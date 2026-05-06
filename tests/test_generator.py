@@ -1,0 +1,134 @@
+import pytest
+
+from specoracle.config import ModelSettings, Task
+from specoracle.generator import MockLLMClient, OpenAIClient, SpecOracleGenerator, extract_python_code
+
+
+def test_extract_python_code_prefers_fenced_python_block() -> None:
+    text = "Here:\n```python\ndef answer():\n    return 42\n```\nDone"
+
+    assert extract_python_code(text) == "def answer():\n    return 42"
+
+
+def test_task_schema_requires_human_reference() -> None:
+    with pytest.raises(ValueError, match="human_reference"):
+        Task.from_mapping(
+            {
+                "id": "missing_reference",
+                "prompt": "Implement answer().",
+                "test_code": "def test_placeholder():\n    assert True\n",
+                "day2_prompt": "Add answer_text().",
+                "day2_test_code": "def test_placeholder():\n    assert True\n",
+            }
+        )
+
+
+def test_oracle_generation_routes_through_oracle_prompt() -> None:
+    task = Task(
+        id="demo",
+        prompt="Implement answer() -> int returning 42.",
+        test_code="from solution import answer\n\ndef test_answer():\n    assert answer() == 42\n",
+        day2_prompt="Add answer_text() -> str returning '42'.",
+        day2_test_code=(
+            "from solution import answer_text\n\n"
+            "def test_answer_text():\n    assert answer_text() == '42'\n"
+        ),
+        day2_stressors=("interface_generalization",),
+        human_reference="def answer():\n    return 42\n",
+        entry_point="answer",
+        mock_solution="def answer():\n    return 42\n",
+        mock_day2_solution="def answer_text():\n    return '42'\n",
+    )
+    settings = ModelSettings(provider="mock", model="mock-local")
+    generator = SpecOracleGenerator(MockLLMClient(), settings)
+
+    baseline = generator.baseline_generation(task)
+    oracle = generator.oracle_generation(task)
+
+    assert baseline.variant == "baseline_generation"
+    assert oracle.variant == "oracle_generation"
+    assert "Zen of Python primitives" not in baseline.system_prompt
+    assert "Zen of Python primitives" in oracle.system_prompt
+    assert oracle.code == "def answer():\n    return 42"
+    assert oracle.task["day2_prompt"] == "Add answer_text() -> str returning '42'."
+    assert oracle.task["day2_stressors"] == ["interface_generalization"]
+    assert oracle.task["human_reference"] == "def answer():\n    return 42\n"
+    assert oracle.oracle_spec_label == "zen_of_python"
+
+
+def test_custom_spec_override_replaces_zen_oracle_prompt() -> None:
+    task = Task(
+        id="legacy",
+        prompt="Implement answer() -> int returning 42.",
+        test_code="from solution import answer\n\ndef test_answer():\n    assert answer() == 42\n",
+        day2_prompt="Add answer_text() -> str returning '42'.",
+        day2_test_code=(
+            "from solution import answer_text\n\n"
+            "def test_answer_text():\n    assert answer_text() == '42'\n"
+        ),
+        day2_stressors=("interface_generalization",),
+        human_reference="def answer():\n    return 42\n",
+        custom_spec_override="All helpers must have alliterative names and return tuples.",
+        entry_point="answer",
+        mock_solution="def answer():\n    return 42\n",
+    )
+    settings = ModelSettings(provider="mock", model="mock-local")
+    generator = SpecOracleGenerator(MockLLMClient(), settings)
+
+    oracle = generator.oracle_generation(task)
+
+    assert oracle.oracle_spec_label == "custom_spec_override"
+    assert oracle.oracle_spec == "All helpers must have alliterative names and return tuples."
+    assert "Zen of Python primitives" not in oracle.system_prompt
+    assert "All helpers must have alliterative names" in oracle.system_prompt
+
+
+def test_neutral_style_generation_uses_neutral_prompt() -> None:
+    task = Task(
+        id="neutral",
+        prompt="Implement answer() -> int returning 42.",
+        test_code="from solution import answer\n\ndef test_answer():\n    assert answer() == 42\n",
+        day2_prompt="Add answer_text() -> str returning '42'.",
+        day2_test_code="def test_placeholder():\n    assert True\n",
+        day2_stressors=("interface_generalization",),
+        human_reference="def answer():\n    return 42\n",
+        entry_point="answer",
+        mock_solution="def answer():\n    return 42\n",
+    )
+    generator = SpecOracleGenerator(MockLLMClient(), ModelSettings(provider="mock", model="mock-local"))
+
+    result = generator.neutral_style_generation(task)
+
+    assert result.variant == "neutral_style_generation"
+    assert "maintainable Python" in result.system_prompt
+    assert "Zen of Python primitives" not in result.system_prompt
+
+
+def test_openai_client_retries_without_temperature_when_model_rejects_it() -> None:
+    class FakeResponse:
+        output_text = "def answer():\n    return 42"
+
+    class FakeResponses:
+        def __init__(self) -> None:
+            self.calls: list[dict] = []
+
+        def create(self, **kwargs):
+            self.calls.append(kwargs)
+            if "temperature" in kwargs:
+                raise RuntimeError("Unsupported parameter: 'temperature' is not supported")
+            return FakeResponse()
+
+    client = OpenAIClient.__new__(OpenAIClient)
+    fake_responses = FakeResponses()
+    client._client = type("FakeOpenAI", (), {"responses": fake_responses})()
+
+    text = client.complete(
+        system_prompt="system",
+        user_prompt="user",
+        settings=ModelSettings(provider="openai", model="gpt-5.5"),
+    )
+
+    assert text == "def answer():\n    return 42"
+    assert "temperature" in fake_responses.calls[0]
+    assert "temperature" not in fake_responses.calls[1]
+    assert client.last_effective_temperature is None
