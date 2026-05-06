@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, minimal realization of the spec with no speculative abstractions or framework-shaped code. It uses a single threading.Lock, explicit cached _total to avoid recomputing sums, guard clauses at the top of increment, and clear error messages. Data movement is explicit: snapshot returns a dict comprehension copy, total returns a plain int, and internal state is never exposed. Names are self-explanatory and the entire behavior can be audited locally in under 40 lines. The only minor quibble is that the snapshot filter for `count != 0` is slightly defensive (counts can never go below 1 given the current API), but it's harmless and arguably documents intent. Overall this is a textbook example of the Zen-aligned approach: simple, flat, explicit, and easy to explain.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, minimal realization of the spec with no speculative abstractions or framework-shaped code. It uses a single threading.Lock, explicit cached _total to avoid recomputing sums, guard clauses at the top of increment, and clear error messages. Data movement is explicit: snapshot returns a dict comprehension copy, total returns a plain int, and internal state is never exposed. Names are self-explanatory and the entire behavior can be audited locally in under 40 lines. The only minor quibble is that the snapshot filter for `count != 0` is slightly defensive (counts can never go below 1 given the current API), but it's harmless and arguably documents intent. Overall this is a textbook example of the Zen-aligned approach: simple, flat, explicit, and easy to explain.\",\n  \"strengths\": [\n    \"Single lock with no layered synchronization complexity\",\n    \"Cached _total avoids O(n) sum on every total() call\",\n    \"Guard clause at top of increment keeps control flow flat\",\n    \"snapshot() returns a true copy, preventing external mutation of internal state\",\n    \"Clear, informative error messages for both ValueError and OverflowError\",\n    \"No unused extension points or speculative abstractions\"\n  ],\n  \"weaknesses\": [\n    \"The `count != 0` filter in snapshot is dead code given the current API (counts only ever increase), which could mislead a reader into thinking decrement is possible\",\n    \"Docstring module header is slightly redundant with the class docstring but harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single lock with no layered synchronization complexity",
+      "Cached _total avoids O(n) sum on every total() call",
+      "Guard clause at top of increment keeps control flow flat",
+      "snapshot() returns a true copy, preventing external mutation of internal state",
+      "Clear, informative error messages for both ValueError and OverflowError",
+      "No unused extension points or speculative abstractions"
+    ],
+    "weaknesses": [
+      "The `count != 0` filter in snapshot is dead code given the current API (counts only ever increase), which could mislead a reader into thinking decrement is possible",
+      "Docstring module header is slightly redundant with the class docstring but harmless"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.505,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 35,
+    "maintainability_index": 80.151,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_generation"
+}

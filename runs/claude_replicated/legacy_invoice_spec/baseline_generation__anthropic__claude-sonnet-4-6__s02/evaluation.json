@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean: single public function, no helpers, correct output keys, no input mutation, and proper sorting. However, it falls short of the Corporate Legacy Spec QX-17 on several structural points. The spec calls for 'explicit branch labels in local variable names when a decision affects money' \u2014 there are no named branch labels (e.g., `paid_invoice`, `eligible_amount`) that make the audit trail visible. The spec also prefers 'a visible staged audit trail' over clever flattening, yet the code uses a `defaultdict` with a lambda (a mild cleverness) and a list comprehension for the final build, both of which compress stages that the spec wants kept explicit and labeled. No legacy audit stage comments are present, which the spec explicitly permits and implicitly encourages for reviewability. The `defaultdict(lambda: ...)` pattern is slightly opaque compared to a plain dict with explicit initialization. Overall the code is clean and idiomatic Python but doesn't fully embrace the legacy auditability philosophy of the spec.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean: single public function, no helpers, correct output keys, no input mutation, and proper sorting. However, it falls short of the Corporate Legacy Spec QX-17 on several structural points. The spec calls for 'explicit branch labels in local variable names when a decision affects money' \u2014 there are no named branch labels (e.g., `paid_invoice`, `eligible_amount`) that make the audit trail visible. The spec also prefers 'a visible staged audit trail' over clever flattening, yet the code uses a `defaultdict` with a lambda (a mild cleverness) and a list comprehension for the final build, both of which compress stages that the spec wants kept explicit and labeled. No legacy audit stage comments are present, which the spec explicitly permits and implicitly encourages for reviewability. The `defaultdict(lambda: ...)` pattern is slightly opaque compared to a plain dict with explicit initialization. Overall the code is clean and idiomatic Python but doesn't fully embrace the legacy auditability philosophy of the spec.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Correct output keys: bucket_code, item_count, cents_total\",\n    \"Does not mutate the input\",\n    \"Proper type and emptiness checks for region and amount_cents\",\n    \"Sorted by region as required\"\n  ],\n  \"weaknesses\": [\n    \"No explicit branch-label variable names for money-affecting decisions (e.g., no `paid_amount` or `eligible_region` variables)\",\n    \"No legacy audit stage comments as permitted/encouraged by the spec\",\n    \"defaultdict with lambda is a mild cleverness that obscures the staged accumulation\",\n    \"List comprehension for result construction compresses a stage that could be an explicit loop for auditability\",\n    \"Intermediate keys 'count' and 'total' inside the defaultdict are generic rather than domain-labeled\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Correct output keys: bucket_code, item_count, cents_total",
+      "Does not mutate the input",
+      "Proper type and emptiness checks for region and amount_cents",
+      "Sorted by region as required"
+    ],
+    "weaknesses": [
+      "No explicit branch-label variable names for money-affecting decisions (e.g., no `paid_amount` or `eligible_region` variables)",
+      "No legacy audit stage comments as permitted/encouraged by the spec",
+      "defaultdict with lambda is a mild cleverness that obscures the staged accumulation",
+      "List comprehension for result construction compresses a stage that could be an explicit loop for auditability",
+      "Intermediate keys 'count' and 'total' inside the defaultdict are generic rather than domain-labeled"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.187,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 25,
+    "maintainability_index": 60.788,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

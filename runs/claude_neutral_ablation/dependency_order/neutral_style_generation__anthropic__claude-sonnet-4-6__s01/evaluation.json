@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-structured, and correctly solves the problem using Kahn's algorithm with batching. It handles all edge cases: implicit nodes from dependency lists, cycle detection, alphabetical sorting within batches, and non-mutation of input. The code is readable with clear variable names and a helpful docstring. The only minor structural concern is the redundant re-sorting of the queue after each batch \u2014 since nodes are added in arbitrary order during processing, the re-sort is necessary for determinism, but the approach of sorting the initial queue and then re-sorting after each batch is slightly awkward. A cleaner approach might use a sorted insertion or simply sort once at batch collection time. The extra `sorted_queue` intermediate variable and `queue.clear()/extend()` pattern adds a small amount of noise. Overall, the code is flat, explicit, locally auditable, and free of architectural slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-structured, and correctly solves the problem using Kahn's algorithm with batching. It handles all edge cases: implicit nodes from dependency lists, cycle detection, alphabetical sorting within batches, and non-mutation of input. The code is readable with clear variable names and a helpful docstring. The only minor structural concern is the redundant re-sorting of the queue after each batch \u2014 since nodes are added in arbitrary order during processing, the re-sort is necessary for determinism, but the approach of sorting the initial queue and then re-sorting after each batch is slightly awkward. A cleaner approach might use a sorted insertion or simply sort once at batch collection time. The extra `sorted_queue` intermediate variable and `queue.clear()/extend()` pattern adds a small amount of noise. Overall, the code is flat, explicit, locally auditable, and free of architectural slop.\",\n  \"strengths\": [\n    \"Correctly includes implicit nodes that only appear as dependencies\",\n    \"Clean Kahn's algorithm implementation with proper cycle detection\",\n    \"Good use of type annotations and docstring\",\n    \"Non-mutating of input is preserved\",\n    \"Alphabetical sorting within batches is correctly applied\"\n  ],\n  \"weaknesses\": [\n    \"Redundant queue re-sorting after each batch adds minor complexity; the initial sort of the queue is partially wasted since new nodes are appended unsorted during processing\",\n    \"The batch_size/loop pattern to drain the queue is slightly more verbose than collecting the batch directly from a sorted structure\",\n    \"Minor: `processed` counter could be replaced by comparing `len(batches)` flattened, but this is negligible\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Correctly includes implicit nodes that only appear as dependencies",
+      "Clean Kahn's algorithm implementation with proper cycle detection",
+      "Good use of type annotations and docstring",
+      "Non-mutating of input is preserved",
+      "Alphabetical sorting within batches is correctly applied"
+    ],
+    "weaknesses": [
+      "Redundant queue re-sorting after each batch adds minor complexity; the initial sort of the queue is partially wasted since new nodes are appended unsorted during processing",
+      "The batch_size/loop pattern to drain the queue is slightly more verbose than collecting the batch directly from a sorted structure",
+      "Minor: `processed` counter could be replaced by comparing `len(batches)` flattened, but this is negligible"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Write clean, maintainable Python without a task-specific informal oracle.",
+  "oracle_spec_label": "neutral_style",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 3.259,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 52,
+    "maintainability_index": 79.404,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "neutral_style_generation"
+}

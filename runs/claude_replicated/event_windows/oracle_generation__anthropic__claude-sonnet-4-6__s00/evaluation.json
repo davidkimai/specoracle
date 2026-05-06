@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Helper functions are small and single-purpose, control flow is guarded at the top of the main function, data movement is visible (two defaultdicts accumulated in a single loop, then sorted at output), and names are self-explanatory. The only minor structural quibble is maintaining two parallel defaultdicts (counts and totals) instead of a single dict of accumulators, which adds a small amount of redundancy and requires the final comprehension to index both; a single dict mapping start \u2192 (count, total) tuple or a simple dataclass would be marginally more cohesive. The use of math.floor(timestamp / window_size) * window_size is correct but slightly more verbose than the idiomatic timestamp // window_size * window_size. The bool-check on window_size is a thoughtful guard. Overall the code is sparse, auditable, and free of speculative abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Helper functions are small and single-purpose, control flow is guarded at the top of the main function, data movement is visible (two defaultdicts accumulated in a single loop, then sorted at output), and names are self-explanatory. The only minor structural quibble is maintaining two parallel defaultdicts (counts and totals) instead of a single dict of accumulators, which adds a small amount of redundancy and requires the final comprehension to index both; a single dict mapping start \u2192 (count, total) tuple or a simple dataclass would be marginally more cohesive. The use of math.floor(timestamp / window_size) * window_size is correct but slightly more verbose than the idiomatic timestamp // window_size * window_size. The bool-check on window_size is a thoughtful guard. Overall the code is sparse, auditable, and free of speculative abstractions.\",\n  \"strengths\": [\n    \"Small, pure helpers (_is_valid_event, _window_start) with clear single responsibilities\",\n    \"Explicit ValueError with informative messages for invalid window_size, including bool guard\",\n    \"Flat control flow with a single guard clause and a straightforward accumulation loop\",\n    \"No hidden mutation or global state; data movement is fully visible\",\n    \"Ordinary standard-library constructs only (defaultdict, math.floor, sorted)\"\n  ],\n  \"weaknesses\": [\n    \"Two parallel defaultdicts (counts, totals) instead of a single accumulator dict slightly increases cognitive load and indexing in the final comprehension\",\n    \"math.floor(timestamp / window_size) * window_size is correct but less idiomatic than timestamp // window_size * window_size for integer floor division\",\n    \"Docstring is thorough but slightly over-documented for a function this simple, adding noise without aiding local auditability\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helpers (_is_valid_event, _window_start) with clear single responsibilities",
+      "Explicit ValueError with informative messages for invalid window_size, including bool guard",
+      "Flat control flow with a single guard clause and a straightforward accumulation loop",
+      "No hidden mutation or global state; data movement is fully visible",
+      "Ordinary standard-library constructs only (defaultdict, math.floor, sorted)"
+    ],
+    "weaknesses": [
+      "Two parallel defaultdicts (counts, totals) instead of a single accumulator dict slightly increases cognitive load and indexing in the final comprehension",
+      "math.floor(timestamp / window_size) * window_size is correct but less idiomatic than timestamp // window_size * window_size for integer floor division",
+      "Docstring is thorough but slightly over-documented for a function this simple, adding noise without aiding local auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.798,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 53,
+    "maintainability_index": 80.399,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,49 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, flat, readable, and keeps the required single public function while returning the exact legacy keys without mutating input. However, it falls short of the informal legacy oracle in a few structural ways: the money-affecting eligibility decision is compressed into one compound condition rather than a visibly staged audit trail, local variable names do not carry explicit branch labels for the paid/valid-money path, and the inline type-ignore comments violate the comment rule because they do not name a legacy audit stage. The unused import and imprecise accumulator typing add minor audit slop.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, flat, readable, and keeps the required single public function while returning the exact legacy keys without mutating input. However, it falls short of the informal legacy oracle in a few structural ways: the money-affecting eligibility decision is compressed into one compound condition rather than a visibly staged audit trail, local variable names do not carry explicit branch labels for the paid/valid-money path, and the inline type-ignore comments violate the comment rule because they do not name a legacy audit stage. The unused import and imprecise accumulator typing add minor audit slop.\",\n  \"strengths\": [\n    \"Single obvious public function with no helper indirection\",\n    \"Flat control flow and straightforward aggregation\",\n    \"Returns exact legacy keys sorted by region\",\n    \"Does not mutate input invoices\"\n  ],\n  \"weaknesses\": [\n    \"Compound eligibility check reduces visible staged auditability\",\n    \"Money-affecting branch variables are not explicitly labeled\",\n    \"Inline type-ignore comments are not legacy audit stage comments\",\n    \"Unused import and broad accumulator typing add minor slop\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single obvious public function with no helper indirection",
+      "Flat control flow and straightforward aggregation",
+      "Returns exact legacy keys sorted by region",
+      "Does not mutate input invoices"
+    ],
+    "weaknesses": [
+      "Compound eligibility check reduces visible staged auditability",
+      "Money-affecting branch variables are not explicitly labeled",
+      "Inline type-ignore comments are not legacy audit stage comments",
+      "Unused import and broad accumulator typing add minor slop"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.633,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 25,
+    "maintainability_index": 73.184,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

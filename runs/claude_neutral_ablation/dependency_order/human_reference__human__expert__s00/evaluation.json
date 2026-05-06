@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a straightforward Kahn's algorithm variant with no unnecessary abstractions or hidden state. Data movement is visible: the full task set is built upfront, `remaining` is rebuilt each iteration rather than mutated in place, and the cycle check is a simple guard clause. Names (`ready`, `blockers`, `completed`, `remaining`) are self-explanatory and make local auditing easy. The only minor quibble is that rebuilding the entire `remaining` dict each iteration (rather than removing completed tasks and updating blocker sets in place) is slightly less efficient, but it keeps the logic immutable and easy to reason about, which aligns well with the Zen preference for explicitness over cleverness. No speculative abstractions, no framework-shaped code, no deep nesting.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a straightforward Kahn's algorithm variant with no unnecessary abstractions or hidden state. Data movement is visible: the full task set is built upfront, `remaining` is rebuilt each iteration rather than mutated in place, and the cycle check is a simple guard clause. Names (`ready`, `blockers`, `completed`, `remaining`) are self-explanatory and make local auditing easy. The only minor quibble is that rebuilding the entire `remaining` dict each iteration (rather than removing completed tasks and updating blocker sets in place) is slightly less efficient, but it keeps the logic immutable and easy to reason about, which aligns well with the Zen preference for explicitness over cleverness. No speculative abstractions, no framework-shaped code, no deep nesting.\",\n  \"strengths\": [\n    \"Flat control flow with a single while loop and a clear guard clause for cycle detection\",\n    \"Explicit data movement: full task universe computed upfront, no hidden mutation\",\n    \"Self-documenting variable names that map directly to the problem domain\",\n    \"Correctly includes tasks that only appear as dependencies via the initial set union\",\n    \"Does not mutate the input dict\"\n  ],\n  \"weaknesses\": [\n    \"Rebuilding the full `remaining` dict each iteration is O(n) per batch instead of O(ready) for in-place removal, though this is a minor efficiency trade-off for clarity\",\n    \"No docstring or inline comment explaining the algorithm for a first-time reader\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single while loop and a clear guard clause for cycle detection",
+      "Explicit data movement: full task universe computed upfront, no hidden mutation",
+      "Self-documenting variable names that map directly to the problem domain",
+      "Correctly includes tasks that only appear as dependencies via the initial set union",
+      "Does not mutate the input dict"
+    ],
+    "weaknesses": [
+      "Rebuilding the full `remaining` dict each iteration is O(n) per batch instead of O(ready) for in-place removal, though this is a minor efficiency trade-off for clarity",
+      "No docstring or inline comment explaining the algorithm for a first-time reader"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 6.238,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 19,
+    "maintainability_index": 61.266,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "human_reference"
+}

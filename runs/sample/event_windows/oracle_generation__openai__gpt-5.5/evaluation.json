@@ -1,0 +1,48 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, and locally auditable, with flat control flow and small pure helpers that clarify validation without adding architectural weight. It uses ordinary dictionaries and sorting to express the grouping directly, has no hidden global state or speculative abstractions, and raises a clear error for invalid window sizes. The only minor reservations are the slightly stricter-than-stated rejection of bool as an integer and a small amount of helper indirection for such a compact task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is simple, explicit, and locally auditable, with flat control flow and small pure helpers that clarify validation without adding architectural weight. It uses ordinary dictionaries and sorting to express the grouping directly, has no hidden global state or speculative abstractions, and raises a clear error for invalid window sizes. The only minor reservations are the slightly stricter-than-stated rejection of bool as an integer and a small amount of helper indirection for such a compact task.\",\n  \"strengths\": [\n    \"Clear positive window_size validation\",\n    \"Flat loop with straightforward data movement\",\n    \"Small pure validation helpers\",\n    \"Deterministic sorted output\",\n    \"No unnecessary abstractions or global state\"\n  ],\n  \"weaknesses\": [\n    \"Rejects bool integers explicitly, which is stricter than the minimal spec\",\n    \"Helper extraction is mildly more structure than the task strictly requires\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clear positive window_size validation",
+      "Flat loop with straightforward data movement",
+      "Small pure validation helpers",
+      "Deterministic sorted output",
+      "No unnecessary abstractions or global state"
+    ],
+    "weaknesses": [
+      "Rejects bool integers explicitly, which is stricter than the minimal spec",
+      "Helper extraction is mildly more structure than the task strictly requires"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.996,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 25,
+    "maintainability_index": 52.254,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_generation"
+}

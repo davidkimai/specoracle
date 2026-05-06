@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit data movement and clear error messages. The control flow uses a straightforward while loop with guard clauses that keep nesting shallow. Known flags are declared upfront as a set, defaults are explicit in the result dict, and each validation step is locally auditable. The code avoids metaprogramming, framework-shaped abstractions, and hidden state. Minor weaknesses include the lack of small pure helpers (the spec suggests extracting helpers for value parsing/validation), and the monolithic while-loop body handles all flag logic inline rather than delegating to small focused functions. The docstring is thorough but slightly verbose. Overall this is a solid, maintainable implementation that closely follows the Zen principles with only modest room for improvement in decomposition.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit data movement and clear error messages. The control flow uses a straightforward while loop with guard clauses that keep nesting shallow. Known flags are declared upfront as a set, defaults are explicit in the result dict, and each validation step is locally auditable. The code avoids metaprogramming, framework-shaped abstractions, and hidden state. Minor weaknesses include the lack of small pure helpers (the spec suggests extracting helpers for value parsing/validation), and the monolithic while-loop body handles all flag logic inline rather than delegating to small focused functions. The docstring is thorough but slightly verbose. Overall this is a solid, maintainable implementation that closely follows the Zen principles with only modest room for improvement in decomposition.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses avoids deep nesting\",\n    \"Explicit defaults declared upfront in result dict\",\n    \"Clear, specific error messages for each failure mode\",\n    \"Known flags validated against a set before processing\",\n    \"No hidden mutation, global state, or speculative abstractions\",\n    \"Ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"All flag handling is inline in one loop body rather than small pure helpers (e.g., parse_limit, parse_format)\",\n    \"The check `value.startswith('--')` for detecting missing values is a heuristic that could misfire on legitimate paths starting with '--'\",\n    \"Slightly verbose docstring relative to the simplicity of the function\",\n    \"No deduplication guard if the same flag is passed twice (silently last-write-wins)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses avoids deep nesting",
+      "Explicit defaults declared upfront in result dict",
+      "Clear, specific error messages for each failure mode",
+      "Known flags validated against a set before processing",
+      "No hidden mutation, global state, or speculative abstractions",
+      "Ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "All flag handling is inline in one loop body rather than small pure helpers (e.g., parse_limit, parse_format)",
+      "The check `value.startswith('--')` for detecting missing values is a heuristic that could misfire on legitimate paths starting with '--'",
+      "Slightly verbose docstring relative to the simplicity of the function",
+      "No deduplication guard if the same flag is passed twice (silently last-write-wins)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.874,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 71,
+    "maintainability_index": 74.692,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "baseline_generation"
+}

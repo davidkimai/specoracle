@@ -1,0 +1,48 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, and locally auditable, with flat control flow and clear recursive handling of nested dictionaries while avoiding input mutation via deepcopy. It preserves the core task semantics well and avoids speculative abstractions or clever machinery. The main structural gap is that it does not raise clear validation errors for invalid inputs, instead relying on incidental attribute/type failures, and it folds recursion into the public function rather than using a small internal helper.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is simple, explicit, and locally auditable, with flat control flow and clear recursive handling of nested dictionaries while avoiding input mutation via deepcopy. It preserves the core task semantics well and avoids speculative abstractions or clever machinery. The main structural gap is that it does not raise clear validation errors for invalid inputs, instead relying on incidental attribute/type failures, and it folds recursion into the public function rather than using a small internal helper.\",\n  \"strengths\": [\n    \"Clear override-wins logic with explicit None-as-delete behavior\",\n    \"Does not mutate either input and copies inserted values defensively\",\n    \"Flat, readable control flow with early continue statements\",\n    \"Uses ordinary standard-library constructs without unnecessary abstraction\"\n  ],\n  \"weaknesses\": [\n    \"No explicit input validation or clear errors for non-dict arguments\",\n    \"Recursive implementation is directly exposed through the public entry point\",\n    \"Deepcopy is safe but somewhat heavy for a small merge operation\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear override-wins logic with explicit None-as-delete behavior",
+      "Does not mutate either input and copies inserted values defensively",
+      "Flat, readable control flow with early continue statements",
+      "Uses ordinary standard-library constructs without unnecessary abstraction"
+    ],
+    "weaknesses": [
+      "No explicit input validation or clear errors for non-dict arguments",
+      "Recursive implementation is directly exposed through the public entry point",
+      "Deepcopy is safe but somewhat heavy for a small merge operation"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.189,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 65.989,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "human_reference"
+}

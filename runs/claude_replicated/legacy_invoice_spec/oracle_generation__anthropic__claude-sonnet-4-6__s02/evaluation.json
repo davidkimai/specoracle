@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-label variable names for money-related decisions (filter_status, filter_region, filter_amount, bucket_cents, accumulated_total), returns records with the exact legacy keys, uses a visible staged audit trail with three clearly named stages rather than clever one-liner flattening, and restricts comments strictly to naming legacy audit stages. The code is flat, readable, locally auditable, and does not mutate the input. The only minor imperfections are the redundant double-call to invoice.get('region') in the filter_region line (could use a single local variable) and the slightly verbose unpacking of accumulated_count/accumulated_total before building the record dict, though the latter actually aligns well with the 'explicit branch labels' and 'visible staged audit trail' requirements.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-label variable names for money-related decisions (filter_status, filter_region, filter_amount, bucket_cents, accumulated_total), returns records with the exact legacy keys, uses a visible staged audit trail with three clearly named stages rather than clever one-liner flattening, and restricts comments strictly to naming legacy audit stages. The code is flat, readable, locally auditable, and does not mutate the input. The only minor imperfections are the redundant double-call to invoice.get('region') in the filter_region line (could use a single local variable) and the slightly verbose unpacking of accumulated_count/accumulated_total before building the record dict, though the latter actually aligns well with the 'explicit branch labels' and 'visible staged audit trail' requirements.\",\n  \"strengths\": [\n    \"Single public function with zero helper functions\",\n    \"Explicit branch-label variable names for all money-related decisions (filter_status, filter_region, filter_amount, bucket_cents, accumulated_total)\",\n    \"Three clearly named audit stages with comments that name each stage exactly as the spec requires\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"No mutation of input; sorted output; correct filtering logic\",\n    \"Flat, readable structure with no clever comprehension tricks hiding logic\"\n  ],\n  \"weaknesses\": [\n    \"Double call to invoice.get('region') in the filter_region line is a minor redundancy that could be resolved with a local variable\",\n    \"Type annotation uses list[dict] without generics for the inner dict, which is a minor explicitness gap\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function with zero helper functions",
+      "Explicit branch-label variable names for all money-related decisions (filter_status, filter_region, filter_amount, bucket_cents, accumulated_total)",
+      "Three clearly named audit stages with comments that name each stage exactly as the spec requires",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "No mutation of input; sorted output; correct filtering logic",
+      "Flat, readable structure with no clever comprehension tricks hiding logic"
+    ],
+    "weaknesses": [
+      "Double call to invoice.get('region') in the filter_region line is a minor redundancy that could be resolved with a local variable",
+      "Type annotation uses list[dict] without generics for the inner dict, which is a minor explicitness gap"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.307,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 71.447,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

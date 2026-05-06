@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and follows the Zen of Python closely. It splits responsibilities sensibly across three small pure helpers (_all_tasks, _build_graph, _kahn_batches), keeps control flow flat, avoids hidden mutation (copies in_degree before modifying), raises a clear ValueError on cycles, and uses ordinary standard-library constructs (deque, dict). The docstring is slightly over-engineered with NumPy-style sections for a small utility, and the module-level docstring adds marginal noise. There is a minor redundancy: the queue is pre-sorted and next_ready is also sorted before extending, but the final batch is sorted again with sorted(batch) \u2014 since the queue already delivers items in sorted order and batch_size items are popped in FIFO order, the final sort is harmless but slightly redundant. Overall the architecture is transparent, auditable, and appropriately sized for the task.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-decomposed, and follows the Zen of Python closely. It splits responsibilities sensibly across three small pure helpers (_all_tasks, _build_graph, _kahn_batches), keeps control flow flat, avoids hidden mutation (copies in_degree before modifying), raises a clear ValueError on cycles, and uses ordinary standard-library constructs (deque, dict). The docstring is slightly over-engineered with NumPy-style sections for a small utility, and the module-level docstring adds marginal noise. There is a minor redundancy: the queue is pre-sorted and next_ready is also sorted before extending, but the final batch is sorted again with sorted(batch) \u2014 since the queue already delivers items in sorted order and batch_size items are popped in FIFO order, the final sort is harmless but slightly redundant. Overall the architecture is transparent, auditable, and appropriately sized for the task.\",\n  \"strengths\": [\n    \"Clean separation into three focused helpers with clear single responsibilities\",\n    \"Explicit data movement: in_degree is copied before mutation, input dict is never touched\",\n    \"Kahn's algorithm is a well-known, correct choice for this problem\",\n    \"Clear, informative ValueError message on cycle detection\",\n    \"Includes dependency-only tasks via _all_tasks\",\n    \"Uses ordinary stdlib constructs (deque, dict, sorted)\"\n  ],\n  \"weaknesses\": [\n    \"NumPy-style docstrings are over-engineered for a small utility module\",\n    \"Redundant sorted() call on batch since queue already delivers items in sorted order\",\n    \"Module-level docstring adds noise without meaningful additional information\",\n    \"Sorting next_ready before extending queue is slightly redundant given the final batch sort\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into three focused helpers with clear single responsibilities",
+      "Explicit data movement: in_degree is copied before mutation, input dict is never touched",
+      "Kahn's algorithm is a well-known, correct choice for this problem",
+      "Clear, informative ValueError message on cycle detection",
+      "Includes dependency-only tasks via _all_tasks",
+      "Uses ordinary stdlib constructs (deque, dict, sorted)"
+    ],
+    "weaknesses": [
+      "NumPy-style docstrings are over-engineered for a small utility module",
+      "Redundant sorted() call on batch since queue already delivers items in sorted order",
+      "Module-level docstring adds noise without meaningful additional information",
+      "Sorting next_ready before extending queue is slightly redundant given the final batch sort"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.739,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.25,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 4,
+    "loc": 84,
+    "maintainability_index": 76.866,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

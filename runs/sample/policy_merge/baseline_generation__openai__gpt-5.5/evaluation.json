@@ -1,0 +1,49 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, pure, and locally auditable, with small helpers and clear recursive behavior that preserves the required merge semantics without mutating the inputs. Control flow is mostly flat and ordinary Python constructs are used. The main structural gap is the absence of explicit input validation despite the constraint to raise clear errors for invalid inputs; non-dict inputs will fail indirectly via attribute errors. There is also minor unnecessary machinery such as the sentinel, but it does not materially obscure the code.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is simple, explicit, pure, and locally auditable, with small helpers and clear recursive behavior that preserves the required merge semantics without mutating the inputs. Control flow is mostly flat and ordinary Python constructs are used. The main structural gap is the absence of explicit input validation despite the constraint to raise clear errors for invalid inputs; non-dict inputs will fail indirectly via attribute errors. There is also minor unnecessary machinery such as the sentinel, but it does not materially obscure the code.\",\n  \"strengths\": [\n    \"Clear recursive merge with override precedence and deletion via None\",\n    \"Does not mutate either input dictionary\",\n    \"Small helper functions with readable names\",\n    \"Uses straightforward standard-library Python constructs\",\n    \"Copies nested dictionaries to avoid hidden aliasing\"\n  ],\n  \"weaknesses\": [\n    \"Does not raise clear errors for invalid non-dict inputs\",\n    \"Sentinel is unnecessary for the current logic\",\n    \"Override non-dict mutable values are shared by reference\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear recursive merge with override precedence and deletion via None",
+      "Does not mutate either input dictionary",
+      "Small helper functions with readable names",
+      "Uses straightforward standard-library Python constructs",
+      "Copies nested dictionaries to avoid hidden aliasing"
+    ],
+    "weaknesses": [
+      "Does not raise clear errors for invalid non-dict inputs",
+      "Sentinel is unnecessary for the current logic",
+      "Override non-dict mutable values are shared by reference"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.109,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 32,
+    "maintainability_index": 87.232,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

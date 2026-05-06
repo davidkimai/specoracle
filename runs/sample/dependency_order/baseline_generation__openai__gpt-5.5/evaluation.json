@@ -1,0 +1,49 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, and locally auditable, using a straightforward Kahn-style topological batching algorithm with clear data structures and no input mutation. It handles dependency-only tasks, sorted batches, and cycle detection correctly. The main structural drawbacks are that all logic is kept in one function despite several separable phases, and invalid input handling is implicit rather than producing clear errors.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is simple, explicit, and locally auditable, using a straightforward Kahn-style topological batching algorithm with clear data structures and no input mutation. It handles dependency-only tasks, sorted batches, and cycle detection correctly. The main structural drawbacks are that all logic is kept in one function despite several separable phases, and invalid input handling is implicit rather than producing clear errors.\",\n  \"strengths\": [\n    \"Straightforward topological batching algorithm\",\n    \"Copies input into internal structures and avoids mutating caller data\",\n    \"Includes tasks that only appear as dependencies\",\n    \"Produces alphabetically sorted batches\",\n    \"Cycle detection is simple and clear\"\n  ],\n  \"weaknesses\": [\n    \"No explicit validation or clear errors for malformed inputs\",\n    \"Several phases could be split into small pure helpers\",\n    \"Minor extra surface area from __all__ for such a small module\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Straightforward topological batching algorithm",
+      "Copies input into internal structures and avoids mutating caller data",
+      "Includes tasks that only appear as dependencies",
+      "Produces alphabetically sorted batches",
+      "Cycle detection is simple and clear"
+    ],
+    "weaknesses": [
+      "No explicit validation or clear errors for malformed inputs",
+      "Several phases could be split into small pure helpers",
+      "Minor extra surface area from __all__ for such a small module"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.466,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 49,
+    "maintainability_index": 77.545,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

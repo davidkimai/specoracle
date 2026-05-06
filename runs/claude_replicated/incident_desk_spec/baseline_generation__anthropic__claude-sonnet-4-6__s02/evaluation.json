@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and correct: it preserves ticket order, uses a single pass with no classes, emits a stable 'routed' status_code string, and handles the default rule fallback properly. The main gap against the Zen oracle is the absence of a named lookup table (e.g., severity_boost_table = {'critical': 10, 'high': 5}) as explicitly called for by the spec's preference for 'local lookup tables with names ending in _table'. The if/elif chain for severity adjustments is functional but slightly less auditable than a table lookup, and the branch reasons are implicit in the condition expressions rather than named strings. Otherwise the code is readable, explicit, and free of architectural slop.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, flat, and correct: it preserves ticket order, uses a single pass with no classes, emits a stable 'routed' status_code string, and handles the default rule fallback properly. The main gap against the Zen oracle is the absence of a named lookup table (e.g., severity_boost_table = {'critical': 10, 'high': 5}) as explicitly called for by the spec's preference for 'local lookup tables with names ending in _table'. The if/elif chain for severity adjustments is functional but slightly less auditable than a table lookup, and the branch reasons are implicit in the condition expressions rather than named strings. Otherwise the code is readable, explicit, and free of architectural slop.\",\n  \"strengths\": [\n    \"Single-pass, no classes, no unnecessary abstraction\",\n    \"Stable 'routed' status_code string, never a boolean\",\n    \"Ticket order preserved via sequential append\",\n    \"Explicit field presence check before processing\",\n    \"Correct default rule fallback using chained .get()\"\n  ],\n  \"weaknesses\": [\n    \"Missing severity_boost_table (or similar _table-named dict) as required by the structural spec\",\n    \"if/elif severity branch is slightly less auditable than a named table lookup\",\n    \"Branch reasons are implicit in conditions rather than short explicit named strings\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single-pass, no classes, no unnecessary abstraction",
+      "Stable 'routed' status_code string, never a boolean",
+      "Ticket order preserved via sequential append",
+      "Explicit field presence check before processing",
+      "Correct default rule fallback using chained .get()"
+    ],
+    "weaknesses": [
+      "Missing severity_boost_table (or similar _table-named dict) as required by the structural spec",
+      "if/elif severity branch is slightly less auditable than a named table lookup",
+      "Branch reasons are implicit in conditions rather than short explicit named strings"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.267,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 22,
+    "maintainability_index": 57.672,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It correctly handles all specified requirements: validates window_size, ignores malformed events (including bool edge cases), groups events into the correct windows using floor division, and returns sorted results. The use of defaultdict is idiomatic and the logic is flat and easy to audit. Minor issues include the unnecessary import of `math.floor` when integer floor division `//` would be more Pythonic and direct, the overly strict `isinstance(window_size, int)` check that rejects valid numeric types like numpy integers or floats that happen to be whole numbers (though this is debatable), and the docstring is somewhat verbose for a simple utility function. The two separate defaultdicts for counts and totals is slightly redundant compared to a single dict of tuples or a dataclass, but remains readable. Overall this is solid, maintainable Python code.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It correctly handles all specified requirements: validates window_size, ignores malformed events (including bool edge cases), groups events into the correct windows using floor division, and returns sorted results. The use of defaultdict is idiomatic and the logic is flat and easy to audit. Minor issues include the unnecessary import of `math.floor` when integer floor division `//` would be more Pythonic and direct, the overly strict `isinstance(window_size, int)` check that rejects valid numeric types like numpy integers or floats that happen to be whole numbers (though this is debatable), and the docstring is somewhat verbose for a simple utility function. The two separate defaultdicts for counts and totals is slightly redundant compared to a single dict of tuples or a dataclass, but remains readable. Overall this is solid, maintainable Python code.\",\n  \"strengths\": [\n    \"Correctly excludes bool values from int checks, preventing subtle bugs\",\n    \"Uses defaultdict idiomatically for accumulation\",\n    \"Flat, linear control flow with no nested complexity\",\n    \"Clear variable naming and sorted output\",\n    \"Proper ValueError with informative message\"\n  ],\n  \"weaknesses\": [\n    \"Imports `math.floor` unnecessarily when `//` operator is more Pythonic for integer floor division\",\n    \"Two separate defaultdicts for counts and totals is slightly redundant; a single dict with a tuple/namedtuple would be more cohesive\",\n    \"Overly strict type check on window_size rejects valid numeric inputs like floats that are whole numbers\",\n    \"Docstring is verbose relative to the function's simplicity\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Correctly excludes bool values from int checks, preventing subtle bugs",
+      "Uses defaultdict idiomatically for accumulation",
+      "Flat, linear control flow with no nested complexity",
+      "Clear variable naming and sorted output",
+      "Proper ValueError with informative message"
+    ],
+    "weaknesses": [
+      "Imports `math.floor` unnecessarily when `//` operator is more Pythonic for integer floor division",
+      "Two separate defaultdicts for counts and totals is slightly redundant; a single dict with a tuple/namedtuple would be more cohesive",
+      "Overly strict type check on window_size rejects valid numeric inputs like floats that are whole numbers",
+      "Docstring is verbose relative to the function's simplicity"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Write clean, maintainable Python without a task-specific informal oracle.",
+  "oracle_spec_label": "neutral_style",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.173,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 57,
+    "maintainability_index": 81.036,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "neutral_style_generation"
+}

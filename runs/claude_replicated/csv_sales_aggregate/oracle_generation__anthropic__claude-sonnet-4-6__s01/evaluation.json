@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured with small pure helpers and explicit data movement. The separation into `_row_is_valid` and `_parse_ints` is sensible, though there is a minor inefficiency: `_row_is_valid` calls `_parse_ints` internally, and then `aggregate_sales` calls `_parse_ints` again on valid rows, parsing twice per valid row. A slightly flatter design would parse once and use the result directly (e.g., return the parsed values from a combined guard or restructure the loop). The `defaultdict` with a mutable lambda default is a minor hidden-mutation concern but is idiomatic enough for this pattern. The final list comprehension with `**sums` unpacking is clean and explicit. Overall the code is sparse, auditable, uses standard-library constructs, and avoids speculative abstractions \u2014 it scores well against the Zen oracle with only the double-parse and the lambda-defaultdict as minor structural blemishes.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured with small pure helpers and explicit data movement. The separation into `_row_is_valid` and `_parse_ints` is sensible, though there is a minor inefficiency: `_row_is_valid` calls `_parse_ints` internally, and then `aggregate_sales` calls `_parse_ints` again on valid rows, parsing twice per valid row. A slightly flatter design would parse once and use the result directly (e.g., return the parsed values from a combined guard or restructure the loop). The `defaultdict` with a mutable lambda default is a minor hidden-mutation concern but is idiomatic enough for this pattern. The final list comprehension with `**sums` unpacking is clean and explicit. Overall the code is sparse, auditable, uses standard-library constructs, and avoids speculative abstractions \u2014 it scores well against the Zen oracle with only the double-parse and the lambda-defaultdict as minor structural blemishes.\",\n  \"strengths\": [\n    \"Small, focused helpers with clear single responsibilities\",\n    \"Flat control flow with guard clauses (continue on invalid rows)\",\n    \"Explicit data movement; no hidden global state\",\n    \"Standard-library only (csv, io, collections)\",\n    \"Readable names that make behavior easy to explain locally\",\n    \"Clean sorted output construction via list comprehension\"\n  ],\n  \"weaknesses\": [\n    \"`_parse_ints` is called twice per valid row (once in `_row_is_valid`, once in the main loop), wasting work and creating a subtle coupling\",\n    \"The `defaultdict` lambda returning a mutable dict is a mild hidden-mutation pattern; explicit accumulation would be more transparent\",\n    \"The `required.issubset(row.keys())` check is largely redundant when using `csv.DictReader`, which always provides all header keys (possibly as None for short rows)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, focused helpers with clear single responsibilities",
+      "Flat control flow with guard clauses (continue on invalid rows)",
+      "Explicit data movement; no hidden global state",
+      "Standard-library only (csv, io, collections)",
+      "Readable names that make behavior easy to explain locally",
+      "Clean sorted output construction via list comprehension"
+    ],
+    "weaknesses": [
+      "`_parse_ints` is called twice per valid row (once in `_row_is_valid`, once in the main loop), wasting work and creating a subtle coupling",
+      "The `defaultdict` lambda returning a mutable dict is a mild hidden-mutation pattern; explicit accumulation would be more transparent",
+      "The `required.issubset(row.keys())` check is largely redundant when using `csv.DictReader`, which always provides all header keys (possibly as None for short rows)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.519,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 31,
+    "maintainability_index": 52.769,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

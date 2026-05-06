@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, minimal realization of the task. The helper `_resolve_path` is a small pure function with flat control flow using guard clauses at each step, making local auditing trivial. Data movement is explicit\u2014no mutation, no hidden state. The main `extract_fields` validates inputs with clear TypeError messages and delegates to a comprehension, keeping the architecture two-layer and obvious. Names are self-explanatory. The only minor quibble is that the docstring on `extract_fields` is slightly verbose for such a simple function, and the module-level docstring adds marginal noise, but neither constitutes architectural slop. The implementation avoids speculative abstractions entirely and uses only standard-library constructs.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, minimal realization of the task. The helper `_resolve_path` is a small pure function with flat control flow using guard clauses at each step, making local auditing trivial. Data movement is explicit\u2014no mutation, no hidden state. The main `extract_fields` validates inputs with clear TypeError messages and delegates to a comprehension, keeping the architecture two-layer and obvious. Names are self-explanatory. The only minor quibble is that the docstring on `extract_fields` is slightly verbose for such a simple function, and the module-level docstring adds marginal noise, but neither constitutes architectural slop. The implementation avoids speculative abstractions entirely and uses only standard-library constructs.\",\n  \"strengths\": [\n    \"Small, pure `_resolve_path` helper with flat, guard-clause-driven control flow\",\n    \"No mutation of input data anywhere in the call chain\",\n    \"Explicit TypeError raises for invalid input types with informative messages\",\n    \"Single-expression comprehension in `extract_fields` keeps the entry point minimal\",\n    \"Ordinary constructs only\u2014no metaprogramming or framework-shaped code\",\n    \"Names (`_resolve_path`, `current`, `parts`, `output_key`) are immediately self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Module-level and function docstrings are slightly over-documented for the simplicity of the code\",\n    \"The NumPy-style docstring format in `extract_fields` is heavier than needed for a two-parameter function\",\n    \"No validation that individual path values in `paths` are strings, which could produce confusing errors downstream\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure `_resolve_path` helper with flat, guard-clause-driven control flow",
+      "No mutation of input data anywhere in the call chain",
+      "Explicit TypeError raises for invalid input types with informative messages",
+      "Single-expression comprehension in `extract_fields` keeps the entry point minimal",
+      "Ordinary constructs only\u2014no metaprogramming or framework-shaped code",
+      "Names (`_resolve_path`, `current`, `parts`, `output_key`) are immediately self-explanatory"
+    ],
+    "weaknesses": [
+      "Module-level and function docstrings are slightly over-documented for the simplicity of the code",
+      "The NumPy-style docstring format in `extract_fields` is heavier than needed for a two-parameter function",
+      "No validation that individual path values in `paths` are strings, which could produce confusing errors downstream"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.976,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 2,
+    "loc": 46,
+    "maintainability_index": 86.853,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

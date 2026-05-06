@@ -1,0 +1,28 @@
+{
+  "code": "from __future__ import annotations\n\n\ndef plan_batches(\n    dependencies: dict[str, list[str]], completed: set[str] | None = None\n) -> list[list[str]]:\n    done = set() if completed is None else set(completed)\n\n    tasks = set(dependencies)\n    for blockers in dependencies.values():\n        tasks.update(blockers)\n    tasks -= done\n\n    remaining = {task: set(dependencies.get(task, [])) - done for task in tasks}\n    batches: list[list[str]] = []\n    while remaining:\n        ready = sorted(task for task, blockers in remaining.items() if not blockers)\n        if not ready:\n            raise ValueError(\"dependency graph contains a cycle\")\n\n        batches.append(ready)\n        completed_batch = set(ready)\n        remaining = {\n            task: blockers - completed_batch\n            for task, blockers in remaining.items()\n            if task not in completed_batch\n        }\n    return batches",
+  "duration_seconds": 9.541,
+  "error": null,
+  "maintenance_failure_detail": "",
+  "maintenance_failure_type": "none",
+  "maintenance_model": "gpt-5.5",
+  "maintenance_provider": "openai",
+  "maintenance_token_overhead": 773,
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "pass_at_1": true,
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.185,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "raw_response": "from __future__ import annotations\n\n\ndef plan_batches(\n    dependencies: dict[str, list[str]], completed: set[str] | None = None\n) -> list[list[str]]:\n    done = set() if completed is None else set(completed)\n\n    tasks = set(dependencies)\n    for blockers in dependencies.values():\n        tasks.update(blockers)\n    tasks -= done\n\n    remaining = {task: set(dependencies.get(task, [])) - done for task in tasks}\n    batches: list[list[str]] = []\n    while remaining:\n        ready = sorted(task for task, blockers in remaining.items() if not blockers)\n        if not ready:\n            raise ValueError(\"dependency graph contains a cycle\")\n\n        batches.append(ready)\n        completed_batch = set(ready)\n        remaining = {\n            task: blockers - completed_batch\n            for task, blockers in remaining.items()\n            if task not in completed_batch\n        }\n    return batches",
+  "task_id": "dependency_order",
+  "variant": "human_reference"
+}

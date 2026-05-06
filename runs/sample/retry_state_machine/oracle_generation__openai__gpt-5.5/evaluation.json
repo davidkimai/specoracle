@@ -1,0 +1,47 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, flat, deterministic, and easy to audit locally, with clear state and direct method behavior matching the retry-gate model. The only notable issues are slight over-engineering via __slots__ and __all__, and a semantic wrinkle: the constructor raises TypeError for non-integer inputs even though the task says invalid max_attempts should raise ValueError.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is simple, explicit, flat, deterministic, and easy to audit locally, with clear state and direct method behavior matching the retry-gate model. The only notable issues are slight over-engineering via __slots__ and __all__, and a semantic wrinkle: the constructor raises TypeError for non-integer inputs even though the task says invalid max_attempts should raise ValueError.\",\n  \"strengths\": [\n    \"Clear minimal state with explicit _max_attempts and _failures fields\",\n    \"Flat, readable control flow with direct method implementations\",\n    \"No global mutable state, time, threads, networking, or nondeterminism\",\n    \"Correct retry counting, reset behavior, allow logic, and clamped remaining count\"\n  ],\n  \"weaknesses\": [\n    \"Raises TypeError for some invalid constructor inputs despite the requirement specifying ValueError\",\n    \"__slots__ and __all__ are mildly unnecessary for such a small task\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear minimal state with explicit _max_attempts and _failures fields",
+      "Flat, readable control flow with direct method implementations",
+      "No global mutable state, time, threads, networking, or nondeterminism",
+      "Correct retry counting, reset behavior, allow logic, and clamped remaining count"
+    ],
+    "weaknesses": [
+      "Raises TypeError for some invalid constructor inputs despite the requirement specifying ValueError",
+      "__slots__ and __all__ are mildly unnecessary for such a small task"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.436,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.667,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 5,
+    "loc": 20,
+    "maintainability_index": 57.512,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_generation"
+}

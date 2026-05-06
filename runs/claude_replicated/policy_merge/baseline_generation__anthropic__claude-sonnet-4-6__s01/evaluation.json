@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a single recursive function with flat control flow, explicit data movement, and no hidden mutation. The logic is easy to audit locally: iterate all keys, handle override-wins, None-removal, recursive dict merge, and defaults fallback in a straightforward sequence. The guard clauses (continue for None, else for defaults) keep nesting reasonable. Minor weaknesses include the lack of input validation (no check that inputs are actually dicts, which the spec implies should raise clear errors) and the slightly verbose double-lookup pattern (checking `key in override` then extracting `override[key]`) which could be marginally cleaner with `.get()` or `.items()` iteration, but these are small concerns. Overall this is a solid, maintainable implementation that closely follows the Zen principles.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a single recursive function with flat control flow, explicit data movement, and no hidden mutation. The logic is easy to audit locally: iterate all keys, handle override-wins, None-removal, recursive dict merge, and defaults fallback in a straightforward sequence. The guard clauses (continue for None, else for defaults) keep nesting reasonable. Minor weaknesses include the lack of input validation (no check that inputs are actually dicts, which the spec implies should raise clear errors) and the slightly verbose double-lookup pattern (checking `key in override` then extracting `override[key]`) which could be marginally cleaner with `.get()` or `.items()` iteration, but these are small concerns. Overall this is a solid, maintainable implementation that closely follows the Zen principles.\",\n  \"strengths\": [\n    \"No mutation of input dicts; result is built fresh\",\n    \"Flat control flow with guard clauses (continue) avoiding deep nesting\",\n    \"Recursive helper is the function itself \u2014 no speculative abstraction\",\n    \"Names are self-explanatory (defaults, override, override_val, result)\",\n    \"Correct handling of all three cases: None removal, recursive merge, override wins\"\n  ],\n  \"weaknesses\": [\n    \"No input validation \u2014 passing non-dict arguments silently misbehaves instead of raising a clear error\",\n    \"Double key lookup (key in override, then override[key]) is slightly redundant; iterating override.items() would be cleaner\",\n    \"Key ordering is non-deterministic due to set union iteration, though functionally harmless\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "No mutation of input dicts; result is built fresh",
+      "Flat control flow with guard clauses (continue) avoiding deep nesting",
+      "Recursive helper is the function itself \u2014 no speculative abstraction",
+      "Names are self-explanatory (defaults, override, override_val, result)",
+      "Correct handling of all three cases: None removal, recursive merge, override wins"
+    ],
+    "weaknesses": [
+      "No input validation \u2014 passing non-dict arguments silently misbehaves instead of raising a clear error",
+      "Double key lookup (key in override, then override[key]) is slightly redundant; iterating override.items() would be cleaner",
+      "Key ordering is non-deterministic due to set union iteration, though functionally harmless"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.949,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 60.906,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,48 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the legacy structural oracle: it uses a single obvious public function, keeps eligibility, accumulation, and reporting as visible local stages, uses the exact required output keys, avoids mutation, and makes money-affecting decisions explicit through branch-labeled variables. The main drawback is that the variable names are sometimes excessively long, which slightly reduces readability and local auditability despite matching the requested legacy style.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the legacy structural oracle: it uses a single obvious public function, keeps eligibility, accumulation, and reporting as visible local stages, uses the exact required output keys, avoids mutation, and makes money-affecting decisions explicit through branch-labeled variables. The main drawback is that the variable names are sometimes excessively long, which slightly reduces readability and local auditability despite matching the requested legacy style.\",\n  \"strengths\": [\n    \"Single public function with no helper indirection\",\n    \"Clear staged audit trail for eligibility, accumulation, and reporting\",\n    \"Explicit branch-labeled variables for paid, region, and amount decisions\",\n    \"Returns exact legacy keys sorted by region\",\n    \"Does not mutate input\"\n  ],\n  \"weaknesses\": [\n    \"Variable names are occasionally overlong and visually noisy\",\n    \"Extra dict-type guard is harmless but not required by the stated invoice shape\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper indirection",
+      "Clear staged audit trail for eligibility, accumulation, and reporting",
+      "Explicit branch-labeled variables for paid, region, and amount decisions",
+      "Returns exact legacy keys sorted by region",
+      "Does not mutate input"
+    ],
+    "weaknesses": [
+      "Variable names are occasionally overlong and visually noisy",
+      "Extra dict-type guard is harmless but not required by the stated invoice shape"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.073,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 47,
+    "maintainability_index": 66.371,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

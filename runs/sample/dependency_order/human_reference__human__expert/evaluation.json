@@ -1,0 +1,48 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, flat, and locally auditable, using a straightforward Kahn-style batching loop with ordinary data structures and no hidden mutation or speculative abstraction. It preserves the required semantics: includes dependency-only tasks, sorts each ready batch, avoids mutating the input, and raises a clear ValueError on cycles. The only notable gap against the operational guidance is that it relies on the annotated contract rather than explicitly validating malformed inputs.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is simple, explicit, flat, and locally auditable, using a straightforward Kahn-style batching loop with ordinary data structures and no hidden mutation or speculative abstraction. It preserves the required semantics: includes dependency-only tasks, sorts each ready batch, avoids mutating the input, and raises a clear ValueError on cycles. The only notable gap against the operational guidance is that it relies on the annotated contract rather than explicitly validating malformed inputs.\",\n  \"strengths\": [\n    \"Clear, compact implementation with flat control flow\",\n    \"Explicit construction of task set and remaining dependency sets\",\n    \"Does not mutate the input dependencies\",\n    \"Produces alphabetically sorted parallel batches\",\n    \"Raises a clear ValueError when no progress is possible\"\n  ],\n  \"weaknesses\": [\n    \"No explicit validation for invalid input shapes or non-string task names\",\n    \"Minor unnecessary future import for such a small function\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clear, compact implementation with flat control flow",
+      "Explicit construction of task set and remaining dependency sets",
+      "Does not mutate the input dependencies",
+      "Produces alphabetically sorted parallel batches",
+      "Raises a clear ValueError when no progress is possible"
+    ],
+    "weaknesses": [
+      "No explicit validation for invalid input shapes or non-string task names",
+      "Minor unnecessary future import for such a small function"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.18,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 19,
+    "maintainability_index": 61.266,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "human_reference"
+}

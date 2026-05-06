@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It correctly uses Kahn's algorithm for topological batching, handles nodes that only appear as dependencies, avoids mutating the input, raises ValueError on cycles, and sorts each batch alphabetically. The code is flat, explicit, and locally auditable with no unnecessary abstractions. Minor issues: the docstring in the module and function are slightly verbose but not harmful; the `next_nodes` intermediate list and the `queue.clear()` + re-append pattern is slightly roundabout compared to directly building the next queue, but it's still clear and correct. Overall this is a solid, maintainable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It correctly uses Kahn's algorithm for topological batching, handles nodes that only appear as dependencies, avoids mutating the input, raises ValueError on cycles, and sorts each batch alphabetically. The code is flat, explicit, and locally auditable with no unnecessary abstractions. Minor issues: the docstring in the module and function are slightly verbose but not harmful; the `next_nodes` intermediate list and the `queue.clear()` + re-append pattern is slightly roundabout compared to directly building the next queue, but it's still clear and correct. Overall this is a solid, maintainable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Correct Kahn's algorithm implementation with proper cycle detection\",\n    \"Handles tasks that only appear as dependencies\",\n    \"Does not mutate the input\",\n    \"Each batch is sorted alphabetically as required\",\n    \"Flat, readable structure with clear variable names\",\n    \"Good use of type annotations throughout\"\n  ],\n  \"weaknesses\": [\n    \"The queue.clear() + next_nodes intermediate list pattern is slightly convoluted; could directly build the next deque\",\n    \"Module-level docstring and function docstring are somewhat redundant with each other\",\n    \"Minor: using a deque but then calling sorted(queue) and queue.clear() loses some of the deque's purpose\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Correct Kahn's algorithm implementation with proper cycle detection",
+      "Handles tasks that only appear as dependencies",
+      "Does not mutate the input",
+      "Each batch is sorted alphabetically as required",
+      "Flat, readable structure with clear variable names",
+      "Good use of type annotations throughout"
+    ],
+    "weaknesses": [
+      "The queue.clear() + next_nodes intermediate list pattern is slightly convoluted; could directly build the next deque",
+      "Module-level docstring and function docstring are somewhat redundant with each other",
+      "Minor: using a deque but then calling sorted(queue) and queue.clear() loses some of the deque's purpose"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Write clean, maintainable Python without a task-specific informal oracle.",
+  "oracle_spec_label": "neutral_style",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.674,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 15.0,
+    "cyclomatic_complexity_max": 15,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 1,
+    "loc": 52,
+    "maintainability_index": 78.587,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "neutral_style_generation"
+}

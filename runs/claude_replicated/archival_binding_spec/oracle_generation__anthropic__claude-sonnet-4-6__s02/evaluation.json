@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows all five R-04 directives: parsing is visibly staged with explicit numbered comments, exactly one public function is exposed, the surviving cross-iteration dictionary is named `sections_ledger`, insertion order is preserved via plain dict (Python 3.7+), and every ValueError message names the specific archival field being rejected. The code is flat, readable, and locally auditable with no clever compression. Minor deductions: the inner per-section dictionaries are not named with a `_ledger` suffix (though the spec only mandates the outer one), and `address_part.strip()` is done after the partition rather than before, which is a trivial ordering quirk but not a real flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows all five R-04 directives: parsing is visibly staged with explicit numbered comments, exactly one public function is exposed, the surviving cross-iteration dictionary is named `sections_ledger`, insertion order is preserved via plain dict (Python 3.7+), and every ValueError message names the specific archival field being rejected. The code is flat, readable, and locally auditable with no clever compression. Minor deductions: the inner per-section dictionaries are not named with a `_ledger` suffix (though the spec only mandates the outer one), and `address_part.strip()` is done after the partition rather than before, which is a trivial ordering quirk but not a real flaw.\",\n  \"strengths\": [\n    \"Five clearly numbered parsing stages match the 'visibly staged' directive exactly\",\n    \"Outer dict named `sections_ledger` as required by the spec\",\n    \"Exactly one public function exposed\",\n    \"Error messages explicitly name the archival field (section, key) being rejected\",\n    \"Insertion order preserved naturally using plain dict\",\n    \"No compressed one-liners or clever abstractions; fully auditable locally\"\n  ],\n  \"weaknesses\": [\n    \"Inner per-section dicts are anonymous `{}` rather than named with a `_ledger` suffix, which could be argued the spec implies for all surviving dicts\",\n    \"Trivial ordering: `address_part.strip()` happens after partition instead of stripping `stripped_line` components earlier, slightly less clean\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Five clearly numbered parsing stages match the 'visibly staged' directive exactly",
+      "Outer dict named `sections_ledger` as required by the spec",
+      "Exactly one public function exposed",
+      "Error messages explicitly name the archival field (section, key) being rejected",
+      "Insertion order preserved naturally using plain dict",
+      "No compressed one-liners or clever abstractions; fully auditable locally"
+    ],
+    "weaknesses": [
+      "Inner per-section dicts are anonymous `{}` rather than named with a `_ledger` suffix, which could be argued the spec implies for all surviving dicts",
+      "Trivial ordering: `address_part.strip()` happens after partition instead of stripping `stripped_line` components earlier, slightly less clean"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.958,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________ test_parse_bindings_rejects_bad_lines _____________________\n\n    def test_parse_bindings_rejects_bad_lines():\n        with pytest.raises(ValueError, match=\"line\"):\n>           parse_bindings([\"missing\"])\n\ntest_solution.py:21: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nlines = ['missing']\n\n    def parse_bindings(lines: list[str]) -> dict[str, dict[str, str]]:\n        \"\"\"Parse a list of strings into a nested section -> key -> value mapping.\n    \n        Each non-empty, non-comment line must follow the format:\n            section.key=value\n    \n        Comments begin with '#'. Whitespace around section, key, and value is\n        stripped. Input order is preserved in the returned dictionaries.\n    \n        Raises ValueError for malformed lines, empty section names, or empty keys.\n        \"\"\"\n        sections_ledger: dict[str, dict[str, str]] = {}\n    \n        for line_number, raw_line in enumerate(lines, start=1):\n            # Stage 1: Strip surrounding whitespace and skip blank lines or comments.\n            stripped_line = raw_line.strip()\n            if not stripped_line:\n                continue\n            if stripped_line.startswith(\"#\"):\n                continue\n    \n            # Stage 2: Split on the first '=' to separate the address from the value.\n            if \"=\" not in stripped_line:\n>               raise ValueError(\n                    f\"Line {line_number}: malformed archival field \u2014 \"\n                    f\"missing '=' separator in {stripped_line!r}\"\n                )\nE               ValueError: Line 1: malformed archival field \u2014 missing '=' separator in 'missing'\n\nsolution.py:30: ValueError\n\nDuring handling of the above exception, another exception occurred:\n\n    def test_parse_bindings_rejects_bad_lines():\n>       with pytest.raises(ValueError, match=\"line\"):\nE       AssertionError: Regex pattern did not match.\nE         Expected regex: 'line'\nE         Actual message: \"Line 1: malformed archival field \u2014 missing '=' separator in 'missing'\"\n\ntest_solution.py:20: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_parse_bindings_rejects_bad_lines - AssertionErr...\n1 failed, 1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 54,
+    "maintainability_index": 83.64,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_generation"
+}

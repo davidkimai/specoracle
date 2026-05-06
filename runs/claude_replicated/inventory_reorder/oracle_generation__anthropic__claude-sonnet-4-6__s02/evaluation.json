@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. Guard clauses keep the main loop readable, helpers are small and pure, data flow is explicit with no hidden mutation, and names clearly communicate intent. The `_is_valid_item` helper is slightly heavier than necessary\u2014it tries numeric conversions that are repeated immediately after in the main loop\u2014but this is a minor redundancy rather than a structural flaw. The use of `math.ceil` in a named helper, the module-level constant for required keys, and the straightforward sort at the end all reflect good Zen-aligned choices. No speculative abstractions, no framework-shaped code, and the behavior is fully auditable locally.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. Guard clauses keep the main loop readable, helpers are small and pure, data flow is explicit with no hidden mutation, and names clearly communicate intent. The `_is_valid_item` helper is slightly heavier than necessary\u2014it tries numeric conversions that are repeated immediately after in the main loop\u2014but this is a minor redundancy rather than a structural flaw. The use of `math.ceil` in a named helper, the module-level constant for required keys, and the straightforward sort at the end all reflect good Zen-aligned choices. No speculative abstractions, no framework-shaped code, and the behavior is fully auditable locally.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses that exit early and avoid nesting\",\n    \"Small, named pure helpers (`_is_valid_item`, `_round_up_to_multiple`) with clear responsibilities\",\n    \"Explicit data movement: values are extracted and converted once before use\",\n    \"Module-level constant for required keys makes validation intent obvious\",\n    \"Straightforward standard-library usage (math.ceil, dict.get, list.sort)\"\n  ],\n  \"weaknesses\": [\n    \"Validation in `_is_valid_item` duplicates type conversions that are repeated in the main loop, a minor DRY violation\",\n    \"The `str(item['sku'])` conversion in `_is_valid_item` always succeeds, making that check effectively a no-op\",\n    \"Could use a small extraction helper to unpack item fields, reducing the block of repeated `int(item[...])` calls in the main loop\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses that exit early and avoid nesting",
+      "Small, named pure helpers (`_is_valid_item`, `_round_up_to_multiple`) with clear responsibilities",
+      "Explicit data movement: values are extracted and converted once before use",
+      "Module-level constant for required keys makes validation intent obvious",
+      "Straightforward standard-library usage (math.ceil, dict.get, list.sort)"
+    ],
+    "weaknesses": [
+      "Validation in `_is_valid_item` duplicates type conversions that are repeated in the main loop, a minor DRY violation",
+      "The `str(item['sku'])` conversion in `_is_valid_item` always succeeds, making that check effectively a no-op",
+      "Could use a small extraction helper to unpack item fields, reducing the block of repeated `int(item[...])` calls in the main loop"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.872,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 41,
+    "maintainability_index": 65.741,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and structurally sound. It uses a small pure helper (_evict) to separate concerns, keeps control flow flat with a simple guard clause in allow(), makes data movement explicit through named local variables, and uses ordinary standard-library constructs (defaultdict, deque) that are well-suited to the task. The error message is clear, names are self-explanatory, and there are no speculative abstractions or unused extension points. The only minor quibble is that snapshot() doesn't evict stale entries before returning, which could surprise callers who expect it to reflect the current window state, but this is a functional ambiguity rather than a structural flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and structurally sound. It uses a small pure helper (_evict) to separate concerns, keeps control flow flat with a simple guard clause in allow(), makes data movement explicit through named local variables, and uses ordinary standard-library constructs (defaultdict, deque) that are well-suited to the task. The error message is clear, names are self-explanatory, and there are no speculative abstractions or unused extension points. The only minor quibble is that snapshot() doesn't evict stale entries before returning, which could surprise callers who expect it to reflect the current window state, but this is a functional ambiguity rather than a structural flaw.\",\n  \"strengths\": [\n    \"Small, focused _evict helper cleanly separates the purging logic\",\n    \"Flat control flow in allow() with a simple early-return guard\",\n    \"Explicit data movement: local variable 'dq' makes mutations traceable\",\n    \"Appropriate use of deque for O(1) front-removal and defaultdict for zero-boilerplate key initialization\",\n    \"Clear ValueError with descriptive message for invalid construction arguments\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"snapshot() returns stale timestamps without evicting first, potentially surprising callers\",\n    \"Type annotation uses lowercase dict/list (Python 3.9+) but deque is imported from collections without a generic annotation, minor inconsistency\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, focused _evict helper cleanly separates the purging logic",
+      "Flat control flow in allow() with a simple early-return guard",
+      "Explicit data movement: local variable 'dq' makes mutations traceable",
+      "Appropriate use of deque for O(1) front-removal and defaultdict for zero-boilerplate key initialization",
+      "Clear ValueError with descriptive message for invalid construction arguments",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "snapshot() returns stale timestamps without evicting first, potentially surprising callers",
+      "Type annotation uses lowercase dict/list (Python 3.9+) but deque is imported from collections without a generic annotation, minor inconsistency"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.314,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 22,
+    "maintainability_index": 55.35,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

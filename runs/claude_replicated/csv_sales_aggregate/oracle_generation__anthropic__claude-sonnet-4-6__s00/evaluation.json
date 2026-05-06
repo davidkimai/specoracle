@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and follows the Zen of Python well. It uses ordinary standard-library constructs (csv, io, defaultdict), keeps control flow flat with guard clauses, makes data movement explicit, and avoids speculative abstractions. The early-return on missing headers is a sensible guard. The main weakness is that the function is slightly monolithic\u2014a small pure helper to parse/validate a single row would improve local auditability and testability without adding complexity. The fieldnames check is slightly over-engineered (DictReader with missing required headers could just fall through the row-level guard), and the redundant `row.keys()` check inside the loop is unnecessary since DictReader always provides all header keys (missing values become None/empty, not absent keys). Names are clear and the result construction is explicit.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and follows the Zen of Python well. It uses ordinary standard-library constructs (csv, io, defaultdict), keeps control flow flat with guard clauses, makes data movement explicit, and avoids speculative abstractions. The early-return on missing headers is a sensible guard. The main weakness is that the function is slightly monolithic\u2014a small pure helper to parse/validate a single row would improve local auditability and testability without adding complexity. The fieldnames check is slightly over-engineered (DictReader with missing required headers could just fall through the row-level guard), and the redundant `row.keys()` check inside the loop is unnecessary since DictReader always provides all header keys (missing values become None/empty, not absent keys). Names are clear and the result construction is explicit.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses instead of deep nesting\",\n    \"Explicit data movement: no hidden mutation or global state\",\n    \"Uses plain standard-library tools (csv.DictReader, defaultdict, io.StringIO)\",\n    \"Clear variable names that make behavior easy to explain\",\n    \"Early return on missing headers avoids confusing silent empty results\",\n    \"Sort is explicit and readable\"\n  ],\n  \"weaknesses\": [\n    \"Monolithic function; a small parse_row helper would improve auditability and testability\",\n    \"Redundant row.keys() subset check inside the loop\u2014DictReader always yields all header keys\",\n    \"Header validation duplicates work that the row-level guard would catch anyway, adding noise\",\n    \"defaultdict with mutable lambda default is a minor hidden-state smell compared to an explicit accumulator dict\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses instead of deep nesting",
+      "Explicit data movement: no hidden mutation or global state",
+      "Uses plain standard-library tools (csv.DictReader, defaultdict, io.StringIO)",
+      "Clear variable names that make behavior easy to explain",
+      "Early return on missing headers avoids confusing silent empty results",
+      "Sort is explicit and readable"
+    ],
+    "weaknesses": [
+      "Monolithic function; a small parse_row helper would improve auditability and testability",
+      "Redundant row.keys() subset check inside the loop\u2014DictReader always yields all header keys",
+      "Header validation duplicates work that the row-level guard would catch anyway, adding noise",
+      "defaultdict with mutable lambda default is a minor hidden-state smell compared to an explicit accumulator dict"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.337,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 35,
+    "maintainability_index": 74.268,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

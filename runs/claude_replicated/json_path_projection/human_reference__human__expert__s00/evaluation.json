@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and well-structured. It uses a sentinel `_MISSING` to distinguish between a missing path and a value of `None`, which is correct and explicit. The logic is split into two small, focused functions with clear responsibilities. Control flow in `_resolve_path` is flat with guard clauses rather than deep nesting. Data movement is explicit, there is no mutation of the input, and no hidden state. The naming is clear and self-explanatory. The only minor weaknesses are that negative list indexes are silently treated as missing (via `isdigit()`) rather than being explicitly handled or documented, and there is no input validation (e.g., checking that `record` is actually a dict or `paths` is a dict), though the task doesn't strictly require it. Overall this is a textbook example of the Zen of Python applied to a small utility function.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and well-structured. It uses a sentinel `_MISSING` to distinguish between a missing path and a value of `None`, which is correct and explicit. The logic is split into two small, focused functions with clear responsibilities. Control flow in `_resolve_path` is flat with guard clauses rather than deep nesting. Data movement is explicit, there is no mutation of the input, and no hidden state. The naming is clear and self-explanatory. The only minor weaknesses are that negative list indexes are silently treated as missing (via `isdigit()`) rather than being explicitly handled or documented, and there is no input validation (e.g., checking that `record` is actually a dict or `paths` is a dict), though the task doesn't strictly require it. Overall this is a textbook example of the Zen of Python applied to a small utility function.\",\n  \"strengths\": [\n    \"Sentinel `_MISSING` correctly distinguishes missing paths from `None` values\",\n    \"Two small, single-purpose functions with clear separation of concerns\",\n    \"Flat control flow using guard clauses in `_resolve_path`\",\n    \"No mutation of input data\",\n    \"Ordinary standard-library constructs only, no metaprogramming\",\n    \"Easy to audit locally \u2014 behavior is transparent at a glance\"\n  ],\n  \"weaknesses\": [\n    \"Negative list indexes (e.g., '-1') are silently treated as missing rather than being explicitly handled or documented\",\n    \"No input validation for `record` or `paths` types, which could lead to confusing errors downstream\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Sentinel `_MISSING` correctly distinguishes missing paths from `None` values",
+      "Two small, single-purpose functions with clear separation of concerns",
+      "Flat control flow using guard clauses in `_resolve_path`",
+      "No mutation of input data",
+      "Ordinary standard-library constructs only, no metaprogramming",
+      "Easy to audit locally \u2014 behavior is transparent at a glance"
+    ],
+    "weaknesses": [
+      "Negative list indexes (e.g., '-1') are silently treated as missing rather than being explicitly handled or documented",
+      "No input validation for `record` or `paths` types, which could lead to confusing errors downstream"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.167,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 22,
+    "maintainability_index": 58.067,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "human_reference"
+}

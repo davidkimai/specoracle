@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, readable, and uses ordinary constructs without clever metaprogramming or speculative abstractions. The control flow is reasonably flat with guard clauses handling each container type. The main structural weakness is that the path-traversal logic is inlined inside the outer loop rather than extracted into a small pure helper (e.g., `resolve_path(record, parts, default)`), which the spec explicitly prefers and which would make each concern locally auditable in isolation. The `resolved` boolean flag is a minor smell\u2014a helper returning a sentinel or using a try/except around the whole traversal would be cleaner. There is no input validation (e.g., checking that `record` is actually a dict or `paths` is a dict), and the function silently accepts tuples as sequences, which is an undocumented extension. Overall it is solid, idiomatic Python that satisfies the task with minimal bloat, but misses the 'small pure helpers' and 'flat control flow' guidance by keeping everything in one monolithic function body.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, readable, and uses ordinary constructs without clever metaprogramming or speculative abstractions. The control flow is reasonably flat with guard clauses handling each container type. The main structural weakness is that the path-traversal logic is inlined inside the outer loop rather than extracted into a small pure helper (e.g., `resolve_path(record, parts, default)`), which the spec explicitly prefers and which would make each concern locally auditable in isolation. The `resolved` boolean flag is a minor smell\u2014a helper returning a sentinel or using a try/except around the whole traversal would be cleaner. There is no input validation (e.g., checking that `record` is actually a dict or `paths` is a dict), and the function silently accepts tuples as sequences, which is an undocumented extension. Overall it is solid, idiomatic Python that satisfies the task with minimal bloat, but misses the 'small pure helpers' and 'flat control flow' guidance by keeping everything in one monolithic function body.\",\n  \"strengths\": [\n    \"No mutation of input; result is built fresh\",\n    \"Explicit type checks for dict vs list/tuple rather than duck-typing surprises\",\n    \"Clear variable names (output_key, path, parts, current, resolved)\",\n    \"No metaprogramming, no framework-shaped code, no unused extension points\",\n    \"Handles integer indexes correctly with try/except on int() and IndexError\"\n  ],\n  \"weaknesses\": [\n    \"Path traversal logic is not extracted into a small pure helper as the spec prefers\",\n    \"The `resolved` boolean flag adds cognitive overhead; a helper returning a sentinel or raising internally would be cleaner\",\n    \"No validation that `record` is a dict or `paths` is a dict; invalid inputs fail silently or with cryptic errors\",\n    \"Silently supports tuples as sequences without documenting this behavior\",\n    \"Slightly deep nesting (for-loop inside for-loop with if/elif/else) could be flattened with a helper\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "No mutation of input; result is built fresh",
+      "Explicit type checks for dict vs list/tuple rather than duck-typing surprises",
+      "Clear variable names (output_key, path, parts, current, resolved)",
+      "No metaprogramming, no framework-shaped code, no unused extension points",
+      "Handles integer indexes correctly with try/except on int() and IndexError"
+    ],
+    "weaknesses": [
+      "Path traversal logic is not extracted into a small pure helper as the spec prefers",
+      "The `resolved` boolean flag adds cognitive overhead; a helper returning a sentinel or raising internally would be cleaner",
+      "No validation that `record` is a dict or `paths` is a dict; invalid inputs fail silently or with cryptic errors",
+      "Silently supports tuples as sequences without documenting this behavior",
+      "Slightly deep nesting (for-loop inside for-loop with if/elif/else) could be flattened with a helper"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.028,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 25,
+    "maintainability_index": 63.688,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "baseline_generation"
+}

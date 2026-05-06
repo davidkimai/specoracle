@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (money_status_branch_is_paid, money_amount_branch_is_integer, money_region_branch_is_named), returns records with the exact legacy keys, and avoids clever one-liners in favor of a visible staged audit trail. The staged guard checks are separated into named booleans before the conditional branches, making the logic locally auditable. Minor weaknesses include the absence of any legacy audit stage comments (the spec says comments are allowed when naming a stage, and the staged structure here would benefit from them), and the use of setdefault slightly obscures the two-phase 'initialize then accumulate' audit trail that explicit if/else branching would make clearer. The input is not mutated. Overall this is a strong, readable, spec-compliant implementation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The candidate implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (money_status_branch_is_paid, money_amount_branch_is_integer, money_region_branch_is_named), returns records with the exact legacy keys, and avoids clever one-liners in favor of a visible staged audit trail. The staged guard checks are separated into named booleans before the conditional branches, making the logic locally auditable. Minor weaknesses include the absence of any legacy audit stage comments (the spec says comments are allowed when naming a stage, and the staged structure here would benefit from them), and the use of setdefault slightly obscures the two-phase 'initialize then accumulate' audit trail that explicit if/else branching would make clearer. The input is not mutated. Overall this is a strong, readable, spec-compliant implementation.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Explicit branch-label variable names for all money-affecting decisions\",\n    \"Exact legacy keys: bucket_code, item_count, cents_total\",\n    \"Visible staged guard checks before accumulation \u2014 easy to audit\",\n    \"Input is not mutated\",\n    \"Sorted output by region as required\"\n  ],\n  \"weaknesses\": [\n    \"No comments naming legacy audit stages, which the spec explicitly permits and the staged structure invites\",\n    \"setdefault slightly obscures the initialize-then-accumulate two-phase pattern; an explicit if/else would be more auditable\",\n    \"Type annotation uses int | str union which is minor noise given the values are always int after validation\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Explicit branch-label variable names for all money-affecting decisions",
+      "Exact legacy keys: bucket_code, item_count, cents_total",
+      "Visible staged guard checks before accumulation \u2014 easy to audit",
+      "Input is not mutated",
+      "Sorted output by region as required"
+    ],
+    "weaknesses": [
+      "No comments naming legacy audit stages, which the spec explicitly permits and the staged structure invites",
+      "setdefault slightly obscures the initialize-then-accumulate two-phase pattern; an explicit if/else would be more auditable",
+      "Type annotation uses int | str union which is minor noise given the values are always int after validation"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.573,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 20,
+    "maintainability_index": 56.999,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "human_reference"
+}

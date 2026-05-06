@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is clean, correct, and follows the single-function requirement with no helper functions. It uses explicit variable names for the filter conditions and produces the exact required output keys. The staged approach (filter+accumulate, then build result, then sort) provides a reasonable audit trail. However, it falls short of the oracle's explicit guidance in a few ways: the local variable names inside the accumulator ('count', 'total') are not 'explicit branch labels' that name a money-affecting decision as the spec requests, there are no comments naming legacy audit stages (the spec allows and implicitly encourages them for staged review), and the use of a defaultdict with a lambda is mildly clever rather than maximally explicit \u2014 a plain dict with explicit initialization would be more auditable. The list comprehension for building results is acceptable but a plain for-loop with appends would better match the 'visible staged audit trail' preference. Overall it is solid and functional but misses some of the structural explicitness the oracle prizes.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The candidate implementation is clean, correct, and follows the single-function requirement with no helper functions. It uses explicit variable names for the filter conditions and produces the exact required output keys. The staged approach (filter+accumulate, then build result, then sort) provides a reasonable audit trail. However, it falls short of the oracle's explicit guidance in a few ways: the local variable names inside the accumulator ('count', 'total') are not 'explicit branch labels' that name a money-affecting decision as the spec requests, there are no comments naming legacy audit stages (the spec allows and implicitly encourages them for staged review), and the use of a defaultdict with a lambda is mildly clever rather than maximally explicit \u2014 a plain dict with explicit initialization would be more auditable. The list comprehension for building results is acceptable but a plain for-loop with appends would better match the 'visible staged audit trail' preference. Overall it is solid and functional but misses some of the structural explicitness the oracle prizes.\",\n  \"strengths\": [\n    \"Single public function with no helpers, matching the oracle's primary rule\",\n    \"Exact legacy output keys used correctly\",\n    \"Does not mutate input\",\n    \"Explicit multi-condition filter with named variables improves readability\",\n    \"Staged processing (accumulate, build, sort) provides a visible audit trail\"\n  ],\n  \"weaknesses\": [\n    \"No comments naming legacy audit stages, which the spec explicitly permits and implicitly encourages\",\n    \"Local accumulator keys ('count', 'total') are not explicit branch labels tied to money decisions as the spec requests\",\n    \"defaultdict with lambda is slightly clever; a plain dict with explicit initialization would be more auditable\",\n    \"List comprehension for result construction is less explicitly staged than a for-loop with appends\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helpers, matching the oracle's primary rule",
+      "Exact legacy output keys used correctly",
+      "Does not mutate input",
+      "Explicit multi-condition filter with named variables improves readability",
+      "Staged processing (accumulate, build, sort) provides a visible audit trail"
+    ],
+    "weaknesses": [
+      "No comments naming legacy audit stages, which the spec explicitly permits and implicitly encourages",
+      "Local accumulator keys ('count', 'total') are not explicit branch labels tied to money decisions as the spec requests",
+      "defaultdict with lambda is slightly clever; a plain dict with explicit initialization would be more auditable",
+      "List comprehension for result construction is less explicitly staged than a for-loop with appends"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 4.033,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 25,
+    "maintainability_index": 59.961,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

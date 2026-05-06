@@ -1,0 +1,49 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, flat, and locally auditable, with a single public function, explicit money-related branch variable names, visible staged filtering, exact legacy output keys, deterministic sorting, and no input mutation. It preserves the required semantics well. Minor issues are the somewhat compressed combined rejection for region and amount, the use of setdefault with a mixed-type bucket row that slightly reduces explicitness, and an unnecessary future import.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is simple, flat, and locally auditable, with a single public function, explicit money-related branch variable names, visible staged filtering, exact legacy output keys, deterministic sorting, and no input mutation. It preserves the required semantics well. Minor issues are the somewhat compressed combined rejection for region and amount, the use of setdefault with a mixed-type bucket row that slightly reduces explicitness, and an unnecessary future import.\",\n  \"strengths\": [\n    \"Single obvious public function with no helper indirection\",\n    \"Explicit money branch variable names make decisions auditable\",\n    \"Returns exact legacy keys and sorts by region\",\n    \"Flat control flow with clear staged filtering\",\n    \"Does not mutate the input invoices\"\n  ],\n  \"weaknesses\": [\n    \"Combines region and amount rejection into one branch\",\n    \"setdefault is slightly less explicit than a visible bucket creation branch\",\n    \"Unnecessary future import adds minor noise\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single obvious public function with no helper indirection",
+      "Explicit money branch variable names make decisions auditable",
+      "Returns exact legacy keys and sorts by region",
+      "Flat control flow with clear staged filtering",
+      "Does not mutate the input invoices"
+    ],
+    "weaknesses": [
+      "Combines region and amount rejection into one branch",
+      "setdefault is slightly less explicit than a visible bucket creation branch",
+      "Unnecessary future import adds minor noise"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.436,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 20,
+    "maintainability_index": 56.999,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "human_reference"
+}

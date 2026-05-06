@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with a single well-scoped function that handles all requirements explicitly. The guard clause for window_size is immediate and clear. Malformed event filtering uses a simple isinstance check with a continue guard, keeping nesting minimal. The use of setdefault for accumulation is idiomatic and avoids redundant key lookups. The final sorted return is explicit and easy to audit. Minor weaknesses: the in-place mutation of dicts stored in the windows dict (via setdefault returning a reference) is slightly implicit, and a small pure helper for event validation could improve local auditability, but neither rises to a significant structural flaw. Overall this is a tight, maintainable implementation that closely follows the Zen principles.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with a single well-scoped function that handles all requirements explicitly. The guard clause for window_size is immediate and clear. Malformed event filtering uses a simple isinstance check with a continue guard, keeping nesting minimal. The use of setdefault for accumulation is idiomatic and avoids redundant key lookups. The final sorted return is explicit and easy to audit. Minor weaknesses: the in-place mutation of dicts stored in the windows dict (via setdefault returning a reference) is slightly implicit, and a small pure helper for event validation could improve local auditability, but neither rises to a significant structural flaw. Overall this is a tight, maintainable implementation that closely follows the Zen principles.\",\n  \"strengths\": [\n    \"Immediate ValueError guard with clear message\",\n    \"Flat control flow with guard-clause continue for malformed events\",\n    \"Explicit data movement; no hidden state or global mutation\",\n    \"Idiomatic use of dict.setdefault for accumulation\",\n    \"Sorted return is transparent and easy to verify\"\n  ],\n  \"weaknesses\": [\n    \"In-place mutation of dicts via setdefault reference is slightly implicit rather than building new dicts at the end\",\n    \"Event validation logic is inline rather than extracted into a small named helper, reducing local auditability slightly\",\n    \"isinstance check doesn't guard against bool subclass of int (True/False would pass), which may be an edge case worth noting\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Immediate ValueError guard with clear message",
+      "Flat control flow with guard-clause continue for malformed events",
+      "Explicit data movement; no hidden state or global mutation",
+      "Idiomatic use of dict.setdefault for accumulation",
+      "Sorted return is transparent and easy to verify"
+    ],
+    "weaknesses": [
+      "In-place mutation of dicts via setdefault reference is slightly implicit rather than building new dicts at the end",
+      "Event validation logic is inline rather than extracted into a small named helper, reducing local auditability slightly",
+      "isinstance check doesn't guard against bool subclass of int (True/False would pass), which may be an edge case worth noting"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.006,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 58.61,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "human_reference"
+}

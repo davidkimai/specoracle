@@ -1,0 +1,47 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, and locally auditable while preserving the required semantics. It uses small pure helpers for validation and recursive copying, keeps the main merge control flow flat with clear continue points, avoids mutating inputs, and raises clear errors for invalid top-level inputs. The only minor structural slop is that recursive merging calls the public entry point, causing repeated validation and some redundant copying; a private recursive merge helper could make that intent slightly cleaner.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is simple, explicit, and locally auditable while preserving the required semantics. It uses small pure helpers for validation and recursive copying, keeps the main merge control flow flat with clear continue points, avoids mutating inputs, and raises clear errors for invalid top-level inputs. The only minor structural slop is that recursive merging calls the public entry point, causing repeated validation and some redundant copying; a private recursive merge helper could make that intent slightly cleaner.\",\n  \"strengths\": [\n    \"Clear top-level input validation with explicit TypeError messages\",\n    \"Does not mutate either input and explicitly copies nested dictionaries\",\n    \"Flat, readable merge loop with straightforward handling of deletion, recursive merge, and replacement\",\n    \"Uses ordinary Python constructs without speculative abstraction\"\n  ],\n  \"weaknesses\": [\n    \"Recursive call to merge_policy repeats public validation and creates minor extra work\",\n    \"The __future__ import is unnecessary for this implementation\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clear top-level input validation with explicit TypeError messages",
+      "Does not mutate either input and explicitly copies nested dictionaries",
+      "Flat, readable merge loop with straightforward handling of deletion, recursive merge, and replacement",
+      "Uses ordinary Python constructs without speculative abstraction"
+    ],
+    "weaknesses": [
+      "Recursive call to merge_policy repeats public validation and creates minor extra work",
+      "The __future__ import is unnecessary for this implementation"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.12,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 25,
+    "maintainability_index": 59.017,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

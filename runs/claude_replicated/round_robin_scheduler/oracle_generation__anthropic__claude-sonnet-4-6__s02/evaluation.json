@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the Zen oracle: it extracts exactly one small pure helper (_enabled_workers) that does one thing, the main function is flat with a single guard clause before the list comprehension, data movement is explicit (no mutation, no hidden state), the error is clear and immediate, names are self-explanatory, and there are zero speculative abstractions or unused extension points. The modular index arithmetic `active[index % len(active)]` is the simplest correct expression of round-robin without importing itertools.cycle or any other machinery, keeping the behavior locally auditable in a single glance.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a near-perfect realization of the Zen oracle: it extracts exactly one small pure helper (_enabled_workers) that does one thing, the main function is flat with a single guard clause before the list comprehension, data movement is explicit (no mutation, no hidden state), the error is clear and immediate, names are self-explanatory, and there are zero speculative abstractions or unused extension points. The modular index arithmetic `active[index % len(active)]` is the simplest correct expression of round-robin without importing itertools.cycle or any other machinery, keeping the behavior locally auditable in a single glance.\",\n  \"strengths\": [\n    \"Clean separation into a focused helper and a main function\",\n    \"Flat control flow with an early guard clause\",\n    \"No mutation of inputs; returns fresh dicts\",\n    \"Clear, immediate ValueError with a descriptive message\",\n    \"Readable list comprehension that makes the round-robin logic explicit\",\n    \"No unnecessary imports or abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Minor: the docstring is slightly verbose for code this self-evident, but it causes no harm\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into a focused helper and a main function",
+      "Flat control flow with an early guard clause",
+      "No mutation of inputs; returns fresh dicts",
+      "Clear, immediate ValueError with a descriptive message",
+      "Readable list comprehension that makes the round-robin logic explicit",
+      "No unnecessary imports or abstractions"
+    ],
+    "weaknesses": [
+      "Minor: the docstring is slightly verbose for code this self-evident, but it causes no harm"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.793,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 2,
+    "loc": 20,
+    "maintainability_index": 97.046,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

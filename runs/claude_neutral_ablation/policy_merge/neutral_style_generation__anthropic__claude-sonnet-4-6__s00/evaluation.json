@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and directly expresses the merge logic without unnecessary abstraction or complexity. It handles all specified cases (override wins, recursive dict merging, None removal, no mutation) in a flat, explicit loop that is easy to audit locally. The use of set union for key enumeration is idiomatic, and the conditional branching is straightforward and well-ordered. Minor quibble: key ordering in the result is non-deterministic due to set iteration, which could be addressed by iterating defaults then override keys in order, but this is a very minor stylistic concern that doesn't affect correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, readable, and directly expresses the merge logic without unnecessary abstraction or complexity. It handles all specified cases (override wins, recursive dict merging, None removal, no mutation) in a flat, explicit loop that is easy to audit locally. The use of set union for key enumeration is idiomatic, and the conditional branching is straightforward and well-ordered. Minor quibble: key ordering in the result is non-deterministic due to set iteration, which could be addressed by iterating defaults then override keys in order, but this is a very minor stylistic concern that doesn't affect correctness.\",\n  \"strengths\": [\n    \"Explicit, flat control flow with no hidden magic or over-engineering\",\n    \"Correctly handles all four cases: default-only, override wins, recursive merge, None removal\",\n    \"Does not mutate inputs \u2014 builds a fresh result dict\",\n    \"Recursive call is clean and reuses the same function naturally\",\n    \"Easy to read and locally auditable in one pass\"\n  ],\n  \"weaknesses\": [\n    \"Set iteration gives non-deterministic key ordering in the result (minor in Python 3.7+ dicts, but set order is still random)\",\n    \"No type hints or docstring, though the function signature has type hints for parameters\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit, flat control flow with no hidden magic or over-engineering",
+      "Correctly handles all four cases: default-only, override wins, recursive merge, None removal",
+      "Does not mutate inputs \u2014 builds a fresh result dict",
+      "Recursive call is clean and reuses the same function naturally",
+      "Easy to read and locally auditable in one pass"
+    ],
+    "weaknesses": [
+      "Set iteration gives non-deterministic key ordering in the result (minor in Python 3.7+ dicts, but set order is still random)",
+      "No type hints or docstring, though the function signature has type hints for parameters"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Write clean, maintainable Python without a task-specific informal oracle.",
+  "oracle_spec_label": "neutral_style",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.782,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 61.56,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "neutral_style_generation"
+}

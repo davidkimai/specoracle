@@ -1,0 +1,47 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, deterministic, and locally auditable, with flat control flow and no unnecessary abstractions or hidden state. It directly models the retry state with two instance fields and straightforward methods, preserving the task semantics. The only minor reservation is that it adds a TypeError path for non-integer inputs beyond the stated ValueError requirement, though this is still clear and reasonable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is simple, explicit, deterministic, and locally auditable, with flat control flow and no unnecessary abstractions or hidden state. It directly models the retry state with two instance fields and straightforward methods, preserving the task semantics. The only minor reservation is that it adds a TypeError path for non-integer inputs beyond the stated ValueError requirement, though this is still clear and reasonable.\",\n  \"strengths\": [\n    \"Minimal class with clear state and behavior\",\n    \"Flat, readable control flow with explicit validation\",\n    \"No global state, time, threading, networking, or clever machinery\",\n    \"remaining() safely clamps at zero\"\n  ],\n  \"weaknesses\": [\n    \"Adds a TypeError case not explicitly required by the specification\",\n    \"bool values pass the isinstance(int) check, as in ordinary Python\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal class with clear state and behavior",
+      "Flat, readable control flow with explicit validation",
+      "No global state, time, threading, networking, or clever machinery",
+      "remaining() safely clamps at zero"
+    ],
+    "weaknesses": [
+      "Adds a TypeError case not explicitly required by the specification",
+      "bool values pass the isinstance(int) check, as in ordinary Python"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.246,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.667,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 5,
+    "loc": 22,
+    "maintainability_index": 56.609,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "baseline_generation"
+}

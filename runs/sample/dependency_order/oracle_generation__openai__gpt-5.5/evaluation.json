@@ -1,0 +1,48 @@
+{
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is simple, explicit, and locally auditable while preserving the task semantics. It cleanly separates validation/input normalization from the batching algorithm, avoids mutating the caller's input, includes dependency-only tasks, sorts each batch, and detects cycles with a clear ValueError. The control flow is flat and uses ordinary data structures without speculative abstraction. Minor reservations are that the helper layer is slightly more formal than strictly necessary for such a small function, and the algorithm relies on local in-place mutation of the working graph, though that mutation is explicit and easy to inspect.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is simple, explicit, and locally auditable while preserving the task semantics. It cleanly separates validation/input normalization from the batching algorithm, avoids mutating the caller's input, includes dependency-only tasks, sorts each batch, and detects cycles with a clear ValueError. The control flow is flat and uses ordinary data structures without speculative abstraction. Minor reservations are that the helper layer is slightly more formal than strictly necessary for such a small function, and the algorithm relies on local in-place mutation of the working graph, though that mutation is explicit and easy to inspect.\",\n  \"strengths\": [\n    \"Clear separation between validation/building and scheduling\",\n    \"Does not mutate the input; all mutation is confined to local working sets\",\n    \"Flat, readable topological batching loop\",\n    \"Includes dependency-only tasks and sorts ready batches deterministically\",\n    \"Raises clear errors for invalid input and cycles\"\n  ],\n  \"weaknesses\": [\n    \"Validation helpers are mildly more elaborate than necessary for the small task\",\n    \"Uses in-place mutation of the local remaining graph rather than a fully immutable style\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clear separation between validation/building and scheduling",
+      "Does not mutate the input; all mutation is confined to local working sets",
+      "Flat, readable topological batching loop",
+      "Includes dependency-only tasks and sorts ready batches deterministically",
+      "Raises clear errors for invalid input and cycles"
+    ],
+    "weaknesses": [
+      "Validation helpers are mildly more elaborate than necessary for the small task",
+      "Uses in-place mutation of the local remaining graph rather than a fully immutable style"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.611,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.667,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 3,
+    "loc": 38,
+    "maintainability_index": 54.547,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

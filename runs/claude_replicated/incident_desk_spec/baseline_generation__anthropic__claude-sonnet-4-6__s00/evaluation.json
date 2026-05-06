@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a local lookup table named `severity_bonus` (close to the `_table` suffix convention but not exact), avoids classes, preserves ticket order, uses explicit string `'routed'` for status_code, and keeps the logic flat with no unnecessary abstraction. The main weaknesses are the variable name `severity_bonus` instead of `severity_bonus_table` (spec prefers names ending in `_table`), the use of `or` chaining for rule lookup which could mask a valid falsy rule dict edge case, and the branch reasons are embedded in comments rather than as explicit named strings. The docstring is verbose for a single-pass routing function. Overall it closely follows the spirit of the spec with minor deviations.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a local lookup table named `severity_bonus` (close to the `_table` suffix convention but not exact), avoids classes, preserves ticket order, uses explicit string `'routed'` for status_code, and keeps the logic flat with no unnecessary abstraction. The main weaknesses are the variable name `severity_bonus` instead of `severity_bonus_table` (spec prefers names ending in `_table`), the use of `or` chaining for rule lookup which could mask a valid falsy rule dict edge case, and the branch reasons are embedded in comments rather than as explicit named strings. The docstring is verbose for a single-pass routing function. Overall it closely follows the spirit of the spec with minor deviations.\",\n  \"strengths\": [\n    \"Local lookup dict for severity bonuses is explicit and named descriptively\",\n    \"No classes introduced for single-pass routing\",\n    \"Ticket order preserved via simple linear iteration\",\n    \"status_code is a stable explicit string 'routed', never a boolean\",\n    \"Required field validation is clear and flat\"\n  ],\n  \"weaknesses\": [\n    \"Lookup table named `severity_bonus` rather than `severity_bonus_table` as spec prefers\",\n    \"`rules.get(service) or rules.get('default', {})` could silently fall through on an empty-but-present service rule dict\",\n    \"Branch reasons are in comments, not as short explicit named strings in code\",\n    \"Docstring is overly verbose for a simple single-pass function\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Local lookup dict for severity bonuses is explicit and named descriptively",
+      "No classes introduced for single-pass routing",
+      "Ticket order preserved via simple linear iteration",
+      "status_code is a stable explicit string 'routed', never a boolean",
+      "Required field validation is clear and flat"
+    ],
+    "weaknesses": [
+      "Lookup table named `severity_bonus` rather than `severity_bonus_table` as spec prefers",
+      "`rules.get(service) or rules.get('default', {})` could silently fall through on an empty-but-present service rule dict",
+      "Branch reasons are in comments, not as short explicit named strings in code",
+      "Docstring is overly verbose for a simple single-pass function"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.01,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 45,
+    "maintainability_index": 83.388,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "baseline_generation"
+}

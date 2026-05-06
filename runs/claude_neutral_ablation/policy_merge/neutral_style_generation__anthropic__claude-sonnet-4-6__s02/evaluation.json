@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and directly expresses the merge semantics without unnecessary abstraction or complexity. The logic flows naturally: collect all keys, iterate, handle the three cases (None removal, recursive dict merge, override wins) explicitly and flatly. No mutation of inputs, correct recursion, and the code is locally auditable in a single glance. Minor quibble: iterating over an unordered set means key insertion order is non-deterministic, which could matter in Python 3.7+ where dicts preserve insertion order \u2014 a sorted() or chained iteration over defaults then override-only keys would be more predictable, but this is a minor stylistic concern rather than a correctness issue.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, readable, and directly expresses the merge semantics without unnecessary abstraction or complexity. The logic flows naturally: collect all keys, iterate, handle the three cases (None removal, recursive dict merge, override wins) explicitly and flatly. No mutation of inputs, correct recursion, and the code is locally auditable in a single glance. Minor quibble: iterating over an unordered set means key insertion order is non-deterministic, which could matter in Python 3.7+ where dicts preserve insertion order \u2014 a sorted() or chained iteration over defaults then override-only keys would be more predictable, but this is a minor stylistic concern rather than a correctness issue.\",\n  \"strengths\": [\n    \"Explicit handling of all three cases (None removal, recursive merge, override wins) in a flat, readable if/elif/else structure\",\n    \"No mutation of either input dict\",\n    \"Correct recursive delegation for nested dicts\",\n    \"No unnecessary helper functions or abstractions\",\n    \"Short and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Using set union for keys loses insertion order; iterating defaults then override-only keys would preserve deterministic ordering\",\n    \"No type hints or docstring, though the function signature has type hints for parameters\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit handling of all three cases (None removal, recursive merge, override wins) in a flat, readable if/elif/else structure",
+      "No mutation of either input dict",
+      "Correct recursive delegation for nested dicts",
+      "No unnecessary helper functions or abstractions",
+      "Short and locally auditable"
+    ],
+    "weaknesses": [
+      "Using set union for keys loses insertion order; iterating defaults then override-only keys would preserve deterministic ordering",
+      "No type hints or docstring, though the function signature has type hints for parameters"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Write clean, maintainable Python without a task-specific informal oracle.",
+  "oracle_spec_label": "neutral_style",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.81,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 61.56,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "neutral_style_generation"
+}

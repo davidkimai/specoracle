@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-structured, and follows most Zen principles: explicit error messages, clear naming, flat control flow in `allow`, and no speculative abstractions. The `_evict_stale` helper is a reasonable extraction, though its internal loop logic is slightly convoluted \u2014 it uses a for/else with a mutable `keep_from` variable that requires careful reading to audit, when `bisect.bisect_left` or a simple list comprehension/filter would be both simpler and more idiomatic. The `_window_start` helper is a trivially thin wrapper that adds indirection without meaningful clarity gain. The `snapshot` returning a copy is correct and explicit. Overall the code is maintainable and locally auditable, but the eviction logic introduces unnecessary complexity where a one-liner using `bisect` or a filter expression would collapse the degrees of freedom more cleanly.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, well-structured, and follows most Zen principles: explicit error messages, clear naming, flat control flow in `allow`, and no speculative abstractions. The `_evict_stale` helper is a reasonable extraction, though its internal loop logic is slightly convoluted \u2014 it uses a for/else with a mutable `keep_from` variable that requires careful reading to audit, when `bisect.bisect_left` or a simple list comprehension/filter would be both simpler and more idiomatic. The `_window_start` helper is a trivially thin wrapper that adds indirection without meaningful clarity gain. The `snapshot` returning a copy is correct and explicit. Overall the code is maintainable and locally auditable, but the eviction logic introduces unnecessary complexity where a one-liner using `bisect` or a filter expression would collapse the degrees of freedom more cleanly.\",\n  \"strengths\": [\n    \"Clear, descriptive names throughout (limit, window_seconds, _evict_stale, _records)\",\n    \"Explicit ValueError messages with repr of bad values\",\n    \"Flat control flow in allow(); guard clause pattern used correctly\",\n    \"snapshot() returns a defensive copy, making data movement explicit\",\n    \"No speculative abstractions or unused extension points\",\n    \"Docstrings accurately describe the half-open window semantics\"\n  ],\n  \"weaknesses\": [\n    \"_evict_stale uses a for/else with mutable keep_from index, harder to audit than bisect.bisect_left or a filter\",\n    \"_window_start is a trivially thin helper that adds a layer of indirection without meaningful abstraction value\",\n    \"The for/else pattern in _evict_stale is a subtle Python construct that violates 'explicit is better than implicit' for most readers\",\n    \"defaultdict causes snapshot() to silently create an empty list for unknown keys rather than returning [] cleanly from a missing-key guard\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear, descriptive names throughout (limit, window_seconds, _evict_stale, _records)",
+      "Explicit ValueError messages with repr of bad values",
+      "Flat control flow in allow(); guard clause pattern used correctly",
+      "snapshot() returns a defensive copy, making data movement explicit",
+      "No speculative abstractions or unused extension points",
+      "Docstrings accurately describe the half-open window semantics"
+    ],
+    "weaknesses": [
+      "_evict_stale uses a for/else with mutable keep_from index, harder to audit than bisect.bisect_left or a filter",
+      "_window_start is a trivially thin helper that adds a layer of indirection without meaningful abstraction value",
+      "The for/else pattern in _evict_stale is a subtle Python construct that violates 'explicit is better than implicit' for most readers",
+      "defaultdict causes snapshot() to silently create an empty list for unknown keys rather than returning [] cleanly from a missing-key guard"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.325,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 5,
+    "loc": 51,
+    "maintainability_index": 78.785,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_generation"
+}
