@@ -17,6 +17,13 @@ The core experiment is simple:
 This gives researchers a concrete way to test whether soft specification
 conditioning collapses architectural degrees of freedom without breaking tests.
 
+## Key Findings
+
+SpecOracle provides two major empirical insights for the Secure Program Synthesis (SPS) community based on a 20-task replicated pilot run with Claude Sonnet 4.6:
+
+1. **Soft Oracles Work:** Conditioning on informal specs (like the Zen of Python or custom constraints) yielded a **40\% reduction in cyclomatic complexity** (8.101 down to 4.887, p=0.004) while maintaining a 95\% functional pass rate. The model achieved this by actively modularizing the code (decreasing nesting, increasing function count), not just writing denser monolithic scripts.
+2. **The Frontier Model Blind Spot:** Our Day 2 context-ablation test revealed that current frontier models can successfully brute-force maintenance patches on toxic "vibecoded" slop with 100\% success---even when the context is completely ablated. This implies that **pass/fail agentic evaluations are fundamentally insufficient** for measuring architectural security. We must enforce static structural discipline via soft oracles to prevent technical debt from silently accumulating beyond human auditability.
+
 ## Install
 
 ```bash
@@ -38,6 +45,24 @@ For Anthropic models:
 
 ```bash
 python3 -m pip install -e '.[anthropic]'
+```
+
+## Datasets
+
+The repository contains two SlopBench splits:
+
+- `data/slopbench_min/`: the locked 20-task pilot split used for the committed
+  Claude Sonnet 4.6 replicated evidence in `runs/claude_replicated/`.
+- `data/slopbench/`: the self-contained 50-task benchmark for future and
+  community model runs. Tasks `001`-`020` are byte-identical copies of the pilot
+  split; tasks `021`-`050` expand coverage across async/generator patterns,
+  reliability-critical code, object lifecycle management, advanced data
+  pipelines, and custom/adversarial informal specs.
+
+Validate the full benchmark schema without running any model:
+
+```bash
+specoracle validate --dataset data/slopbench
 ```
 
 ## Offline Smoke Run

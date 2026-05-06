@@ -38,6 +38,32 @@ from specoracle.generator import (
 from specoracle.stress import SpecArena, StressResult, stress_result_from_mapping
 
 
+_SLOPBENCH_MIN_TASK_IDS = frozenset(
+    {
+        "nested_json_index",
+        "retry_state_machine",
+        "event_window_summary",
+        "dependency_order",
+        "policy_merge",
+        "legacy_invoice_spec",
+        "thread_safe_counter",
+        "config_precedence_merge",
+        "cli_argument_validation",
+        "csv_sales_aggregate",
+        "retry_backoff_schedule",
+        "json_path_projection",
+        "sliding_window_limiter",
+        "archival_binding_spec",
+        "dedupe_event_stream",
+        "round_robin_scheduler",
+        "incident_desk_spec",
+        "log_sessionizer",
+        "feature_flag_matrix",
+        "inventory_reorder",
+    }
+)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -157,17 +183,22 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "validate":
         tasks = load_tasks(Path(args.dataset), limit=args.limit)
-        errors = validate_run_dir(
-            run_dir=Path(args.run_dir),
-            tasks=tasks,
-            samples=args.samples,
-            context_ablation=args.context_ablation,
-        )
+        if args.run_dir:
+            errors = validate_run_dir(
+                run_dir=Path(args.run_dir),
+                tasks=tasks,
+                samples=args.samples,
+                context_ablation=args.context_ablation,
+            )
+            success_target = str(Path(args.run_dir).resolve())
+        else:
+            errors = validate_dataset(Path(args.dataset), tasks=tasks)
+            success_target = str(Path(args.dataset).resolve())
         if errors:
             for error in errors:
                 print(f"validation error: {error}")
             return 1
-        print(f"validated {Path(args.run_dir).resolve()}")
+        print(f"validated {success_target}")
         return 0
 
     if args.command == "sandbox":
@@ -224,8 +255,8 @@ def build_parser() -> argparse.ArgumentParser:
     stress.add_argument("--pytest-timeout", type=float, default=10.0)
     stress.add_argument("--context-ablation", action="store_true")
 
-    validate = subparsers.add_parser("validate", help="validate a completed run directory")
-    validate.add_argument("--run-dir", required=True)
+    validate = subparsers.add_parser("validate", help="validate a task dataset or completed run directory")
+    validate.add_argument("--run-dir", default=None)
     validate.add_argument("--dataset", required=True)
     validate.add_argument("--limit", type=int, default=None)
     validate.add_argument("--samples", type=int, default=1)
@@ -856,6 +887,97 @@ def validate_run_dir(
             )
     else:
         errors.append("missing summary.csv")
+
+    return errors
+
+
+def validate_dataset(dataset_path: Path, *, tasks: Iterable[Task]) -> list[str]:
+    task_list = list(tasks)
+    errors: list[str] = []
+
+    if not task_list:
+        errors.append("dataset contains no tasks")
+
+    task_counts: dict[str, int] = {}
+    for task in task_list:
+        task_counts[task.id] = task_counts.get(task.id, 0) + 1
+    for task_id, count in sorted(task_counts.items()):
+        if count > 1:
+            errors.append(f"duplicate task id: {task_id}")
+
+    design_notes_path = dataset_path.parent / "DESIGN_NOTES.md"
+    design_notes = (
+        design_notes_path.read_text(encoding="utf-8") if design_notes_path.exists() else ""
+    )
+    if not design_notes:
+        errors.append(f"missing design notes: {design_notes_path}")
+
+    custom_spec_count = 0
+    for task in task_list:
+        if not task.day2_stressors:
+            errors.append(f"{task.id}: missing day2_stressors")
+        for stressor in task.day2_stressors:
+            if f"`{stressor}`" not in design_notes:
+                errors.append(f"{task.id}: undocumented day2_stressor {stressor}")
+
+        if "day2-hard" in task.tags and len(task.day2_stressors) < 2:
+            errors.append(f"{task.id}: day2-hard requires at least two stressors")
+        if len(task.day2_stressors) >= 2 and "day2-hard" not in task.tags:
+            print(f"validation warning: {task.id} has 2+ stressors but lacks day2-hard")
+
+        if task.custom_spec_override:
+            custom_spec_count += 1
+
+        if not task.human_reference.strip():
+            errors.append(f"{task.id}: empty human_reference")
+        if not (task.mock_solution or "").strip():
+            errors.append(f"{task.id}: empty mock_solution")
+        if not (task.mock_day2_solution or "").strip():
+            errors.append(f"{task.id}: empty mock_day2_solution")
+        copied_pilot_task = dataset_path.name == "slopbench" and task.id in _SLOPBENCH_MIN_TASK_IDS
+        if (
+            not copied_pilot_task
+            and task.mock_solution
+            and task.mock_solution.strip() == task.human_reference.strip()
+        ):
+            errors.append(f"{task.id}: mock_solution must differ from human_reference")
+        if (
+            not copied_pilot_task
+            and task.mock_day2_solution
+            and task.mock_day2_solution.strip() == task.human_reference.strip()
+        ):
+            errors.append(f"{task.id}: mock_day2_solution must differ from human_reference")
+
+    task_by_id = {task.id: task for task in task_list}
+    if dataset_path.name == "slopbench":
+        if len(task_list) != 50:
+            errors.append(f"slopbench must contain 50 tasks, found {len(task_list)}")
+        if custom_spec_count < 8:
+            errors.append(
+                f"slopbench must contain at least 8 custom-spec tasks, found {custom_spec_count}"
+            )
+
+        for task_id in (
+            "audit_trail_builder",
+            "financial_reconciler",
+            "access_control_log",
+            "medical_intake_form",
+            "adversarial_spec",
+            "state_diff_tracker",
+            "circuit_breaker",
+        ):
+            task = task_by_id.get(task_id)
+            if task is None:
+                errors.append(f"slopbench missing required custom-spec task: {task_id}")
+            elif not task.custom_spec_override:
+                errors.append(f"{task_id}: missing custom_spec_override")
+
+        adversarial = task_by_id.get("adversarial_spec")
+        if adversarial:
+            if "adversarial_spec" not in adversarial.tags:
+                errors.append("adversarial_spec: missing adversarial_spec tag")
+            if "custom_spec" not in adversarial.tags:
+                errors.append("adversarial_spec: missing custom_spec tag")
 
     return errors
 

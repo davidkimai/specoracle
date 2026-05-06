@@ -129,3 +129,37 @@ mock_day2_solution: |
         ]
     )
     assert benchmark_code == 0
+
+
+def test_cli_dataset_only_validate_rejects_bad_dataset(tmp_path: Path) -> None:
+    dataset = tmp_path / "bad_dataset"
+    dataset.mkdir()
+    (dataset / "task.yaml").write_text(
+        """
+id: broken
+entry_point: broken
+prompt: |
+  Implement broken().
+test_code: |
+  def test_placeholder():
+      assert True
+day2_prompt: |
+  Extend broken().
+day2_test_code: |
+  def test_placeholder():
+      assert True
+day2_stressors: [not_in_design_notes]
+human_reference: |
+  def broken():
+      return None
+mock_solution: |
+  def broken():
+      return None
+mock_day2_solution: |
+  def broken():
+      return None
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    assert main(["validate", "--dataset", str(dataset)]) == 1

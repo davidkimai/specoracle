@@ -44,6 +44,16 @@ reference run, where mean CC falls from 8.389 to 4.356.
    conditioning significantly reduces cyclomatic complexity while preserving
    near-complete functional correctness.
 
+## Full Benchmark Artifact
+
+`data/slopbench/` is the 50-task standalone SlopBench benchmark. It keeps the
+20-task pilot split byte-identical as tasks 001-020 and adds tasks 021-050
+across async/generator patterns, reliability-critical code, object lifecycle
+management, advanced data pipelines, and custom/adversarial informal specs.
+Current paper claims should continue to cite the locked `slopbench_min` Claude
+run; the full split is the community/release artifact for future model runs and
+appendix-level smoke validation.
+
 ## Limitations
 
 - Context ablation shows maintenance agents can often succeed without useful

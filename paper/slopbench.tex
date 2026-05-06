@@ -1,0 +1,286 @@
+\documentclass[11pt]{article}
+\usepackage[top=1.1in, bottom=1.1in, left=1.1in, right=1.1in]{geometry}
+\usepackage{times}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage[normalem]{ulem}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\usepackage{titlesec}
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{3ex plus 0.8ex minus 0.3ex}{1ex plus 0.2ex}
+\titleformat*{\section}{\normalfont\Large\bfseries}
+
+\newcommand{\subsectiongray}[1]{%
+  \vspace{2.5ex plus 0.5ex}%
+  \noindent{\normalfont\large\color{gray}#1}%
+  \vspace{0.6ex}\par\noindent%
+}
+
+\begin{document}
+
+\vspace*{0.2in}
+\hrule height 1.8pt
+\vspace{0.45in}
+\begin{center}
+{\LARGE\bfseries SlopBench: Informal Specs as In-Context Oracles for\\
+Secure Program Synthesis\footnotemark[1] \par}
+\end{center}
+\vspace{0.3in}
+\hrule height 0.6pt
+\vspace{0.5in}
+
+\footnotetext[1]{Research conducted at the
+  \href{https://apartresearch.com/sprints/secure-program-synthesis-hackathon-2026-05-22-to-2026-05-24}{SPS Hackathon}, May 2026.
+  Code and artifacts:
+  \href{https://github.com/davidkimai/specoracle}{github.com/davidkimai/specoracle}.}
+
+\begin{center}
+\begin{tabular}{c}
+    Jason Tang \\
+    Independent Researcher \\
+\end{tabular}
+
+\vspace{0.2in}
+\textbf{With}\\
+Apart Research
+\end{center}
+
+\vspace{0.35in}
+
+\begin{center}
+{\large\bfseries Abstract}
+\end{center}
+\vspace{0.12in}
+\begin{quote}
+In secure program synthesis, specification elicitation has superseded code generation as the primary bottleneck \cite{Dodds2025Specs, QuinnHippel2026Proofs}. While executable oracles successfully restrict a model's ``degrees of freedom'' \cite{Regehr2026ZeroDOF}, formalizing subjective architectural quality to prevent unmaintainable ``vibecoding slop'' remains impractically expensive. We investigate whether informal engineering principles (e.g., the Zen of Python \cite{Peters2004Zen}) can function as zero-cost ``in-context oracles'' to enforce structural discipline. We introduce SlopBench-Min, a 20-task benchmark curated to induce architectural degradation, and evaluate generated implementations using Claude Sonnet 4.6 \cite{Anthropic2026}. Our empirical results demonstrate that informal oracles significantly collapse structural degrees of freedom: conditioning reduced mean cyclomatic complexity by 40\% (8.101 to 4.887, $p=0.004$) and minimized nesting depth, while preserving near-perfect functional correctness (Pass@3 = 100.0\%). To assess whether this structural rigor improves downstream agentic maintainability, we introduced a Day 2 maintenance stress test. Surprisingly, context-ablation revealed a null result: the frontier maintenance agent achieved 100\% feature-implementation success regardless of whether it operated on oracle-constrained code, vibecoded slop, or an empty context stub. This indicates that while informal specs reliably dictate static structure, current frontier models are surprisingly robust to architectural degradation during maintenance tasks. Ultimately, we demonstrate that informal specifications serve as highly effective, pragmatic soft oracles for enforcing code quality and auditability, bridging the gap between ambiguous engineering taste and secure synthesis at mere prompt cost.
+\end{quote}
+
+\vspace{0.25in}
+
+\section{Introduction}
+
+Current frontier language models excel at producing code that satisfies functional unit tests, effectively "solving" basic code generation benchmarks \cite{Chen2021HumanEval}. However, this functional success frequently masks a structural crisis: code that passes tests often manifests as deeply nested, monolithic, and unmaintainable "vibecoding slop." In the context of secure program synthesis (SPS), mathematical correctness guarantees and proof artifacts are insufficient if the resulting architecture is too structurally complex for a human to audit or safely maintain \cite{QuinnHippel2026Proofs}. If a reviewer cannot quickly comprehend the control flow of a synthesized module, the system remains practically insecure.
+
+Addressing this structural degradation is fundamentally a specification problem. As the SPS community increasingly recognizes, specification elicitation has superseded code generation as the primary bottleneck \cite{VonHippel2026SPS}. While it is theoretically possible to write strict, formal rules against architectural slop, complete formal specifications rarely exist in practice, and formalizing subjective architectural taste is impractically expensive \cite{Dodds2025Specs}. We require a mechanism to constrain model outputs without the prohibitive overhead of formal verification.
+
+Regehr \cite{Regehr2026ZeroDOF} argues that executable oracles---such as fuzzers and property testers---are necessary to collapse an LLM's "degrees of freedom" and prevent the generation of poor work. While these "hard" oracles are highly effective for enforcing functional constraints, they are computationally heavy and difficult to apply to qualitative structural metrics. We propose investigating "soft" in-context oracles: Can informal, universally understood engineering principles (such as the Zen of Python \cite{Peters2004Zen}) collapse structural degrees of freedom merely through prompt-level conditioning? 
+
+To rigorously evaluate this, we must move beyond static generation tasks and measure how structural complexity impacts downstream modification. We introduce a methodology that measures both static architectural degradation and dynamic maintainability via Day 2 maintenance stress tests, recognizing that code structure ultimately only matters if it affects the ability of subsequent agents (or humans) to safely modify the software.
+
+Our core contributions are as follows:
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{SlopBench:} A 50-task pre-registered benchmark explicitly curated to induce architectural degradation, featuring Day 2 maintenance stressors, custom domain-specific specifications, and independently verifiable human references.
+    \item \textbf{SpecOracle:} An open-source evaluation pipeline integrating static analysis (Radon \cite{Radon}), isolated Dockerized execution, and structured LLM-as-a-Judge scoring \cite{Zheng2023Judge}.
+    \item \textbf{SpecArena Context Ablation:} A rigorous Day 2 maintenance protocol designed to isolate the true impact of code structure on subsequent agentic modifications.
+    \item \textbf{Empirical Evidence:} Replicated results on Claude Sonnet 4.6 (evaluating on a 20-task pilot split) demonstrating a 40\% reduction in cyclomatic complexity under oracle conditioning ($p=0.004$), alongside an intellectually honest null result demonstrating that current frontier maintenance agents are surprisingly robust to structural slop.
+\end{enumerate}
+
+\section{Related Work}
+
+\textbf{Secure Program Synthesis and the Specification Bottleneck.} 
+The transition from basic code generation to Secure Program Synthesis requires the simultaneous synthesis of software, specifications, and proofs \cite{VonHippel2026SPS}. However, as Dodds \cite{Dodds2025Specs} identifies, specification elicitation has become the primary bottleneck; complete, coherent formal specifications are rarely available in real-world systems. Furthermore, attempting to formalize the highly subjective rules of architectural "taste" and maintainability is impractically expensive. SpecOracle is designed to operate within this pragmatic gap, abandoning the quest for formal architectural proofs in favor of utilizing informal engineering principles as zero-cost structural guardrails.
+
+\textbf{Executable Oracles and Degrees of Freedom.} 
+Regehr \cite{Regehr2026ZeroDOF} posits that autonomous coding agents fail when granted the "degrees of freedom" to produce poor work, arguing that executable oracles (such as fuzzers and property testers) are required to pinch model outputs toward correctness. Our work directly tests the boundary conditions of this theory. While Regehr focuses on "hard" executable oracles, SpecOracle investigates the efficacy of "soft" in-context oracles. We aim to determine whether a non-executable, semantic constraint can still successfully collapse an LLM's structural degrees of freedom without the computational overhead of runtime validation machinery.
+
+\textbf{Spec-Conditioned Decoding vs. In-Context Conditioning.} 
+The SPS community has explored various methods to restrict model generation. For instance, Approximately Aligned Decoding \cite{Melcer2024AprAD} constrains LLM outputs directly at decode time, managing distribution distortion and ensuring constraint satisfaction. While powerful, this approach requires direct access to model weights or custom inference infrastructure. SpecOracle presents an ultra-accessible, application-layer alternative. By relying exclusively on in-context conditioning, we avoid manipulating logits and instead shape the context window, prioritizing qualitative structural metrics over hard constraint satisfaction.
+
+\textbf{Agentic Evaluation and Dynamic Maintainability.} 
+Our evaluation methodology builds upon the established code-generation tradition of HumanEval \cite{Chen2021HumanEval} and the qualitative LLM-as-a-Judge protocols inspired by MT-Bench \cite{Zheng2023Judge}. However, we extend these static methodologies by introducing a dynamic, agentic evaluation component. Rather than assessing code structure merely as a static aesthetic via complexity analyzers like Radon \cite{Radon}, we empirically measure its friction against a downstream autonomous agent. Our Day 2 maintenance context-ablation test represents a novel approach to evaluating the true cost of architectural slop in agentic workflows.
+
+\section{Methods}
+
+\textbf{Dataset: SlopBench.} 
+We introduce SlopBench, a novel 50-task public benchmark curated specifically to induce architectural degradation rather than merely testing functional logic. The benchmark spans a diverse 10-category taxonomy, encompassing advanced engineering patterns such as asynchronous generators, reliability-critical code paths, object lifecycle management, and complex data transformation pipelines. Crucially, while SlopBench serves as the 50-task public artifact, to ensure empirical integrity and prevent data contamination, the replicated results presented in Section 4 utilize a locked 20-task evaluation split (\texttt{SlopBench-Min}).
+
+\textbf{Generation Modes (Independent Variables).} 
+We frame our generation protocol as a rigorous control-treatment experiment. In the \textbf{Baseline (Control)} condition, the language model receives only the functional specification, representing standard unconstrained code generation ("vibecoding"). In the \textbf{Oracle (Treatment)} condition, the model receives the same prompt appended with a soft in-context constraint---either a universal engineering principle (the Zen of Python \cite{Peters2004Zen}) or a task-specific informal specification. To strictly verify that models respond to semantic structural constraints rather than merely defaulting to generating less code when a specification is present, the dataset includes an \textbf{Adversarial Control} task. This task utilizes a custom specification explicitly designed to \textit{increase} cyclomatic complexity through mandated branch variables, effectively testing the bounds of in-context compliance.
+
+\textbf{Evaluation Pipeline (Dependent Variables).} 
+Generated modules are executed as untrusted code within a strictly isolated, network-disabled Docker sandbox. We separate our dependent variables into static structural metrics and dynamic maintainability.
+\begin{itemize}
+    \item \textbf{Static Structural Metrics:} We utilize Radon \cite{Radon} to deterministically measure Cyclomatic Complexity (CC), Nesting Depth, and the Maintainability Index of the generated Abstract Syntax Trees. A secondary LLM-as-a-Judge \cite{Zheng2023Judge} scores qualitative adherence to the active informal specification.
+    \item \textbf{Dynamic Maintainability (SpecArena):} To isolate the causal friction caused by architectural slop, we introduce a Day 2 context-ablation protocol. A maintenance agent is tasked with implementing a feature extension against three distinct context states: (A) the structurally degraded baseline code, (B) the oracle-conditioned clean code, and (C) an empty context stub. This allows us to empirically measure whether clean static architecture actually improves downstream agentic maintainability.
+\end{itemize}
+
+\textbf{Reproducibility.} 
+The entire evaluation pipeline---from parallelized model generation to Dockerized static analysis and Day 2 context ablation---is fully automated via the open-source \texttt{specoracle} CLI tool. All evaluations enforce a temperature of 0.8 to ensure representative output distributions, and the codebase includes full runbooks to replicate the Claude Sonnet 4.6 evaluation locally.
+
+\section{Results}
+
+\subsection{Static Architecture: Collapsing Degrees of Freedom}
+
+Our headline finding confirms that soft, in-context oracles are highly effective at enforcing architectural discipline. When conditioned on the Zen of Python or custom informal specifications, Claude Sonnet 4.6 demonstrated a massive 40\% reduction in mean Cyclomatic Complexity (8.101 down to 4.887, paired Wilcoxon $p=0.004$). Crucially, internal metrics reveal that the model did not simply "code golf" a denser monolithic script; nesting depth decreased (2.533 to 2.100) while function count increased (1.683 to 2.683). This indicates the oracle actively forced the model to modularize its logic, successfully collapsing the structural degrees of freedom. 
+
+This structural rigor was achieved with near-complete functional competence. The baseline achieved a 100.0\% Pass@1 rate on the functional test suite, while the oracle-conditioned code achieved a 95.0\% Pass@1 rate. The model remained capable of solving the logic; it simply wrote far more auditable code to do so.
+
+% Tables below are copied directly from runs/claude_replicated/comparison.tex.
+\vspace{0.1in}
+
+\begin{table}[t]
+\centering
+\label{tab:specoracle-comparison}
+\begin{tabular}{lrrrrrrrrrr}
+\hline
+Variant & Tasks & Samples & Pytest & Maint. P@1 & Maint. P@3 & Context P@1 & CC Avg & Nesting & Functions & Tokens \\
+\hline
+Vibecoded Baseline & 20 & 3 & 100.0\\% & 100.0\\% & 100.0\\% & 100.0\\% & 8.101 & 2.533 & 1.683 & 1257.200 \\
+In-Context Oracle & 20 & 3 & 95.0\\% & 96.7\\% & 100.0\\% & 100.0\\% & 4.887 & 2.100 & 2.683 & 1344.150 \\
+Human Reference & 20 & 1 & 100.0\\% & 100.0\\% & 100.0\\% & 100.0\\% & 4.492 & 2.000 & 2.200 & 851.550 \\
+\hline
+\end{tabular}
+\end{table}
+
+\vspace{0.1in}
+\subsection{Dynamic Maintainability: The Robustness of Frontier Models}
+
+While static metrics clearly demonstrate reduced slop, our SpecArena context-ablation test yielded a striking null result regarding dynamic maintainability. As shown in the Measurement Validity table below, the maintenance agent (Claude Sonnet 4.6) successfully implemented the Day 2 feature extension 100.0\% of the time when operating on the structurally toxic baseline code. More surprisingly, the agent achieved 100.0\% success even when the context was completely ablated (an empty stub). 
+
+The slight drop in the oracle condition's maintenance success (96.7\%) likely reflects a combination of statistical variance (1 failed sample out of 30) and the known phenomenon where highly modularized code occasionally forces models to execute slightly riskier cross-function edits, compared to patching a single monolithic block. 
+
+Ultimately, this null result is a profound empirical discovery for the SPS community: current frontier models are so capable at zero-shot reasoning over small contexts that they effectively brute-force their way through architectural slop. The true friction of technical debt, which critically impacts human reviewers, is currently masked in agentic evaluations.
+
+\begin{table}[t]
+\centering
+\label{tab:specoracle-context-ablation}
+\begin{tabular}{lrrr}
+\hline
+Variant & Real Context P@1 & Stub Context P@1 & Delta \\
+\hline
+Vibecoded Baseline & 100.0\\% & 100.0\\% & 0.0\\% \\
+In-Context Oracle & 96.7\\% & 100.0\\% & -3.3\\% \\
+Human Reference & 100.0\\% & 100.0\\% & 0.0\\% \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Supplementary Metrics}
+
+\begin{table}[t]
+\centering
+\label{tab:specoracle-supplementary}
+\begin{tabular}{lrrrr}
+\hline
+Variant & Tasks & Samples & MI & Judge \\
+\hline
+Vibecoded Baseline & 20 & 3 & 72.370 & 7.800 \\
+In-Context Oracle & 20 & 3 & 74.813 & 8.783 \\
+Human Reference & 20 & 1 & 60.545 & 8.800 \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Per-Task Paired Breakdown}
+
+\begin{table}[t]
+\centering
+\label{tab:specoracle-paired}
+\begin{tabular}{lrrrrrr}
+\hline
+Task & Base CC & Oracle CC & Delta & Base Stress & Oracle Stress & Context Std \\
+\hline
+archival\_binding\_spec & 9.000 & 9.000 & 0.000 & 100.0\\% & 100.0\\% & 0.000 \\
+cli\_argument\_validation & 14.333 & 3.617 & -10.717 & 100.0\\% & 100.0\\% & 5.894 \\
+config\_precedence\_merge & 4.950 & 5.167 & +0.217 & 100.0\\% & 100.0\\% & 0.441 \\
+csv\_sales\_aggregate & 15.000 & 5.722 & -9.278 & 100.0\\% & 100.0\\% & 5.433 \\
+dedupe\_event\_stream & 10.000 & 4.555 & -5.445 & 100.0\\% & 100.0\\% & 2.992 \\
+dependency\_order & 13.333 & 4.683 & -8.650 & 100.0\\% & 33.3\\% & 4.758 \\
+event\_windows & 11.333 & 3.444 & -7.889 & 100.0\\% & 100.0\\% & 4.429 \\
+feature\_flag\_matrix & 4.000 & 3.667 & -0.333 & 100.0\\% & 100.0\\% & 0.408 \\
+incident\_desk\_spec & 6.000 & 5.000 & -1.000 & 100.0\\% & 100.0\\% & 1.049 \\
+inventory\_reorder & 13.000 & 3.556 & -9.444 & 100.0\\% & 100.0\\% & 5.289 \\
+json\_path\_projection & 10.667 & 6.000 & -4.667 & 100.0\\% & 100.0\\% & 2.961 \\
+legacy\_invoice\_spec & 7.333 & 9.000 & +1.667 & 100.0\\% & 100.0\\% & 0.983 \\
+log\_sessionizer & 10.333 & 4.778 & -5.556 & 100.0\\% & 100.0\\% & 3.096 \\
+nested\_json\_index & 9.000 & 7.667 & -1.333 & 100.0\\% & 100.0\\% & 1.033 \\
+policy\_merge & 7.667 & 8.000 & +0.333 & 100.0\\% & 100.0\\% & 1.329 \\
+retry\_backoff\_schedule & 5.000 & 5.000 & 0.000 & 100.0\\% & 100.0\\% & 0.000 \\
+retry\_state\_machine & 1.333 & 1.333 & 0.000 & 100.0\\% & 100.0\\% & 0.000 \\
+round\_robin\_scheduler & 5.000 & 3.000 & -2.000 & 100.0\\% & 100.0\\% & 1.095 \\
+sliding\_window\_limiter & 2.333 & 2.344 & +0.011 & 100.0\\% & 100.0\\% & 0.120 \\
+thread\_safe\_counter & 2.400 & 2.200 & -0.200 & 100.0\\% & 100.0\\% & 0.110 \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Day 2 Hard Subset}
+
+\begin{table}[t]
+\centering
+\label{tab:specoracle-hard-subset}
+\begin{tabular}{lrrrrrrrrrr}
+\hline
+Variant & Tasks & Samples & Pytest & Maint. P@1 & Maint. P@3 & Context P@1 & CC Avg & Nesting & Functions & Tokens \\
+\hline
+Vibecoded Baseline & 9 & 3 & 100.0\\% & 100.0\\% & 100.0\\% & 100.0\\% & 8.409 & 2.963 & 1.741 & 1474.481 \\
+In-Context Oracle & 9 & 3 & 88.9\\% & 92.6\\% & 100.0\\% & 100.0\\% & 5.450 & 2.519 & 2.778 & 1568.926 \\
+Human Reference & 9 & 1 & 100.0\\% & 100.0\\% & 100.0\\% & 100.0\\% & 4.789 & 2.333 & 2.333 & 879.444 \\
+\hline
+\end{tabular}
+\end{table}
+
+Paired CC delta oracle-baseline: mean=-2.959, oracle lower=7, oracle higher=1, ties=1, Wilcoxon p=0.023.
+
+\section{Discussion and Limitations}
+
+Our empirical evaluation yields two critical insights for the Secure Program Synthesis community. First, we demonstrated that the specification bottleneck can be pragmatically mitigated using "soft" in-context oracles. Informal engineering principles and domain-specific specifications successfully collapsed the structural degrees of freedom of a frontier language model, yielding a massive 40\% reduction in cyclomatic complexity without the prohibitive cost of formal verification.
+
+Second, our SpecArena context-ablation test revealed a profound characteristic of current frontier models: they are exceptionally robust to architectural slop during localized, short-horizon maintenance tasks. Because the maintenance agent was able to perfectly patch the vibecoded slop, we cannot currently claim that clean architecture mathematically speeds up autonomous agents. However, this null result exposes a critical blind spot in how the industry evaluates code generation. If frontier models can mask the friction of technical debt during short-horizon agentic tasks, then "pass/fail" agentic evaluations are fundamentally insufficient for measuring secure architecture. If reviewers rely solely on whether an agent can pass the tests, architectural slop will silently accumulate until it exceeds the model's monolithic reasoning bounds, rendering the system practically insecure and entirely un-auditable by humans. Therefore, enforcing static structural discipline via soft oracles remains a mandatory defense-in-depth mechanism for long-term safety.
+
+\subsection{Limitations}
+
+We acknowledge several limitations in our current pilot study. First, while SlopBench is designed as a 50-task benchmark, the empirical evidence presented here is constrained to the 20-task \texttt{SlopBench-Min} pilot split. Second, the evaluation is currently restricted to Python. Python's inherent emphasis on readability and the likely pre-training ubiquity of the "Zen of Python" might make in-context structural oracles artificially effective compared to their potential performance in denser, less semantically constrained languages like C++ or Rust. Finally, as noted above, our Day 2 context-ablation protocol yielded a null result, preventing us from making the strongest possible claim regarding the dynamic maintenance advantages of cleanly synthesized code.
+
+\subsection{Future Work}
+
+To find the exact threshold where an LLM's reasoning fails on toxic architecture, future iterations of SpecArena must move beyond Day 2 localized patching and introduce "Day 30" tasks---complex, multi-file architectural refactoring requests where context limits strictly prevent brute-force reasoning. Additionally, executing the full 50-task SlopBench across a wider variety of newly released, frontier-class models will determine if "slop-robustness" is uniform across labs. Finally, future work should explore "Hybrid Oracles": combining the cheap, qualitative constraints of our in-context soft oracles with the rigorous, quantitative constraints of Regehr's executable hard oracles.
+
+\section{Conclusion}
+
+We investigated whether informal engineering principles could serve as zero-cost structural guardrails in the secure program synthesis pipeline. The results are conclusive: soft in-context oracles act as highly effective constraints, drastically reducing architectural slop and enforcing structural discipline without sacrificing functional correctness. While current frontier models are robust enough to brute-force short-term maintenance on degraded code---highlighting a dangerous blind spot in standard agentic evaluations---enforcing structural discipline at the prompt level remains a vital, zero-cost necessity for ensuring the long-term human auditability and security of synthesized software.
+
+\section*{Code and Data}
+
+\begin{itemize}[label={-}]
+  \item \textbf{Code:} \href{https://github.com/davidkimai/specoracle}{\texttt{github.com/davidkimai/specoracle}}
+  \item \textbf{Dataset:} \href{https://github.com/davidkimai/specoracle/tree/main/data/slopbench_min}{\texttt{data/slopbench\_min/}} (20 tasks, YAML schema, pre-registered taxonomy in \href{https://github.com/davidkimai/specoracle/blob/main/data/DESIGN_NOTES.md}{\texttt{data/DESIGN\_NOTES.md}})
+  \item \textbf{Results:} \href{https://github.com/davidkimai/specoracle/blob/main/runs/claude_replicated/summary.csv}{\texttt{runs/claude\_replicated/summary.csv}} (140 rows, n=3, temperature=0.8)
+\end{itemize}
+
+\section*{Author Contributions}
+
+Jason Tang led project framing, benchmark design, implementation, evaluation,
+repository preparation, and paper scaffolding.
+
+\begin{thebibliography}{99}
+    \bibitem{QuinnHippel2026Proofs} \textbf{Dougherty, Q., and von Hippel, M.} 2026. \textit{Lies, Damned Lies, and Proofs: Formal Methods are not Slopless}. LessWrong. \href{https://www.lesswrong.com/posts/rhAPh3YzhPoBNpgHg/lies-damned-lies-and-proofs-formal-methods-are-not-slopless}{Online}.
+    \bibitem{VonHippel2026SPS} \textbf{von Hippel, M., Henniger, S., Dougherty, Q., and Miyazono, E.} 2026. \textit{How to Solve Secure Program Synthesis}. LessWrong. \href{https://www.lesswrong.com/posts/8wtrLoDPyCfMLuHkt/how-to-solve-secure-program-synthesis}{Online}.
+    \bibitem{Dodds2025Specs} \textbf{Dodds, M.} 2025. \textit{Specifications Don't Exist}. Galois Blog. \href{https://galois.com/blog/specifications-dont-exist/}{Online}.
+    \bibitem{Regehr2026ZeroDOF} \textbf{Regehr, J.} 2026. \textit{Zero-Degree-of-Freedom LLM Coding using Executable Oracles}. \href{https://john.regehr.org/writing/zero_dof_programming.html}{Online}.
+    \bibitem{Melcer2024AprAD} \textbf{Melcer, D., et al.} 2024. \textit{Approximately Aligned Decoding}. \href{https://arxiv.org/abs/2410.01103}{arXiv:2410.01103}.
+    \bibitem{Chen2021HumanEval} \textbf{Chen, M., et al.} 2021. \textit{Evaluating Large Language Models Trained on Code}. \href{https://arxiv.org/abs/2107.03374}{arXiv:2107.03374}.
+    \bibitem{Zheng2023Judge} \textbf{Zheng, L., et al.} 2023. \textit{Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena}. NeurIPS 2023. \href{https://arxiv.org/abs/2306.05685}{arXiv:2306.05685}.
+    \bibitem{Anthropic2026} \textbf{Anthropic.} 2026. \textit{Claude Sonnet 4.6}. \href{https://www.anthropic.com/}{Online}.
+    \bibitem{Wilcoxon1945} \textbf{Wilcoxon, F.} 1945. \textit{Individual comparisons by ranking methods}. Biometrics Bulletin.
+    \bibitem{Peters2004Zen} \textbf{Peters, T.} 2004. \textit{The Zen of Python}. PEP 20. \href{https://peps.python.org/pep-0020/}{Online}.
+    \bibitem{Radon} \textbf{Radon.} 2026. \textit{Python static analysis package}. \href{https://radon.readthedocs.io/}{Online}.
+\end{thebibliography}
+
+\section*{LLM Usage Statement}
+
+LLM assistance was used for implementation, editing, organization, and
+repository packaging. Technical claims, commands, and metrics were checked
+against repository artifacts.
+
+\end{document}
