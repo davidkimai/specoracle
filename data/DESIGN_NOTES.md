@@ -29,3 +29,11 @@ Every task declares one or more `day2_stressors` from this taxonomy.
 Tasks tagged `day2-hard` combine at least two stressors or require an update
 across multiple structural sites. This tag is assigned before new real-model
 results are inspected and is used only for subgroup analysis.
+
+## Post-Study Note
+
+The `legacy_invoice_spec` custom oracle illustrates that informal specs can
+deliberately trade lower CC for higher auditability. Corporate Legacy Spec
+QX-17 asks for explicit local branch labels around monetary decisions, so the
+oracle can increase decision-count metrics while better satisfying the intended
+review surface. This is expected behavior and a research finding in itself.

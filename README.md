@@ -241,6 +241,13 @@ quality. The structural result remains positive: oracle conditioning
 substantially reduces cyclomatic complexity while preserving near-complete
 functional correctness.
 
+The `legacy_invoice_spec` task is the main custom-spec caveat. Corporate Legacy
+Spec QX-17 explicitly requires branch-label local variables for monetary
+decisions. This can inflate CC mechanically because audit-facing decision points
+become named branches. The oracle's CC regression on this task is therefore a
+spec-priority tradeoff: the custom oracle optimizes local monetary auditability,
+not minimal branching.
+
 The supplementary neutral-style ablation covers the original six smoke tasks,
 not a randomized full-benchmark condition:
 
