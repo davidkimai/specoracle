@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean: it uses a single public function with no helpers, returns the exact legacy keys, does not mutate input, and sorts by region. The two-dict accumulation pattern (totals + counts) provides a visible staged audit trail that aligns with the spec's preference for reviewable stages over clever flattening. However, the docstring is verbose and contains a rambling parenthetical about bool subclassing that violates the 'comments only when naming a legacy audit stage' rule. The inline comments ('Guard: invoice must be a mapping', 'Filter conditions') are not legacy audit stage labels as required. The module-level docstring is also unnecessary noise. The list comprehension at the end is slightly clever in referencing two separate dicts by key, which could be made more explicit. Overall it's solid but the comment discipline and docstring verbosity are meaningful deviations from the oracle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean: it uses a single public function with no helpers, returns the exact legacy keys, does not mutate input, and sorts by region. The two-dict accumulation pattern (totals + counts) provides a visible staged audit trail that aligns with the spec's preference for reviewable stages over clever flattening. However, the docstring is verbose and contains a rambling parenthetical about bool subclassing that violates the 'comments only when naming a legacy audit stage' rule. The inline comments ('Guard: invoice must be a mapping', 'Filter conditions') are not legacy audit stage labels as required. The module-level docstring is also unnecessary noise. The list comprehension at the end is slightly clever in referencing two separate dicts by key, which could be made more explicit. Overall it's solid but the comment discipline and docstring verbosity are meaningful deviations from the oracle.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Exact legacy keys used: bucket_code, item_count, cents_total\",\n    \"Two-dict accumulation provides a visible, auditable staged trail\",\n    \"Input is not mutated\",\n    \"Sorted output by region is correct\",\n    \"Explicit guard and filter conditions are easy to read\"\n  ],\n  \"weaknesses\": [\n    \"Comments do not name legacy audit stages as required by the spec\",\n    \"Docstring is excessively verbose with off-topic bool subclassing discussion\",\n    \"Module-level docstring adds noise without value\",\n    \"Referencing two separate dicts in the final list comprehension is slightly implicit; a single loop building result rows would be more explicit\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Exact legacy keys used: bucket_code, item_count, cents_total",
+      "Two-dict accumulation provides a visible, auditable staged trail",
+      "Input is not mutated",
+      "Sorted output by region is correct",
+      "Explicit guard and filter conditions are easy to read"
+    ],
+    "weaknesses": [
+      "Comments do not name legacy audit stages as required by the spec",
+      "Docstring is excessively verbose with off-topic bool subclassing discussion",
+      "Module-level docstring adds noise without value",
+      "Referencing two separate dicts in the final list comprehension is slightly implicit; a single loop building result rows would be more explicit"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.044,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 43,
+    "maintainability_index": 84.335,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

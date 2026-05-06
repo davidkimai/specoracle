@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook double-checked locking singleton that is clean, flat, and easy to audit locally. It uses only standard-library constructs (threading.Lock), makes data movement explicit through named attributes, and avoids any speculative abstraction. The sentinel pattern with `_MISSING` is the idiomatic Python way to distinguish 'not yet set' from a legitimate None value. The Generic typing adds useful type safety without adding complexity. The only minor quibbles are the `type: ignore` comment (a small smell indicating the type annotation for `_value` could be cleaner, e.g., using `Optional[T]` with a separate boolean flag or a dedicated wrapper) and the `from __future__ import annotations` import which is unnecessary overhead for this simple file, but neither meaningfully detracts from the structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a textbook double-checked locking singleton that is clean, flat, and easy to audit locally. It uses only standard-library constructs (threading.Lock), makes data movement explicit through named attributes, and avoids any speculative abstraction. The sentinel pattern with `_MISSING` is the idiomatic Python way to distinguish 'not yet set' from a legitimate None value. The Generic typing adds useful type safety without adding complexity. The only minor quibbles are the `type: ignore` comment (a small smell indicating the type annotation for `_value` could be cleaner, e.g., using `Optional[T]` with a separate boolean flag or a dedicated wrapper) and the `from __future__ import annotations` import which is unnecessary overhead for this simple file, but neither meaningfully detracts from the structural quality.\",\n  \"strengths\": [\n    \"Double-checked locking is the correct, efficient thread-safe pattern for lazy initialization\",\n    \"Sentinel object cleanly handles the case where factory returns None\",\n    \"Flat control flow with a single guard clause before acquiring the lock\",\n    \"Uses only standard-library constructs with no metaprogramming\",\n    \"Names are self-explanatory and the behavior is locally auditable in under 10 lines\"\n  ],\n  \"weaknesses\": [\n    \"The `T | object` union type for `_value` is imprecise and forces a `type: ignore` comment; a cleaner approach would use a separate boolean flag or Optional with a known-None sentinel\",\n    \"`from __future__ import annotations` is unnecessary boilerplate for this file\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Double-checked locking is the correct, efficient thread-safe pattern for lazy initialization",
+      "Sentinel object cleanly handles the case where factory returns None",
+      "Flat control flow with a single guard clause before acquiring the lock",
+      "Uses only standard-library constructs with no metaprogramming",
+      "Names are self-explanatory and the behavior is locally auditable in under 10 lines"
+    ],
+    "weaknesses": [
+      "The `T | object` union type for `_value` is imprecise and forces a `type: ignore` comment; a cleaner approach would use a separate boolean flag or Optional with a known-None sentinel",
+      "`from __future__ import annotations` is unnecessary boilerplate for this file"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.935,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 16,
+    "maintainability_index": 77.395,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "human_reference"
+}

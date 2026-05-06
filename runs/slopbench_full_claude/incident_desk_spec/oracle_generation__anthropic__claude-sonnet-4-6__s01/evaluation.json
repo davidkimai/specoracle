@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Spec N-9: it uses named lookup tables with the required `_table` suffix (`severity_boost_table`, `required_fields_table`), avoids classes for single-pass routing, preserves ticket order via sequential list append, uses a stable string constant `ROUTED` rather than a boolean for `status_code`, and keeps logic flat with no nested functions or unnecessary abstractions. The `skip_reason` assignments are a minor oddity\u2014they're immediately discarded and marked with `noqa`, which is slightly awkward (the spec says 'keep branch reasons as short explicit strings, not hidden in comments', but these are dead assignments rather than meaningful labels). A cleaner approach would be to simply `continue` without the dead variable, or use a logging call. The null-field check as a second guard is explicit and correct. Overall the code is highly readable, locally auditable, and structurally aligned with the oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Spec N-9: it uses named lookup tables with the required `_table` suffix (`severity_boost_table`, `required_fields_table`), avoids classes for single-pass routing, preserves ticket order via sequential list append, uses a stable string constant `ROUTED` rather than a boolean for `status_code`, and keeps logic flat with no nested functions or unnecessary abstractions. The `skip_reason` assignments are a minor oddity\u2014they're immediately discarded and marked with `noqa`, which is slightly awkward (the spec says 'keep branch reasons as short explicit strings, not hidden in comments', but these are dead assignments rather than meaningful labels). A cleaner approach would be to simply `continue` without the dead variable, or use a logging call. The null-field check as a second guard is explicit and correct. Overall the code is highly readable, locally auditable, and structurally aligned with the oracle.\",\n  \"strengths\": [\n    \"Uses `_table`-suffixed lookup dicts as specified\",\n    \"Stable string constant `ROUTED` for status_code, never a boolean\",\n    \"Flat single-pass loop with no classes or unnecessary abstractions\",\n    \"Ticket order preserved via sequential append\",\n    \"Explicit two-stage validation (missing keys, then null values) is clear and auditable\",\n    \"Default rule fallback is clean and explicit\"\n  ],\n  \"weaknesses\": [\n    \"`skip_reason` dead-variable assignments are noisy and require `noqa` suppression; they don't actually surface the reason anywhere\",\n    \"The `required_fields_table` is a set, not a dict\u2014the `_table` suffix conventionally implies a mapping, which is a minor naming inconsistency\",\n    \"No handling for the case where `rules` itself lacks a 'default' key and a service is also missing (silently uses a hardcoded fallback not from the spec)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `_table`-suffixed lookup dicts as specified",
+      "Stable string constant `ROUTED` for status_code, never a boolean",
+      "Flat single-pass loop with no classes or unnecessary abstractions",
+      "Ticket order preserved via sequential append",
+      "Explicit two-stage validation (missing keys, then null values) is clear and auditable",
+      "Default rule fallback is clean and explicit"
+    ],
+    "weaknesses": [
+      "`skip_reason` dead-variable assignments are noisy and require `noqa` suppression; they don't actually surface the reason anywhere",
+      "The `required_fields_table` is a set, not a dict\u2014the `_table` suffix conventionally implies a mapping, which is a minor naming inconsistency",
+      "No handling for the case where `rules` itself lacks a 'default' key and a service is also missing (silently uses a hardcoded fallback not from the spec)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.935,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 35,
+    "maintainability_index": 75.887,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

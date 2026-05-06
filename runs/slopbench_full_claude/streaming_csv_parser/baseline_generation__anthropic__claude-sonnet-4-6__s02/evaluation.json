@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, streaming, and leverages the standard library's csv.reader appropriately rather than reinventing parsing. Control flow is flat and readable: filter empties with a generator expression, pull the header with next(), then yield dicts in a simple loop. The guard clause for StopIteration is explicit and correct. Minor issues: stripping whitespace from both headers and values is a silent normalization decision not required by the spec (could mask data), the dict comprehension silently pads missing cells with empty strings rather than raising on malformed rows, and the docstring is slightly over-engineered for the function's simplicity. The type annotation uses the bare `dict` rather than `dict[str, str]` in the signature despite the return annotation. Overall, this is a solid, auditable, Zen-aligned implementation with only small deviations from ideal explicitness.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, streaming, and leverages the standard library's csv.reader appropriately rather than reinventing parsing. Control flow is flat and readable: filter empties with a generator expression, pull the header with next(), then yield dicts in a simple loop. The guard clause for StopIteration is explicit and correct. Minor issues: stripping whitespace from both headers and values is a silent normalization decision not required by the spec (could mask data), the dict comprehension silently pads missing cells with empty strings rather than raising on malformed rows, and the docstring is slightly over-engineered for the function's simplicity. The type annotation uses the bare `dict` rather than `dict[str, str]` in the signature despite the return annotation. Overall, this is a solid, auditable, Zen-aligned implementation with only small deviations from ideal explicitness.\",\n  \"strengths\": [\n    \"Uses csv.reader from the standard library, avoiding reinvention of CSV parsing edge cases\",\n    \"Preserves streaming behavior throughout with generator expressions and lazy iteration\",\n    \"Flat control flow with a clear guard clause for the empty-input case\",\n    \"Explicit data movement: header extraction separated from row iteration\"\n  ],\n  \"weaknesses\": [\n    \"Silent whitespace stripping on both headers and values is an undocumented normalization not required by the spec\",\n    \"Missing cells are silently padded with empty strings instead of raising a clear error for malformed rows\",\n    \"Return type annotation uses bare `dict` instead of `dict[str, str]` inconsistently with the docstring\",\n    \"Docstring length is disproportionate to the function's simplicity, adding noise over signal\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses csv.reader from the standard library, avoiding reinvention of CSV parsing edge cases",
+      "Preserves streaming behavior throughout with generator expressions and lazy iteration",
+      "Flat control flow with a clear guard clause for the empty-input case",
+      "Explicit data movement: header extraction separated from row iteration"
+    ],
+    "weaknesses": [
+      "Silent whitespace stripping on both headers and values is an undocumented normalization not required by the spec",
+      "Missing cells are silently padded with empty strings instead of raising a clear error for malformed rows",
+      "Return type annotation uses bare `dict` instead of `dict[str, str]` inconsistently with the docstring",
+      "Docstring length is disproportionate to the function's simplicity, adding noise over signal"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.659,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 74.658,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "baseline_generation"
+}

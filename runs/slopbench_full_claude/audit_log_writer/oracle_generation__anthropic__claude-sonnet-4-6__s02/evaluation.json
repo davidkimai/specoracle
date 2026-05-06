@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and locally auditable. It correctly separates concerns (validation, sequencing, record construction, sink mutation), uses ordinary stdlib constructs, raises clear typed errors for invalid inputs, and satisfies the mutable-object separation requirement. The only minor issues are: the copy direction is slightly backwards (the sink gets the copy via `dict(record)` while the caller gets the original `record` \u2014 functionally equivalent but semantically inverted from the docstring's intent), the timestamp field is speculative/unrequested by the functional spec adding a small degree of untested surface area, and `datetime.datetime.utcnow()` is deprecated in Python 3.12+ in favor of `datetime.datetime.now(datetime.timezone.utc)`. These are small imperfections in an otherwise well-structured, sparse, and maintainable implementation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and locally auditable. It correctly separates concerns (validation, sequencing, record construction, sink mutation), uses ordinary stdlib constructs, raises clear typed errors for invalid inputs, and satisfies the mutable-object separation requirement. The only minor issues are: the copy direction is slightly backwards (the sink gets the copy via `dict(record)` while the caller gets the original `record` \u2014 functionally equivalent but semantically inverted from the docstring's intent), the timestamp field is speculative/unrequested by the functional spec adding a small degree of untested surface area, and `datetime.datetime.utcnow()` is deprecated in Python 3.12+ in favor of `datetime.datetime.now(datetime.timezone.utc)`. These are small imperfections in an otherwise well-structured, sparse, and maintainable implementation.\",\n  \"strengths\": [\n    \"Explicit input validation with clear TypeError messages\",\n    \"Flat control flow with no unnecessary nesting\",\n    \"Data movement is transparent: sink mutation and return value are clearly separated\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names are self-explanatory and the class is easy to audit locally\",\n    \"Correct mutable-object separation between returned record and sink entry\"\n  ],\n  \"weaknesses\": [\n    \"Timestamp field is not required by the spec, adding untested/unspecified surface area\",\n    \"`datetime.datetime.utcnow()` is deprecated in Python 3.12+; should use timezone-aware alternative\",\n    \"Semantically, the sink receives the copy (`dict(record)`) while the caller gets the original, which is the reverse of what the docstring implies \u2014 though functionally correct\",\n    \"Docstring is verbose relative to the simplicity of the task, slightly over-engineered for the scope\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit input validation with clear TypeError messages",
+      "Flat control flow with no unnecessary nesting",
+      "Data movement is transparent: sink mutation and return value are clearly separated",
+      "No speculative abstractions or unused extension points",
+      "Names are self-explanatory and the class is easy to audit locally",
+      "Correct mutable-object separation between returned record and sink entry"
+    ],
+    "weaknesses": [
+      "Timestamp field is not required by the spec, adding untested/unspecified surface area",
+      "`datetime.datetime.utcnow()` is deprecated in Python 3.12+; should use timezone-aware alternative",
+      "Semantically, the sink receives the copy (`dict(record)`) while the caller gets the original, which is the reverse of what the docstring implies \u2014 though functionally correct",
+      "Docstring is verbose relative to the simplicity of the task, slightly over-engineered for the scope"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.829,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________________ test_writes_monotonic_records_without_aliasing ________________\n\n    def test_writes_monotonic_records_without_aliasing():\n        sink = []\n        writer = AuditLogWriter(sink)\n        first = writer.write('alice', 'create')\n        second = writer.write('bob', 'delete')\n        assert [row['sequence'] for row in sink] == [1, 2]\n>       assert first == {'sequence': 1, 'actor': 'alice', 'action': 'create'}\nE       AssertionError: assert {'action': 'c...39:30.523156'} == {'action': 'c...'sequence': 1}\nE         \nE         Omitting 3 identical items, use -vv to show\nE         Left contains 1 more item:\nE         {'timestamp': '2026-05-06T17:39:30.523156'}\nE         Use -v to get more diff\n\ntest_solution.py:10: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_writes_monotonic_records_without_aliasing - Ass...\n1 failed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 36,
+    "maintainability_index": 90.018,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_log_writer",
+  "variant": "oracle_generation"
+}

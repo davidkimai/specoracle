@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle for this task: it is flat, explicit, and locally auditable in under 10 lines. Control flow uses a guard clause (`continue`) to separate the missing-field path from the casting path, avoiding nesting. Data movement is explicit\u2014values are written into `result` only through named assignments. Error handling is precise, catching only the two expected exception types and re-raising with the field name as required. Naming is clear and self-explanatory. There are no speculative abstractions, no hidden mutation, and no framework-shaped scaffolding. The only marginal improvement would be extracting a tiny `coerce_field` helper to make the try/except block a named unit, but given the simplicity of the loop body, that would be over-engineering for this scale.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle for this task: it is flat, explicit, and locally auditable in under 10 lines. Control flow uses a guard clause (`continue`) to separate the missing-field path from the casting path, avoiding nesting. Data movement is explicit\u2014values are written into `result` only through named assignments. Error handling is precise, catching only the two expected exception types and re-raising with the field name as required. Naming is clear and self-explanatory. There are no speculative abstractions, no hidden mutation, and no framework-shaped scaffolding. The only marginal improvement would be extracting a tiny `coerce_field` helper to make the try/except block a named unit, but given the simplicity of the loop body, that would be over-engineering for this scale.\",\n  \"strengths\": [\n    \"Flat control flow with a guard clause avoids nesting\",\n    \"Explicit result construction with no hidden mutation\",\n    \"Precise exception handling catches only ValueError and TypeError\",\n    \"Clear, self-documenting names throughout\",\n    \"No speculative abstractions or unused extension points\",\n    \"Correct re-raise with field name as specified\"\n  ],\n  \"weaknesses\": [\n    \"Could optionally extract a `coerce_field` helper for even finer separation of concerns, though this is minor at this scale\",\n    \"No validation that schema values are actually 2-tuples, which could produce confusing errors on malformed schema input\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a guard clause avoids nesting",
+      "Explicit result construction with no hidden mutation",
+      "Precise exception handling catches only ValueError and TypeError",
+      "Clear, self-documenting names throughout",
+      "No speculative abstractions or unused extension points",
+      "Correct re-raise with field name as specified"
+    ],
+    "weaknesses": [
+      "Could optionally extract a `coerce_field` helper for even finer separation of concerns, though this is minor at this scale",
+      "No validation that schema values are actually 2-tuples, which could produce confusing errors on malformed schema input"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.617,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 11,
+    "maintainability_index": 72.004,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "schema_coercer",
+  "variant": "oracle_generation"
+}

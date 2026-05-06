@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a straightforward loop with a seen-set for deduplication, explicit guard clauses, and named variables that make the logic easy to audit locally. The compiled regex is a reasonable choice for repeated matching. Minor issues: `\\w` in Python also matches Unicode word characters and the underscore, which is slightly broader than 'letters, digits, and underscores' (ASCII-only), though this is a common acceptable interpretation. The pattern could be extracted as a module-level constant to signal it's fixed, and a small pure helper like `is_valid_field(field)` would better separate concerns per the 'small pure helpers' guideline. No input-type validation is performed (e.g., if `fields` contains non-strings), and the docstring duplicates the spec rather than adding insight. Overall the code is sparse, flat, and maintainable with only minor structural improvements possible.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a straightforward loop with a seen-set for deduplication, explicit guard clauses, and named variables that make the logic easy to audit locally. The compiled regex is a reasonable choice for repeated matching. Minor issues: `\\\\w` in Python also matches Unicode word characters and the underscore, which is slightly broader than 'letters, digits, and underscores' (ASCII-only), though this is a common acceptable interpretation. The pattern could be extracted as a module-level constant to signal it's fixed, and a small pure helper like `is_valid_field(field)` would better separate concerns per the 'small pure helpers' guideline. No input-type validation is performed (e.g., if `fields` contains non-strings), and the docstring duplicates the spec rather than adding insight. Overall the code is sparse, flat, and maintainable with only minor structural improvements possible.\",\n  \"strengths\": [\n    \"Flat control flow with clear guard clauses\",\n    \"Explicit deduplication via seen-set with preserved order\",\n    \"Readable variable names that map directly to the problem domain\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"No small pure helper to isolate the validity check (violates 'prefer small pure helpers' guideline)\",\n    \"Regex compiled inside the function on every call rather than at module level as a constant\",\n    \"\\\\w matches Unicode word characters, subtly broader than ASCII letters/digits/underscores\",\n    \"No input validation or clear error for invalid argument types\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with clear guard clauses",
+      "Explicit deduplication via seen-set with preserved order",
+      "Readable variable names that map directly to the problem domain",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "No small pure helper to isolate the validity check (violates 'prefer small pure helpers' guideline)",
+      "Regex compiled inside the function on every call rather than at module level as a constant",
+      "\\w matches Unicode word characters, subtly broader than ASCII letters/digits/underscores",
+      "No input validation or clear error for invalid argument types"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.804,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 16,
+    "maintainability_index": 92.421,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "baseline_generation"
+}

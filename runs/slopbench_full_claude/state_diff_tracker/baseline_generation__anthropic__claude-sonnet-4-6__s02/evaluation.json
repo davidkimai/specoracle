@@ -1,0 +1,50 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of Pythonic clarity and directness. It uses a set union to enumerate all fields exactly once, iterates with a simple for-loop (flat, no nesting beyond one level), uses dict.get with a None sentinel to naturally handle added/removed fields, builds explicit records with the required keys, and sorts in a single readable lambda. There is no abstraction overhead, no helper classes, no magic, and every line is locally auditable. It satisfies all three SRL-3 requirements: each change is an explicit record with field/before/after, nothing is collapsed into summaries, and the field labels are preserved verbatim.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of Pythonic clarity and directness. It uses a set union to enumerate all fields exactly once, iterates with a simple for-loop (flat, no nesting beyond one level), uses dict.get with a None sentinel to naturally handle added/removed fields, builds explicit records with the required keys, and sorts in a single readable lambda. There is no abstraction overhead, no helper classes, no magic, and every line is locally auditable. It satisfies all three SRL-3 requirements: each change is an explicit record with field/before/after, nothing is collapsed into summaries, and the field labels are preserved verbatim.\",\n  \"strengths\": [\n    \"Set union cleanly handles added, removed, and changed fields in one pass\",\n    \"Explicit record construction with named keys matches the spec exactly\",\n    \"Single-level loop with no unnecessary nesting or abstraction\",\n    \"Sort is concise and correct, placed at the natural end of construction\",\n    \"None sentinel from dict.get correctly distinguishes missing from null\"\n  ],\n  \"weaknesses\": [\n    \"No docstring or type annotation on the return type's inner structure, though the signature is otherwise typed\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Set union cleanly handles added, removed, and changed fields in one pass",
+      "Explicit record construction with named keys matches the spec exactly",
+      "Single-level loop with no unnecessary nesting or abstraction",
+      "Sort is concise and correct, placed at the natural end of construction",
+      "None sentinel from dict.get correctly distinguishes missing from null"
+    ],
+    "weaknesses": [
+      "No docstring or type annotation on the return type's inner structure, though the signature is otherwise typed"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.016,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 10,
+    "maintainability_index": 67.719,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses standard Kahn's algorithm correctly. Data flow is explicit, there's no hidden mutation of the input, and the cycle detection is clear. The code is flat and easy to audit locally. Minor weaknesses include the monolithic structure (the helper suggestion from the spec could split graph-building from batch-extraction), the docstring is slightly verbose with Sphinx-style param tags that add noise, and the `deque` is used but then immediately cleared and rebuilt as a sorted list each iteration\u2014a plain list would suffice since the deque's FIFO property isn't actually leveraged. Overall it's a solid, straightforward implementation that closely follows the spirit of the Zen oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and uses standard Kahn's algorithm correctly. Data flow is explicit, there's no hidden mutation of the input, and the cycle detection is clear. The code is flat and easy to audit locally. Minor weaknesses include the monolithic structure (the helper suggestion from the spec could split graph-building from batch-extraction), the docstring is slightly verbose with Sphinx-style param tags that add noise, and the `deque` is used but then immediately cleared and rebuilt as a sorted list each iteration\u2014a plain list would suffice since the deque's FIFO property isn't actually leveraged. Overall it's a solid, straightforward implementation that closely follows the spirit of the Zen oracle.\",\n  \"strengths\": [\n    \"Correct Kahn's algorithm with cycle detection via processed_count check\",\n    \"No mutation of input dependencies dict\",\n    \"Includes tasks that only appear as dependencies via all_tasks set construction\",\n    \"Flat control flow with no deep nesting\",\n    \"Clear, descriptive variable names (in_degree, successors, current_batch)\",\n    \"Uses only standard library (collections.deque)\"\n  ],\n  \"weaknesses\": [\n    \"Monolithic function; graph-building and batch-extraction could be small pure helpers per the spec\",\n    \"deque is imported and used but its FIFO property is never leveraged\u2014a plain list would be simpler and more honest\",\n    \"Sphinx-style docstring (:param:/:return:) adds ceremony not warranted by the task's simplicity\",\n    \"Type annotations on local variables (in_degree: dict[str, int]) are slightly over-annotated for a function this small\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Correct Kahn's algorithm with cycle detection via processed_count check",
+      "No mutation of input dependencies dict",
+      "Includes tasks that only appear as dependencies via all_tasks set construction",
+      "Flat control flow with no deep nesting",
+      "Clear, descriptive variable names (in_degree, successors, current_batch)",
+      "Uses only standard library (collections.deque)"
+    ],
+    "weaknesses": [
+      "Monolithic function; graph-building and batch-extraction could be small pure helpers per the spec",
+      "deque is imported and used but its FIFO property is never leveraged\u2014a plain list would be simpler and more honest",
+      "Sphinx-style docstring (:param:/:return:) adds ceremony not warranted by the task's simplicity",
+      "Type annotations on local variables (in_degree: dict[str, int]) are slightly over-annotated for a function this small"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.176,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 47,
+    "maintainability_index": 80.609,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

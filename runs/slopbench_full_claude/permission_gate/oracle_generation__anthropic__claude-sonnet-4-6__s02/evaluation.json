@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. Guard clauses handle invalid inputs with clear TypeError messages before the single-expression logic, keeping control flow linear and auditable. The core logic `permission in matrix.get(role, set())` is idiomatic and directly expresses the deny-by-default semantics. The docstring restates the contract. The only minor quibble is that the isinstance checks, while defensively correct, add some verbosity for what is essentially a trivial lookup function \u2014 a type-annotated function in a well-typed codebase might omit them \u2014 but they are not harmful and align with the 'raise clear errors for invalid inputs' constraint.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. Guard clauses handle invalid inputs with clear TypeError messages before the single-expression logic, keeping control flow linear and auditable. The core logic `permission in matrix.get(role, set())` is idiomatic and directly expresses the deny-by-default semantics. The docstring restates the contract. The only minor quibble is that the isinstance checks, while defensively correct, add some verbosity for what is essentially a trivial lookup function \u2014 a type-annotated function in a well-typed codebase might omit them \u2014 but they are not harmful and align with the 'raise clear errors for invalid inputs' constraint.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses before the single return statement\",\n    \"Core logic is a one-liner that directly encodes deny-by-default semantics\",\n    \"Explicit TypeError messages for each invalid input type\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names are self-explanatory and match the domain vocabulary\"\n  ],\n  \"weaknesses\": [\n    \"isinstance guards add boilerplate that may be unnecessary given Python's duck-typing norms and the type annotations already present\",\n    \"set() allocation on every miss is minor but could use an empty frozenset constant for marginal clarity\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses before the single return statement",
+      "Core logic is a one-liner that directly encodes deny-by-default semantics",
+      "Explicit TypeError messages for each invalid input type",
+      "No speculative abstractions or unused extension points",
+      "Names are self-explanatory and match the domain vocabulary"
+    ],
+    "weaknesses": [
+      "isinstance guards add boilerplate that may be unnecessary given Python's duck-typing norms and the type annotations already present",
+      "set() allocation on every miss is minor but could use an empty frozenset constant for marginal clarity"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.83,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 68.826,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "permission_gate",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and uses ordinary standard-library constructs (OrderedDict) in a straightforward way. Data movement is visible, control flow is flat, helpers are small and named clearly, and invalid inputs raise clear errors. The separation between `set`, `get`, and `_evict_expired` is well-judged. Minor issues: `_evict_expired` is called on every `set` which is O(n) and slightly speculative (a simpler design would rely solely on lazy expiry in `get` plus LRU eviction, which is sufficient for correctness); the `__contains__` override has a subtle semantic issue (returns False for a key storing None); and the docstring on `__len__` honestly admits it may include expired entries, which is a mild inconsistency with the `__contains__` behavior. The `__repr__` and `__contains__` are minor speculative additions not required by the task spec, but they don't add significant complexity. Overall the code is locally auditable, sparse, and well-structured.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and uses ordinary standard-library constructs (OrderedDict) in a straightforward way. Data movement is visible, control flow is flat, helpers are small and named clearly, and invalid inputs raise clear errors. The separation between `set`, `get`, and `_evict_expired` is well-judged. Minor issues: `_evict_expired` is called on every `set` which is O(n) and slightly speculative (a simpler design would rely solely on lazy expiry in `get` plus LRU eviction, which is sufficient for correctness); the `__contains__` override has a subtle semantic issue (returns False for a key storing None); and the docstring on `__len__` honestly admits it may include expired entries, which is a mild inconsistency with the `__contains__` behavior. The `__repr__` and `__contains__` are minor speculative additions not required by the task spec, but they don't add significant complexity. Overall the code is locally auditable, sparse, and well-structured.\",\n  \"strengths\": [\n    \"Uses OrderedDict naturally for LRU ordering with move_to_end and popitem(last=False)\",\n    \"Clear validation with explicit ValueError messages for bad inputs\",\n    \"Small, single-purpose helpers (_evict_expired) with explicit parameter passing\",\n    \"Flat control flow with guard clauses in get()\",\n    \"Injected `now` callable makes testing straightforward without monkey-patching\",\n    \"Names are self-explanatory (expire_at, current, _ttl, _max_size)\"\n  ],\n  \"weaknesses\": [\n    \"Eager O(n) expired-entry scan on every set() is unnecessary; lazy expiry in get() plus LRU eviction alone satisfies the spec\",\n    \"__contains__ silently returns False for a key whose value is None, a subtle semantic bug\",\n    \"__contains__ and __repr__ are speculative additions not required by the task\",\n    \"__len__ documents that it may include expired entries, creating an inconsistency with __contains__ behavior\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses OrderedDict naturally for LRU ordering with move_to_end and popitem(last=False)",
+      "Clear validation with explicit ValueError messages for bad inputs",
+      "Small, single-purpose helpers (_evict_expired) with explicit parameter passing",
+      "Flat control flow with guard clauses in get()",
+      "Injected `now` callable makes testing straightforward without monkey-patching",
+      "Names are self-explanatory (expire_at, current, _ttl, _max_size)"
+    ],
+    "weaknesses": [
+      "Eager O(n) expired-entry scan on every set() is unnecessary; lazy expiry in get() plus LRU eviction alone satisfies the spec",
+      "__contains__ silently returns False for a key whose value is None, a subtle semantic bug",
+      "__contains__ and __repr__ are speculative additions not required by the task",
+      "__len__ documents that it may include expired entries, creating an inconsistency with __contains__ behavior"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.966,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 7,
+    "loc": 85,
+    "maintainability_index": 72.745,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

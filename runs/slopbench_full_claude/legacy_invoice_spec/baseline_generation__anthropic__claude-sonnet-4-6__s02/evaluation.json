@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a single public function with no helpers, which aligns with the spec. The exact legacy keys are used, and the input is not mutated. However, the code violates the spirit of the Corporate Legacy Spec QX-17 in several ways: comments are supposed to name legacy audit stages (e.g., 'STAGE 1: ELIGIBILITY FILTER'), not just describe what the code does generically; the spec calls for explicit branch labels in local variable names when decisions affect money (e.g., `paid_amount_cents` or `eligible_region`), which is absent; the docstring is verbose and un-legacy-like; the bool exclusion logic is correct but undocumented as a legacy audit concern; and the lambda in the sort key is a minor cleverness that could be replaced with an explicit key extraction. The staged audit trail is partially visible but not explicitly labeled as such, making review harder than the spec intends.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a single public function with no helpers, which aligns with the spec. The exact legacy keys are used, and the input is not mutated. However, the code violates the spirit of the Corporate Legacy Spec QX-17 in several ways: comments are supposed to name legacy audit stages (e.g., 'STAGE 1: ELIGIBILITY FILTER'), not just describe what the code does generically; the spec calls for explicit branch labels in local variable names when decisions affect money (e.g., `paid_amount_cents` or `eligible_region`), which is absent; the docstring is verbose and un-legacy-like; the bool exclusion logic is correct but undocumented as a legacy audit concern; and the lambda in the sort key is a minor cleverness that could be replaced with an explicit key extraction. The staged audit trail is partially visible but not explicitly labeled as such, making review harder than the spec intends.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Exact legacy keys used: bucket_code, item_count, cents_total\",\n    \"Input is not mutated\",\n    \"Correct bool exclusion for amount_cents\",\n    \"Filters are applied in a visible, sequential manner\"\n  ],\n  \"weaknesses\": [\n    \"Comments do not name legacy audit stages as required by the spec\",\n    \"Local variable names do not use explicit branch labels for money-affecting decisions (e.g., no 'paid_' prefix or similar)\",\n    \"Verbose NumPy-style docstring is inconsistent with a legacy corporate style\",\n    \"Lambda in sort key is minor cleverness that could be more explicit\",\n    \"No visible staged audit trail with named stages as the spec implies\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Exact legacy keys used: bucket_code, item_count, cents_total",
+      "Input is not mutated",
+      "Correct bool exclusion for amount_cents",
+      "Filters are applied in a visible, sequential manner"
+    ],
+    "weaknesses": [
+      "Comments do not name legacy audit stages as required by the spec",
+      "Local variable names do not use explicit branch labels for money-affecting decisions (e.g., no 'paid_' prefix or similar)",
+      "Verbose NumPy-style docstring is inconsistent with a legacy corporate style",
+      "Lambda in sort key is minor cleverness that could be more explicit",
+      "No visible staged audit trail with named stages as the spec implies"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.758,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 76.233,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

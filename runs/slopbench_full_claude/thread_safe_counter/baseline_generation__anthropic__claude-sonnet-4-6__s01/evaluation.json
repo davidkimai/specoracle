@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and structurally sound. It uses a single lock, a cached total, and a plain dict \u2014 all ordinary standard-library constructs with no speculative abstractions. Control flow is flat: each method is a single guard-plus-action inside a lock block. Names are self-explanatory, errors are explicit with informative messages, and internal state is never exposed (snapshot returns a fresh dict, total returns a scalar). The redundant `count != 0` filter in snapshot is technically correct but slightly over-specified since counts can only increase (they're never decremented), making the filter a no-op in practice \u2014 a minor unnecessary complexity. The docstrings are thorough but slightly verbose for the task's simplicity, adding bulk without aiding local auditability. The cached `_total` field is a sensible micro-optimization that keeps `total()` O(1) without obscuring intent. Overall this is a near-ideal realization of the spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, direct, and structurally sound. It uses a single lock, a cached total, and a plain dict \u2014 all ordinary standard-library constructs with no speculative abstractions. Control flow is flat: each method is a single guard-plus-action inside a lock block. Names are self-explanatory, errors are explicit with informative messages, and internal state is never exposed (snapshot returns a fresh dict, total returns a scalar). The redundant `count != 0` filter in snapshot is technically correct but slightly over-specified since counts can only increase (they're never decremented), making the filter a no-op in practice \u2014 a minor unnecessary complexity. The docstrings are thorough but slightly verbose for the task's simplicity, adding bulk without aiding local auditability. The cached `_total` field is a sensible micro-optimization that keeps `total()` O(1) without obscuring intent. Overall this is a near-ideal realization of the spec.\",\n  \"strengths\": [\n    \"Single threading.Lock with no over-engineering (no RLock, Condition, or Semaphore speculation)\",\n    \"Cached _total avoids summing the dict on every total() call while remaining explicit\",\n    \"Flat control flow in increment: one guard clause, then straightforward mutation\",\n    \"snapshot() returns a fresh dict copy, correctly preventing external mutation of internal state\",\n    \"Clear, informative error messages for both ValueError and OverflowError\"\n  ],\n  \"weaknesses\": [\n    \"The `count != 0` filter in snapshot is a no-op since counts only ever increase, adding noise without purpose\",\n    \"Docstrings are more verbose than needed for code this simple, slightly obscuring the sparse-and-auditable goal\",\n    \"Dict[str, int] import from typing is unnecessary in Python 3.9+ where built-in dict suffices\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single threading.Lock with no over-engineering (no RLock, Condition, or Semaphore speculation)",
+      "Cached _total avoids summing the dict on every total() call while remaining explicit",
+      "Flat control flow in increment: one guard clause, then straightforward mutation",
+      "snapshot() returns a fresh dict copy, correctly preventing external mutation of internal state",
+      "Clear, informative error messages for both ValueError and OverflowError"
+    ],
+    "weaknesses": [
+      "The `count != 0` filter in snapshot is a no-op since counts only ever increase, adding noise without purpose",
+      "Docstrings are more verbose than needed for code this simple, slightly obscuring the sparse-and-auditable goal",
+      "Dict[str, int] import from typing is unnecessary in Python 3.9+ where built-in dict suffices"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.812,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 59,
+    "maintainability_index": 76.483,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "baseline_generation"
+}

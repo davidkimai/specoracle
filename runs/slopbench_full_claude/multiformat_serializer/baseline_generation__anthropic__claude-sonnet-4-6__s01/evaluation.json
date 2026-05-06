@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and follows the Zen of Python closely. Each format gets its own small pure helper, control flow in the dispatcher is flat and explicit, errors are raised clearly, and standard-library constructs are used throughout. The bool-before-int guard in `_toml_format_value` is correctly ordered and commented. Minor issues: the `fmt = format.lower().strip()` normalization is mildly speculative (the spec doesn't ask for case-insensitive or whitespace-tolerant matching), the `else` fallback in `_toml_format_value` silently coerces unknown types to strings rather than raising, and the docstring bulk adds noise without adding auditability. The silent skipping of non-primitive TOML values is acceptable given the spec says 'primitive values' but could be made explicit with a comment or guard. Overall a solid, maintainable implementation with only minor deviations from strict minimalism.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-decomposed, and follows the Zen of Python closely. Each format gets its own small pure helper, control flow in the dispatcher is flat and explicit, errors are raised clearly, and standard-library constructs are used throughout. The bool-before-int guard in `_toml_format_value` is correctly ordered and commented. Minor issues: the `fmt = format.lower().strip()` normalization is mildly speculative (the spec doesn't ask for case-insensitive or whitespace-tolerant matching), the `else` fallback in `_toml_format_value` silently coerces unknown types to strings rather than raising, and the docstring bulk adds noise without adding auditability. The silent skipping of non-primitive TOML values is acceptable given the spec says 'primitive values' but could be made explicit with a comment or guard. Overall a solid, maintainable implementation with only minor deviations from strict minimalism.\",\n  \"strengths\": [\n    \"Three small, single-purpose helpers keep the dispatcher thin and readable\",\n    \"Explicit ValueError with a helpful message for unsupported formats\",\n    \"bool checked before int in TOML formatter with explanatory comment\",\n    \"Standard-library only; no clever metaprogramming or speculative abstractions\",\n    \"Data flow is explicit and there is no hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"format.lower().strip() normalization is speculative; spec implies exact string matching\",\n    \"Fallback else branch in _toml_format_value silently coerces unknown types instead of raising\",\n    \"Heavy docstring volume adds noise without improving local auditability\",\n    \"Non-primitive TOML values are silently skipped with only a comment, not a deliberate guard or warning\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Three small, single-purpose helpers keep the dispatcher thin and readable",
+      "Explicit ValueError with a helpful message for unsupported formats",
+      "bool checked before int in TOML formatter with explanatory comment",
+      "Standard-library only; no clever metaprogramming or speculative abstractions",
+      "Data flow is explicit and there is no hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "format.lower().strip() normalization is speculative; spec implies exact string matching",
+      "Fallback else branch in _toml_format_value silently coerces unknown types instead of raising",
+      "Heavy docstring volume adds noise without improving local auditability",
+      "Non-primitive TOML values are silently skipped with only a comment, not a deliberate guard or warning"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.695,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_serializes_supported_formats _______________________\n\n    def test_serializes_supported_formats():\n        assert serialize_record({'b': 2, 'a': 1}, 'json') == '{\"a\": 1, \"b\": 2}'\n>       assert serialize_record({'a': 1, 'b': 2}, 'csv') == 'a,b\\n1,2'\nE       AssertionError: assert 'a,b\\r\\n1,2\\r\\n' == 'a,b\\n1,2'\nE         \nE         - a,b\nE         + a,b\nE         ?    +\nE         - 1,2\nE         + 1,2\nE         ?    ++\n\ntest_solution.py:6: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_serializes_supported_formats - AssertionError: ...\n1 failed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 5,
+    "loc": 74,
+    "maintainability_index": 82.035,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "multiformat_serializer",
+  "variant": "baseline_generation"
+}

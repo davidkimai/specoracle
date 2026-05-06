@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Treasury Reconciliation Doctrine TR-4 with exemplary structural discipline: separate named accumulators (debit_totals, credit_totals) are maintained throughout, the tagged_amount variable is assigned before any conditional routing so no inline arithmetic appears inside direction-deciding branches, and validation of direction precedes any accumulation. The code is flat, explicit, and locally auditable with no hidden control flow or clever abstractions. Minor imperfections include using manual dict initialization instead of collections.defaultdict (which would be cleaner but is a style preference), and the `tagged_amount = float(amount)` rename adds minimal semantic value over just using `amount` after a type-coercion step\u2014but it does satisfy the TR-4 tagging requirement explicitly. Overall this is a clean, doctrine-compliant implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Treasury Reconciliation Doctrine TR-4 with exemplary structural discipline: separate named accumulators (debit_totals, credit_totals) are maintained throughout, the tagged_amount variable is assigned before any conditional routing so no inline arithmetic appears inside direction-deciding branches, and validation of direction precedes any accumulation. The code is flat, explicit, and locally auditable with no hidden control flow or clever abstractions. Minor imperfections include using manual dict initialization instead of collections.defaultdict (which would be cleaner but is a style preference), and the `tagged_amount = float(amount)` rename adds minimal semantic value over just using `amount` after a type-coercion step\u2014but it does satisfy the TR-4 tagging requirement explicitly. Overall this is a clean, doctrine-compliant implementation.\",\n  \"strengths\": [\n    \"Separate named accumulators (debit_totals, credit_totals) strictly per TR-4\",\n    \"tagged_amount assigned before the direction conditional, no inline arithmetic inside the branch\",\n    \"Direction validation raises ValueError with a clear, informative message before any accumulation\",\n    \"Final balance computed explicitly as credit - debit in a named variable\",\n    \"Flat, readable loop structure with no nested lambdas or clever one-liners\",\n    \"VALID_DIRECTIONS as a frozenset constant is explicit and reusable\"\n  ],\n  \"weaknesses\": [\n    \"Manual account initialization (if account not in ...) is slightly verbose; defaultdict(float) would be cleaner\",\n    \"tagged_amount = float(amount) is a thin rename that adds little semantic clarity beyond a direct cast\",\n    \"set union for all_accounts is redundant since both dicts are always initialized together for each account\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators (debit_totals, credit_totals) strictly per TR-4",
+      "tagged_amount assigned before the direction conditional, no inline arithmetic inside the branch",
+      "Direction validation raises ValueError with a clear, informative message before any accumulation",
+      "Final balance computed explicitly as credit - debit in a named variable",
+      "Flat, readable loop structure with no nested lambdas or clever one-liners",
+      "VALID_DIRECTIONS as a frozenset constant is explicit and reusable"
+    ],
+    "weaknesses": [
+      "Manual account initialization (if account not in ...) is slightly verbose; defaultdict(float) would be cleaner",
+      "tagged_amount = float(amount) is a thin rename that adds little semantic clarity beyond a direct cast",
+      "set union for all_accounts is redundant since both dicts are always initialized together for each account"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.012,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 56,
+    "maintainability_index": 80.867,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_generation"
+}

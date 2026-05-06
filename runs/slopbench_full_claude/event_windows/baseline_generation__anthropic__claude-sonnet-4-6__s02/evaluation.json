@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, readable, and uses ordinary standard-library constructs. The guard clauses are flat and explicit, data movement is clear, and naming is sensible. The main structural issue is maintaining two parallel defaultdicts (window_count and window_total) when a single dict mapping start \u2192 (count, total) tuple or a single defaultdict of a small accumulator would be more cohesive and reduce the risk of the two dicts drifting out of sync. The docstring is verbose for a small utility (NumPy-style docstring is speculative abstraction for a simple helper), and the `from math import floor` import is unused. The comment about bool being a subclass of int is a minor noise addition. Overall the code is clean and auditable but has a few small structural inefficiencies.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, readable, and uses ordinary standard-library constructs. The guard clauses are flat and explicit, data movement is clear, and naming is sensible. The main structural issue is maintaining two parallel defaultdicts (window_count and window_total) when a single dict mapping start \u2192 (count, total) tuple or a single defaultdict of a small accumulator would be more cohesive and reduce the risk of the two dicts drifting out of sync. The docstring is verbose for a small utility (NumPy-style docstring is speculative abstraction for a simple helper), and the `from math import floor` import is unused. The comment about bool being a subclass of int is a minor noise addition. Overall the code is clean and auditable but has a few small structural inefficiencies.\",\n  \"strengths\": [\n    \"Clear ValueError with informative message for invalid window_size\",\n    \"Flat control flow with guard clauses instead of deep nesting\",\n    \"Explicit data movement; no hidden mutation or global state\",\n    \"Ordinary standard-library constructs (defaultdict, sorted)\",\n    \"Readable names throughout\"\n  ],\n  \"weaknesses\": [\n    \"Two parallel defaultdicts instead of one unified accumulator, creating a subtle sync risk\",\n    \"Unused `from math import floor` import\",\n    \"Overly verbose NumPy-style docstring is speculative overhead for a small helper\",\n    \"Minor noise comment about bool subclassing int adds clutter without aiding auditability\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear ValueError with informative message for invalid window_size",
+      "Flat control flow with guard clauses instead of deep nesting",
+      "Explicit data movement; no hidden mutation or global state",
+      "Ordinary standard-library constructs (defaultdict, sorted)",
+      "Readable names throughout"
+    ],
+    "weaknesses": [
+      "Two parallel defaultdicts instead of one unified accumulator, creating a subtle sync risk",
+      "Unused `from math import floor` import",
+      "Overly verbose NumPy-style docstring is speculative overhead for a small helper",
+      "Minor noise comment about bool subclassing int adds clutter without aiding auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.835,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 52,
+    "maintainability_index": 79.637,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "baseline_generation"
+}

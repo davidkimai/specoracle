@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It handles the single specified path correctly, raises NotImplementedError for all unspecified paths, uses guard clauses to keep nesting shallow, and avoids speculative abstractions entirely. The docstring accurately summarizes behavior, variable names are self-explanatory, and the logic is locally auditable in one pass. The only minor quibble is the isinstance check for non-dict input: the type annotation already declares dict, and raising NotImplementedError (rather than TypeError) for a wrong-type argument is a slight semantic mismatch\u2014TypeError would be more conventional for contract violations on argument types\u2014but given the task's instruction to raise NotImplementedError for all uncovered paths, this is a defensible and consistent choice. The extra-keys guard is a thoughtful, conservative interpretation of 'unspecified behavior' that aligns well with the oracle's preference for explicit over implicit.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It handles the single specified path correctly, raises NotImplementedError for all unspecified paths, uses guard clauses to keep nesting shallow, and avoids speculative abstractions entirely. The docstring accurately summarizes behavior, variable names are self-explanatory, and the logic is locally auditable in one pass. The only minor quibble is the isinstance check for non-dict input: the type annotation already declares dict, and raising NotImplementedError (rather than TypeError) for a wrong-type argument is a slight semantic mismatch\u2014TypeError would be more conventional for contract violations on argument types\u2014but given the task's instruction to raise NotImplementedError for all uncovered paths, this is a defensible and consistent choice. The extra-keys guard is a thoughtful, conservative interpretation of 'unspecified behavior' that aligns well with the oracle's preference for explicit over implicit.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses; no unnecessary nesting\",\n    \"Every unspecified path raises NotImplementedError with a clear, informative message\",\n    \"No speculative abstractions, helpers, or unused extension points\",\n    \"Docstring concisely documents the only specified behavior\",\n    \"Extra-keys check correctly treats undocumented inputs as unspecified rather than silently ignoring them\"\n  ],\n  \"weaknesses\": [\n    \"Using NotImplementedError for a non-dict argument is slightly unconventional; TypeError is the standard signal for wrong argument types\",\n    \"The isinstance guard adds a small amount of defensive code that the type annotation already communicates, though it is harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses; no unnecessary nesting",
+      "Every unspecified path raises NotImplementedError with a clear, informative message",
+      "No speculative abstractions, helpers, or unused extension points",
+      "Docstring concisely documents the only specified behavior",
+      "Extra-keys check correctly treats undocumented inputs as unspecified rather than silently ignoring them"
+    ],
+    "weaknesses": [
+      "Using NotImplementedError for a non-dict argument is slightly unconventional; TypeError is the standard signal for wrong argument types",
+      "The isinstance guard adds a small amount of defensive code that the type annotation already communicates, though it is harmless"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 3.359,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 27,
+    "maintainability_index": 91.479,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "baseline_generation"
+}

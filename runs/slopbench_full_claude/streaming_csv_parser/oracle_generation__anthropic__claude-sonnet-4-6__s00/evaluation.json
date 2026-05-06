@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "This implementation is a near-ideal realization of the Zen of Python oracle for this task. It delegates CSV parsing to the standard library rather than reimplementing it, keeps control flow flat with a single guard clause for the missing-header case, makes data movement explicit through a generator expression for filtering and `dict(zip(...))` for row construction, raises clear errors with actionable messages, and avoids all speculative abstractions. The streaming contract is preserved end-to-end: the input is never materialized into a list, and the generator expression `non_empty` feeds lazily into `csv.reader`. The only minor quibble is that the docstring is somewhat verbose for a function this small, and the `row_number` offset of 2 (counting from the header) is a reasonable but implicit convention that could confuse maintainers expecting 1-based data-row numbering; a brief inline comment would help. Overall the architecture is sparse, auditable, and correct.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"This implementation is a near-ideal realization of the Zen of Python oracle for this task. It delegates CSV parsing to the standard library rather than reimplementing it, keeps control flow flat with a single guard clause for the missing-header case, makes data movement explicit through a generator expression for filtering and `dict(zip(...))` for row construction, raises clear errors with actionable messages, and avoids all speculative abstractions. The streaming contract is preserved end-to-end: the input is never materialized into a list, and the generator expression `non_empty` feeds lazily into `csv.reader`. The only minor quibble is that the docstring is somewhat verbose for a function this small, and the `row_number` offset of 2 (counting from the header) is a reasonable but implicit convention that could confuse maintainers expecting 1-based data-row numbering; a brief inline comment would help. Overall the architecture is sparse, auditable, and correct.\",\n  \"strengths\": [\n    \"Delegates to `csv.reader` rather than hand-rolling CSV parsing\",\n    \"Preserves streaming: no list conversion of the input iterable\",\n    \"Flat control flow with a single early-exit guard for missing header\",\n    \"Explicit data movement via `dict(zip(header, row))`\",\n    \"Clear, specific ValueError messages for both error cases\",\n    \"No unused abstractions or extension points\"\n  ],\n  \"weaknesses\": [\n    \"Docstring length is disproportionate to the function's simplicity\",\n    \"The `row_number` starting at 2 is a subtle convention that warrants a brief inline comment\",\n    \"No handling of quoted fields that span multiple input lines (a known csv.reader limitation when feeding pre-split lines, though acceptable given the task spec)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Delegates to `csv.reader` rather than hand-rolling CSV parsing",
+      "Preserves streaming: no list conversion of the input iterable",
+      "Flat control flow with a single early-exit guard for missing header",
+      "Explicit data movement via `dict(zip(header, row))`",
+      "Clear, specific ValueError messages for both error cases",
+      "No unused abstractions or extension points"
+    ],
+    "weaknesses": [
+      "Docstring length is disproportionate to the function's simplicity",
+      "The `row_number` starting at 2 is a subtle convention that warrants a brief inline comment",
+      "No handling of quoted fields that span multiple input lines (a known csv.reader limitation when feeding pre-split lines, though acceptable given the task spec)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.721,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 86.66,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_generation"
+}

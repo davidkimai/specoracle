@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into four small, pure, single-responsibility helpers (_parse_value, _env_to_nested, _set_nested, _deep_merge) each of which can be read and audited in isolation. Control flow is flat throughout\u2014guard clauses handle edge cases early, no deep nesting appears, and data movement is explicit with copy.deepcopy preventing mutation. Names are self-explanatory, standard-library constructs are used exclusively, and there is no speculative abstraction. The only minor quibbles are: (1) the docstring module header is slightly ceremonial for a utility module, (2) the type annotation `bool | int | list | str` uses a union that could be a simple `object` or left implicit without loss, and (3) `_set_nested` silently overwrites a non-dict intermediate node rather than raising an error, which is a small hidden-behavior concern. These are very minor issues that do not materially harm auditability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into four small, pure, single-responsibility helpers (_parse_value, _env_to_nested, _set_nested, _deep_merge) each of which can be read and audited in isolation. Control flow is flat throughout\u2014guard clauses handle edge cases early, no deep nesting appears, and data movement is explicit with copy.deepcopy preventing mutation. Names are self-explanatory, standard-library constructs are used exclusively, and there is no speculative abstraction. The only minor quibbles are: (1) the docstring module header is slightly ceremonial for a utility module, (2) the type annotation `bool | int | list | str` uses a union that could be a simple `object` or left implicit without loss, and (3) `_set_nested` silently overwrites a non-dict intermediate node rather than raising an error, which is a small hidden-behavior concern. These are very minor issues that do not materially harm auditability or correctness.\",\n  \"strengths\": [\n    \"Four focused pure helpers, each auditable in under ten lines\",\n    \"No mutation of inputs; deepcopy used precisely where needed\",\n    \"Flat control flow with early guard clauses and clear error messages\",\n    \"Parsing logic is explicit and ordered (bool \u2192 int \u2192 list \u2192 str) with no magic\",\n    \"Type checks on all three inputs raise clear TypeError messages\",\n    \"Empty path-segment detection raises ValueError with the offending key named\"\n  ],\n  \"weaknesses\": [\n    \"_set_nested silently clobbers a non-dict intermediate node instead of raising an error, hiding a potential misconfiguration\",\n    \"Module-level docstring and parameter docblock add minor ceremony without functional value\",\n    \"raw.lower() called twice in _parse_value instead of once assigned to a local variable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Four focused pure helpers, each auditable in under ten lines",
+      "No mutation of inputs; deepcopy used precisely where needed",
+      "Flat control flow with early guard clauses and clear error messages",
+      "Parsing logic is explicit and ordered (bool \u2192 int \u2192 list \u2192 str) with no magic",
+      "Type checks on all three inputs raise clear TypeError messages",
+      "Empty path-segment detection raises ValueError with the offending key named"
+    ],
+    "weaknesses": [
+      "_set_nested silently clobbers a non-dict intermediate node instead of raising an error, hiding a potential misconfiguration",
+      "Module-level docstring and parameter docblock add minor ceremony without functional value",
+      "raw.lower() called twice in _parse_value instead of once assigned to a local variable"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.854,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 25,
+    "function_count": 5,
+    "loc": 80,
+    "maintainability_index": 68.816,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "oracle_generation"
+}

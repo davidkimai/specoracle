@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, well-decomposed solution that closely follows the Zen of Python principles. It splits responsibility sensibly across small, pure helpers (_parse_tokens, _coerce_limit, _coerce_format) each doing exactly one thing, with flat control flow using guard clauses and early returns. Data movement is explicit\u2014raw tokens flow through a plain dict, coercion is explicit at each step, and the final assembly in parse_cli_args is transparent. Names are self-explanatory, errors are specific and actionable, and there is no speculative abstraction or framework-shaped scaffolding. The only minor imperfections are the type-ignore comments (a symptom of the union type in the raw dict that could be avoided by keeping raw as dict[str, str] and handling --dry-run separately) and the numpy-style docstring on parse_cli_args which is slightly heavier than needed for a function this small, but neither meaningfully harms auditability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, well-decomposed solution that closely follows the Zen of Python principles. It splits responsibility sensibly across small, pure helpers (_parse_tokens, _coerce_limit, _coerce_format) each doing exactly one thing, with flat control flow using guard clauses and early returns. Data movement is explicit\u2014raw tokens flow through a plain dict, coercion is explicit at each step, and the final assembly in parse_cli_args is transparent. Names are self-explanatory, errors are specific and actionable, and there is no speculative abstraction or framework-shaped scaffolding. The only minor imperfections are the type-ignore comments (a symptom of the union type in the raw dict that could be avoided by keeping raw as dict[str, str] and handling --dry-run separately) and the numpy-style docstring on parse_cli_args which is slightly heavier than needed for a function this small, but neither meaningfully harms auditability or correctness.\",\n  \"strengths\": [\n    \"Three focused helpers with single responsibilities keep the main function thin and readable\",\n    \"Flat control flow with guard clauses throughout; no deep nesting\",\n    \"Explicit data pipeline: tokenize \u2192 validate required \u2192 coerce each field \u2192 assemble result\",\n    \"Clear, specific ValueError messages for every failure mode\",\n    \"No hidden mutation, no global state, no unused extension points\",\n    \"Duplicate-flag detection is a nice correctness touch\"\n  ],\n  \"weaknesses\": [\n    \"Union type dict[str, str | bool | None] in _parse_tokens forces type-ignore comments downstream; separating boolean flags from value flags in the return type would be cleaner\",\n    \"Numpy-style docstring on parse_cli_args is heavier than the function warrants\",\n    \"value_flags set is defined but never actually used in the logic (only known_flags and the --dry-run branch are checked)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Three focused helpers with single responsibilities keep the main function thin and readable",
+      "Flat control flow with guard clauses throughout; no deep nesting",
+      "Explicit data pipeline: tokenize \u2192 validate required \u2192 coerce each field \u2192 assemble result",
+      "Clear, specific ValueError messages for every failure mode",
+      "No hidden mutation, no global state, no unused extension points",
+      "Duplicate-flag detection is a nice correctness touch"
+    ],
+    "weaknesses": [
+      "Union type dict[str, str | bool | None] in _parse_tokens forces type-ignore comments downstream; separating boolean flags from value flags in the return type would be cleaner",
+      "Numpy-style docstring on parse_cli_args is heavier than the function warrants",
+      "value_flags set is defined but never actually used in the logic (only known_flags and the --dry-run branch are checked)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.414,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.25,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 4,
+    "loc": 91,
+    "maintainability_index": 71.162,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_generation"
+}

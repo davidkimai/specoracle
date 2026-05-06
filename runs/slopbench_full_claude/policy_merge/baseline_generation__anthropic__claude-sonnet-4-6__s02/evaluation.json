@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and directly expressive of the task semantics. It uses a single pure recursive function with no hidden state or mutation, explicit key-set union, and clear guard clauses that handle each case in order: None removal, recursive dict merge, override win, and default fallback. The control flow is easy to audit locally in one pass. The only minor quibble is the absence of input validation (e.g., raising TypeError if inputs are not dicts), which the operational constraints suggest should be present, and the nesting of the isinstance check inside the override branch could arguably be flattened with an early extraction, but neither issue materially harms readability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and directly expressive of the task semantics. It uses a single pure recursive function with no hidden state or mutation, explicit key-set union, and clear guard clauses that handle each case in order: None removal, recursive dict merge, override win, and default fallback. The control flow is easy to audit locally in one pass. The only minor quibble is the absence of input validation (e.g., raising TypeError if inputs are not dicts), which the operational constraints suggest should be present, and the nesting of the isinstance check inside the override branch could arguably be flattened with an early extraction, but neither issue materially harms readability or correctness.\",\n  \"strengths\": [\n    \"No mutation of inputs; result is built fresh\",\n    \"Flat, readable control flow with guard clauses in natural priority order\",\n    \"Recursion is the right tool here and is applied cleanly\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names (defaults, override, result, all_keys) are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"No input validation: passing non-dict arguments silently misbehaves instead of raising a clear error\",\n    \"Slight nesting depth in the isinstance branch could be reduced by extracting a helper like `_both_dicts(a, b)`\",\n    \"Key iteration order is non-deterministic (set), which is harmless but could be sorted for deterministic output in tests\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "No mutation of inputs; result is built fresh",
+      "Flat, readable control flow with guard clauses in natural priority order",
+      "Recursion is the right tool here and is applied cleanly",
+      "No speculative abstractions or unused extension points",
+      "Names (defaults, override, result, all_keys) are self-explanatory"
+    ],
+    "weaknesses": [
+      "No input validation: passing non-dict arguments silently misbehaves instead of raising a clear error",
+      "Slight nesting depth in the isinstance branch could be reduced by extracting a helper like `_both_dicts(a, b)`",
+      "Key iteration order is non-deterministic (set), which is harmless but could be sorted for deterministic output in tests"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.757,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 61.56,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

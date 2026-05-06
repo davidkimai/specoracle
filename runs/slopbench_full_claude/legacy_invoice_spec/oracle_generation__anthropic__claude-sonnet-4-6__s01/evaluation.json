@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17 oracle: it uses a single public function with no helper functions, employs explicit staged local variable names (stage1_eligible, stage2_bucket_counts, stage2_bucket_totals, stage3_records) that create a visible audit trail, uses comments only to name legacy audit stages, returns records with the exact legacy keys (bucket_code, item_count, cents_total), does not mutate the input, and correctly handles edge cases like boolean exclusion from integer checks. The staged approach with intermediate lists and named variables makes each decision point locally auditable. The only minor quibble is that the record_* local variables in Stage 3 add slight verbosity without meaningful audit value since they simply alias dict values before immediate use, and two separate defaultdicts for counts and totals could arguably be one structure, but these are minor stylistic points that don't violate the spec's intent.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17 oracle: it uses a single public function with no helper functions, employs explicit staged local variable names (stage1_eligible, stage2_bucket_counts, stage2_bucket_totals, stage3_records) that create a visible audit trail, uses comments only to name legacy audit stages, returns records with the exact legacy keys (bucket_code, item_count, cents_total), does not mutate the input, and correctly handles edge cases like boolean exclusion from integer checks. The staged approach with intermediate lists and named variables makes each decision point locally auditable. The only minor quibble is that the record_* local variables in Stage 3 add slight verbosity without meaningful audit value since they simply alias dict values before immediate use, and two separate defaultdicts for counts and totals could arguably be one structure, but these are minor stylistic points that don't violate the spec's intent.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Explicit staged variable names (stage1_, stage2_, stage3_) create a clear audit trail\",\n    \"Comments strictly limited to naming legacy audit stages\",\n    \"Exact legacy keys used: bucket_code, item_count, cents_total\",\n    \"Correctly excludes booleans from integer check\",\n    \"Does not mutate input\",\n    \"Sorted output by region as required\"\n  ],\n  \"weaknesses\": [\n    \"record_bucket_code, record_item_count, record_cents_total in Stage 3 are trivial aliases that add noise without audit value\",\n    \"Two separate defaultdicts for counts and totals is slightly redundant; a single dict of tuples or named structure could be cleaner without losing auditability\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Explicit staged variable names (stage1_, stage2_, stage3_) create a clear audit trail",
+      "Comments strictly limited to naming legacy audit stages",
+      "Exact legacy keys used: bucket_code, item_count, cents_total",
+      "Correctly excludes booleans from integer check",
+      "Does not mutate input",
+      "Sorted output by region as required"
+    ],
+    "weaknesses": [
+      "record_bucket_code, record_item_count, record_cents_total in Stage 3 are trivial aliases that add noise without audit value",
+      "Two separate defaultdicts for counts and totals is slightly redundant; a single dict of tuples or named structure could be cleaner without losing auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.902,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 75.925,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the stated requirements without speculative abstractions. Each method does exactly one thing, control flow is flat, data movement is explicit through the `_refs` dict, and names are self-explanatory. The `cleanup` method correctly uses a two-pass approach (collect dead keys, then delete) to avoid mutating the dict during iteration. The `__len__` and `__contains__` helpers are reasonable additions that don't bloat the class. The only minor concern is that `__contains__` calls `self.get(key)` which dereferences the weak ref, meaning it returns False for dead-but-not-yet-cleaned entries rather than True \u2014 this is arguably correct behavior but could surprise a caller who just registered a key and the object was immediately collected; however this is semantically sound. No hidden mutation, no global state, no metaprogramming, no framework-shaped scaffolding.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the stated requirements without speculative abstractions. Each method does exactly one thing, control flow is flat, data movement is explicit through the `_refs` dict, and names are self-explanatory. The `cleanup` method correctly uses a two-pass approach (collect dead keys, then delete) to avoid mutating the dict during iteration. The `__len__` and `__contains__` helpers are reasonable additions that don't bloat the class. The only minor concern is that `__contains__` calls `self.get(key)` which dereferences the weak ref, meaning it returns False for dead-but-not-yet-cleaned entries rather than True \u2014 this is arguably correct behavior but could surprise a caller who just registered a key and the object was immediately collected; however this is semantically sound. No hidden mutation, no global state, no metaprogramming, no framework-shaped scaffolding.\",\n  \"strengths\": [\n    \"Flat, readable control flow with guard clauses in get()\",\n    \"cleanup() avoids mutating dict during iteration via explicit dead_keys list\",\n    \"Names are precise and self-documenting\",\n    \"No speculative extension points or unused abstractions\",\n    \"__contains__ correctly reflects liveness rather than mere key presence\"\n  ],\n  \"weaknesses\": [\n    \"__len__ counts dead references that haven't been cleaned up yet, which may mislead callers\",\n    \"No input validation (e.g., unhashable keys will raise a cryptic TypeError rather than a clear error)\",\n    \"Docstring module header is slightly redundant with the class docstring\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, readable control flow with guard clauses in get()",
+      "cleanup() avoids mutating dict during iteration via explicit dead_keys list",
+      "Names are precise and self-documenting",
+      "No speculative extension points or unused abstractions",
+      "__contains__ correctly reflects liveness rather than mere key presence"
+    ],
+    "weaknesses": [
+      "__len__ counts dead references that haven't been cleaned up yet, which may mislead callers",
+      "No input validation (e.g., unhashable keys will raise a cryptic TypeError rather than a clear error)",
+      "Docstring module header is slightly redundant with the class docstring"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.47,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.714,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 6,
+    "loc": 32,
+    "maintainability_index": 87.243,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "oracle_generation"
+}

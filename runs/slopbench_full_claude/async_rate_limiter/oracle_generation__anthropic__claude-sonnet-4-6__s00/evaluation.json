@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp log, an asyncio.Lock for safe concurrent access, and a simple guard clause for invalid input. Control flow is flat and locally auditable: the acquire method reads top-to-bottom with no hidden state or speculative abstractions. The `now` injection point is explicit and purposeful (not speculative), enabling deterministic testing. The only minor quibble is the boundary condition: `<= window_start` excludes timestamps exactly one second old, which is a defensible but subtly strict interpretation of 'per one-second window' \u2014 some would argue `< window_start` is more natural for a half-open interval. The docstring is appropriately brief, names are self-explanatory, and the class carries no unused extension points.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp log, an asyncio.Lock for safe concurrent access, and a simple guard clause for invalid input. Control flow is flat and locally auditable: the acquire method reads top-to-bottom with no hidden state or speculative abstractions. The `now` injection point is explicit and purposeful (not speculative), enabling deterministic testing. The only minor quibble is the boundary condition: `<= window_start` excludes timestamps exactly one second old, which is a defensible but subtly strict interpretation of 'per one-second window' \u2014 some would argue `< window_start` is more natural for a half-open interval. The docstring is appropriately brief, names are self-explanatory, and the class carries no unused extension points.\",\n  \"strengths\": [\n    \"Flat, readable control flow with a single guard clause for invalid rate\",\n    \"Explicit data movement: timestamps deque is the sole mutable state, mutated only inside the lock\",\n    \"Purposeful `now` injection for testability without framework overhead\",\n    \"Standard-library only (asyncio, collections, time) \u2014 no clever metaprogramming\",\n    \"Lock scope is tight and obvious; no hidden global state\"\n  ],\n  \"weaknesses\": [\n    \"Boundary condition `<= window_start` may silently drop timestamps exactly at the window edge rather than the more conventional `< window_start` half-open interval\",\n    \"Module-level docstring mentions 'token-bucket-style' which is slightly misleading \u2014 this is a sliding-window log, not a token bucket\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, readable control flow with a single guard clause for invalid rate",
+      "Explicit data movement: timestamps deque is the sole mutable state, mutated only inside the lock",
+      "Purposeful `now` injection for testability without framework overhead",
+      "Standard-library only (asyncio, collections, time) \u2014 no clever metaprogramming",
+      "Lock scope is tight and obvious; no hidden global state"
+    ],
+    "weaknesses": [
+      "Boundary condition `<= window_start` may silently drop timestamps exactly at the window edge rather than the more conventional `< window_start` half-open interval",
+      "Module-level docstring mentions 'token-bucket-style' which is slightly misleading \u2014 this is a sliding-window log, not a token bucket"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.432,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.25s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 28,
+    "maintainability_index": 82.307,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_generation"
+}

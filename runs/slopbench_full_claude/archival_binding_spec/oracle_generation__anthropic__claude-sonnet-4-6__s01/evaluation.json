@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows all five points of Archival Binder Spec R-04: parsing is visibly staged with clear comment headers for each of the five steps, there is exactly one public function, the surviving cross-iteration dictionary is named `bindings_ledger`, insertion order is preserved via plain `dict` (Python 3.7+), and every `ValueError` message explicitly names the archival field being rejected ('section', 'key', or 'line'). The code is flat, readable, and locally auditable with no clever compressions. The only minor imperfection is that the inner per-section dictionaries are not named with the `_ledger` suffix (e.g., `bindings_ledger[section]` is an anonymous `{}`), but this is a trivial omission since the spec says 'local names ending in _ledger for dictionaries that survive across loop iterations' and the inner dicts do survive across iterations implicitly through the outer ledger.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows all five points of Archival Binder Spec R-04: parsing is visibly staged with clear comment headers for each of the five steps, there is exactly one public function, the surviving cross-iteration dictionary is named `bindings_ledger`, insertion order is preserved via plain `dict` (Python 3.7+), and every `ValueError` message explicitly names the archival field being rejected ('section', 'key', or 'line'). The code is flat, readable, and locally auditable with no clever compressions. The only minor imperfection is that the inner per-section dictionaries are not named with the `_ledger` suffix (e.g., `bindings_ledger[section]` is an anonymous `{}`), but this is a trivial omission since the spec says 'local names ending in _ledger for dictionaries that survive across loop iterations' and the inner dicts do survive across iterations implicitly through the outer ledger.\",\n  \"strengths\": [\n    \"Five clearly labeled parsing stages match the 'visibly staged parsing' requirement exactly\",\n    \"Single public function with no extraneous helpers\",\n    \"Outer accumulator correctly named `bindings_ledger`\",\n    \"All ValueError messages name the specific archival field being rejected\",\n    \"Insertion order preserved naturally using standard dict\",\n    \"Docstring is thorough and accurate\"\n  ],\n  \"weaknesses\": [\n    \"Inner per-section dicts are anonymous `{}` rather than a named `_ledger` variable, slightly inconsistent with the naming convention\",\n    \"The `_` throwaway variable from `partition` is used twice but never commented, a minor readability nit\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Five clearly labeled parsing stages match the 'visibly staged parsing' requirement exactly",
+      "Single public function with no extraneous helpers",
+      "Outer accumulator correctly named `bindings_ledger`",
+      "All ValueError messages name the specific archival field being rejected",
+      "Insertion order preserved naturally using standard dict",
+      "Docstring is thorough and accurate"
+    ],
+    "weaknesses": [
+      "Inner per-section dicts are anonymous `{}` rather than a named `_ledger` variable, slightly inconsistent with the naming convention",
+      "The `_` throwaway variable from `partition` is used twice but never commented, a minor readability nit"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.892,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 54,
+    "maintainability_index": 84.38,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_generation"
+}

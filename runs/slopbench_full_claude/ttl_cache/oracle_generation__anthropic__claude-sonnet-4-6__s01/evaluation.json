@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "This implementation is a clean, readable, and well-structured realization of the TTLCache spec. It uses ordinary standard-library constructs (OrderedDict), keeps control flow flat with guard clauses, makes data movement explicit through named helpers, raises clear errors for invalid inputs, and avoids speculative abstractions. The separation into `_evict_expired` and `_evict_lru_if_over_limit` is appropriately granular without being over-engineered. The only minor concern is that calling `_evict_expired` on every `set` is O(n) and slightly over-eager \u2014 lazy expiry on `get` plus LRU eviction on overflow would be sufficient and simpler \u2014 but it's not incorrect and keeps the store tidy. The `__len__` and `__repr__` additions are useful and non-speculative. Overall this is nearly exemplary Zen-aligned code.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"This implementation is a clean, readable, and well-structured realization of the TTLCache spec. It uses ordinary standard-library constructs (OrderedDict), keeps control flow flat with guard clauses, makes data movement explicit through named helpers, raises clear errors for invalid inputs, and avoids speculative abstractions. The separation into `_evict_expired` and `_evict_lru_if_over_limit` is appropriately granular without being over-engineered. The only minor concern is that calling `_evict_expired` on every `set` is O(n) and slightly over-eager \u2014 lazy expiry on `get` plus LRU eviction on overflow would be sufficient and simpler \u2014 but it's not incorrect and keeps the store tidy. The `__len__` and `__repr__` additions are useful and non-speculative. Overall this is nearly exemplary Zen-aligned code.\",\n  \"strengths\": [\n    \"Clear input validation with informative error messages\",\n    \"Explicit data layout: OrderedDict maps key to (value, expiry) tuple, documented inline\",\n    \"Small, single-purpose helpers with self-explanatory names\",\n    \"Flat control flow throughout; no deep nesting\",\n    \"Injectable `now` callable makes testing straightforward without monkey-patching\",\n    \"No hidden mutation or implicit global state\",\n    \"Docstrings are concise and accurate without being verbose\"\n  ],\n  \"weaknesses\": [\n    \"Scanning all entries for expiry on every `set` is O(n) and unnecessary; lazy expiry on `get` plus LRU eviction is sufficient\",\n    \"The `set` method refreshes LRU position before writing the new value, which is a minor ordering quirk (harmless but slightly non-obvious)\",\n    \"Module-level docstring adds minimal value given the class docstring already covers the same ground\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clear input validation with informative error messages",
+      "Explicit data layout: OrderedDict maps key to (value, expiry) tuple, documented inline",
+      "Small, single-purpose helpers with self-explanatory names",
+      "Flat control flow throughout; no deep nesting",
+      "Injectable `now` callable makes testing straightforward without monkey-patching",
+      "No hidden mutation or implicit global state",
+      "Docstrings are concise and accurate without being verbose"
+    ],
+    "weaknesses": [
+      "Scanning all entries for expiry on every `set` is O(n) and unnecessary; lazy expiry on `get` plus LRU eviction is sufficient",
+      "The `set` method refreshes LRU position before writing the new value, which is a minor ordering quirk (harmless but slightly non-obvious)",
+      "Module-level docstring adds minimal value given the class docstring already covers the same ground"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.096,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 7,
+    "loc": 75,
+    "maintainability_index": 75.375,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "oracle_generation"
+}

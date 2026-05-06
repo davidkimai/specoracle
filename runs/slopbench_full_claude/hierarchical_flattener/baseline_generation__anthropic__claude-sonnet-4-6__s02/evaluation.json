@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It raises a clear TypeError for invalid input, uses explicit data movement via result.update(), and keeps control flow flat with a simple if/else. The main structural concern is the use of a hidden `_prefix` parameter for recursion rather than extracting a small pure helper (e.g., `_flatten_recursive(value, prefix)`) that the public `flatten_paths` delegates to \u2014 this would make the public API cleaner and avoid the leaky internal parameter. The docstring is thorough but slightly over-engineered for the task size. Overall it's close to idiomatic and auditable, just missing the small helper extraction that the operational constraints explicitly prefer.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It raises a clear TypeError for invalid input, uses explicit data movement via result.update(), and keeps control flow flat with a simple if/else. The main structural concern is the use of a hidden `_prefix` parameter for recursion rather than extracting a small pure helper (e.g., `_flatten_recursive(value, prefix)`) that the public `flatten_paths` delegates to \u2014 this would make the public API cleaner and avoid the leaky internal parameter. The docstring is thorough but slightly over-engineered for the task size. Overall it's close to idiomatic and auditable, just missing the small helper extraction that the operational constraints explicitly prefer.\",\n  \"strengths\": [\n    \"Clear TypeError with informative message for non-dict input\",\n    \"Explicit data movement with result.update(); no hidden mutation\",\n    \"Flat control flow with simple if/else guard\",\n    \"Correct handling of lists as leaf values\",\n    \"Readable variable names (full_key, nested, result)\"\n  ],\n  \"weaknesses\": [\n    \"Public API leaks internal `_prefix` parameter instead of using a private helper function\",\n    \"Docstring length is disproportionate to the implementation complexity\",\n    \"Recursive call re-validates the type check unnecessarily on nested dicts\",\n    \"No guard for empty dict input edge case documentation\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear TypeError with informative message for non-dict input",
+      "Explicit data movement with result.update(); no hidden mutation",
+      "Flat control flow with simple if/else guard",
+      "Correct handling of lists as leaf values",
+      "Readable variable names (full_key, nested, result)"
+    ],
+    "weaknesses": [
+      "Public API leaks internal `_prefix` parameter instead of using a private helper function",
+      "Docstring length is disproportionate to the implementation complexity",
+      "Recursive call re-validates the type check unnecessarily on nested dicts",
+      "No guard for empty dict input edge case documentation"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.802,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 78.484,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "baseline_generation"
+}

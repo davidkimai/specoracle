@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses small pure helpers (_is_valid_item, _round_up_to_multiple), keeps control flow flat with guard clauses, makes data movement explicit, and uses clear names throughout. The separation of validation, computation, and sorting is sensible. Minor issues: _is_valid_item does redundant type coercion checks that are then repeated in the main loop (the int() calls happen twice), and the velocity isinstance/coercion block in the main loop adds a small amount of defensive complexity that slightly muddies the otherwise clean flow. The REQUIRED_KEYS module-level constant is a reasonable choice. The docstring is informative without being excessive. Overall this is a solid, auditable implementation that a maintainer can reason about locally.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses small pure helpers (_is_valid_item, _round_up_to_multiple), keeps control flow flat with guard clauses, makes data movement explicit, and uses clear names throughout. The separation of validation, computation, and sorting is sensible. Minor issues: _is_valid_item does redundant type coercion checks that are then repeated in the main loop (the int() calls happen twice), and the velocity isinstance/coercion block in the main loop adds a small amount of defensive complexity that slightly muddies the otherwise clean flow. The REQUIRED_KEYS module-level constant is a reasonable choice. The docstring is informative without being excessive. Overall this is a solid, auditable implementation that a maintainer can reason about locally.\",\n  \"strengths\": [\n    \"Small, focused helper functions with clear single responsibilities\",\n    \"Flat control flow using guard clauses (continue) rather than deep nesting\",\n    \"Explicit data extraction from item dict into typed local variables before use\",\n    \"Clear, descriptive names (deficit, velocity, reorder_quantity)\",\n    \"math.ceil approach for rounding up is idiomatic and readable\",\n    \"Sorting is done at the end on the result list, keeping the loop clean\"\n  ],\n  \"weaknesses\": [\n    \"Validation in _is_valid_item calls int() on fields, then the main loop calls int() again \u2014 redundant coercion\",\n    \"The velocity isinstance/coercion block adds speculative defensive logic not required by the spec\",\n    \"The docstring Args/Returns block is slightly over-engineered for a small utility function\",\n    \"REQUIRED_KEYS as a module-level set is a minor speculative abstraction for a single-use validation\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, focused helper functions with clear single responsibilities",
+      "Flat control flow using guard clauses (continue) rather than deep nesting",
+      "Explicit data extraction from item dict into typed local variables before use",
+      "Clear, descriptive names (deficit, velocity, reorder_quantity)",
+      "math.ceil approach for rounding up is idiomatic and readable",
+      "Sorting is done at the end on the result list, keeping the loop clean"
+    ],
+    "weaknesses": [
+      "Validation in _is_valid_item calls int() on fields, then the main loop calls int() again \u2014 redundant coercion",
+      "The velocity isinstance/coercion block adds speculative defensive logic not required by the spec",
+      "The docstring Args/Returns block is slightly over-engineered for a small utility function",
+      "REQUIRED_KEYS as a module-level set is a minor speculative abstraction for a single-use validation"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.974,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.333,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 55,
+    "maintainability_index": 73.783,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_generation"
+}

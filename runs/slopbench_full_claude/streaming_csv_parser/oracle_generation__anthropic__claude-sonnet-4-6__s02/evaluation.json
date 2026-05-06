@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and idiomatic. It delegates CSV parsing to the standard library's `csv.reader`, avoids materializing the input, uses a guard clause (`try/except StopIteration`) to handle the empty-input edge case explicitly, raises a clear `ValueError` on malformed rows, and names everything plainly. The generator expression for filtering empty lines is transparent and composable. The only minor quibbles are that the docstring is slightly verbose for such a small function, and one could argue that `zip(header, row)` passed directly to `dict()` is marginally more idiomatic than a named intermediate, but both are trivial. There are no speculative abstractions, no hidden state, and no unnecessary complexity\u2014the implementation is essentially the minimal correct solution.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and idiomatic. It delegates CSV parsing to the standard library's `csv.reader`, avoids materializing the input, uses a guard clause (`try/except StopIteration`) to handle the empty-input edge case explicitly, raises a clear `ValueError` on malformed rows, and names everything plainly. The generator expression for filtering empty lines is transparent and composable. The only minor quibbles are that the docstring is slightly verbose for such a small function, and one could argue that `zip(header, row)` passed directly to `dict()` is marginally more idiomatic than a named intermediate, but both are trivial. There are no speculative abstractions, no hidden state, and no unnecessary complexity\u2014the implementation is essentially the minimal correct solution.\",\n  \"strengths\": [\n    \"Delegates to `csv.reader` rather than reimplementing CSV parsing\",\n    \"Fully streaming: no list conversion of input\",\n    \"Flat control flow with a single guard clause for empty input\",\n    \"Explicit error raised with a descriptive message for field-count mismatch\",\n    \"Names are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is slightly over-documented for a function this small\",\n    \"No handling for quoted fields that span lines (edge case inherited from `csv.reader` behavior with pre-split lines, but worth noting)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Delegates to `csv.reader` rather than reimplementing CSV parsing",
+      "Fully streaming: no list conversion of input",
+      "Flat control flow with a single guard clause for empty input",
+      "Explicit error raised with a descriptive message for field-count mismatch",
+      "Names are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "Docstring is slightly over-documented for a function this small",
+      "No handling for quoted fields that span lines (edge case inherited from `csv.reader` behavior with pre-split lines, but worth noting)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.431,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 29,
+    "maintainability_index": 94.004,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_generation"
+}

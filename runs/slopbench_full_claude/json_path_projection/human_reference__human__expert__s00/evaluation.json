@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and well-structured. It separates concerns appropriately with a small pure helper `_resolve_path` and a thin public entry point `extract_fields`. Control flow is flat with guard clauses rather than deep nesting. The sentinel `_MISSING` pattern is idiomatic for distinguishing 'not found' from `None` values. Data movement is explicit, there is no mutation of the input, and names are self-explanatory. The only minor weaknesses are that negative list indexes are silently rejected (via `isdigit()`) without a clear error, and the `isdigit()` check doesn't handle edge cases like very large indexes that could be valid but unusual \u2014 though these are minor given the spec. Overall this is a textbook example of the Zen-aligned approach: simple, explicit, flat, and locally auditable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and well-structured. It separates concerns appropriately with a small pure helper `_resolve_path` and a thin public entry point `extract_fields`. Control flow is flat with guard clauses rather than deep nesting. The sentinel `_MISSING` pattern is idiomatic for distinguishing 'not found' from `None` values. Data movement is explicit, there is no mutation of the input, and names are self-explanatory. The only minor weaknesses are that negative list indexes are silently rejected (via `isdigit()`) without a clear error, and the `isdigit()` check doesn't handle edge cases like very large indexes that could be valid but unusual \u2014 though these are minor given the spec. Overall this is a textbook example of the Zen-aligned approach: simple, explicit, flat, and locally auditable.\",\n  \"strengths\": [\n    \"Clean separation between public API and private helper\",\n    \"Flat control flow using guard clauses in _resolve_path\",\n    \"Sentinel _MISSING correctly distinguishes missing values from None defaults\",\n    \"No input mutation, explicit data movement\",\n    \"Readable, self-documenting names throughout\"\n  ],\n  \"weaknesses\": [\n    \"Negative list indexes silently fall through to _MISSING rather than raising a clear error\",\n    \"No input validation (e.g., non-dict record or non-dict paths) with explicit errors as the spec suggests\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation between public API and private helper",
+      "Flat control flow using guard clauses in _resolve_path",
+      "Sentinel _MISSING correctly distinguishes missing values from None defaults",
+      "No input mutation, explicit data movement",
+      "Readable, self-documenting names throughout"
+    ],
+    "weaknesses": [
+      "Negative list indexes silently fall through to _MISSING rather than raising a clear error",
+      "No input validation (e.g., non-dict record or non-dict paths) with explicit errors as the spec suggests"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.684,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 22,
+    "maintainability_index": 58.067,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "human_reference"
+}

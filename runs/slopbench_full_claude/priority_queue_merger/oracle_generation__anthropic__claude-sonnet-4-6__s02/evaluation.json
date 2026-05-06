@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is broadly clean and readable, using heapq correctly with a sensible heap entry tuple. The input validation is explicit and the control flow is flat. However, there is a significant semantic bug: using `None` as a sentinel to detect exhausted iterators means any stream that actually yields `None` (or any falsy value like `0`) will be silently dropped \u2014 `0` is falsy so `if value is not None` handles zeros correctly, but `None` values in the stream would be mishandled. The task says `int` inputs, so `None` won't appear in practice, but the sentinel approach is fragile and non-idiomatic. The standard library already provides `heapq.merge` which does exactly this task; while reimplementing it is fine for the exercise, the candidate could have delegated to it or at least used the canonical `next(stream, _SENTINEL)` pattern with a dedicated sentinel object. The docstring is verbose for what is a small function. The `stream_index` tie-breaker is correct and explicit. Overall the code is auditable and correct for the stated integer domain, but the `None`-sentinel anti-pattern and the missed opportunity to use a proper sentinel object are meaningful structural weaknesses.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is broadly clean and readable, using heapq correctly with a sensible heap entry tuple. The input validation is explicit and the control flow is flat. However, there is a significant semantic bug: using `None` as a sentinel to detect exhausted iterators means any stream that actually yields `None` (or any falsy value like `0`) will be silently dropped \u2014 `0` is falsy so `if value is not None` handles zeros correctly, but `None` values in the stream would be mishandled. The task says `int` inputs, so `None` won't appear in practice, but the sentinel approach is fragile and non-idiomatic. The standard library already provides `heapq.merge` which does exactly this task; while reimplementing it is fine for the exercise, the candidate could have delegated to it or at least used the canonical `next(stream, _SENTINEL)` pattern with a dedicated sentinel object. The docstring is verbose for what is a small function. The `stream_index` tie-breaker is correct and explicit. Overall the code is auditable and correct for the stated integer domain, but the `None`-sentinel anti-pattern and the missed opportunity to use a proper sentinel object are meaningful structural weaknesses.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit early input validation with clear TypeError messages\",\n    \"Heap tuple includes stream_index for deterministic tie-breaking without comparing iterators\",\n    \"Lazy generation via yield is correct and memory-efficient\",\n    \"Names are self-explanatory (streams, stream_index, heap, next_value)\"\n  ],\n  \"weaknesses\": [\n    \"Uses None as exhaustion sentinel, which would silently drop None values from streams (fragile pattern; a dedicated sentinel object is idiomatic)\",\n    \"Does not leverage heapq.merge which already implements this functionality correctly\",\n    \"Docstring is disproportionately long relative to the function's simplicity\",\n    \"hasattr(__iter__) duck-typing check is weaker than wrapping iter() in a try/except, and misses non-iterable edge cases like integers that have no __iter__\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit early input validation with clear TypeError messages",
+      "Heap tuple includes stream_index for deterministic tie-breaking without comparing iterators",
+      "Lazy generation via yield is correct and memory-efficient",
+      "Names are self-explanatory (streams, stream_index, heap, next_value)"
+    ],
+    "weaknesses": [
+      "Uses None as exhaustion sentinel, which would silently drop None values from streams (fragile pattern; a dedicated sentinel object is idiomatic)",
+      "Does not leverage heapq.merge which already implements this functionality correctly",
+      "Docstring is disproportionately long relative to the function's simplicity",
+      "hasattr(__iter__) duck-typing check is weaker than wrapping iter() in a try/except, and misses non-iterable edge cases like integers that have no __iter__"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.684,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 45,
+    "maintainability_index": 84.46,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "priority_queue_merger",
+  "variant": "oracle_generation"
+}

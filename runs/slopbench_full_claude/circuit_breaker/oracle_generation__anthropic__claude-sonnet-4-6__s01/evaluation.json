@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State is inspectable via a typed enum property, configuration values are named attributes, and all three state transitions are clearly delineated. The `_check_recovery` method handles the OPEN\u2192HALF_OPEN transition in one place, and the half-open trial correctly closes on success or reopens on failure. The `now` injection point enables deterministic testing. Minor imperfections: `_transition_to` is a trivial one-liner wrapper that adds indirection without meaningful abstraction, and the CLOSED success path resets `_failure_count` inline rather than through `_record_success`, creating a small asymmetry. These are cosmetic issues that don't affect correctness or auditability.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State is inspectable via a typed enum property, configuration values are named attributes, and all three state transitions are clearly delineated. The `_check_recovery` method handles the OPEN\u2192HALF_OPEN transition in one place, and the half-open trial correctly closes on success or reopens on failure. The `now` injection point enables deterministic testing. Minor imperfections: `_transition_to` is a trivial one-liner wrapper that adds indirection without meaningful abstraction, and the CLOSED success path resets `_failure_count` inline rather than through `_record_success`, creating a small asymmetry. These are cosmetic issues that don't affect correctness or auditability.\",\n  \"strengths\": [\n    \"State is a proper enum with an inspectable public property, satisfying RCS-5 explicitly\",\n    \"All configuration values (failure_threshold, recovery_timeout) are named instance attributes\",\n    \"Half-open trial logic is correct: success closes, failure reopens with fresh timer\",\n    \"Injected `now` callable makes the implementation fully testable without monkey-patching\",\n    \"Docstrings are accurate and informative without being verbose\",\n    \"Flat, readable control flow with no nested conditionals beyond what's necessary\"\n  ],\n  \"weaknesses\": [\n    \"`_transition_to` is a trivial assignment wrapper that adds a layer of indirection without real benefit\",\n    \"CLOSED success path resets `_failure_count` inline rather than reusing `_record_success`, creating a subtle asymmetry\",\n    \"No guard against non-positive failure_threshold or negative recovery_timeout (minor robustness gap)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "State is a proper enum with an inspectable public property, satisfying RCS-5 explicitly",
+      "All configuration values (failure_threshold, recovery_timeout) are named instance attributes",
+      "Half-open trial logic is correct: success closes, failure reopens with fresh timer",
+      "Injected `now` callable makes the implementation fully testable without monkey-patching",
+      "Docstrings are accurate and informative without being verbose",
+      "Flat, readable control flow with no nested conditionals beyond what's necessary"
+    ],
+    "weaknesses": [
+      "`_transition_to` is a trivial assignment wrapper that adds a layer of indirection without real benefit",
+      "CLOSED success path resets `_failure_count` inline rather than reusing `_record_success`, creating a subtle asymmetry",
+      "No guard against non-positive failure_threshold or negative recovery_timeout (minor robustness gap)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.891,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert <CircuitState.OPEN: 2> == 'open'\nE        +  where <CircuitState.OPEN: 2> = <solution.CircuitBreaker object at 0xffffa0ce2a50>.state\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 2.111,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 7,
+    "loc": 92,
+    "maintainability_index": 74.04,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_generation"
+}

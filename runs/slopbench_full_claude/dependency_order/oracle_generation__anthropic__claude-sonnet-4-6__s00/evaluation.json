@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, well-decomposed realization of Kahn's algorithm that closely follows the Zen of Python's structural ideals. Each helper has a single, clearly named responsibility (_build_graph, _in_degrees, _reverse_edges, _kahn_batches), control flow is flat with no deep nesting, data movement is explicit with no hidden mutation of the input, and the error path raises a clear ValueError with a descriptive message. The only minor quibbles are that _build_graph could be slightly simplified (the `if task not in graph` guard followed by `graph[task] = []` could use setdefault, and the prereq loop appends individually rather than assigning the list directly), and the docstring for _in_degrees slightly overexplains what 'in-degree' means in a non-standard way (prereq count rather than the classic graph-theoretic in-degree from reverse edges), which could momentarily confuse a reader familiar with Kahn's algorithm. These are very minor issues; overall the code is sparse, auditable, and architecturally sound.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, well-decomposed realization of Kahn's algorithm that closely follows the Zen of Python's structural ideals. Each helper has a single, clearly named responsibility (_build_graph, _in_degrees, _reverse_edges, _kahn_batches), control flow is flat with no deep nesting, data movement is explicit with no hidden mutation of the input, and the error path raises a clear ValueError with a descriptive message. The only minor quibbles are that _build_graph could be slightly simplified (the `if task not in graph` guard followed by `graph[task] = []` could use setdefault, and the prereq loop appends individually rather than assigning the list directly), and the docstring for _in_degrees slightly overexplains what 'in-degree' means in a non-standard way (prereq count rather than the classic graph-theoretic in-degree from reverse edges), which could momentarily confuse a reader familiar with Kahn's algorithm. These are very minor issues; overall the code is sparse, auditable, and architecturally sound.\",\n  \"strengths\": [\n    \"Clean decomposition into small, single-purpose helpers with descriptive names\",\n    \"No mutation of the input dict; a fresh graph is built internally\",\n    \"Flat control flow throughout; no unnecessary nesting\",\n    \"Clear ValueError with an informative message on cycle detection\",\n    \"Standard-library only (collections.deque); no clever metaprogramming\",\n    \"Correctly includes tasks that only appear as dependency values\"\n  ],\n  \"weaknesses\": [\n    \"_build_graph appends prereqs one-by-one instead of assigning the list directly, adding minor noise\",\n    \"The _in_degrees docstring redefines 'in-degree' in a non-standard way that could confuse readers familiar with graph theory\",\n    \"Minor: could use dict.setdefault or collections.defaultdict to simplify _build_graph slightly\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean decomposition into small, single-purpose helpers with descriptive names",
+      "No mutation of the input dict; a fresh graph is built internally",
+      "Flat control flow throughout; no unnecessary nesting",
+      "Clear ValueError with an informative message on cycle detection",
+      "Standard-library only (collections.deque); no clever metaprogramming",
+      "Correctly includes tasks that only appear as dependency values"
+    ],
+    "weaknesses": [
+      "_build_graph appends prereqs one-by-one instead of assigning the list directly, adding minor noise",
+      "The _in_degrees docstring redefines 'in-degree' in a non-standard way that could confuse readers familiar with graph theory",
+      "Minor: could use dict.setdefault or collections.defaultdict to simplify _build_graph slightly"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.289,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 5,
+    "loc": 70,
+    "maintainability_index": 76.006,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

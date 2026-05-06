@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably decomposed into small helpers with clear names. However, it has notable structural issues: `_in_degrees` contains dead code (the `counts[prereq]` presence-check line does nothing useful and is confusing), the `ready` deque is sorted twice per iteration (once before the loop and once after, with a redundant initial sort), and the use of `deque` is unnecessary since the algorithm clears and rebuilds it each iteration\u2014a plain list would be simpler and more honest. The `_build_graph` helper is straightforward but could be replaced with a `defaultdict` pattern more cleanly. The docstrings are verbose relative to the code complexity, adding noise rather than clarity. Overall the architecture is sound and avoids deep nesting, hidden mutation, and speculative abstractions, but the dead code in `_in_degrees` and the redundant sorting/deque usage represent real clarity failures that a maintainer would need to puzzle through.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably decomposed into small helpers with clear names. However, it has notable structural issues: `_in_degrees` contains dead code (the `counts[prereq]` presence-check line does nothing useful and is confusing), the `ready` deque is sorted twice per iteration (once before the loop and once after, with a redundant initial sort), and the use of `deque` is unnecessary since the algorithm clears and rebuilds it each iteration\u2014a plain list would be simpler and more honest. The `_build_graph` helper is straightforward but could be replaced with a `defaultdict` pattern more cleanly. The docstrings are verbose relative to the code complexity, adding noise rather than clarity. Overall the architecture is sound and avoids deep nesting, hidden mutation, and speculative abstractions, but the dead code in `_in_degrees` and the redundant sorting/deque usage represent real clarity failures that a maintainer would need to puzzle through.\",\n  \"strengths\": [\n    \"Clean separation into small, named helpers (_build_graph, _in_degrees, _reverse_edges, _kahn_batches)\",\n    \"Does not mutate input; returns fresh data structures\",\n    \"Raises ValueError with a clear message on cycle detection\",\n    \"Includes tasks that appear only as dependencies\",\n    \"Flat control flow with no deep nesting\"\n  ],\n  \"weaknesses\": [\n    \"`_in_degrees` contains a dead no-op line (`counts[prereq]`) that is confusing and serves no purpose\",\n    \"Redundant double-sorting of `ready` each iteration; initial sort before the loop is wasted work\",\n    \"Using `deque` is misleading since it is cleared and rebuilt each batch\u2014a plain list is simpler\",\n    \"Docstrings are disproportionately long relative to the simplicity of the code\",\n    \"The `counts` dict in `_in_degrees` is built but never used, adding confusion\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into small, named helpers (_build_graph, _in_degrees, _reverse_edges, _kahn_batches)",
+      "Does not mutate input; returns fresh data structures",
+      "Raises ValueError with a clear message on cycle detection",
+      "Includes tasks that appear only as dependencies",
+      "Flat control flow with no deep nesting"
+    ],
+    "weaknesses": [
+      "`_in_degrees` contains a dead no-op line (`counts[prereq]`) that is confusing and serves no purpose",
+      "Redundant double-sorting of `ready` each iteration; initial sort before the loop is wasted work",
+      "Using `deque` is misleading since it is cleared and rebuilt each batch\u2014a plain list is simpler",
+      "Docstrings are disproportionately long relative to the simplicity of the code",
+      "The `counts` dict in `_in_degrees` is built but never used, adding confusion"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 3.407,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.6,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 5,
+    "loc": 81,
+    "maintainability_index": 74.127,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Validation is upfront with clear error messages, state is minimal and named well, the refill logic is extracted into a small pure helper, and `allow` reads as a straightforward guard-clause sequence. There is no speculative abstraction, no hidden mutation, and no framework-shaped scaffolding. The only minor quibble is that `_refill` mutates instance state rather than returning a value (making it not truly 'pure'), and `cost` validation accepts 0 silently which is a borderline design choice, but neither rises to a real structural flaw. Overall this is an exemplary realization of the Zen-guided spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Validation is upfront with clear error messages, state is minimal and named well, the refill logic is extracted into a small pure helper, and `allow` reads as a straightforward guard-clause sequence. There is no speculative abstraction, no hidden mutation, and no framework-shaped scaffolding. The only minor quibble is that `_refill` mutates instance state rather than returning a value (making it not truly 'pure'), and `cost` validation accepts 0 silently which is a borderline design choice, but neither rises to a real structural flaw. Overall this is an exemplary realization of the Zen-guided spec.\",\n  \"strengths\": [\n    \"Validation at construction and call site with informative error messages\",\n    \"Flat control flow in both `_refill` and `allow`; no deep nesting\",\n    \"Minimal, well-named state: `_tokens`, `_last_refill`, `_capacity`, `_refill_rate`, `_now`\",\n    \"Injected `now` callable makes time source explicit and testable\",\n    \"Docstring is concise and accurate without over-specifying internals\",\n    \"No unused extension points or speculative abstractions\"\n  ],\n  \"weaknesses\": [\n    \"`_refill` mutates instance state rather than returning computed values, slightly obscuring data flow\",\n    \"Allowing `cost=0` silently (always returns True) is a debatable edge case that could warrant a check or documentation\",\n    \"Type annotation `cost: int` is not enforced; a float cost would silently work\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Validation at construction and call site with informative error messages",
+      "Flat control flow in both `_refill` and `allow`; no deep nesting",
+      "Minimal, well-named state: `_tokens`, `_last_refill`, `_capacity`, `_refill_rate`, `_now`",
+      "Injected `now` callable makes time source explicit and testable",
+      "Docstring is concise and accurate without over-specifying internals",
+      "No unused extension points or speculative abstractions"
+    ],
+    "weaknesses": [
+      "`_refill` mutates instance state rather than returning computed values, slightly obscuring data flow",
+      "Allowing `cost=0` silently (always returns True) is a debatable edge case that could warrant a check or documentation",
+      "Type annotation `cost: int` is not enforced; a float cost would silently work"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.003,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.25,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 43,
+    "maintainability_index": 80.854,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "oracle_generation"
+}

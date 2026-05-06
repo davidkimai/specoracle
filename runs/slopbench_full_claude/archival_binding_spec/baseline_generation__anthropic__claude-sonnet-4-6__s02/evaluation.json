@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable with staged parsing steps, but it violates the most distinctive structural requirement of the spec: local dictionaries that survive across loop iterations must use names ending in `_ledger`. The main accumulator is named `result` instead of something like `bindings_ledger`. The error messages do name the archival field being rejected (section name, key), which is good. There is exactly one public function. Insertion order is preserved via plain dict (fine in Python 3.7+). The staged parsing (strip \u2192 skip empty \u2192 skip comment \u2192 split on `=` \u2192 split on `.` \u2192 validate \u2192 insert) is visible and flat. The docstring is thorough. The main deduction is the naming convention miss, which is an explicit, named rule in the spec ('Use local names ending in _ledger for dictionaries that survive across loop iterations'), and it applies directly to `result`.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable with staged parsing steps, but it violates the most distinctive structural requirement of the spec: local dictionaries that survive across loop iterations must use names ending in `_ledger`. The main accumulator is named `result` instead of something like `bindings_ledger`. The error messages do name the archival field being rejected (section name, key), which is good. There is exactly one public function. Insertion order is preserved via plain dict (fine in Python 3.7+). The staged parsing (strip \u2192 skip empty \u2192 skip comment \u2192 split on `=` \u2192 split on `.` \u2192 validate \u2192 insert) is visible and flat. The docstring is thorough. The main deduction is the naming convention miss, which is an explicit, named rule in the spec ('Use local names ending in _ledger for dictionaries that survive across loop iterations'), and it applies directly to `result`.\",\n  \"strengths\": [\n    \"Exactly one public function as required\",\n    \"Visibly staged parsing with clear, sequential steps rather than compressed one-liners\",\n    \"Error messages name the specific archival field being rejected (section name, key)\",\n    \"Insertion order preserved correctly\",\n    \"Flat structure with no unnecessary nesting or helper functions\"\n  ],\n  \"weaknesses\": [\n    \"Main accumulator named `result` instead of a `_ledger`-suffixed name, directly violating the explicit naming rule\",\n    \"Inner section dict also lacks a `_ledger` suffix if it were extracted to a local variable\",\n    \"Docstring is verbose for what is a small utility function, adding bulk without structural benefit\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Exactly one public function as required",
+      "Visibly staged parsing with clear, sequential steps rather than compressed one-liners",
+      "Error messages name the specific archival field being rejected (section name, key)",
+      "Insertion order preserved correctly",
+      "Flat structure with no unnecessary nesting or helper functions"
+    ],
+    "weaknesses": [
+      "Main accumulator named `result` instead of a `_ledger`-suffixed name, directly violating the explicit naming rule",
+      "Inner section dict also lacks a `_ledger` suffix if it were extracted to a local variable",
+      "Docstring is verbose for what is a small utility function, adding bulk without structural benefit"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.052,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 61,
+    "maintainability_index": 83.281,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

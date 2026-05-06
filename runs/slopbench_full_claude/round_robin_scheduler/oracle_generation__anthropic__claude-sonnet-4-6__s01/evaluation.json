@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the Zen of Python oracle: it splits responsibility cleanly into a small pure helper (_enabled_workers) and a thin orchestrating function (assign_round_robin), keeps control flow completely flat with a single guard clause, makes data movement fully explicit with no mutation of inputs, raises a clear ValueError with a descriptive message, uses only built-in constructs (list comprehension, enumerate, modulo), and employs names that make the behavior self-documenting. There are no speculative abstractions, no hidden state, and no unnecessary complexity\u2014a maintainer can audit the entire behavior in seconds.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a near-perfect realization of the Zen of Python oracle: it splits responsibility cleanly into a small pure helper (_enabled_workers) and a thin orchestrating function (assign_round_robin), keeps control flow completely flat with a single guard clause, makes data movement fully explicit with no mutation of inputs, raises a clear ValueError with a descriptive message, uses only built-in constructs (list comprehension, enumerate, modulo), and employs names that make the behavior self-documenting. There are no speculative abstractions, no hidden state, and no unnecessary complexity\u2014a maintainer can audit the entire behavior in seconds.\",\n  \"strengths\": [\n    \"Clean separation into a focused helper and a thin orchestrator\",\n    \"Flat control flow with a single early-exit guard clause\",\n    \"No input mutation; pure functional data flow throughout\",\n    \"Clear, descriptive ValueError for the invalid-input case\",\n    \"Uses only ordinary standard-library constructs (enumerate, modulo, list comprehension)\",\n    \"Names (_enabled_workers, active, index, job) are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"No substantive weaknesses; the period at the end of the error message is a trivial stylistic non-issue\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into a focused helper and a thin orchestrator",
+      "Flat control flow with a single early-exit guard clause",
+      "No input mutation; pure functional data flow throughout",
+      "Clear, descriptive ValueError for the invalid-input case",
+      "Uses only ordinary standard-library constructs (enumerate, modulo, list comprehension)",
+      "Names (_enabled_workers, active, index, job) are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "No substantive weaknesses; the period at the end of the error message is a trivial stylistic non-issue"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.95,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 2,
+    "loc": 11,
+    "maintainability_index": 71.056,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows RAT-9: it explicitly names all derived fields before insertion (sequence_number, source_system, actor_id, action), rejects events missing source_system or actor_id with clear ValueError messages, uses a flat loop with no hidden magic, and the docstring accurately describes behavior. The code is readable, locally auditable, and structurally clean. The only minor issue is that 'action' is fetched with event.get('action') rather than event['action'], which silently allows missing action fields without rejection\u2014inconsistent with the explicit validation applied to the other required fields, and the functional requirement implies action is also expected. This is a small but real gap against the spirit of the spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows RAT-9: it explicitly names all derived fields before insertion (sequence_number, source_system, actor_id, action), rejects events missing source_system or actor_id with clear ValueError messages, uses a flat loop with no hidden magic, and the docstring accurately describes behavior. The code is readable, locally auditable, and structurally clean. The only minor issue is that 'action' is fetched with event.get('action') rather than event['action'], which silently allows missing action fields without rejection\u2014inconsistent with the explicit validation applied to the other required fields, and the functional requirement implies action is also expected. This is a small but real gap against the spirit of the spec.\",\n  \"strengths\": [\n    \"Derived fields (sequence_number, source_system, actor_id, action) are explicitly named before dict insertion, satisfying RAT-9 naming requirement\",\n    \"Missing source_system and actor_id raise ValueError with informative index-based messages\u2014no silent invention\",\n    \"Flat, single-loop structure with no unnecessary abstraction layers\",\n    \"Type annotations and docstring are accurate and informative\",\n    \"audit_records list is built incrementally and returned cleanly\"\n  ],\n  \"weaknesses\": [\n    \"action is fetched with event.get('action') instead of event['action'], silently allowing None for a field described as required in the docstring\",\n    \"No validation that source_system or actor_id are non-empty strings, only presence is checked\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Derived fields (sequence_number, source_system, actor_id, action) are explicitly named before dict insertion, satisfying RAT-9 naming requirement",
+      "Missing source_system and actor_id raise ValueError with informative index-based messages\u2014no silent invention",
+      "Flat, single-loop structure with no unnecessary abstraction layers",
+      "Type annotations and docstring are accurate and informative",
+      "audit_records list is built incrementally and returned cleanly"
+    ],
+    "weaknesses": [
+      "action is fetched with event.get('action') instead of event['action'], silently allowing None for a field described as required in the docstring",
+      "No validation that source_system or actor_id are non-empty strings, only presence is checked"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.298,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n>       assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\nE       AssertionError: assert [{'action': '...stem': 'crm'}] == [{'action': '...stem': 'crm'}]\nE         \nE         At index 0 diff: {'sequence_number': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'} != {'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}\nE         Use -v to get more diff\n\ntest_solution.py:8: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - AssertionError: ...\n1 failed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 45,
+    "maintainability_index": 87.646,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and minimal. It uses a simple counter, builds a plain dict, appends a copy to the sink, and returns the original \u2014 satisfying the mutable-object separation requirement without over-engineering. Input validation is clear and raises typed errors. The docstring is informative without being excessive. The only minor quibble is that `copy.copy` on a dict of primitives is equivalent to `dict(record)` or `{**record}`, and importing `copy` for this purpose is a slight overhead, but it's not wrong and is arguably more explicit about intent. The class is flat, auditable locally, and free of speculative abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and minimal. It uses a simple counter, builds a plain dict, appends a copy to the sink, and returns the original \u2014 satisfying the mutable-object separation requirement without over-engineering. Input validation is clear and raises typed errors. The docstring is informative without being excessive. The only minor quibble is that `copy.copy` on a dict of primitives is equivalent to `dict(record)` or `{**record}`, and importing `copy` for this purpose is a slight overhead, but it's not wrong and is arguably more explicit about intent. The class is flat, auditable locally, and free of speculative abstractions.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses for validation\",\n    \"Explicit data movement: record built once, copied into sink, original returned\",\n    \"Clear, typed error messages for invalid inputs\",\n    \"No hidden state or global mutation\",\n    \"Minimal surface area \u2014 no unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Importing `copy` for shallow-copying a dict of primitives is heavier than `{**record}` or `record.copy()`\",\n    \"Type annotations on `write` parameters are absent (minor omission given the rest of the code's explicitness)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses for validation",
+      "Explicit data movement: record built once, copied into sink, original returned",
+      "Clear, typed error messages for invalid inputs",
+      "No hidden state or global mutation",
+      "Minimal surface area \u2014 no unused extension points"
+    ],
+    "weaknesses": [
+      "Importing `copy` for shallow-copying a dict of primitives is heavier than `{**record}` or `record.copy()`",
+      "Type annotations on `write` parameters are absent (minor omission given the rest of the code's explicitness)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.001,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________________ test_writes_monotonic_records_without_aliasing ________________\n\n    def test_writes_monotonic_records_without_aliasing():\n        sink = []\n        writer = AuditLogWriter(sink)\n        first = writer.write('alice', 'create')\n        second = writer.write('bob', 'delete')\n>       assert [row['sequence'] for row in sink] == [1, 2]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:9: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n.0 = <list_iterator object at 0xffff960c9d20>\n\n>   assert [row['sequence'] for row in sink] == [1, 2]\n            ^^^^^^^^^^^^^^^\nE   KeyError: 'sequence'\n\ntest_solution.py:9: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_writes_monotonic_records_without_aliasing - Key...\n1 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 27,
+    "maintainability_index": 90.401,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_log_writer",
+  "variant": "oracle_generation"
+}

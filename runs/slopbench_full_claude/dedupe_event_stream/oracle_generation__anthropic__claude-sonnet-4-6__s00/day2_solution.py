@@ -1,0 +1,93 @@
+"""
+dedupe_event_stream.py
+
+Deduplicate a stream of events based on composite key fields and a rolling
+timestamp window.
+"""
+
+from typing import Any
+
+
+def _extract_key(event: dict, key_fields: list[str]) -> tuple | None:
+    """Return a hashable composite key or None if any field is missing."""
+    try:
+        return tuple(event[field] for field in key_fields)
+    except KeyError:
+        return None
+
+
+def _is_valid(event: dict) -> bool:
+    """Return True if event contains an integer 'timestamp' field."""
+    return isinstance(event.get("timestamp"), int)
+
+
+def dedupe_events(
+    events: list[dict],
+    key_fields: list[str],
+    window_seconds: int,
+    return_stats: bool = False,
+) -> list[dict] | tuple[list[dict], dict]:
+    """
+    Keep the first event for each composite key within a rolling timestamp window.
+
+    Parameters
+    ----------
+    events:
+        Ordered sequence of event dicts.
+    key_fields:
+        Field names that form the composite deduplication key.
+    window_seconds:
+        Duration of the deduplication window in seconds.
+    return_stats:
+        When True, return a tuple of (retained_events, stats_dict) where
+        stats_dict contains keys "kept", "duplicates", and "malformed".
+
+    Returns
+    -------
+    list[dict]
+        Retained events in their original order (when return_stats is False).
+    tuple[list[dict], dict]
+        Retained events and a stats dictionary (when return_stats is True).
+    """
+    if not isinstance(key_fields, list) or not key_fields:
+        raise ValueError("key_fields must be a non-empty list")
+    if not isinstance(window_seconds, int) or window_seconds < 0:
+        raise ValueError("window_seconds must be a non-negative integer")
+
+    # Maps composite key -> timestamp of the most recently kept event.
+    seen: dict[tuple, int] = {}
+    retained: list[dict] = []
+
+    kept = 0
+    duplicates = 0
+    malformed = 0
+
+    for event in events:
+        if not _is_valid(event):
+            malformed += 1
+            continue
+
+        key = _extract_key(event, key_fields)
+        if key is None:
+            malformed += 1
+            continue
+
+        ts: int = event["timestamp"]
+
+        if key in seen:
+            kept_ts = seen[key]
+            if ts - kept_ts < window_seconds:
+                # Duplicate within the window; skip.
+                duplicates += 1
+                continue
+            # Outside the window; treat as a new event and update the anchor.
+
+        seen[key] = ts
+        retained.append(event)
+        kept += 1
+
+    if return_stats:
+        stats = {"kept": kept, "duplicates": duplicates, "malformed": malformed}
+        return retained, stats
+
+    return retained

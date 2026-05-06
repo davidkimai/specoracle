@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: all three required fields are validated before any are accepted into the output (the cleaned dict is only returned after all checks pass), every ValueError names the offending field, and there is no partial acceptance. The code is flat, explicit, and locally auditable \u2014 each field gets its own clearly delimited block with consistent guard patterns. The boolean-subclass guard for age is a thoughtful edge-case catch. Minor deductions: the docstring mentions TypeError but the code never raises it (slightly misleading), and the per-field validation could theoretically be refactored into a small helper to reduce repetition, but the current verbosity actually aids auditability in a clinical context, so it's a minor style trade-off rather than a real flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: all three required fields are validated before any are accepted into the output (the cleaned dict is only returned after all checks pass), every ValueError names the offending field, and there is no partial acceptance. The code is flat, explicit, and locally auditable \u2014 each field gets its own clearly delimited block with consistent guard patterns. The boolean-subclass guard for age is a thoughtful edge-case catch. Minor deductions: the docstring mentions TypeError but the code never raises it (slightly misleading), and the per-field validation could theoretically be refactored into a small helper to reduce repetition, but the current verbosity actually aids auditability in a clinical context, so it's a minor style trade-off rather than a real flaw.\",\n  \"strengths\": [\n    \"All fields fully validated before any are written to the cleaned output, satisfying the 'no partial validation' requirement\",\n    \"Every ValueError message names the offending field explicitly\",\n    \"Boolean subclass of int is correctly rejected for age\",\n    \"Flat, readable structure with clearly delimited per-field sections\",\n    \"Strips whitespace from patient_id and rejects empty strings after stripping\",\n    \"Validates each symptom element's type individually\"\n  ],\n  \"weaknesses\": [\n    \"Docstring claims TypeError is 'not raised directly' but implies it may surface, which is misleading since all type errors are converted to ValueError internally\",\n    \"Slight repetition across field-validation blocks that could be reduced with a tiny helper, though verbosity aids auditability here\",\n    \"No validation that symptom strings are non-empty (may or may not be intended by spec)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All fields fully validated before any are written to the cleaned output, satisfying the 'no partial validation' requirement",
+      "Every ValueError message names the offending field explicitly",
+      "Boolean subclass of int is correctly rejected for age",
+      "Flat, readable structure with clearly delimited per-field sections",
+      "Strips whitespace from patient_id and rejects empty strings after stripping",
+      "Validates each symptom element's type individually"
+    ],
+    "weaknesses": [
+      "Docstring claims TypeError is 'not raised directly' but implies it may surface, which is misleading since all type errors are converted to ValueError internally",
+      "Slight repetition across field-validation blocks that could be reduced with a tiny helper, though verbosity aids auditability here",
+      "No validation that symptom strings are non-empty (may or may not be intended by spec)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.122,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 71,
+    "maintainability_index": 73.836,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

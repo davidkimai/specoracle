@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the Zen of Python oracle for this task. It is flat, explicit, and locally auditable in under 10 lines. Data movement is transparent: a fresh dict is created from defaults, segment overrides are applied in order with unknown segments silently skipped (as specified), and user overrides are applied last. No mutation of inputs occurs. The control flow is maximally simple with no unnecessary nesting, helpers, or abstractions. The only minor critique is that it silently accepts non-bool values in overrides or segment dicts without validation, and the spec says to raise clear errors for invalid inputs\u2014though the spec is ambiguous about what constitutes 'invalid' here (it doesn't enumerate error cases explicitly). The naming is clear and the code reads like a direct prose translation of the requirements.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-perfect realization of the Zen of Python oracle for this task. It is flat, explicit, and locally auditable in under 10 lines. Data movement is transparent: a fresh dict is created from defaults, segment overrides are applied in order with unknown segments silently skipped (as specified), and user overrides are applied last. No mutation of inputs occurs. The control flow is maximally simple with no unnecessary nesting, helpers, or abstractions. The only minor critique is that it silently accepts non-bool values in overrides or segment dicts without validation, and the spec says to raise clear errors for invalid inputs\u2014though the spec is ambiguous about what constitutes 'invalid' here (it doesn't enumerate error cases explicitly). The naming is clear and the code reads like a direct prose translation of the requirements.\",\n  \"strengths\": [\n    \"Completely flat control flow with no unnecessary nesting\",\n    \"Explicit data movement: new dict created, never mutates inputs\",\n    \"Direct mapping from requirements to code\u2014each requirement is one line\",\n    \"Uses only standard dict operations, no clever metaprogramming\",\n    \"Minimal and sparse; easy to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"No input validation (e.g., non-bool flag values, non-list 'segments' field) despite the operational constraint to raise clear errors for invalid inputs\",\n    \"Could arguably extract a small 'apply_overrides' helper per the 'small pure helpers' preference, though the function is already small enough that this would be speculative abstraction\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Completely flat control flow with no unnecessary nesting",
+      "Explicit data movement: new dict created, never mutates inputs",
+      "Direct mapping from requirements to code\u2014each requirement is one line",
+      "Uses only standard dict operations, no clever metaprogramming",
+      "Minimal and sparse; easy to audit locally"
+    ],
+    "weaknesses": [
+      "No input validation (e.g., non-bool flag values, non-list 'segments' field) despite the operational constraint to raise clear errors for invalid inputs",
+      "Could arguably extract a small 'apply_overrides' helper per the 'small pure helpers' preference, though the function is already small enough that this would be speculative abstraction"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.96,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 12,
+    "maintainability_index": 71.752,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "baseline_generation"
+}

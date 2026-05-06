@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp log, which is the natural data structure for this problem. The helper `_drop_expired` is a small, pure extraction that keeps `acquire` readable. Control flow is flat with a single guard clause. The lock is explicit and correctly scoped. Names are self-explanatory (`cutoff`, `_drop_expired`, `_timestamps`). The `now` injection for testability is handled without ceremony. The only minor quibble is that the boundary condition (`<= cutoff` vs `< cutoff`) implements a half-open window that could be debated, and the module-level docstring slightly overstates 'token-bucket' when it's really a sliding-window log, but neither affects correctness or structural quality meaningfully.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp log, which is the natural data structure for this problem. The helper `_drop_expired` is a small, pure extraction that keeps `acquire` readable. Control flow is flat with a single guard clause. The lock is explicit and correctly scoped. Names are self-explanatory (`cutoff`, `_drop_expired`, `_timestamps`). The `now` injection for testability is handled without ceremony. The only minor quibble is that the boundary condition (`<= cutoff` vs `< cutoff`) implements a half-open window that could be debated, and the module-level docstring slightly overstates 'token-bucket' when it's really a sliding-window log, but neither affects correctness or structural quality meaningfully.\",\n  \"strengths\": [\n    \"Minimal surface area: constructor, one private helper, one public async method\",\n    \"Explicit data movement: timestamps deque is the sole mutable state, mutated only inside the lock\",\n    \"Flat control flow in acquire() with a clear guard clause\",\n    \"_drop_expired is a small, named, auditable helper\",\n    \"Clear ValueError with repr of the bad value\",\n    \"now injection is clean and defaults sensibly to time.monotonic\",\n    \"asyncio.Lock used correctly to prevent race conditions\"\n  ],\n  \"weaknesses\": [\n    \"Module docstring calls it 'token-bucket-style' but it is a sliding-window log \u2014 minor conceptual mislabeling\",\n    \"Boundary condition (<= cutoff) silently excludes timestamps exactly 1 second old; a comment explaining the window semantics would aid auditability\",\n    \"asyncio.Lock is created at __init__ time, which can cause issues if the limiter is instantiated outside an event loop in older Python versions (minor portability concern)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal surface area: constructor, one private helper, one public async method",
+      "Explicit data movement: timestamps deque is the sole mutable state, mutated only inside the lock",
+      "Flat control flow in acquire() with a clear guard clause",
+      "_drop_expired is a small, named, auditable helper",
+      "Clear ValueError with repr of the bad value",
+      "now injection is clean and defaults sensibly to time.monotonic",
+      "asyncio.Lock used correctly to prevent race conditions"
+    ],
+    "weaknesses": [
+      "Module docstring calls it 'token-bucket-style' but it is a sliding-window log \u2014 minor conceptual mislabeling",
+      "Boundary condition (<= cutoff) silently excludes timestamps exactly 1 second old; a comment explaining the window semantics would aid auditability",
+      "asyncio.Lock is created at __init__ time, which can cause issues if the limiter is instantiated outside an event loop in older Python versions (minor portability concern)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.373,
+    "exit_code": 2,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "\n==================================== ERRORS ====================================\n______________________ ERROR collecting test_solution.py _______________________\ntest_solution.py:3: in <module>\n    from solution import AsyncRateLimiter\nsolution.py:13: in <module>\n    class AsyncRateLimiter:\nsolution.py:16: in AsyncRateLimiter\n    def __init__(self, rate: int, *, now: callable | None = None):\n                                          ^^^^^^^^^^^^^^^\nE   TypeError: unsupported operand type(s) for |: 'builtin_function_or_method' and 'NoneType'\n=========================== short test summary info ============================\nERROR test_solution.py - TypeError: unsupported operand type(s) for |: 'built...\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.36s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 3,
+    "loc": 35,
+    "maintainability_index": 82.781,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Treasury Reconciliation Doctrine TR-4 with exemplary structural discipline: separate named accumulators for debits and credits, direction validation before any accumulator is touched, and arithmetic fully outside the directional conditional. The code is explicit, flat, readable, and locally auditable with no hidden control flow or architectural slop. The minor deductions are for the unnecessary `sorted(all_accounts)` ordering in the result (not required by spec and adds a subtle assumption about output ordering), the `VALID_DIRECTIONS` frozenset being defined inside the function on every call rather than as a module-level constant, and the `set(debit_totals.keys()) | set(credit_totals.keys())` union being redundant since both dicts are always populated together in the loop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Treasury Reconciliation Doctrine TR-4 with exemplary structural discipline: separate named accumulators for debits and credits, direction validation before any accumulator is touched, and arithmetic fully outside the directional conditional. The code is explicit, flat, readable, and locally auditable with no hidden control flow or architectural slop. The minor deductions are for the unnecessary `sorted(all_accounts)` ordering in the result (not required by spec and adds a subtle assumption about output ordering), the `VALID_DIRECTIONS` frozenset being defined inside the function on every call rather than as a module-level constant, and the `set(debit_totals.keys()) | set(credit_totals.keys())` union being redundant since both dicts are always populated together in the loop.\",\n  \"strengths\": [\n    \"Separate named accumulators (debit_totals, credit_totals) strictly satisfy TR-4 \u00a72\",\n    \"Direction validation occurs before any accumulator mutation, satisfying TR-4 \u00a71\",\n    \"No inline arithmetic inside the directional conditional, satisfying TR-4 \u00a73\",\n    \"Clear docstring documenting inputs, outputs, and exception behavior\",\n    \"Explicit, flat control flow with no nested lambdas or clever one-liners\",\n    \"Balance computed after both accumulators are finalized, not incrementally\"\n  ],\n  \"weaknesses\": [\n    \"VALID_DIRECTIONS frozenset is recreated on every function call; should be a module-level constant\",\n    \"The set union for all_accounts is redundant since both dicts are always co-populated in the same loop iteration\",\n    \"Sorting accounts in the output is an undocumented behavior not required by the spec, introducing a subtle assumption\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators (debit_totals, credit_totals) strictly satisfy TR-4 \u00a72",
+      "Direction validation occurs before any accumulator mutation, satisfying TR-4 \u00a71",
+      "No inline arithmetic inside the directional conditional, satisfying TR-4 \u00a73",
+      "Clear docstring documenting inputs, outputs, and exception behavior",
+      "Explicit, flat control flow with no nested lambdas or clever one-liners",
+      "Balance computed after both accumulators are finalized, not incrementally"
+    ],
+    "weaknesses": [
+      "VALID_DIRECTIONS frozenset is recreated on every function call; should be a module-level constant",
+      "The set union for all_accounts is redundant since both dicts are always co-populated in the same loop iteration",
+      "Sorting accounts in the output is an undocumented behavior not required by the spec, introducing a subtle assumption"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.936,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 61,
+    "maintainability_index": 80.664,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_generation"
+}

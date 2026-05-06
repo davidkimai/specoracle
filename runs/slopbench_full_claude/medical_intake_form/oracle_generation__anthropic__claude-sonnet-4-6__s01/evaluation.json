@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, explicit, and flat realization of CD-7 requirements. It collects all validation errors before raising, names every failing field in the error message, rejects booleans masquerading as ints, validates list element types, and returns a clean copy of only the three required fields. The code is locally auditable with clear section comments, no hidden control flow, and no unnecessary abstraction. The only minor quibbles are that the docstring promises to raise on 'the first field that fails' but the implementation (correctly) reports all failures, and the whitespace-only check on patient_id is a reasonable but undocumented extension of the spec. These are trivial issues that do not detract from the overall structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, explicit, and flat realization of CD-7 requirements. It collects all validation errors before raising, names every failing field in the error message, rejects booleans masquerading as ints, validates list element types, and returns a clean copy of only the three required fields. The code is locally auditable with clear section comments, no hidden control flow, and no unnecessary abstraction. The only minor quibbles are that the docstring promises to raise on 'the first field that fails' but the implementation (correctly) reports all failures, and the whitespace-only check on patient_id is a reasonable but undocumented extension of the spec. These are trivial issues that do not detract from the overall structural quality.\",\n  \"strengths\": [\n    \"Full validation pass before any output is accepted, strictly following CD-7\",\n    \"All failing fields are named in the error message\",\n    \"Explicit bool rejection prevents Python subclass confusion\",\n    \"List element type validation catches non-str symptoms\",\n    \"Returns a clean copy (list(symptoms_value)) preventing mutation aliasing\",\n    \"Flat, readable structure with no unnecessary abstraction or nesting\",\n    \"Handles missing keys gracefully via .get() without masking errors\"\n  ],\n  \"weaknesses\": [\n    \"Docstring contradicts implementation: says 'raises ValueError naming the first field' but actually reports all failing fields\",\n    \"Whitespace-only patient_id rejection is a reasonable but unspecified extension of the requirements\",\n    \"Section comment headers add minor visual noise for a function this small\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Full validation pass before any output is accepted, strictly following CD-7",
+      "All failing fields are named in the error message",
+      "Explicit bool rejection prevents Python subclass confusion",
+      "List element type validation catches non-str symptoms",
+      "Returns a clean copy (list(symptoms_value)) preventing mutation aliasing",
+      "Flat, readable structure with no unnecessary abstraction or nesting",
+      "Handles missing keys gracefully via .get() without masking errors"
+    ],
+    "weaknesses": [
+      "Docstring contradicts implementation: says 'raises ValueError naming the first field' but actually reports all failing fields",
+      "Whitespace-only patient_id rejection is a reasonable but unspecified extension of the requirements",
+      "Section comment headers add minor visual noise for a function this small"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.351,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 93,
+    "maintainability_index": 82.191,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Data movement is visible: the (conn, timestamp) tuple makes idle-time tracking self-documenting, lock scopes are narrow and consistent, and side-effectful operations (close) are deliberately pushed outside the lock with clear comments explaining why. Control flow is shallow\u2014guard clauses and early returns keep nesting minimal. The public API surface matches the task exactly with no speculative extension points. The only minor structural quibbles are the docstring verbosity (NumPy-style docs for a small utility feel slightly over-engineered) and the `idle_count` property and `__repr__`, which are convenient but not required and add a small amount of untasked surface area; neither rises to the level of architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Data movement is visible: the (conn, timestamp) tuple makes idle-time tracking self-documenting, lock scopes are narrow and consistent, and side-effectful operations (close) are deliberately pushed outside the lock with clear comments explaining why. Control flow is shallow\u2014guard clauses and early returns keep nesting minimal. The public API surface matches the task exactly with no speculative extension points. The only minor structural quibbles are the docstring verbosity (NumPy-style docs for a small utility feel slightly over-engineered) and the `idle_count` property and `__repr__`, which are convenient but not required and add a small amount of untasked surface area; neither rises to the level of architectural slop.\",\n  \"strengths\": [\n    \"Lock scopes are minimal and symmetric: idle-pool mutation inside, slow I/O (factory, close) outside\",\n    \"Explicit (conn, timestamp) pair makes data layout immediately auditable\",\n    \"Guard clause in release() keeps nesting flat\",\n    \"ValueError on negative max_size gives clear, early feedback\",\n    \"No hidden global state, no metaprogramming, no speculative abstractions\",\n    \"evict_idle iterates all entries rather than assuming sorted order, which is correct and simple\"\n  ],\n  \"weaknesses\": [\n    \"NumPy-style docstrings are heavier than the utility warrants; plain one-liners would suffice\",\n    \"idle_count and __repr__ are untasked additions that slightly expand the auditable surface\",\n    \"max_size=0 is allowed (connections are always closed on release) but this edge case is not documented or tested in the code\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Lock scopes are minimal and symmetric: idle-pool mutation inside, slow I/O (factory, close) outside",
+      "Explicit (conn, timestamp) pair makes data layout immediately auditable",
+      "Guard clause in release() keeps nesting flat",
+      "ValueError on negative max_size gives clear, early feedback",
+      "No hidden global state, no metaprogramming, no speculative abstractions",
+      "evict_idle iterates all entries rather than assuming sorted order, which is correct and simple"
+    ],
+    "weaknesses": [
+      "NumPy-style docstrings are heavier than the utility warrants; plain one-liners would suffice",
+      "idle_count and __repr__ are untasked additions that slightly expand the auditable surface",
+      "max_size=0 is allowed (connections are always closed on release) but this edge case is not documented or tested in the code"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.182,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.571,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 6,
+    "loc": 110,
+    "maintainability_index": 71.568,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "baseline_generation"
+}

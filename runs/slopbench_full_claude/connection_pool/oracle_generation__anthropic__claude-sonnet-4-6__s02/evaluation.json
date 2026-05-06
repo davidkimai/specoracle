@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and structurally sound. Data flow is transparent: `_total` tracks live connections, `_idle` holds timestamped entries, and every mutation path is visible. Control flow is flat with guard clauses used correctly in `acquire` and `release`. The `_close` helper is a small, pure extraction that avoids repetition without over-abstracting. Input validation raises clear, typed errors. The `now` injection point is minimal and purposeful (testability), not speculative. The only minor structural concern is that `release` doesn't decrement `_total` when discarding an overflow connection \u2014 it calls `_close` which does decrement, but the semantics are slightly surprising: a caller releases a connection they acquired (which incremented `_total`), so decrementing on discard is actually correct, but the pool-full guard `len(self._idle) >= self._max_size` conflates idle capacity with total capacity in a way that could confuse a maintainer. Still, the overall architecture is sparse, auditable, and avoids all the common failure modes of speculative abstraction or hidden state.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and structurally sound. Data flow is transparent: `_total` tracks live connections, `_idle` holds timestamped entries, and every mutation path is visible. Control flow is flat with guard clauses used correctly in `acquire` and `release`. The `_close` helper is a small, pure extraction that avoids repetition without over-abstracting. Input validation raises clear, typed errors. The `now` injection point is minimal and purposeful (testability), not speculative. The only minor structural concern is that `release` doesn't decrement `_total` when discarding an overflow connection \u2014 it calls `_close` which does decrement, but the semantics are slightly surprising: a caller releases a connection they acquired (which incremented `_total`), so decrementing on discard is actually correct, but the pool-full guard `len(self._idle) >= self._max_size` conflates idle capacity with total capacity in a way that could confuse a maintainer. Still, the overall architecture is sparse, auditable, and avoids all the common failure modes of speculative abstraction or hidden state.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses; no deep nesting\",\n    \"Explicit data movement: _total and _idle mutations are always visible at call sites\",\n    \"Small, single-purpose _close helper avoids duplication without over-engineering\",\n    \"Clear, typed input validation with informative error messages\",\n    \"now injection is minimal and purposeful, not framework-shaped\",\n    \"evict_idle rebuilds the deque cleanly rather than mutating in-place, avoiding iteration bugs\"\n  ],\n  \"weaknesses\": [\n    \"release overflow guard (len(idle) >= max_size) is subtly different from the total-capacity check in acquire, which could confuse maintainers about the invariant being enforced\",\n    \"No docstring clarification that release on a connection not acquired from this pool silently corrupts _total\",\n    \"idle_count/total_count properties add minor surface area that isn't required by the spec, though they're harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses; no deep nesting",
+      "Explicit data movement: _total and _idle mutations are always visible at call sites",
+      "Small, single-purpose _close helper avoids duplication without over-engineering",
+      "Clear, typed input validation with informative error messages",
+      "now injection is minimal and purposeful, not framework-shaped",
+      "evict_idle rebuilds the deque cleanly rather than mutating in-place, avoiding iteration bugs"
+    ],
+    "weaknesses": [
+      "release overflow guard (len(idle) >= max_size) is subtly different from the total-capacity check in acquire, which could confuse maintainers about the invariant being enforced",
+      "No docstring clarification that release on a connection not acquired from this pool silently corrupts _total",
+      "idle_count/total_count properties add minor surface area that isn't required by the spec, though they're harmless"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.585,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.625,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 7,
+    "loc": 100,
+    "maintainability_index": 70.197,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_generation"
+}

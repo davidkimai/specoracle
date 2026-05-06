@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and locally auditable. Control flow is flat with guard clauses at the top of the loop, data movement is explicit through a single `result` dict, and errors are raised with clear messages. The use of `seen` for duplicate detection, `value_flags` set for dispatch, and a simple index-based loop are all ordinary standard-library constructs. The docstring is thorough without being excessive. Minor weaknesses: the `else: # --dry-run` comment is a code smell indicating the dispatch logic could be slightly more explicit (e.g., an explicit `elif token == '--dry-run'`), and the module-level docstring adds marginal value. The `known_flags` set is defined but the check `token not in known_flags` already handles unknown flags cleanly. Overall this is a well-structured, maintainable implementation that closely follows the Zen principles of explicitness, flatness, and simplicity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and locally auditable. Control flow is flat with guard clauses at the top of the loop, data movement is explicit through a single `result` dict, and errors are raised with clear messages. The use of `seen` for duplicate detection, `value_flags` set for dispatch, and a simple index-based loop are all ordinary standard-library constructs. The docstring is thorough without being excessive. Minor weaknesses: the `else: # --dry-run` comment is a code smell indicating the dispatch logic could be slightly more explicit (e.g., an explicit `elif token == '--dry-run'`), and the module-level docstring adds marginal value. The `known_flags` set is defined but the check `token not in known_flags` already handles unknown flags cleanly. Overall this is a well-structured, maintainable implementation that closely follows the Zen principles of explicitness, flatness, and simplicity.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses at loop entry\",\n    \"Explicit data movement through a single result dict with no hidden mutation\",\n    \"Clear, specific error messages for every failure mode\",\n    \"Duplicate flag detection via `seen` set is simple and correct\",\n    \"Ordinary constructs only \u2014 no metaprogramming or framework-shaped abstractions\",\n    \"Easy to audit locally: each flag's handling is visible in one place\"\n  ],\n  \"weaknesses\": [\n    \"`else: # --dry-run` relies on implicit exhaustion of cases rather than an explicit `elif token == '--dry-run'`\",\n    \"Module-level docstring duplicates the function docstring without adding value\",\n    \"No helper functions extracted (e.g., `parse_limit`, `parse_format`) which would make each validation unit independently testable, though the function is small enough this is minor\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses at loop entry",
+      "Explicit data movement through a single result dict with no hidden mutation",
+      "Clear, specific error messages for every failure mode",
+      "Duplicate flag detection via `seen` set is simple and correct",
+      "Ordinary constructs only \u2014 no metaprogramming or framework-shaped abstractions",
+      "Easy to audit locally: each flag's handling is visible in one place"
+    ],
+    "weaknesses": [
+      "`else: # --dry-run` relies on implicit exhaustion of cases rather than an explicit `elif token == '--dry-run'`",
+      "Module-level docstring duplicates the function docstring without adding value",
+      "No helper functions extracted (e.g., `parse_limit`, `parse_format`) which would make each validation unit independently testable, though the function is small enough this is minor"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 3.536,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 15.0,
+    "cyclomatic_complexity_max": 15,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 1,
+    "loc": 72,
+    "maintainability_index": 72.732,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "baseline_generation"
+}

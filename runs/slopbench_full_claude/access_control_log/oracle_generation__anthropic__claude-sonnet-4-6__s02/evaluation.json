@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the ZT-2 principle: the access decision is computed once into a clearly named boolean, the audit record is unconditionally appended to the log before any return path, and the single return statement at the end makes it structurally impossible to bypass the log write. The code is flat (no nesting beyond a single boolean expression), explicit (typed signatures, named intermediate values), and locally auditable in one glance. The docstring accurately describes the ZT-2 guarantee without over-engineering. There is no architectural slop, no dead code, and no hidden control flow.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the ZT-2 principle: the access decision is computed once into a clearly named boolean, the audit record is unconditionally appended to the log before any return path, and the single return statement at the end makes it structurally impossible to bypass the log write. The code is flat (no nesting beyond a single boolean expression), explicit (typed signatures, named intermediate values), and locally auditable in one glance. The docstring accurately describes the ZT-2 guarantee without over-engineering. There is no architectural slop, no dead code, and no hidden control flow.\",\n  \"strengths\": [\n    \"Single return path guarantees log is always written before returning (ZT-2 compliant)\",\n    \"Decision computed into a named boolean before logging, making intent explicit\",\n    \"Deny-by-default via `role in matrix and permission in matrix[role]` \u2014 falsy for missing roles or permissions\",\n    \"Flat structure with no unnecessary nesting or helper abstractions\",\n    \"Full type annotations and clear docstring without over-documentation\",\n    \"Log record contains exactly the required fields: role, permission, allowed\"\n  ],\n  \"weaknesses\": [\n    \"No validation or sanitization of inputs (e.g., non-string role/permission), though not required by the spec\",\n    \"Log record is a plain mutable dict; a frozen/immutable record type would be marginally more tamper-resistant, but this is a minor stylistic point\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single return path guarantees log is always written before returning (ZT-2 compliant)",
+      "Decision computed into a named boolean before logging, making intent explicit",
+      "Deny-by-default via `role in matrix and permission in matrix[role]` \u2014 falsy for missing roles or permissions",
+      "Flat structure with no unnecessary nesting or helper abstractions",
+      "Full type annotations and clear docstring without over-documentation",
+      "Log record contains exactly the required fields: role, permission, allowed"
+    ],
+    "weaknesses": [
+      "No validation or sanitization of inputs (e.g., non-string role/permission), though not required by the spec",
+      "Log record is a plain mutable dict; a frozen/immutable record type would be marginally more tamper-resistant, but this is a minor stylistic point"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.164,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 88.342,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "oracle_generation"
+}

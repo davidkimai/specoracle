@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses appropriate standard-library constructs (OrderedDict for LRU). Control flow is mostly flat, names are self-explanatory, and input validation raises clear errors. The main structural issues are: the `set` method has a redundant branch (both `if key in self._cache` and `else` call `move_to_end`, which is unnecessary since assignment to an existing key doesn't change order but `move_to_end` handles both cases identically \u2014 the branches could collapse to two lines); `_evict_expired` does a full scan on every `set` that adds a new entry over capacity, which is a hidden cost; the `__contains__` method has a subtle semantic issue (returns False for keys with value None); and the docstring for `__len__` honestly admits it may include expired entries, which is a leaky abstraction. The speculative extras (`__len__`, `__contains__`, `clear`) are mild framework-shaped additions not required by the task. Overall the code is auditable and correct, with minor structural redundancy and a few unnecessary extension points.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and uses appropriate standard-library constructs (OrderedDict for LRU). Control flow is mostly flat, names are self-explanatory, and input validation raises clear errors. The main structural issues are: the `set` method has a redundant branch (both `if key in self._cache` and `else` call `move_to_end`, which is unnecessary since assignment to an existing key doesn't change order but `move_to_end` handles both cases identically \u2014 the branches could collapse to two lines); `_evict_expired` does a full scan on every `set` that adds a new entry over capacity, which is a hidden cost; the `__contains__` method has a subtle semantic issue (returns False for keys with value None); and the docstring for `__len__` honestly admits it may include expired entries, which is a leaky abstraction. The speculative extras (`__len__`, `__contains__`, `clear`) are mild framework-shaped additions not required by the task. Overall the code is auditable and correct, with minor structural redundancy and a few unnecessary extension points.\",\n  \"strengths\": [\n    \"Clear input validation with descriptive error messages\",\n    \"Appropriate use of OrderedDict for LRU semantics\",\n    \"Flat control flow in get() with guard clauses\",\n    \"Explicit data movement \u2014 expiry stored alongside value, no hidden state\",\n    \"Injected `now` callable makes time testable without patching\"\n  ],\n  \"weaknesses\": [\n    \"Redundant if/else in set() \u2014 both branches call move_to_end identically, collapsible to unconditional assignment + move_to_end\",\n    \"Full expired-entry scan on every capacity-exceeding set() is an implicit cost not visible at call site\",\n    \"`__contains__` returns False for valid keys whose value is None \u2014 subtle semantic bug\",\n    \"Speculative extras (clear, __len__, __contains__) not required by the task spec\",\n    \"__len__ including expired entries is a leaky abstraction noted but not resolved\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear input validation with descriptive error messages",
+      "Appropriate use of OrderedDict for LRU semantics",
+      "Flat control flow in get() with guard clauses",
+      "Explicit data movement \u2014 expiry stored alongside value, no hidden state",
+      "Injected `now` callable makes time testable without patching"
+    ],
+    "weaknesses": [
+      "Redundant if/else in set() \u2014 both branches call move_to_end identically, collapsible to unconditional assignment + move_to_end",
+      "Full expired-entry scan on every capacity-exceeding set() is an implicit cost not visible at call site",
+      "`__contains__` returns False for valid keys whose value is None \u2014 subtle semantic bug",
+      "Speculative extras (clear, __len__, __contains__) not required by the task spec",
+      "__len__ including expired entries is a leaky abstraction noted but not resolved"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.173,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.444,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 22,
+    "function_count": 8,
+    "loc": 76,
+    "maintainability_index": 72.661,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

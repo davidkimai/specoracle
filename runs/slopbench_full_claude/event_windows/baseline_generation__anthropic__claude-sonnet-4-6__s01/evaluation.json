@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It uses standard-library constructs (defaultdict, floor division), keeps control flow flat with guard clauses, and names things clearly. The main structural issue is maintaining two parallel dicts (window_totals and window_counts) when a single dict of (count, total) tuples or a simple dataclass would make the data movement more explicit and reduce the chance of key-sync bugs. The `from math import floor` import is unused (floor division operator is used instead, which is fine, but the import is dead code). The docstring is verbose for a small utility. The `isinstance(window_size, int)` check is reasonable but slightly over-engineered given the type annotation already signals intent; a simple `window_size <= 0` guard after a try/except or just trusting the caller would be simpler. The final list comprehension double-indexes both dicts by the same key, which is a minor redundancy that a single combined dict would eliminate. Overall the code is readable, auditable, and avoids speculative abstractions, but the parallel-dict pattern and unused import are small but real structural blemishes.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It uses standard-library constructs (defaultdict, floor division), keeps control flow flat with guard clauses, and names things clearly. The main structural issue is maintaining two parallel dicts (window_totals and window_counts) when a single dict of (count, total) tuples or a simple dataclass would make the data movement more explicit and reduce the chance of key-sync bugs. The `from math import floor` import is unused (floor division operator is used instead, which is fine, but the import is dead code). The docstring is verbose for a small utility. The `isinstance(window_size, int)` check is reasonable but slightly over-engineered given the type annotation already signals intent; a simple `window_size <= 0` guard after a try/except or just trusting the caller would be simpler. The final list comprehension double-indexes both dicts by the same key, which is a minor redundancy that a single combined dict would eliminate. Overall the code is readable, auditable, and avoids speculative abstractions, but the parallel-dict pattern and unused import are small but real structural blemishes.\",\n  \"strengths\": [\n    \"Flat control flow with early-continue guard clauses for malformed events\",\n    \"Clear, descriptive variable names throughout\",\n    \"Correct use of floor division matching the half-open window spec\",\n    \"Sorted output produced simply with sorted() on dict keys\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"Unused `from math import floor` import is dead code\",\n    \"Two parallel dicts (window_totals, window_counts) instead of one combined structure, creating a key-sync risk\",\n    \"Overly verbose docstring for a small utility function\",\n    \"isinstance(window_size, int) type guard is slightly over-engineered given the type annotation\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with early-continue guard clauses for malformed events",
+      "Clear, descriptive variable names throughout",
+      "Correct use of floor division matching the half-open window spec",
+      "Sorted output produced simply with sorted() on dict keys",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "Unused `from math import floor` import is dead code",
+      "Two parallel dicts (window_totals, window_counts) instead of one combined structure, creating a key-sync risk",
+      "Overly verbose docstring for a small utility function",
+      "isinstance(window_size, int) type guard is slightly over-engineered given the type annotation"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.067,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 52,
+    "maintainability_index": 77.196,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: all three required fields are validated before any output is produced, every ValueError names the offending field, and the function returns a clean dict only after all validations pass. The code is flat, explicit, and locally auditable with no hidden control flow or abstraction layers. The bool-subclass guard for age is a thoughtful edge-case fix. Minor deductions: the symptoms list permits empty lists (no requirement says otherwise, so this is fine), and stripping patient_id silently normalizes input rather than rejecting it outright, which could be debated as implicit behavior. The docstring is thorough and the structure is straightforward sequential validation matching the Zen of Python's preference for explicit, readable code.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: all three required fields are validated before any output is produced, every ValueError names the offending field, and the function returns a clean dict only after all validations pass. The code is flat, explicit, and locally auditable with no hidden control flow or abstraction layers. The bool-subclass guard for age is a thoughtful edge-case fix. Minor deductions: the symptoms list permits empty lists (no requirement says otherwise, so this is fine), and stripping patient_id silently normalizes input rather than rejecting it outright, which could be debated as implicit behavior. The docstring is thorough and the structure is straightforward sequential validation matching the Zen of Python's preference for explicit, readable code.\",\n  \"strengths\": [\n    \"All fields validated before any are accepted into output, satisfying CD-7's no-partial-validation rule\",\n    \"Every ValueError message names the specific failing field\",\n    \"Bool-subclass guard prevents silent acceptance of True/False as age\",\n    \"Flat, sequential structure with no unnecessary abstraction or indirection\",\n    \"Clean return dict contains exactly the three validated fields, nothing more\"\n  ],\n  \"weaknesses\": [\n    \"Silent stripping of patient_id and symptom strings may mask upstream data quality issues rather than rejecting them explicitly\",\n    \"TypeError for non-dict payload is reasonable but not specified in the functional requirements, adding a minor undocumented behavior\",\n    \"No validation that patient_id has a reasonable format beyond non-empty string (minor, as spec doesn't require it)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All fields validated before any are accepted into output, satisfying CD-7's no-partial-validation rule",
+      "Every ValueError message names the specific failing field",
+      "Bool-subclass guard prevents silent acceptance of True/False as age",
+      "Flat, sequential structure with no unnecessary abstraction or indirection",
+      "Clean return dict contains exactly the three validated fields, nothing more"
+    ],
+    "weaknesses": [
+      "Silent stripping of patient_id and symptom strings may mask upstream data quality issues rather than rejecting them explicitly",
+      "TypeError for non-dict payload is reasonable but not specified in the functional requirements, adding a minor undocumented behavior",
+      "No validation that patient_id has a reasonable format beyond non-empty string (minor, as spec doesn't require it)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.892,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 62,
+    "maintainability_index": 79.091,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

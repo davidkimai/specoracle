@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the task requirements without any speculative abstractions. Each method is small and does exactly one thing; control flow is flat with a simple guard clause in `get`; data movement is explicit through the dictionary; names are self-explanatory. The two-pass cleanup (collect dead keys, then delete) is the idiomatic safe way to mutate a dict during iteration. The type annotations add clarity without overhead. The only minor quibble is that `register` silently overwrites existing keys and accepts any `object` without validation, but the spec doesn't require key-collision errors, so this is acceptable. Overall this is a textbook example of simple, auditable, standard-library code.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the task requirements without any speculative abstractions. Each method is small and does exactly one thing; control flow is flat with a simple guard clause in `get`; data movement is explicit through the dictionary; names are self-explanatory. The two-pass cleanup (collect dead keys, then delete) is the idiomatic safe way to mutate a dict during iteration. The type annotations add clarity without overhead. The only minor quibble is that `register` silently overwrites existing keys and accepts any `object` without validation, but the spec doesn't require key-collision errors, so this is acceptable. Overall this is a textbook example of simple, auditable, standard-library code.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause in `get`\",\n    \"Two-pass cleanup avoids mutating dict during iteration safely and readably\",\n    \"No speculative abstractions or unused extension points\",\n    \"Type annotations improve local auditability without adding complexity\",\n    \"Direct use of weakref.ref \u2014 the right standard-library primitive\"\n  ],\n  \"weaknesses\": [\n    \"No validation or error raised for non-string keys or unhashable inputs (minor, spec is silent on this)\",\n    \"Silent overwrite on duplicate `register` calls \u2014 could be intentional but worth a comment\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause in `get`",
+      "Two-pass cleanup avoids mutating dict during iteration safely and readably",
+      "No speculative abstractions or unused extension points",
+      "Type annotations improve local auditability without adding complexity",
+      "Direct use of weakref.ref \u2014 the right standard-library primitive"
+    ],
+    "weaknesses": [
+      "No validation or error raised for non-string keys or unhashable inputs (minor, spec is silent on this)",
+      "Silent overwrite on duplicate `register` calls \u2014 could be intentional but worth a comment"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.054,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 15,
+    "maintainability_index": 64.513,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "baseline_generation"
+}

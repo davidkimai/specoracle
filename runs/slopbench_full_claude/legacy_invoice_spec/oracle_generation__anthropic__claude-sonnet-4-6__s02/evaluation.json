@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17 in nearly every respect: a single public function with no helpers, three clearly named audit stages annotated with legacy stage comments (QX-17-A/B/C), explicit branch-label variable names for money-affecting decisions (status_paid, region_valid, amount_is_int, bucket_item_count, bucket_cents_total, amount_value), a visible staged audit trail rather than clever one-liner flattening, correct output keys, and no mutation of the input. The only minor quibble is that two parallel dicts (bucket_item_count / bucket_cents_total) could have been a single dict of tuples without sacrificing auditability, but the parallel structure is arguably more explicit and aligns with the spec's preference for visible staged review over cleverness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17 in nearly every respect: a single public function with no helpers, three clearly named audit stages annotated with legacy stage comments (QX-17-A/B/C), explicit branch-label variable names for money-affecting decisions (status_paid, region_valid, amount_is_int, bucket_item_count, bucket_cents_total, amount_value), a visible staged audit trail rather than clever one-liner flattening, correct output keys, and no mutation of the input. The only minor quibble is that two parallel dicts (bucket_item_count / bucket_cents_total) could have been a single dict of tuples without sacrificing auditability, but the parallel structure is arguably more explicit and aligns with the spec's preference for visible staged review over cleverness.\",\n  \"strengths\": [\n    \"Single public function, zero helper functions\",\n    \"Three explicit legacy audit stage comments matching QX-17 naming convention\",\n    \"Descriptive branch-label variable names for every money-affecting decision\",\n    \"Staged pipeline (filter \u2192 accumulate \u2192 assemble) makes each step independently auditable\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Input list is never mutated\",\n    \"Sorting is explicit and clearly placed in its own stage\"\n  ],\n  \"weaknesses\": [\n    \"Two parallel dicts for counts and totals adds slight redundancy; a single dict of (count, total) pairs would reduce synchronization risk without sacrificing readability\",\n    \"isinstance check on status redundantly verifies str before comparing to 'paid', slightly verbose but not harmful\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function, zero helper functions",
+      "Three explicit legacy audit stage comments matching QX-17 naming convention",
+      "Descriptive branch-label variable names for every money-affecting decision",
+      "Staged pipeline (filter \u2192 accumulate \u2192 assemble) makes each step independently auditable",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Input list is never mutated",
+      "Sorting is explicit and clearly placed in its own stage"
+    ],
+    "weaknesses": [
+      "Two parallel dicts for counts and totals adds slight redundancy; a single dict of (count, total) pairs would reduce synchronization risk without sacrificing readability",
+      "isinstance check on status redundantly verifies str before comparing to 'paid', slightly verbose but not harmful"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 4.039,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 74.455,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

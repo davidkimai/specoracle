@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "This implementation is a near-ideal realization of the Zen of Python oracle for this task. It decomposes the problem into small, pure, well-named helpers (_parse_value, _deep_merge, _env_key_to_path, _set_nested, _env_to_nested) each doing exactly one thing with flat control flow. Data movement is explicit\u2014copy.deepcopy is used deliberately and no input is mutated. Error handling is clear and local. The public entry point is a clean three-step pipeline that reads like a specification. The only minor quibbles are that _set_nested uses mutation on a freshly-created dict (acceptable since it's an internal builder pattern, not hidden mutation of inputs), and the type-checking guards in merge_settings are slightly defensive/verbose for a library that could rely on duck typing, but they do satisfy 'raise clear errors for invalid inputs.' There are no speculative abstractions, no framework-shaped code, and no unused extension points.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"This implementation is a near-ideal realization of the Zen of Python oracle for this task. It decomposes the problem into small, pure, well-named helpers (_parse_value, _deep_merge, _env_key_to_path, _set_nested, _env_to_nested) each doing exactly one thing with flat control flow. Data movement is explicit\u2014copy.deepcopy is used deliberately and no input is mutated. Error handling is clear and local. The public entry point is a clean three-step pipeline that reads like a specification. The only minor quibbles are that _set_nested uses mutation on a freshly-created dict (acceptable since it's an internal builder pattern, not hidden mutation of inputs), and the type-checking guards in merge_settings are slightly defensive/verbose for a library that could rely on duck typing, but they do satisfy 'raise clear errors for invalid inputs.' There are no speculative abstractions, no framework-shaped code, and no unused extension points.\",\n  \"strengths\": [\n    \"Small, pure helpers with single responsibilities and descriptive names\",\n    \"Flat control flow throughout; guard clauses used appropriately\",\n    \"Explicit data movement: copy.deepcopy prevents any input mutation\",\n    \"Clear error messages for invalid env keys and type mismatches\",\n    \"Public entry point reads as a transparent three-step pipeline\",\n    \"No clever metaprogramming or speculative abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Type-guard isinstance checks in merge_settings are slightly over-defensive for idiomatic Python duck typing\",\n    \"_set_nested mutates its mapping argument, which is fine internally but slightly breaks the pure-helper pattern if read in isolation\",\n    \"raw.lower() is called twice in _parse_value for true/false checks; a single assignment would be marginally cleaner\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helpers with single responsibilities and descriptive names",
+      "Flat control flow throughout; guard clauses used appropriately",
+      "Explicit data movement: copy.deepcopy prevents any input mutation",
+      "Clear error messages for invalid env keys and type mismatches",
+      "Public entry point reads as a transparent three-step pipeline",
+      "No clever metaprogramming or speculative abstractions"
+    ],
+    "weaknesses": [
+      "Type-guard isinstance checks in merge_settings are slightly over-defensive for idiomatic Python duck typing",
+      "_set_nested mutates its mapping argument, which is fine internally but slightly breaks the pure-helper pattern if read in isolation",
+      "raw.lower() is called twice in _parse_value for true/false checks; a single assignment would be marginally cleaner"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.171,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.833,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 29,
+    "function_count": 6,
+    "loc": 100,
+    "maintainability_index": 69.506,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "oracle_generation"
+}

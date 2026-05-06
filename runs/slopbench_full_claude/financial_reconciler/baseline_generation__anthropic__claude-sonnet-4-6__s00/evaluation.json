@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4's doctrine: direction validation happens before any accumulation, debit and credit are accumulated into separate named keys ('debit' and 'credit') rather than a single running total, and the balance arithmetic is deferred to a clean post-processing loop entirely separate from the direction-routing logic. There is no inline arithmetic inside the conditional that decides monetary direction \u2014 the `result[account][direction] += float(amount)` line executes only after direction has been validated and the account bucket initialized. The code is flat, explicit, and locally auditable with clear error messages. The only minor quibble is that `balance` is initialized to 0.0 in the bucket and then overwritten in a second pass, which is slightly redundant but not harmful, and `VALID_DIRECTIONS` as a module-level constant would be marginally cleaner than a function-local one, but neither issue meaningfully detracts from the structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4's doctrine: direction validation happens before any accumulation, debit and credit are accumulated into separate named keys ('debit' and 'credit') rather than a single running total, and the balance arithmetic is deferred to a clean post-processing loop entirely separate from the direction-routing logic. There is no inline arithmetic inside the conditional that decides monetary direction \u2014 the `result[account][direction] += float(amount)` line executes only after direction has been validated and the account bucket initialized. The code is flat, explicit, and locally auditable with clear error messages. The only minor quibble is that `balance` is initialized to 0.0 in the bucket and then overwritten in a second pass, which is slightly redundant but not harmful, and `VALID_DIRECTIONS` as a module-level constant would be marginally cleaner than a function-local one, but neither issue meaningfully detracts from the structural quality.\",\n  \"strengths\": [\n    \"Direction validation is fully separated from accumulation \u2014 no arithmetic inside direction conditionals\",\n    \"Debit and credit maintained in distinct named accumulators per TR-4\",\n    \"Balance computation deferred to a clean, separate post-processing loop\",\n    \"Comprehensive input validation with informative error messages\",\n    \"Flat, readable control flow with no nested conditionals or clever tricks\"\n  ],\n  \"weaknesses\": [\n    \"VALID_DIRECTIONS defined inside the function on every call; better as a module-level constant\",\n    \"balance initialized to 0.0 in the bucket and immediately overwritten in the second pass \u2014 minor redundancy\",\n    \"No guard against negative amounts, which may be a domain concern\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Direction validation is fully separated from accumulation \u2014 no arithmetic inside direction conditionals",
+      "Debit and credit maintained in distinct named accumulators per TR-4",
+      "Balance computation deferred to a clean, separate post-processing loop",
+      "Comprehensive input validation with informative error messages",
+      "Flat, readable control flow with no nested conditionals or clever tricks"
+    ],
+    "weaknesses": [
+      "VALID_DIRECTIONS defined inside the function on every call; better as a module-level constant",
+      "balance initialized to 0.0 in the bucket and immediately overwritten in the second pass \u2014 minor redundancy",
+      "No guard against negative amounts, which may be a domain concern"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.003,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 61,
+    "maintainability_index": 78.43,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

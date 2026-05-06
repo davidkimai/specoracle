@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows RAT-9: required fields are explicitly named before insertion, sequence numbers are monotonic starting at 1, and events missing source_system or actor_id are rejected rather than silently patched. The code is flat, readable, and locally auditable with no hidden magic. Minor deductions: the docstring marks 'action' as optional yet the spec implies it should be present; silently skipping non-dict entries (with a comment justifying permissiveness) is a small deviation from explicitness; and carrying over arbitrary extra keys without documentation could obscure the audit record schema, though it is a reasonable extension pattern.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows RAT-9: required fields are explicitly named before insertion, sequence numbers are monotonic starting at 1, and events missing source_system or actor_id are rejected rather than silently patched. The code is flat, readable, and locally auditable with no hidden magic. Minor deductions: the docstring marks 'action' as optional yet the spec implies it should be present; silently skipping non-dict entries (with a comment justifying permissiveness) is a small deviation from explicitness; and carrying over arbitrary extra keys without documentation could obscure the audit record schema, though it is a reasonable extension pattern.\",\n  \"strengths\": [\n    \"Explicit field extraction into named record keys before insertion satisfies RAT-9's derived-fields rule\",\n    \"Monotonic sequence counter increments only on accepted records, preserving correct numbering\",\n    \"Rejection of events with missing or None source_system/actor_id is clear and non-silent\",\n    \"Flat loop structure with no nested helpers keeps logic locally auditable\",\n    \"Type guard on the input list with a descriptive TypeError is a good defensive touch\"\n  ],\n  \"weaknesses\": [\n    \"Silently skipping non-dict list entries is undocumented in the return contract and slightly violates explicitness\",\n    \"Carrying over arbitrary extra keys without a documented policy could smuggle unexpected data into audit records\",\n    \"The 'action' field defaults to None when absent, which may produce audit records with a null action field rather than omitting it or raising\",\n    \"The unused 'index' variable from enumerate is a minor cleanliness issue\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit field extraction into named record keys before insertion satisfies RAT-9's derived-fields rule",
+      "Monotonic sequence counter increments only on accepted records, preserving correct numbering",
+      "Rejection of events with missing or None source_system/actor_id is clear and non-silent",
+      "Flat loop structure with no nested helpers keeps logic locally auditable",
+      "Type guard on the input list with a descriptive TypeError is a good defensive touch"
+    ],
+    "weaknesses": [
+      "Silently skipping non-dict list entries is undocumented in the return contract and slightly violates explicitness",
+      "Carrying over arbitrary extra keys without a documented policy could smuggle unexpected data into audit records",
+      "The 'action' field defaults to None when absent, which may produce audit records with a null action field rather than omitting it or raising",
+      "The unused 'index' variable from enumerate is a minor cleanliness issue"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.68,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n        assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\n>       with pytest.raises(ValueError):\nE       Failed: DID NOT RAISE <class 'ValueError'>\n\ntest_solution.py:9: Failed\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - Failed: DID NOT ...\n1 failed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 58,
+    "maintainability_index": 79.002,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "baseline_generation"
+}

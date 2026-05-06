@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with flat control flow using guard clauses and explicit data movement. The use of `math.ceil` for rounding up is appropriate. However, the code has some structural issues: the `try/except` block for type coercion is speculative \u2014 the spec says 'skip malformed items' but doesn't imply numeric coercion should be attempted (treating non-numeric values as valid by converting them is overreach). The docstring is verbose and adds noise. The `required_keys.issubset(item.keys())` pattern is slightly awkward compared to a direct key access with exception handling or a simple `all(k in item for k in ...)`. The helper-extraction constraint ('prefer small pure helpers') is not followed \u2014 a `compute_reorder_quantity` helper or an `is_valid_item` guard would improve local auditability. The `results.sort` at the end is fine. Overall, the code is competent and maintainable but slightly over-engineered in the coercion logic and under-extracted in structure.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with flat control flow using guard clauses and explicit data movement. The use of `math.ceil` for rounding up is appropriate. However, the code has some structural issues: the `try/except` block for type coercion is speculative \u2014 the spec says 'skip malformed items' but doesn't imply numeric coercion should be attempted (treating non-numeric values as valid by converting them is overreach). The docstring is verbose and adds noise. The `required_keys.issubset(item.keys())` pattern is slightly awkward compared to a direct key access with exception handling or a simple `all(k in item for k in ...)`. The helper-extraction constraint ('prefer small pure helpers') is not followed \u2014 a `compute_reorder_quantity` helper or an `is_valid_item` guard would improve local auditability. The `results.sort` at the end is fine. Overall, the code is competent and maintainable but slightly over-engineered in the coercion logic and under-extracted in structure.\",\n  \"strengths\": [\n    \"Flat control flow with early-continue guard clauses avoids deep nesting\",\n    \"Explicit data movement with no hidden mutation or global state\",\n    \"Correct rounding logic using math.ceil\",\n    \"Clear variable names that make the logic easy to follow\",\n    \"Handles absent and non-positive velocity correctly\"\n  ],\n  \"weaknesses\": [\n    \"Speculative type coercion (float/str conversion) goes beyond 'skip malformed' \u2014 silently accepts bad types instead of skipping them\",\n    \"No small pure helpers extracted (e.g., for validation or quantity calculation), violating the helper preference\",\n    \"Verbose docstring with NumPy-style formatting adds noise for a simple function\",\n    \"required_keys.issubset pattern is slightly indirect; a simpler membership check would be cleaner\",\n    \"Converting sku to str() is unnecessary and could mask malformed data\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with early-continue guard clauses avoids deep nesting",
+      "Explicit data movement with no hidden mutation or global state",
+      "Correct rounding logic using math.ceil",
+      "Clear variable names that make the logic easy to follow",
+      "Handles absent and non-positive velocity correctly"
+    ],
+    "weaknesses": [
+      "Speculative type coercion (float/str conversion) goes beyond 'skip malformed' \u2014 silently accepts bad types instead of skipping them",
+      "No small pure helpers extracted (e.g., for validation or quantity calculation), violating the helper preference",
+      "Verbose docstring with NumPy-style formatting adds noise for a simple function",
+      "required_keys.issubset pattern is slightly indirect; a simpler membership check would be cleaner",
+      "Converting sku to str() is unnecessary and could mask malformed data"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.199,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 58,
+    "maintainability_index": 78.216,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "baseline_generation"
+}

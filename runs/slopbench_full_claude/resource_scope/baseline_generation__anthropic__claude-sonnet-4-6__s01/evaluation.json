@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the task requirements without speculative abstractions. State is explicit (`_resources` list), control flow is flat, names are self-explanatory, and the reverse-close logic is straightforward. The error-handling approach (collect errors, raise first) is a reasonable pragmatic choice given the stdlib doesn't offer a built-in multi-error type here. The only minor concern is that silently discarding all but the first error could surprise callers, and `self._resources.clear()` after errors means the scope is silently reset even on failure \u2014 a debatable but defensible choice. Overall this is a textbook example of simple, auditable, ordinary Python.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the task requirements without speculative abstractions. State is explicit (`_resources` list), control flow is flat, names are self-explanatory, and the reverse-close logic is straightforward. The error-handling approach (collect errors, raise first) is a reasonable pragmatic choice given the stdlib doesn't offer a built-in multi-error type here. The only minor concern is that silently discarding all but the first error could surprise callers, and `self._resources.clear()` after errors means the scope is silently reset even on failure \u2014 a debatable but defensible choice. Overall this is a textbook example of simple, auditable, ordinary Python.\",\n  \"strengths\": [\n    \"Minimal class with no unnecessary methods or extension points\",\n    \"Explicit data movement: resources tracked in a plain list, cleared after exit\",\n    \"Flat control flow with a single loop and guard clause for errors\",\n    \"Reverse-order closing correctly implemented with `reversed()`\",\n    \"Returns False from __exit__ to not suppress exceptions\",\n    \"Names (`acquire`, `_resources`) are immediately self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Discards all but the first close-error, which may hide failures silently\",\n    \"Clearing `_resources` on error means re-entering the scope after an exception would start fresh without warning\",\n    \"No validation that the acquired resource has a `close` method (could raise AttributeError instead of a clear error)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal class with no unnecessary methods or extension points",
+      "Explicit data movement: resources tracked in a plain list, cleared after exit",
+      "Flat control flow with a single loop and guard clause for errors",
+      "Reverse-order closing correctly implemented with `reversed()`",
+      "Returns False from __exit__ to not suppress exceptions",
+      "Names (`acquire`, `_resources`) are immediately self-explanatory"
+    ],
+    "weaknesses": [
+      "Discards all but the first close-error, which may hide failures silently",
+      "Clearing `_resources` on error means re-entering the scope after an exception would start fresh without warning",
+      "No validation that the acquired resource has a `close` method (could raise AttributeError instead of a clear error)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.318,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 19,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "baseline_generation"
+}

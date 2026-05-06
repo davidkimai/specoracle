@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it is flat, explicit, and minimal. A single loop over schema items, a guard-free try/except, and a clear ValueError with the field name cover all requirements without speculative abstraction. Data movement is explicit (output dict built and returned), there is no hidden mutation, and the logic is locally auditable in one glance. The only marginal improvement would be distinguishing the case where the raw value is present but fails casting versus the default failing (though the spec does not require this distinction), and one could argue that applying the caster to the default value when the field is absent is slightly surprising behavior\u2014most callers expect defaults to already be the right type\u2014but this faithfully follows the spec as written.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it is flat, explicit, and minimal. A single loop over schema items, a guard-free try/except, and a clear ValueError with the field name cover all requirements without speculative abstraction. Data movement is explicit (output dict built and returned), there is no hidden mutation, and the logic is locally auditable in one glance. The only marginal improvement would be distinguishing the case where the raw value is present but fails casting versus the default failing (though the spec does not require this distinction), and one could argue that applying the caster to the default value when the field is absent is slightly surprising behavior\u2014most callers expect defaults to already be the right type\u2014but this faithfully follows the spec as written.\",\n  \"strengths\": [\n    \"Flat control flow with no unnecessary nesting\",\n    \"Explicit data movement: builds and returns a new dict without mutating inputs\",\n    \"Clear, informative ValueError that names the offending field\",\n    \"No speculative abstractions or unused extension points\",\n    \"Concise and fully locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Applies caster to the default value too, which may surprise callers who supply pre-typed defaults (though spec-compliant)\",\n    \"Could optionally distinguish cast failure on a present value vs. a default, but spec does not require it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no unnecessary nesting",
+      "Explicit data movement: builds and returns a new dict without mutating inputs",
+      "Clear, informative ValueError that names the offending field",
+      "No speculative abstractions or unused extension points",
+      "Concise and fully locally auditable"
+    ],
+    "weaknesses": [
+      "Applies caster to the default value too, which may surprise callers who supply pre-typed defaults (though spec-compliant)",
+      "Could optionally distinguish cast failure on a present value vs. a default, but spec does not require it"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.773,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 10,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "schema_coercer",
+  "variant": "human_reference"
+}

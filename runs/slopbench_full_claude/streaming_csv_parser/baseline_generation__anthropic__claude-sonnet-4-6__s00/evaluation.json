@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate correctly uses `csv.DictReader` for streaming CSV parsing and filters empty lines with a small helper, which is reasonably clean. However, there are several structural issues: the `non_empty_lines` helper does redundant stripping (`rstrip('\\n')` then `rstrip('\\r')` instead of a single `rstrip('\\r\\n')` or `strip()`), the comment about 'handling the header manually' is misleading since no manual handling occurs, the docstring is verbose boilerplate that adds noise without insight, and `dict(row)` is unnecessary since `csv.DictReader` already yields `dict`-like objects (in Python 3.8+ they are plain dicts). The code also silently handles the case where there are no non-empty lines (yielding nothing) rather than raising a clear error for missing headers as the operational constraints suggest. The overall structure is acceptably flat and readable, but the implementation has minor slop and a missed opportunity to raise on invalid input.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The candidate correctly uses `csv.DictReader` for streaming CSV parsing and filters empty lines with a small helper, which is reasonably clean. However, there are several structural issues: the `non_empty_lines` helper does redundant stripping (`rstrip('\\\\n')` then `rstrip('\\\\r')` instead of a single `rstrip('\\\\r\\\\n')` or `strip()`), the comment about 'handling the header manually' is misleading since no manual handling occurs, the docstring is verbose boilerplate that adds noise without insight, and `dict(row)` is unnecessary since `csv.DictReader` already yields `dict`-like objects (in Python 3.8+ they are plain dicts). The code also silently handles the case where there are no non-empty lines (yielding nothing) rather than raising a clear error for missing headers as the operational constraints suggest. The overall structure is acceptably flat and readable, but the implementation has minor slop and a missed opportunity to raise on invalid input.\",\n  \"strengths\": [\n    \"Leverages standard-library `csv.DictReader` rather than reimplementing CSV parsing\",\n    \"Preserves streaming behavior by using a generator helper and not materializing the input\",\n    \"Small, named helper `non_empty_lines` makes data flow explicit\",\n    \"Flat control flow with no deep nesting\"\n  ],\n  \"weaknesses\": [\n    \"Redundant double-rstrip instead of a single `rstrip('\\\\r\\\\n')` or `strip()`\",\n    \"Misleading comment claims manual header handling that doesn't exist\",\n    \"Unnecessary `dict(row)` conversion since Python 3.8+ DictReader already yields dicts\",\n    \"No error raised when the input has no non-empty lines (missing header case silently yields nothing)\",\n    \"Verbose docstring adds boilerplate noise without aiding local auditability\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Leverages standard-library `csv.DictReader` rather than reimplementing CSV parsing",
+      "Preserves streaming behavior by using a generator helper and not materializing the input",
+      "Small, named helper `non_empty_lines` makes data flow explicit",
+      "Flat control flow with no deep nesting"
+    ],
+    "weaknesses": [
+      "Redundant double-rstrip instead of a single `rstrip('\\r\\n')` or `strip()`",
+      "Misleading comment claims manual header handling that doesn't exist",
+      "Unnecessary `dict(row)` conversion since Python 3.8+ DictReader already yields dicts",
+      "No error raised when the input has no non-empty lines (missing header case silently yields nothing)",
+      "Verbose docstring adds boilerplate noise without aiding local auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.437,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 2,
+    "loc": 22,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "baseline_generation"
+}

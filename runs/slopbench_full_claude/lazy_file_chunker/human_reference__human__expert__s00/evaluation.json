@@ -1,0 +1,50 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "This implementation is a textbook example of Pythonic simplicity: a single guard clause rejects invalid input with a clear error message, the loop reads lazily one chunk at a time without buffering the whole file, the break-on-empty idiom is idiomatic and immediately auditable, and there are no speculative abstractions, hidden state, or unnecessary indirection. The type annotations add clarity without clutter, and the function does exactly one thing with no unused extension points.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"This implementation is a textbook example of Pythonic simplicity: a single guard clause rejects invalid input with a clear error message, the loop reads lazily one chunk at a time without buffering the whole file, the break-on-empty idiom is idiomatic and immediately auditable, and there are no speculative abstractions, hidden state, or unnecessary indirection. The type annotations add clarity without clutter, and the function does exactly one thing with no unused extension points.\",\n  \"strengths\": [\n    \"Minimal and flat control flow with a single guard clause and a simple while/break loop\",\n    \"Explicit, clear ValueError for invalid chunk_size\",\n    \"Lazy evaluation \u2014 reads only chunk_size bytes per iteration, never the whole file\",\n    \"Accurate type annotations (BinaryIO, Iterator[bytes]) without over-engineering\",\n    \"No speculative abstractions or helper functions that would add unnecessary indirection\"\n  ],\n  \"weaknesses\": [\n    \"No weaknesses of note; the implementation is essentially optimal for this task\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal and flat control flow with a single guard clause and a simple while/break loop",
+      "Explicit, clear ValueError for invalid chunk_size",
+      "Lazy evaluation \u2014 reads only chunk_size bytes per iteration, never the whole file",
+      "Accurate type annotations (BinaryIO, Iterator[bytes]) without over-engineering",
+      "No speculative abstractions or helper functions that would add unnecessary indirection"
+    ],
+    "weaknesses": [
+      "No weaknesses of note; the implementation is essentially optimal for this task"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.937,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 11,
+    "maintainability_index": 69.289,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "human_reference"
+}

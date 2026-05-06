@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of Pythonic clarity and directness. It computes the union of all keys, iterates once, builds explicit records with the required three fields, and sorts by field name \u2014 exactly matching the functional requirements and the SRL-3 structural spec. There is no unnecessary abstraction, no hidden state, no summary collapsing, and every change is represented as an explicit record. The code is flat, readable, and locally auditable in a single glance.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of Pythonic clarity and directness. It computes the union of all keys, iterates once, builds explicit records with the required three fields, and sorts by field name \u2014 exactly matching the functional requirements and the SRL-3 structural spec. There is no unnecessary abstraction, no hidden state, no summary collapsing, and every change is represented as an explicit record. The code is flat, readable, and locally auditable in a single glance.\",\n  \"strengths\": [\n    \"Explicit record structure with field, before, and after matches spec exactly\",\n    \"Single-pass iteration over union of keys is simple and efficient\",\n    \"Sort by field name is correct and deterministic\",\n    \"No unnecessary abstractions or helper classes\",\n    \"Handles added, removed, and changed fields uniformly via .get() returning None\"\n  ],\n  \"weaknesses\": [\n    \"No type hints on the return value's inner dict (minor style nit)\",\n    \"None is used as sentinel for missing fields, which could be ambiguous if None is a valid field value \u2014 but this is an inherent ambiguity in the spec, not a code flaw\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Explicit record structure with field, before, and after matches spec exactly",
+      "Single-pass iteration over union of keys is simple and efficient",
+      "Sort by field name is correct and deterministic",
+      "No unnecessary abstractions or helper classes",
+      "Handles added, removed, and changed fields uniformly via .get() returning None"
+    ],
+    "weaknesses": [
+      "No type hints on the return value's inner dict (minor style nit)",
+      "None is used as sentinel for missing fields, which could be ambiguous if None is a valid field value \u2014 but this is an inherent ambiguity in the spec, not a code flaw"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.651,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 67.719,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "oracle_generation"
+}

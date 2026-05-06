@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen of Python for this task: it is flat, explicit, and minimal. The guard clauses at the top handle invalid input clearly before any iteration begins, the loop body is a single read-check-yield pattern with no hidden state or mutation, and the docstring communicates behavior without over-engineering. The only minor quibble is the isinstance/bool type check, which adds a small amount of defensive complexity that wasn't strictly required by the spec (the spec only says 'reject non-positive chunk sizes'), but it is a reasonable and locally auditable addition rather than speculative abstraction. There are no unused extension points, no framework-shaped scaffolding, and the data movement is fully explicit.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen of Python for this task: it is flat, explicit, and minimal. The guard clauses at the top handle invalid input clearly before any iteration begins, the loop body is a single read-check-yield pattern with no hidden state or mutation, and the docstring communicates behavior without over-engineering. The only minor quibble is the isinstance/bool type check, which adds a small amount of defensive complexity that wasn't strictly required by the spec (the spec only says 'reject non-positive chunk sizes'), but it is a reasonable and locally auditable addition rather than speculative abstraction. There are no unused extension points, no framework-shaped scaffolding, and the data movement is fully explicit.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses before the loop\",\n    \"Minimal loop body: read, check, yield \u2014 nothing extra\",\n    \"Clear ValueError messages with the offending value included\",\n    \"No hidden state, no global mutation, no speculative abstractions\",\n    \"Docstring is informative without being bloated\"\n  ],\n  \"weaknesses\": [\n    \"The isinstance/bool type guard goes slightly beyond the stated requirement of rejecting non-positive sizes, adding minor complexity\",\n    \"Module-level docstring and verbose parameter docs are mild over-documentation for a small utility function\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses before the loop",
+      "Minimal loop body: read, check, yield \u2014 nothing extra",
+      "Clear ValueError messages with the offending value included",
+      "No hidden state, no global mutation, no speculative abstractions",
+      "Docstring is informative without being bloated"
+    ],
+    "weaknesses": [
+      "The isinstance/bool type guard goes slightly beyond the stated requirement of rejecting non-positive sizes, adding minor complexity",
+      "Module-level docstring and verbose parameter docs are mild over-documentation for a small utility function"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.122,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 67.134,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "oracle_generation"
+}

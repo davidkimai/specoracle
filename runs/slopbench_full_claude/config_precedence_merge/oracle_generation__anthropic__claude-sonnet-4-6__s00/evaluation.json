@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into four small, pure, single-responsibility helpers (_parse_value, _set_nested, _deep_merge, _env_to_nested) each of which can be audited in isolation, uses only standard-library constructs (copy.deepcopy), keeps control flow flat with guard clauses and early returns, makes data movement fully explicit with no hidden mutation, raises clear errors for malformed inputs, and names everything so the behavior is self-documenting. The top-level merge_settings reads as a three-line policy statement. Minor quibbles: the docstring on merge_settings is slightly over-engineered with NumPy-style sections for a small utility, and the PREFIX constant inside _env_to_nested could be a module-level constant, but neither is a meaningful structural flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into four small, pure, single-responsibility helpers (_parse_value, _set_nested, _deep_merge, _env_to_nested) each of which can be audited in isolation, uses only standard-library constructs (copy.deepcopy), keeps control flow flat with guard clauses and early returns, makes data movement fully explicit with no hidden mutation, raises clear errors for malformed inputs, and names everything so the behavior is self-documenting. The top-level merge_settings reads as a three-line policy statement. Minor quibbles: the docstring on merge_settings is slightly over-engineered with NumPy-style sections for a small utility, and the PREFIX constant inside _env_to_nested could be a module-level constant, but neither is a meaningful structural flaw.\",\n  \"strengths\": [\n    \"Four focused pure helpers, each auditable in under ten lines\",\n    \"No hidden mutation; copy.deepcopy used consistently and correctly\",\n    \"Flat control flow with guard clauses in _set_nested and _env_to_nested\",\n    \"Clear, specific error messages for every invalid-input case\",\n    \"merge_settings reads as a transparent three-step policy\",\n    \"Ordinary standard-library constructs only; no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"NumPy-style docstring on merge_settings is speculative overhead for a small utility\",\n    \"PREFIX constant defined inside _env_to_nested rather than at module level\",\n    \"raw.lower() called twice in _parse_value instead of once\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Four focused pure helpers, each auditable in under ten lines",
+      "No hidden mutation; copy.deepcopy used consistently and correctly",
+      "Flat control flow with guard clauses in _set_nested and _env_to_nested",
+      "Clear, specific error messages for every invalid-input case",
+      "merge_settings reads as a transparent three-step policy",
+      "Ordinary standard-library constructs only; no metaprogramming"
+    ],
+    "weaknesses": [
+      "NumPy-style docstring on merge_settings is speculative overhead for a small utility",
+      "PREFIX constant defined inside _env_to_nested rather than at module level",
+      "raw.lower() called twice in _parse_value instead of once"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.615,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.8,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 29,
+    "function_count": 5,
+    "loc": 75,
+    "maintainability_index": 67.043,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "oracle_generation"
+}

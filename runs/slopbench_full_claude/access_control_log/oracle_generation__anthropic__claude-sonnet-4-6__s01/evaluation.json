@@ -1,0 +1,50 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the ZT-2 principle: a single, flat function with no branching, no early returns, and a guaranteed log write before the result is handed back. The deny-by-default logic is expressed in one readable line using `matrix.get(role, set())`, the log record is built inline with all three required fields, and the structure makes it trivially auditable at a glance. The docstring is thorough without being bloated, explicitly calling out the no-short-circuit constraint. There is no architectural slop, no unnecessary abstraction, and no hidden control flow.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the ZT-2 principle: a single, flat function with no branching, no early returns, and a guaranteed log write before the result is handed back. The deny-by-default logic is expressed in one readable line using `matrix.get(role, set())`, the log record is built inline with all three required fields, and the structure makes it trivially auditable at a glance. The docstring is thorough without being bloated, explicitly calling out the no-short-circuit constraint. There is no architectural slop, no unnecessary abstraction, and no hidden control flow.\",\n  \"strengths\": [\n    \"Single unconditional log.append before return satisfies ZT-2 with zero ambiguity\",\n    \"Deny-by-default expressed concisely with matrix.get fallback to empty set\",\n    \"Flat, linear control flow \u2014 no branches, no early returns, no helper functions\",\n    \"All three required log fields (role, permission, allowed) present and explicit\",\n    \"Type annotations and docstring are precise and informative without over-engineering\"\n  ],\n  \"weaknesses\": [\n    \"No weaknesses of note; the implementation is minimal and correct\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single unconditional log.append before return satisfies ZT-2 with zero ambiguity",
+      "Deny-by-default expressed concisely with matrix.get fallback to empty set",
+      "Flat, linear control flow \u2014 no branches, no early returns, no helper functions",
+      "All three required log fields (role, permission, allowed) present and explicit",
+      "Type annotations and docstring are precise and informative without over-engineering"
+    ],
+    "weaknesses": [
+      "No weaknesses of note; the implementation is minimal and correct"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.83,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 86.418,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "oracle_generation"
+}

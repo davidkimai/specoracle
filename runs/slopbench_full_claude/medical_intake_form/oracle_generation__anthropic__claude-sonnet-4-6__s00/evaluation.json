@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, explicit, and flat realization of the CD-7 spec. It validates all fields before raising any error (collecting all errors into a list and raising once at the end), names every failing field in the error message, and returns only a clean dict of exactly the required fields. The bool-subclass guard for age is a thoughtful edge-case handling. The docstring is thorough without being excessive. Minor quibbles: the spec says 'raise ValueError naming the bad field' (singular), suggesting fail-fast on the first bad field rather than accumulating all errors, but collecting all errors is strictly safer and more user-friendly, and the spec's 'partial validation is not permitted' clause is satisfied either way. The patient_id strip() on output is a reasonable normalization. Overall the code is highly readable, locally auditable, and architecturally sound with no unnecessary abstraction layers.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, explicit, and flat realization of the CD-7 spec. It validates all fields before raising any error (collecting all errors into a list and raising once at the end), names every failing field in the error message, and returns only a clean dict of exactly the required fields. The bool-subclass guard for age is a thoughtful edge-case handling. The docstring is thorough without being excessive. Minor quibbles: the spec says 'raise ValueError naming the bad field' (singular), suggesting fail-fast on the first bad field rather than accumulating all errors, but collecting all errors is strictly safer and more user-friendly, and the spec's 'partial validation is not permitted' clause is satisfied either way. The patient_id strip() on output is a reasonable normalization. Overall the code is highly readable, locally auditable, and architecturally sound with no unnecessary abstraction layers.\",\n  \"strengths\": [\n    \"Collects all validation errors before raising, fully satisfying the 'no partial validation' CD-7 requirement\",\n    \"Every error message explicitly names the offending field\",\n    \"Explicit bool rejection for age prevents a common Python gotcha\",\n    \"Returns only the three required fields in a clean copy, not the raw payload\",\n    \"Flat, linear structure with no unnecessary helper functions or classes\",\n    \"Docstring is clear and accurate without being bloated\"\n  ],\n  \"weaknesses\": [\n    \"Accumulating all errors into a list and joining them is slightly more complex than a simple fail-fast ValueError; the spec only requires naming the bad field, not reporting all bad fields simultaneously\",\n    \"patient_id.strip() normalization on output is undocumented in the spec and silently mutates the value\",\n    \"The TypeError for non-dict payload is reasonable but not mentioned in the spec, adding a small undocumented behavior\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Collects all validation errors before raising, fully satisfying the 'no partial validation' CD-7 requirement",
+      "Every error message explicitly names the offending field",
+      "Explicit bool rejection for age prevents a common Python gotcha",
+      "Returns only the three required fields in a clean copy, not the raw payload",
+      "Flat, linear structure with no unnecessary helper functions or classes",
+      "Docstring is clear and accurate without being bloated"
+    ],
+    "weaknesses": [
+      "Accumulating all errors into a list and joining them is slightly more complex than a simple fail-fast ValueError; the spec only requires naming the bad field, not reporting all bad fields simultaneously",
+      "patient_id.strip() normalization on output is undocumented in the spec and silently mutates the value",
+      "The TypeError for non-dict payload is reasonable but not mentioned in the spec, adding a small undocumented behavior"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.706,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 83,
+    "maintainability_index": 78.529,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_generation"
+}

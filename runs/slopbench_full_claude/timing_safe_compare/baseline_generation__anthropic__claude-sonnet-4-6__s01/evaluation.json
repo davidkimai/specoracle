@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses three guard clauses to validate inputs before delegating to the standard library, which is exactly the right structure for this task. Each check is independently readable and raises a clear, informative TypeError. The function does one thing, has no hidden state, no speculative abstractions, and no unnecessary indirection. The only minor quibble is that the two isinstance checks could be collapsed into a single helper or combined with the type-equality check, but the current form is still highly readable and locally auditable. The type annotation uses a string union which is acceptable for older Python compatibility. Overall this is a near-ideal realization of the informal oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses three guard clauses to validate inputs before delegating to the standard library, which is exactly the right structure for this task. Each check is independently readable and raises a clear, informative TypeError. The function does one thing, has no hidden state, no speculative abstractions, and no unnecessary indirection. The only minor quibble is that the two isinstance checks could be collapsed into a single helper or combined with the type-equality check, but the current form is still highly readable and locally auditable. The type annotation uses a string union which is acceptable for older Python compatibility. Overall this is a near-ideal realization of the informal oracle.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses \u2014 no nesting\",\n    \"Each TypeError carries a precise, informative message\",\n    \"Delegates to hmac.compare_digest without reimplementing timing-safe logic\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names are self-explanatory and match the task vocabulary\"\n  ],\n  \"weaknesses\": [\n    \"The two isinstance checks could be merged into one (e.g., checking both at once) to reduce repetition slightly\",\n    \"String-form type annotation ('str | bytes') is a minor anachronism when union types are available natively in Python 3.10+\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses \u2014 no nesting",
+      "Each TypeError carries a precise, informative message",
+      "Delegates to hmac.compare_digest without reimplementing timing-safe logic",
+      "No speculative abstractions or unused extension points",
+      "Names are self-explanatory and match the task vocabulary"
+    ],
+    "weaknesses": [
+      "The two isinstance checks could be merged into one (e.g., checking both at once) to reduce repetition slightly",
+      "String-form type annotation ('str | bytes') is a minor anachronism when union types are available natively in Python 3.10+"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.834,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 16,
+    "maintainability_index": 69.841,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "baseline_generation"
+}

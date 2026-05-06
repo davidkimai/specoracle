@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, streaming-safe, and well-structured. It correctly delegates CSV parsing to the standard library, uses a small pure helper to extract the header, keeps control flow flat, raises clear errors, and avoids speculative abstractions. The `non_empty` generator correctly filters blank lines without buffering. The one mild awkwardness is `list(csv.reader([first_line]))[0]` \u2014 wrapping a single line in a list just to feed `csv.reader` is slightly indirect; `next(csv.reader([first_line]))` would be marginally cleaner and more explicit. The docstrings are thorough but slightly verbose for the simplicity of the code, which adds minor noise. Overall the architecture is honest, auditable, and idiomatic.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, streaming-safe, and well-structured. It correctly delegates CSV parsing to the standard library, uses a small pure helper to extract the header, keeps control flow flat, raises clear errors, and avoids speculative abstractions. The `non_empty` generator correctly filters blank lines without buffering. The one mild awkwardness is `list(csv.reader([first_line]))[0]` \u2014 wrapping a single line in a list just to feed `csv.reader` is slightly indirect; `next(csv.reader([first_line]))` would be marginally cleaner and more explicit. The docstrings are thorough but slightly verbose for the simplicity of the code, which adds minor noise. Overall the architecture is honest, auditable, and idiomatic.\",\n  \"strengths\": [\n    \"Preserves streaming behavior with a generator expression for non-empty lines\",\n    \"Delegates CSV parsing entirely to the standard library `csv` module\",\n    \"Small, focused helper `_read_header` keeps `parse_csv_rows` flat and readable\",\n    \"Raises clear, informative `ValueError` for missing header and mismatched row lengths\",\n    \"No hidden mutation, global state, or speculative extension points\",\n    \"Names are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"`list(csv.reader([first_line]))[0]` is slightly roundabout; `next(csv.reader([first_line]))` is more direct\",\n    \"Docstrings are more verbose than the simplicity of the code warrants\",\n    \"The `non_empty` generator filters blank lines from data rows but `csv.reader` itself would skip them transparently in most use cases, making the filter slightly over-engineered for the data section (though it is correct)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Preserves streaming behavior with a generator expression for non-empty lines",
+      "Delegates CSV parsing entirely to the standard library `csv` module",
+      "Small, focused helper `_read_header` keeps `parse_csv_rows` flat and readable",
+      "Raises clear, informative `ValueError` for missing header and mismatched row lengths",
+      "No hidden mutation, global state, or speculative extension points",
+      "Names are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "`list(csv.reader([first_line]))[0]` is slightly roundabout; `next(csv.reader([first_line]))` is more direct",
+      "Docstrings are more verbose than the simplicity of the code warrants",
+      "The `non_empty` generator filters blank lines from data rows but `csv.reader` itself would skip them transparently in most use cases, making the filter slightly over-engineered for the data section (though it is correct)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.988,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 41,
+    "maintainability_index": 79.336,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_generation"
+}

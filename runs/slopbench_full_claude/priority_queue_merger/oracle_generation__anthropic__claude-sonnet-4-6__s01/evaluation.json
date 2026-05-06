@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and leverages the standard library's `heapq.merge` which is exactly the right tool for lazy sorted merging. Input validation is explicit and raises clear `TypeError` messages. The code is flat, readable, and locally auditable. Minor weaknesses include the `hasattr` duck-typing checks being slightly verbose compared to a simple `try/except TypeError` pattern, and the `wrapped` list with explicit `iter()` conversion is marginally redundant since `heapq.merge` calls `iter()` internally \u2014 though it does enable the per-element validation loop. The docstring is thorough but slightly heavy for the function's simplicity. Overall this is a well-structured, idiomatic solution with no speculative abstractions or hidden state.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, direct, and leverages the standard library's `heapq.merge` which is exactly the right tool for lazy sorted merging. Input validation is explicit and raises clear `TypeError` messages. The code is flat, readable, and locally auditable. Minor weaknesses include the `hasattr` duck-typing checks being slightly verbose compared to a simple `try/except TypeError` pattern, and the `wrapped` list with explicit `iter()` conversion is marginally redundant since `heapq.merge` calls `iter()` internally \u2014 though it does enable the per-element validation loop. The docstring is thorough but slightly heavy for the function's simplicity. Overall this is a well-structured, idiomatic solution with no speculative abstractions or hidden state.\",\n  \"strengths\": [\n    \"Uses `heapq.merge` \u2014 the canonical stdlib tool for this exact task\",\n    \"Lazy by design; yields rather than materializing results\",\n    \"Explicit input validation with clear error messages\",\n    \"Flat control flow with no deep nesting\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"`hasattr(x, '__iter__')` duck-typing is slightly fragile compared to `isinstance(x, Iterable)` or try/except\",\n    \"Building `wrapped` list with explicit `iter()` calls is redundant since `heapq.merge` handles that internally\",\n    \"Docstring length is disproportionate to the implementation complexity\",\n    \"The `idx` variable in the loop is only used for error messages, adding minor noise\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses `heapq.merge` \u2014 the canonical stdlib tool for this exact task",
+      "Lazy by design; yields rather than materializing results",
+      "Explicit input validation with clear error messages",
+      "Flat control flow with no deep nesting",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "`hasattr(x, '__iter__')` duck-typing is slightly fragile compared to `isinstance(x, Iterable)` or try/except",
+      "Building `wrapped` list with explicit `iter()` calls is redundant since `heapq.merge` handles that internally",
+      "Docstring length is disproportionate to the implementation complexity",
+      "The `idx` variable in the loop is only used for error messages, adding minor noise"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.076,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 81.704,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "priority_queue_merger",
+  "variant": "oracle_generation"
+}

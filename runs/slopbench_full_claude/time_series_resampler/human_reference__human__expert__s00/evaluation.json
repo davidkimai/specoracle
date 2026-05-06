@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit data movement and no hidden state. It uses a simple two-pointer scan pattern that is easy to audit locally. The logic is correct: sort once, advance a pointer to forward-fill, and build output in a single pass. The main weaknesses are the absence of input validation (no checks for interval <= 0, start > end, or malformed points) and the lack of small pure helpers that the structural spec recommends \u2014 everything is monolithic in one function. The variable name `current` is slightly ambiguous (could be `last_value`), and the spec's preference for guard clauses for invalid inputs is not honored. Despite these gaps, the core logic is simple, explicit, and avoids speculative abstractions, making it a solid but not exemplary realization of the Zen oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit data movement and no hidden state. It uses a simple two-pointer scan pattern that is easy to audit locally. The logic is correct: sort once, advance a pointer to forward-fill, and build output in a single pass. The main weaknesses are the absence of input validation (no checks for interval <= 0, start > end, or malformed points) and the lack of small pure helpers that the structural spec recommends \u2014 everything is monolithic in one function. The variable name `current` is slightly ambiguous (could be `last_value`), and the spec's preference for guard clauses for invalid inputs is not honored. Despite these gaps, the core logic is simple, explicit, and avoids speculative abstractions, making it a solid but not exemplary realization of the Zen oracle.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement \u2014 sorted copy, no mutation of input\",\n    \"Single-pass O(n log n) algorithm that is easy to follow\",\n    \"No clever metaprogramming or framework-shaped code\",\n    \"Correct forward-fill semantics with None for unknown values\"\n  ],\n  \"weaknesses\": [\n    \"No input validation (interval <= 0, start > end, negative interval)\",\n    \"Monolithic function; no small pure helpers as the spec prefers\",\n    \"Variable name `current` is less descriptive than `last_known_value`\",\n    \"Missing docstring or inline comments for a maintainer unfamiliar with forward-fill semantics\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit data movement \u2014 sorted copy, no mutation of input",
+      "Single-pass O(n log n) algorithm that is easy to follow",
+      "No clever metaprogramming or framework-shaped code",
+      "Correct forward-fill semantics with None for unknown values"
+    ],
+    "weaknesses": [
+      "No input validation (interval <= 0, start > end, negative interval)",
+      "Monolithic function; no small pure helpers as the spec prefers",
+      "Variable name `current` is less descriptive than `last_known_value`",
+      "Missing docstring or inline comments for a maintainer unfamiliar with forward-fill semantics"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.888,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 12,
+    "maintainability_index": 63.803,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "human_reference"
+}

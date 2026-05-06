@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. The control flow is a simple while-True loop with a single exit condition, data movement is visible (collected.extend, cursor = next_cursor), and the callable check plus unpacking guard provide clear error messages without over-engineering. The docstring is thorough but arguably verbose for such a small function. The unpacking try/except adds a small amount of nesting that could be avoided by letting the natural TypeError propagate with a slightly less tailored message, but the tradeoff is reasonable. No speculative abstractions, no hidden state, no framework-shaped scaffolding \u2014 the code is easy to audit locally and matches the task semantics precisely.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and explicit. The control flow is a simple while-True loop with a single exit condition, data movement is visible (collected.extend, cursor = next_cursor), and the callable check plus unpacking guard provide clear error messages without over-engineering. The docstring is thorough but arguably verbose for such a small function. The unpacking try/except adds a small amount of nesting that could be avoided by letting the natural TypeError propagate with a slightly less tailored message, but the tradeoff is reasonable. No speculative abstractions, no hidden state, no framework-shaped scaffolding \u2014 the code is easy to audit locally and matches the task semantics precisely.\",\n  \"strengths\": [\n    \"Flat control flow with a single while-True loop and one return point\",\n    \"Explicit data movement: extend for items, reassignment for cursor\",\n    \"Callable guard raises a clear TypeError before any async work begins\",\n    \"Unpacking error is caught and re-raised with a descriptive message\",\n    \"No unused extension points or speculative abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Docstring length is disproportionate to the function's simplicity\",\n    \"try/except around unpacking adds minor nesting; a direct unpack with a pre-check or letting the natural error surface would be equally clear\",\n    \"Module-level docstring and class-style section headers feel slightly over-formal for a single small utility\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single while-True loop and one return point",
+      "Explicit data movement: extend for items, reassignment for cursor",
+      "Callable guard raises a clear TypeError before any async work begins",
+      "Unpacking error is caught and re-raised with a descriptive message",
+      "No unused extension points or speculative abstractions"
+    ],
+    "weaknesses": [
+      "Docstring length is disproportionate to the function's simplicity",
+      "try/except around unpacking adds minor nesting; a direct unpack with a pre-check or letting the natural error surface would be equally clear",
+      "Module-level docstring and class-style section headers feel slightly over-formal for a single small utility"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.734,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 88.832,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_generation"
+}

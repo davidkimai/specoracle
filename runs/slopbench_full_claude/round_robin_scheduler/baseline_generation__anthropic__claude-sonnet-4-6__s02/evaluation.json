@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It extracts enabled workers in a single comprehension, guards immediately with a clear ValueError, then performs the round-robin assignment with a straightforward enumerate+modulo loop. Data movement is fully visible, inputs are not mutated, and every name is self-explanatory. The only minor quibble is that `num_workers` is a trivially derived local that could be inlined (`index % len(enabled_workers)`), and the docstring is slightly verbose for such a small function, but neither rises to a real structural concern. No speculative abstractions, no hidden state, no clever tricks\u2014exactly what the Zen oracle calls for.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It extracts enabled workers in a single comprehension, guards immediately with a clear ValueError, then performs the round-robin assignment with a straightforward enumerate+modulo loop. Data movement is fully visible, inputs are not mutated, and every name is self-explanatory. The only minor quibble is that `num_workers` is a trivially derived local that could be inlined (`index % len(enabled_workers)`), and the docstring is slightly verbose for such a small function, but neither rises to a real structural concern. No speculative abstractions, no hidden state, no clever tricks\u2014exactly what the Zen oracle calls for.\",\n  \"strengths\": [\n    \"Flat control flow with a single early-exit guard clause\",\n    \"Explicit data extraction into `enabled_workers` before any assignment logic\",\n    \"Readable names that make the algorithm self-documenting\",\n    \"No mutation of input arguments\",\n    \"Standard-library-only, zero metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"`num_workers` is a trivial alias that adds a line without meaningful clarity\",\n    \"Docstring length slightly exceeds what the simple function warrants\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single early-exit guard clause",
+      "Explicit data extraction into `enabled_workers` before any assignment logic",
+      "Readable names that make the algorithm self-documenting",
+      "No mutation of input arguments",
+      "Standard-library-only, zero metaprogramming"
+    ],
+    "weaknesses": [
+      "`num_workers` is a trivial alias that adds a line without meaningful clarity",
+      "Docstring length slightly exceeds what the simple function warrants"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 3.33,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 22,
+    "maintainability_index": 96.083,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

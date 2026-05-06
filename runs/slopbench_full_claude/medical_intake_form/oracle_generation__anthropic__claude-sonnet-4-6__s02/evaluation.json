@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, explicit, and flat realization of CD-7 requirements. It collects all validation errors before raising, satisfying the 'no partial validation' mandate. Each error message names the offending field. The bool-subclass-of-int edge case is handled explicitly. The output dict is constructed only after all validations pass, and contains exactly the required fields. The code is locally auditable with no hidden control flow, no unnecessary abstractions, and no architectural slop. Minor quibbles: the two consecutive isinstance(age, bool)/isinstance(age, int) checks could be collapsed into one compound condition, and stripping patient_id in the output (but not in the error check) is a subtle inconsistency\u2014a whitespace-only string like '   ' would fail validation but a leading/trailing space string would be silently normalized in output without the caller knowing.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, explicit, and flat realization of CD-7 requirements. It collects all validation errors before raising, satisfying the 'no partial validation' mandate. Each error message names the offending field. The bool-subclass-of-int edge case is handled explicitly. The output dict is constructed only after all validations pass, and contains exactly the required fields. The code is locally auditable with no hidden control flow, no unnecessary abstractions, and no architectural slop. Minor quibbles: the two consecutive isinstance(age, bool)/isinstance(age, int) checks could be collapsed into one compound condition, and stripping patient_id in the output (but not in the error check) is a subtle inconsistency\u2014a whitespace-only string like '   ' would fail validation but a leading/trailing space string would be silently normalized in output without the caller knowing.\",\n  \"strengths\": [\n    \"Collects all errors before raising, fully satisfying CD-7 partial-validation prohibition\",\n    \"Every error message explicitly names the failing field\",\n    \"Explicit bool rejection prevents Python's bool-is-int subclass footgun\",\n    \"Output dict is constructed only after all fields pass, with no leakage of unvalidated data\",\n    \"Flat, readable structure with no unnecessary abstractions or helper functions\",\n    \"Validates list element types individually with index-level error reporting\"\n  ],\n  \"weaknesses\": [\n    \"Duplicate isinstance checks for bool and int could be collapsed into a single compound condition for conciseness\",\n    \"Silent strip() normalization of patient_id in output is inconsistent with the validation logic (whitespace-only fails, but leading/trailing spaces are silently removed without signaling the caller)\",\n    \"Raises on first-error semantics are implied by the spec ('naming the bad field'), but collecting all errors and joining them may exceed the spec's intent slightly\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Collects all errors before raising, fully satisfying CD-7 partial-validation prohibition",
+      "Every error message explicitly names the failing field",
+      "Explicit bool rejection prevents Python's bool-is-int subclass footgun",
+      "Output dict is constructed only after all fields pass, with no leakage of unvalidated data",
+      "Flat, readable structure with no unnecessary abstractions or helper functions",
+      "Validates list element types individually with index-level error reporting"
+    ],
+    "weaknesses": [
+      "Duplicate isinstance checks for bool and int could be collapsed into a single compound condition for conciseness",
+      "Silent strip() normalization of patient_id in output is inconsistent with the validation logic (whitespace-only fails, but leading/trailing spaces are silently removed without signaling the caller)",
+      "Raises on first-error semantics are implied by the spec ('naming the bad field'), but collecting all errors and joining them may exceed the spec's intent slightly"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.231,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 75,
+    "maintainability_index": 80.159,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_generation"
+}

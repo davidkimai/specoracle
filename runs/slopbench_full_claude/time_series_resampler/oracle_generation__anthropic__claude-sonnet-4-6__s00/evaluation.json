@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It validates inputs with clear error messages, sorts once, then uses a single linear scan with a pointer\u2014an optimal and readable approach. Control flow is shallow (one while loop with one inner while), data movement is explicit (current_value updated in place, output built by append), and there is no hidden mutation or speculative abstraction. The docstring is thorough without being excessive. The only minor quibble is that the inner while loop could arguably be extracted into a small helper (per 'prefer small pure helpers'), but doing so here would add indirection without clarity gain given the tight coupling between pointer state and the outer loop\u2014so the monolithic approach is actually the simpler choice here. Names are self-explanatory and the behavior is locally auditable in one read.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It validates inputs with clear error messages, sorts once, then uses a single linear scan with a pointer\u2014an optimal and readable approach. Control flow is shallow (one while loop with one inner while), data movement is explicit (current_value updated in place, output built by append), and there is no hidden mutation or speculative abstraction. The docstring is thorough without being excessive. The only minor quibble is that the inner while loop could arguably be extracted into a small helper (per 'prefer small pure helpers'), but doing so here would add indirection without clarity gain given the tight coupling between pointer state and the outer loop\u2014so the monolithic approach is actually the simpler choice here. Names are self-explanatory and the behavior is locally auditable in one read.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit input validation with informative error messages\",\n    \"Single linear scan after one sort\u2014efficient and readable\",\n    \"No hidden mutation or global state\",\n    \"Names (sorted_points, point_index, current_value) make the algorithm self-documenting\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Could optionally extract a 'find_value_at' helper for the inner advance logic, though it's debatable whether that improves clarity here\",\n    \"The type annotation float | None on current_value is slightly redundant given the return type already documents it, but harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit input validation with informative error messages",
+      "Single linear scan after one sort\u2014efficient and readable",
+      "No hidden mutation or global state",
+      "Names (sorted_points, point_index, current_value) make the algorithm self-documenting",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Could optionally extract a 'find_value_at' helper for the inner advance logic, though it's debatable whether that improves clarity here",
+      "The type annotation float | None on current_value is slightly redundant given the return type already documents it, but harmless"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.303,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 42,
+    "maintainability_index": 83.306,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_generation"
+}

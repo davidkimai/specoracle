@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, minimal realization of the task. It uses a plain dict with weakref.ref values, exposes exactly the three required methods, keeps control flow flat with a guard clause in get(), and makes data movement explicit throughout. The cleanup() method correctly separates key collection from deletion to avoid mutating the dict during iteration. There is no speculative abstraction, no hidden state, and no metaprogramming. The only minor imperfection is that get() could collapse the None-ref check and the dead-ref check into a single return expression, and register() silently accepts unhashable or non-weakref-able objects rather than raising a clear error, but these are very small issues in an otherwise exemplary implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, minimal realization of the task. It uses a plain dict with weakref.ref values, exposes exactly the three required methods, keeps control flow flat with a guard clause in get(), and makes data movement explicit throughout. The cleanup() method correctly separates key collection from deletion to avoid mutating the dict during iteration. There is no speculative abstraction, no hidden state, and no metaprogramming. The only minor imperfection is that get() could collapse the None-ref check and the dead-ref check into a single return expression, and register() silently accepts unhashable or non-weakref-able objects rather than raising a clear error, but these are very small issues in an otherwise exemplary implementation.\",\n  \"strengths\": [\n    \"Minimal, flat structure with no unnecessary layers or abstractions\",\n    \"Guard clause in get() keeps the happy path readable\",\n    \"cleanup() correctly avoids mutating the dict during iteration by collecting dead keys first\",\n    \"Names (_store, ref, dead_keys) are self-explanatory and locally auditable\",\n    \"Uses only standard-library weakref with no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"register() does not validate inputs or raise on non-weakref-able objects, silently deferring failure\",\n    \"get() could be slightly more concise by combining the two None checks into one expression\",\n    \"No docstrings or inline comments to clarify the weak-reference lifecycle for maintainers\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal, flat structure with no unnecessary layers or abstractions",
+      "Guard clause in get() keeps the happy path readable",
+      "cleanup() correctly avoids mutating the dict during iteration by collecting dead keys first",
+      "Names (_store, ref, dead_keys) are self-explanatory and locally auditable",
+      "Uses only standard-library weakref with no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "register() does not validate inputs or raise on non-weakref-able objects, silently deferring failure",
+      "get() could be slightly more concise by combining the two None checks into one expression",
+      "No docstrings or inline comments to clarify the weak-reference lifecycle for maintainers"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.128,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 16,
+    "maintainability_index": 64.513,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "baseline_generation"
+}

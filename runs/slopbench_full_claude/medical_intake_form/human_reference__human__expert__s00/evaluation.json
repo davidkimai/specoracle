@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation cleanly satisfies CD-7's core requirements: all fields are validated before any output is produced, error messages name the failing fields, and partial validation is explicitly prevented by collecting all errors before raising. The code is flat, readable, and locally auditable with no unnecessary abstraction. Minor weaknesses include the edge case where `age` is a `bool` (since `bool` is a subclass of `int` in Python, `True`/`False` would pass the isinstance check), and the error message joins multiple field names into a single ValueError rather than raising separate errors per field, which could be considered ambiguous. The symptoms list is defensively copied in the return, which is good practice. Overall the structure is simple and explicit with minimal slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation cleanly satisfies CD-7's core requirements: all fields are validated before any output is produced, error messages name the failing fields, and partial validation is explicitly prevented by collecting all errors before raising. The code is flat, readable, and locally auditable with no unnecessary abstraction. Minor weaknesses include the edge case where `age` is a `bool` (since `bool` is a subclass of `int` in Python, `True`/`False` would pass the isinstance check), and the error message joins multiple field names into a single ValueError rather than raising separate errors per field, which could be considered ambiguous. The symptoms list is defensively copied in the return, which is good practice. Overall the structure is simple and explicit with minimal slop.\",\n  \"strengths\": [\n    \"All fields validated before any output is accepted, satisfying CD-7's partial-validation prohibition\",\n    \"Error messages explicitly name the failing field(s)\",\n    \"Flat, readable structure with no unnecessary abstraction or indirection\",\n    \"Defensive copy of symptoms list in the return value\",\n    \"Clean explicit output dict construction\"\n  ],\n  \"weaknesses\": [\n    \"bool values (True/False) pass the isinstance(age, int) check due to Python's bool/int inheritance, allowing semantically invalid ages\",\n    \"Multiple field errors are joined into one ValueError string rather than raising a single clearly structured error per field\",\n    \"payload.get('patient_id') is called twice redundantly instead of assigning to a variable first\",\n    \"No validation that symptoms list is non-empty, which may or may not be a requirement depending on clinical context\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "All fields validated before any output is accepted, satisfying CD-7's partial-validation prohibition",
+      "Error messages explicitly name the failing field(s)",
+      "Flat, readable structure with no unnecessary abstraction or indirection",
+      "Defensive copy of symptoms list in the return value",
+      "Clean explicit output dict construction"
+    ],
+    "weaknesses": [
+      "bool values (True/False) pass the isinstance(age, int) check due to Python's bool/int inheritance, allowing semantically invalid ages",
+      "Multiple field errors are joined into one ValueError string rather than raising a single clearly structured error per field",
+      "payload.get('patient_id') is called twice redundantly instead of assigning to a variable first",
+      "No validation that symptoms list is non-empty, which may or may not be a requirement depending on clinical context"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.998,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 13,
+    "maintainability_index": 60.173,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "human_reference"
+}

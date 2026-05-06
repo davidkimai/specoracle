@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable decomposition into small helpers, but it has notable structural issues that reduce its score. The `_build_graph` function is the main offender: it contains dead code (the `graph[task] = list(graph[task])` line inside the loop does nothing useful since it's immediately overwritten by the dict comprehension below), and the two-pass logic with `setdefault` followed by a dict union is unnecessarily convoluted when a single clean pass would suffice. The `deque` is used but then immediately converted to a sorted list at the top of the loop, and `ready` is reassigned mid-loop with `ready = deque(sorted(ready))` which is redundant given the batch collection pattern \u2014 a plain list would be cleaner. The `_kahn_batches` function also initializes `ready` with a sorted deque but then immediately re-sorts it as `batch = sorted(ready)`, making the initial sort pointless. These are small but real instances of muddled thinking that a Zen-minded reviewer would flag. The helper decomposition is good in principle, names are clear, no hidden mutation of inputs, and the cycle detection is explicit. Overall it reads as a competent but slightly sloppy first draft that wasn't cleaned up.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable decomposition into small helpers, but it has notable structural issues that reduce its score. The `_build_graph` function is the main offender: it contains dead code (the `graph[task] = list(graph[task])` line inside the loop does nothing useful since it's immediately overwritten by the dict comprehension below), and the two-pass logic with `setdefault` followed by a dict union is unnecessarily convoluted when a single clean pass would suffice. The `deque` is used but then immediately converted to a sorted list at the top of the loop, and `ready` is reassigned mid-loop with `ready = deque(sorted(ready))` which is redundant given the batch collection pattern \u2014 a plain list would be cleaner. The `_kahn_batches` function also initializes `ready` with a sorted deque but then immediately re-sorts it as `batch = sorted(ready)`, making the initial sort pointless. These are small but real instances of muddled thinking that a Zen-minded reviewer would flag. The helper decomposition is good in principle, names are clear, no hidden mutation of inputs, and the cycle detection is explicit. Overall it reads as a competent but slightly sloppy first draft that wasn't cleaned up.\",\n  \"strengths\": [\n    \"Clean separation into small, named helpers (_build_graph, _in_degree_and_dependents, _kahn_batches)\",\n    \"Explicit cycle detection with a clear ValueError message\",\n    \"Input is not mutated; copies are made explicitly\",\n    \"Standard-library only (collections.deque), no clever metaprogramming\",\n    \"Good docstrings that explain intent\"\n  ],\n  \"weaknesses\": [\n    \"_build_graph contains dead code: `graph[task] = list(graph[task])` inside the loop has no effect\",\n    \"Two-pass construction in _build_graph (setdefault loop + dict union) is needlessly complex\",\n    \"Initial sort of `ready` deque in _kahn_batches is wasted work since it's immediately re-sorted as `batch = sorted(ready)`\",\n    \"Using deque then reassigning it mid-loop adds noise; a plain list or set would be simpler\",\n    \"Minor verbosity in error message; the core logic could be expressed more directly\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into small, named helpers (_build_graph, _in_degree_and_dependents, _kahn_batches)",
+      "Explicit cycle detection with a clear ValueError message",
+      "Input is not mutated; copies are made explicitly",
+      "Standard-library only (collections.deque), no clever metaprogramming",
+      "Good docstrings that explain intent"
+    ],
+    "weaknesses": [
+      "_build_graph contains dead code: `graph[task] = list(graph[task])` inside the loop has no effect",
+      "Two-pass construction in _build_graph (setdefault loop + dict union) is needlessly complex",
+      "Initial sort of `ready` deque in _kahn_batches is wasted work since it's immediately re-sorted as `batch = sorted(ready)`",
+      "Using deque then reassigning it mid-loop adds noise; a plain list or set would be simpler",
+      "Minor verbosity in error message; the core logic could be expressed more directly"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.947,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 4,
+    "loc": 69,
+    "maintainability_index": 76.534,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook double-checked locking singleton that maps almost perfectly onto the Zen of Python's structural ideals: it is flat, explicit, uses only standard-library primitives (threading.Lock), names every field clearly (_factory, _instance, _lock), avoids hidden mutation or global state, and contains no speculative abstractions. The double-checked locking pattern is the canonical correct approach for lazy thread-safe initialization in Python and is immediately auditable in a single glance. The only minor gap is the absence of input validation (e.g., checking that factory is callable), which the operational constraints suggest should raise a clear error rather than silently deferring the failure to the first get() call.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a textbook double-checked locking singleton that maps almost perfectly onto the Zen of Python's structural ideals: it is flat, explicit, uses only standard-library primitives (threading.Lock), names every field clearly (_factory, _instance, _lock), avoids hidden mutation or global state, and contains no speculative abstractions. The double-checked locking pattern is the canonical correct approach for lazy thread-safe initialization in Python and is immediately auditable in a single glance. The only minor gap is the absence of input validation (e.g., checking that factory is callable), which the operational constraints suggest should raise a clear error rather than silently deferring the failure to the first get() call.\",\n  \"strengths\": [\n    \"Minimal surface area \u2014 three fields, one method, zero framework scaffolding\",\n    \"Double-checked locking is the correct, well-understood pattern for this problem\",\n    \"All state is explicit and local to the instance; no module-level globals\",\n    \"Standard-library only (threading.Lock); no clever metaprogramming\",\n    \"Names are self-explanatory and make the behavior easy to explain aloud\"\n  ],\n  \"weaknesses\": [\n    \"No validation that factory is callable; an invalid argument silently defers the TypeError until get() is first called\",\n    \"CPython's GIL makes the outer None-check safe in practice, but the code would benefit from a brief comment explaining why double-checked locking is used here for clarity on non-CPython runtimes\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal surface area \u2014 three fields, one method, zero framework scaffolding",
+      "Double-checked locking is the correct, well-understood pattern for this problem",
+      "All state is explicit and local to the instance; no module-level globals",
+      "Standard-library only (threading.Lock); no clever metaprogramming",
+      "Names are self-explanatory and make the behavior easy to explain aloud"
+    ],
+    "weaknesses": [
+      "No validation that factory is callable; an invalid argument silently defers the TypeError until get() is first called",
+      "CPython's GIL makes the outer None-check safe in practice, but the code would benefit from a brief comment explaining why double-checked locking is used here for clarity on non-CPython runtimes"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.815,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 12,
+    "maintainability_index": 68.937,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "baseline_generation"
+}

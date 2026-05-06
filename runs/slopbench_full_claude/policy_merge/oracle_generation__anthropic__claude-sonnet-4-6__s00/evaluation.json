@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It correctly handles all three cases (key only in defaults, key in both, key only in override) through two simple loops with guard clauses rather than deep nesting. Data movement is explicit, no mutation occurs on inputs, and the recursive call is natural. The two-loop structure is slightly redundant\u2014a single loop over the union of keys would be more concise and eliminate the repeated 'already handled' guard\u2014but it remains readable and locally auditable. No speculative abstractions, no clever metaprogramming, and names are self-explanatory. A minor gap is the absence of input validation (e.g., raising TypeError if inputs are not dicts), which the operational constraints suggest should be present.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It correctly handles all three cases (key only in defaults, key in both, key only in override) through two simple loops with guard clauses rather than deep nesting. Data movement is explicit, no mutation occurs on inputs, and the recursive call is natural. The two-loop structure is slightly redundant\u2014a single loop over the union of keys would be more concise and eliminate the repeated 'already handled' guard\u2014but it remains readable and locally auditable. No speculative abstractions, no clever metaprogramming, and names are self-explanatory. A minor gap is the absence of input validation (e.g., raising TypeError if inputs are not dicts), which the operational constraints suggest should be present.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses (continue) instead of nested if-else chains\",\n    \"No mutation of either input dict\",\n    \"Recursive call is clean and reuses the same function correctly\",\n    \"Names (default_value, override_value) make intent immediately clear\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Two separate loops over defaults and override introduce slight redundancy; a single loop over the union of keys would be more concise\",\n    \"No input type validation\u2014passing non-dicts silently produces wrong behavior instead of a clear error\",\n    \"The 'if key in defaults: continue' guard in the second loop is a mild code smell that a unified approach would eliminate\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses (continue) instead of nested if-else chains",
+      "No mutation of either input dict",
+      "Recursive call is clean and reuses the same function correctly",
+      "Names (default_value, override_value) make intent immediately clear",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Two separate loops over defaults and override introduce slight redundancy; a single loop over the union of keys would be more concise",
+      "No input type validation\u2014passing non-dicts silently produces wrong behavior instead of a clear error",
+      "The 'if key in defaults: continue' guard in the second loop is a mild code smell that a unified approach would eliminate"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.108,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 20,
+    "maintainability_index": 58.4,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

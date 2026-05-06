@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses Kahn's algorithm correctly with explicit data structures, avoids mutation of the input, raises a clear ValueError on cycles, and handles dependency-only nodes. The control flow is flat and the variable names are self-explanatory. The main mild weakness is that the logic is monolithic in a single function rather than split into small pure helpers (e.g., `build_graph` and `kahn_batches`), which the structural spec explicitly prefers. The docstring is somewhat verbose for the code size, and the type annotations are good but the comment density slightly exceeds what sparse, locally-auditable code needs. Overall it's a high-quality, idiomatic implementation that closely follows the Zen principles with only minor structural improvements possible.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses Kahn's algorithm correctly with explicit data structures, avoids mutation of the input, raises a clear ValueError on cycles, and handles dependency-only nodes. The control flow is flat and the variable names are self-explanatory. The main mild weakness is that the logic is monolithic in a single function rather than split into small pure helpers (e.g., `build_graph` and `kahn_batches`), which the structural spec explicitly prefers. The docstring is somewhat verbose for the code size, and the type annotations are good but the comment density slightly exceeds what sparse, locally-auditable code needs. Overall it's a high-quality, idiomatic implementation that closely follows the Zen principles with only minor structural improvements possible.\",\n  \"strengths\": [\n    \"Correct Kahn's algorithm with proper cycle detection via processed-count check\",\n    \"Explicit, immutable-input handling \u2014 no mutation of the input dict\",\n    \"Flat control flow with no deep nesting\",\n    \"Clear, descriptive variable names (in_degree, dependents, processed)\",\n    \"Handles dependency-only nodes by building all_nodes from both keys and values\",\n    \"Alphabetical sorting within each batch is straightforward and correct\"\n  ],\n  \"weaknesses\": [\n    \"Single monolithic function rather than small pure helpers (e.g., graph-building separated from batch-extraction)\",\n    \"Comment density is slightly high relative to code clarity \u2014 some comments restate obvious code\",\n    \"Minor: deque is imported but used only as a simple queue; a plain list would suffice given the batch-clearing pattern used\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Correct Kahn's algorithm with proper cycle detection via processed-count check",
+      "Explicit, immutable-input handling \u2014 no mutation of the input dict",
+      "Flat control flow with no deep nesting",
+      "Clear, descriptive variable names (in_degree, dependents, processed)",
+      "Handles dependency-only nodes by building all_nodes from both keys and values",
+      "Alphabetical sorting within each batch is straightforward and correct"
+    ],
+    "weaknesses": [
+      "Single monolithic function rather than small pure helpers (e.g., graph-building separated from batch-extraction)",
+      "Comment density is slightly high relative to code clarity \u2014 some comments restate obvious code",
+      "Minor: deque is imported but used only as a simple queue; a plain list would suffice given the batch-clearing pattern used"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 3.342,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 49,
+    "maintainability_index": 79.684,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

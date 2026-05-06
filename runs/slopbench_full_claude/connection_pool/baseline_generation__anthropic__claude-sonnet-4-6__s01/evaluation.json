@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate ignores the required keyword-only `now` parameter entirely (breaking the functional spec for testable time injection) and instead uses `time.monotonic()` hardcoded throughout. It also ignores the required `evict_idle(max_idle_seconds)` method name, providing `cleanup_idle` instead. Beyond the spec mismatches, the implementation is heavily over-engineered relative to the task: it adds `min_size`, `connection_timeout`, `validate_on_borrow`, `validator`, a `PoolExhaustedError`, a `@contextmanager`, blocking wait-for-release semantics, `__enter__`/`__exit__`, multiple properties, and a logging framework \u2014 none of which were requested. This is exactly the 'speculative abstractions, framework-shaped code, and unused extension points' the oracle warns against. The `acquire()` signature adds an undocumented `timeout` parameter and the blocking wait loop adds complexity that obscures the simple idle-or-create logic. `_close_connection` acquires the lock internally while sometimes called under the lock, creating a latent deadlock risk. Data movement is not fully explicit (`_total_connections` is mutated inside `_close_connection` which is called from multiple lock contexts). The code is far too large to audit locally for a task that needs roughly 30 lines.",
+    "raw_response": "```json\n{\n  \"score\": 3,\n  \"rationale\": \"The candidate ignores the required keyword-only `now` parameter entirely (breaking the functional spec for testable time injection) and instead uses `time.monotonic()` hardcoded throughout. It also ignores the required `evict_idle(max_idle_seconds)` method name, providing `cleanup_idle` instead. Beyond the spec mismatches, the implementation is heavily over-engineered relative to the task: it adds `min_size`, `connection_timeout`, `validate_on_borrow`, `validator`, a `PoolExhaustedError`, a `@contextmanager`, blocking wait-for-release semantics, `__enter__`/`__exit__`, multiple properties, and a logging framework \u2014 none of which were requested. This is exactly the 'speculative abstractions, framework-shaped code, and unused extension points' the oracle warns against. The `acquire()` signature adds an undocumented `timeout` parameter and the blocking wait loop adds complexity that obscures the simple idle-or-create logic. `_close_connection` acquires the lock internally while sometimes called under the lock, creating a latent deadlock risk. Data movement is not fully explicit (`_total_connections` is mutated inside `_close_connection` which is called from multiple lock contexts). The code is far too large to audit locally for a task that needs roughly 30 lines.\",\n  \"strengths\": [\n    \"Thread-safety is addressed with a lock and condition variable\",\n    \"Idle-connection timestamp tracking is present and structurally correct\",\n    \"Validation guard clauses at the top of acquire/release are readable\"\n  ],\n  \"weaknesses\": [\n    \"Missing required `now` parameter for injectable time (breaks testability and spec)\",\n    \"Missing required `evict_idle(max_idle_seconds)` method; provides `cleanup_idle` instead\",\n    \"Massive speculative surface: min_size, validator, connection_timeout, PoolExhaustedError, context manager, blocking wait \u2014 none requested\",\n    \"Potential deadlock: `_close_connection` acquires `_lock` but is called from within locked sections\",\n    \"Logging framework and __repr__/properties add noise that makes local auditing harder\",\n    \"acquire() blocks waiting for release \u2014 not implied by spec and adds hidden complexity\",\n    \"max_size is not keyword-only as required by the spec signature\"\n  ]\n}\n```",
+    "score": 3,
+    "skipped": false,
+    "strengths": [
+      "Thread-safety is addressed with a lock and condition variable",
+      "Idle-connection timestamp tracking is present and structurally correct",
+      "Validation guard clauses at the top of acquire/release are readable"
+    ],
+    "weaknesses": [
+      "Missing required `now` parameter for injectable time (breaks testability and spec)",
+      "Missing required `evict_idle(max_idle_seconds)` method; provides `cleanup_idle` instead",
+      "Massive speculative surface: min_size, validator, connection_timeout, PoolExhaustedError, context manager, blocking wait \u2014 none requested",
+      "Potential deadlock: `_close_connection` acquires `_lock` but is called from within locked sections",
+      "Logging framework and __repr__/properties add noise that makes local auditing harder",
+      "acquire() blocks waiting for release \u2014 not implied by spec and adds hidden complexity",
+      "max_size is not keyword-only as required by the spec signature"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.071,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________ test_reuses_and_evicts_idle_connections ____________________\n\n    def test_reuses_and_evicts_idle_connections():\n        clock = {'t': 0.0}\n>       pool = ConnectionPool(Conn, max_size=1, now=lambda: clock['t'])\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       TypeError: ConnectionPool.__init__() got an unexpected keyword argument 'now'\n\ntest_solution.py:13: TypeError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_reuses_and_evicts_idle_connections - TypeError:...\n1 failed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 60,
+    "function_count": 18,
+    "loc": 285,
+    "maintainability_index": 49.824,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "baseline_generation"
+}

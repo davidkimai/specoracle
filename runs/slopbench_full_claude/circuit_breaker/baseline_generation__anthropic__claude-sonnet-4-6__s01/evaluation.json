@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. States are represented via a proper Enum with a public `state` property returning an inspectable string. Configuration values (`failure_threshold`, `recovery_timeout`) are named and validated at construction. The half-open trial logic correctly closes on success and reopens on failure. The `now` injection point makes the code testable without monkey-patching. The three helper methods (`_maybe_transition_to_half_open`, `_record_failure`, `_record_success`) are small, single-purpose, and locally auditable. The only minor issues are: the `state` property has a side-effect (calling `_maybe_transition_to_half_open`) which is slightly surprising for a property, and the comment 'Keep failure count at threshold (it was already there)' is slightly misleading since the count isn't explicitly reset to threshold on HALF_OPEN failure. These are minor readability concerns that don't affect correctness or structural quality meaningfully.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. States are represented via a proper Enum with a public `state` property returning an inspectable string. Configuration values (`failure_threshold`, `recovery_timeout`) are named and validated at construction. The half-open trial logic correctly closes on success and reopens on failure. The `now` injection point makes the code testable without monkey-patching. The three helper methods (`_maybe_transition_to_half_open`, `_record_failure`, `_record_success`) are small, single-purpose, and locally auditable. The only minor issues are: the `state` property has a side-effect (calling `_maybe_transition_to_half_open`) which is slightly surprising for a property, and the comment 'Keep failure count at threshold (it was already there)' is slightly misleading since the count isn't explicitly reset to threshold on HALF_OPEN failure. These are minor readability concerns that don't affect correctness or structural quality meaningfully.\",\n  \"strengths\": [\n    \"Explicit Enum-based state machine with inspectable `state` property\",\n    \"Named, validated configuration values with no magic constants\",\n    \"Half-open trial correctly transitions to CLOSED on success and OPEN on failure\",\n    \"Injectable `now` callable enables deterministic testing\",\n    \"Small, focused helper methods with clear single responsibilities\",\n    \"Comprehensive docstrings explaining parameters and behavior\"\n  ],\n  \"weaknesses\": [\n    \"Property `state` has a hidden side-effect (state transition), violating principle of least surprise\",\n    \"Failure count is not explicitly reset or documented when transitioning from HALF_OPEN back to OPEN, which could cause confusion\",\n    \"Minor: `_opened_at` type annotation uses `float | None` (Python 3.10+ syntax) without a `from __future__ import annotations` guard\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit Enum-based state machine with inspectable `state` property",
+      "Named, validated configuration values with no magic constants",
+      "Half-open trial correctly transitions to CLOSED on success and OPEN on failure",
+      "Injectable `now` callable enables deterministic testing",
+      "Small, focused helper methods with clear single responsibilities",
+      "Comprehensive docstrings explaining parameters and behavior"
+    ],
+    "weaknesses": [
+      "Property `state` has a hidden side-effect (state transition), violating principle of least surprise",
+      "Failure count is not explicitly reset or documented when transitioning from HALF_OPEN back to OPEN, which could cause confusion",
+      "Minor: `_opened_at` type annotation uses `float | None` (Python 3.10+ syntax) without a `from __future__ import annotations` guard"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.19,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 2.444,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 22,
+    "function_count": 7,
+    "loc": 110,
+    "maintainability_index": 71.681,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

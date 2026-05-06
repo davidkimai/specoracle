@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Validation raises clear errors with informative messages, helpers are small and single-purpose, data movement is visible (no hidden mutation beyond the intentional deque), and the public API is minimal and self-explanatory. The use of `collections.deque` is the right standard-library choice for an ordered sliding window. The only minor quibble is that `_get_window` could be replaced with `self._records.setdefault(key, deque())` to eliminate a conditional branch, and `snapshot` could similarly use `self._records.get(key, deque())` to avoid the guard, but these are trivial style points rather than structural flaws. Overall the code is sparse, auditable, and free of speculative abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Validation raises clear errors with informative messages, helpers are small and single-purpose, data movement is visible (no hidden mutation beyond the intentional deque), and the public API is minimal and self-explanatory. The use of `collections.deque` is the right standard-library choice for an ordered sliding window. The only minor quibble is that `_get_window` could be replaced with `self._records.setdefault(key, deque())` to eliminate a conditional branch, and `snapshot` could similarly use `self._records.get(key, deque())` to avoid the guard, but these are trivial style points rather than structural flaws. Overall the code is sparse, auditable, and free of speculative abstractions.\",\n  \"strengths\": [\n    \"Clear, early validation with informative ValueError messages\",\n    \"Small, single-responsibility helpers (_get_window, _evict_expired) keep allow() flat and readable\",\n    \"Explicit data flow: deque is passed into helpers rather than accessed via self implicitly\",\n    \"snapshot returns a copy, preventing external mutation of internal state\",\n    \"No speculative abstractions, no unused extension points, no framework-shaped code\",\n    \"Docstring on the class correctly documents the half-open window semantics\"\n  ],\n  \"weaknesses\": [\n    \"_get_window could be replaced with dict.setdefault, removing a conditional branch\",\n    \"snapshot's guard clause could use dict.get for symmetry and brevity\",\n    \"Module-level docstring is minor boilerplate that adds little value for a single-class file\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clear, early validation with informative ValueError messages",
+      "Small, single-responsibility helpers (_get_window, _evict_expired) keep allow() flat and readable",
+      "Explicit data flow: deque is passed into helpers rather than accessed via self implicitly",
+      "snapshot returns a copy, preventing external mutation of internal state",
+      "No speculative abstractions, no unused extension points, no framework-shaped code",
+      "Docstring on the class correctly documents the half-open window semantics"
+    ],
+    "weaknesses": [
+      "_get_window could be replaced with dict.setdefault, removing a conditional branch",
+      "snapshot's guard clause could use dict.get for symmetry and brevity",
+      "Module-level docstring is minor boilerplate that adds little value for a single-class file"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.292,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 5,
+    "loc": 48,
+    "maintainability_index": 79.332,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_generation"
+}

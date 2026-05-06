@@ -1,0 +1,50 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of the Zen of Python applied to a small stateful class: it is flat, explicit, minimal, and locally auditable. Every method does exactly one thing, names are self-explanatory, the guard clause in __init__ raises a clear error immediately, state mutation is visible and confined to two well-named attributes, and there are zero speculative abstractions or unused extension points. The `max(0, ...)` in `remaining()` is the only non-trivial expression and it is immediately understandable. Nothing is hidden, nothing is clever, and a maintainer can verify correctness by reading each method in isolation.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of the Zen of Python applied to a small stateful class: it is flat, explicit, minimal, and locally auditable. Every method does exactly one thing, names are self-explanatory, the guard clause in __init__ raises a clear error immediately, state mutation is visible and confined to two well-named attributes, and there are zero speculative abstractions or unused extension points. The `max(0, ...)` in `remaining()` is the only non-trivial expression and it is immediately understandable. Nothing is hidden, nothing is clever, and a maintainer can verify correctness by reading each method in isolation.\",\n  \"strengths\": [\n    \"Guard clause raises ValueError with a clear message before any state is set\",\n    \"Each method is a single, obvious expression \u2014 no branching or nesting\",\n    \"State is fully encapsulated in two private attributes with no global or hidden mutation\",\n    \"remaining() defensively clamps to zero, preventing negative values without extra complexity\",\n    \"Names (allow, record_success, record_failure, remaining) map directly to the domain vocabulary\"\n  ],\n  \"weaknesses\": [\n    \"No weaknesses of note; the implementation is appropriately minimal for the task\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Guard clause raises ValueError with a clear message before any state is set",
+      "Each method is a single, obvious expression \u2014 no branching or nesting",
+      "State is fully encapsulated in two private attributes with no global or hidden mutation",
+      "remaining() defensively clamps to zero, preventing negative values without extra complexity",
+      "Names (allow, record_success, record_failure, remaining) map directly to the domain vocabulary"
+    ],
+    "weaknesses": [
+      "No weaknesses of note; the implementation is appropriately minimal for the task"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.752,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.333,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 5,
+    "loc": 14,
+    "maintainability_index": 62.618,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "baseline_generation"
+}

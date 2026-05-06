@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is largely clean and readable: validation is upfront with clear error messages, batching is a simple list comprehension, the semaphore correctly limits concurrency, and results are gathered in order. The helper `run_batch` is small and purposeful. However, there are a few structural issues worth noting: using `asyncio.ensure_future` is less idiomatic than `asyncio.create_task` in modern Python; the mutation of a pre-allocated `results` list via a nested async closure is a hidden side-effect that makes data movement less explicit (returning indexed tuples from tasks and sorting would be cleaner); the flattening guard `if batch_result is not None` is a latent bug since a handler could legitimately return `None` or an empty list, and the guard conflates 'not yet filled' with 'returned None'; and the docstring is heavier than needed for code this size. These are moderate issues that reduce auditability and correctness confidence without being severe architectural slop.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is largely clean and readable: validation is upfront with clear error messages, batching is a simple list comprehension, the semaphore correctly limits concurrency, and results are gathered in order. The helper `run_batch` is small and purposeful. However, there are a few structural issues worth noting: using `asyncio.ensure_future` is less idiomatic than `asyncio.create_task` in modern Python; the mutation of a pre-allocated `results` list via a nested async closure is a hidden side-effect that makes data movement less explicit (returning indexed tuples from tasks and sorting would be cleaner); the flattening guard `if batch_result is not None` is a latent bug since a handler could legitimately return `None` or an empty list, and the guard conflates 'not yet filled' with 'returned None'; and the docstring is heavier than needed for code this size. These are moderate issues that reduce auditability and correctness confidence without being severe architectural slop.\",\n  \"strengths\": [\n    \"Clear, upfront validation with informative error messages\",\n    \"Batch construction is a simple, readable list comprehension\",\n    \"Semaphore usage is idiomatic and correctly scoped\",\n    \"asyncio.gather propagates exceptions by default \u2014 correct behavior\",\n    \"Function is small enough to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"Mutable shared `results` list mutated inside nested async closure \u2014 hidden side-effect, less explicit data movement\",\n    \"`if batch_result is not None` guard is a latent bug: conflates unset slots with handlers returning None\",\n    \"`asyncio.ensure_future` is less idiomatic than `asyncio.create_task` in modern Python\",\n    \"Docstring verbosity is disproportionate to the code size\",\n    \"Pre-allocating `[None] * len(batches)` and then checking for None is an indirect pattern; returning (index, result) tuples would be more explicit\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear, upfront validation with informative error messages",
+      "Batch construction is a simple, readable list comprehension",
+      "Semaphore usage is idiomatic and correctly scoped",
+      "asyncio.gather propagates exceptions by default \u2014 correct behavior",
+      "Function is small enough to audit locally"
+    ],
+    "weaknesses": [
+      "Mutable shared `results` list mutated inside nested async closure \u2014 hidden side-effect, less explicit data movement",
+      "`if batch_result is not None` guard is a latent bug: conflates unset slots with handlers returning None",
+      "`asyncio.ensure_future` is less idiomatic than `asyncio.create_task` in modern Python",
+      "Docstring verbosity is disproportionate to the code size",
+      "Pre-allocating `[None] * len(batches)` and then checking for None is an indirect pattern; returning (index, result) tuples would be more explicit"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.041,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.15s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 2,
+    "loc": 62,
+    "maintainability_index": 82.524,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "baseline_generation"
+}

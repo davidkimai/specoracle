@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp log, an asyncio.Lock for safe concurrent access, and a simple guard clause for invalid input. Control flow is flat and locally auditable: the acquire method reads top-to-bottom with no hidden state or speculative abstractions. The only mild concern is that the window boundary uses `<= window_start` (strict exclusion of the boundary second), which is a defensible but subtly opinionated choice that could be documented more explicitly. The docstring is helpful without being excessive, and the class carries no unused extension points or framework-shaped scaffolding.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp log, an asyncio.Lock for safe concurrent access, and a simple guard clause for invalid input. Control flow is flat and locally auditable: the acquire method reads top-to-bottom with no hidden state or speculative abstractions. The only mild concern is that the window boundary uses `<= window_start` (strict exclusion of the boundary second), which is a defensible but subtly opinionated choice that could be documented more explicitly. The docstring is helpful without being excessive, and the class carries no unused extension points or framework-shaped scaffolding.\",\n  \"strengths\": [\n    \"Flat, readable acquire() with no deep nesting\",\n    \"Explicit ValueError with message for invalid rate\",\n    \"Deque efficiently handles sliding-window eviction\",\n    \"asyncio.Lock makes concurrency intent explicit\",\n    \"now callable injection enables deterministic testing without complexity\",\n    \"No speculative abstractions or unused hooks\"\n  ],\n  \"weaknesses\": [\n    \"Window boundary condition (`<= window_start`) is subtly exclusive and not explained in comments\",\n    \"Class docstring repeats what the constructor signature already conveys; could be trimmed\",\n    \"Minor: `_lock` creation in __init__ ties the instance to the event loop in older Python versions (though acceptable in modern asyncio)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, readable acquire() with no deep nesting",
+      "Explicit ValueError with message for invalid rate",
+      "Deque efficiently handles sliding-window eviction",
+      "asyncio.Lock makes concurrency intent explicit",
+      "now callable injection enables deterministic testing without complexity",
+      "No speculative abstractions or unused hooks"
+    ],
+    "weaknesses": [
+      "Window boundary condition (`<= window_start`) is subtly exclusive and not explained in comments",
+      "Class docstring repeats what the constructor signature already conveys; could be trimmed",
+      "Minor: `_lock` creation in __init__ ties the instance to the event loop in older Python versions (though acceptable in modern asyncio)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.357,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.21s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 32,
+    "maintainability_index": 84.545,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "baseline_generation"
+}

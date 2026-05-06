@@ -1,0 +1,42 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": "Invalid \\escape: line 3 column 395 (char 410)",
+    "rationale": "judge failed",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses a small pure helper `_is_valid_field` to isolate the regex check, keeps control flow flat with a guard clause for deduplication, and makes data movement explicit through a simple accumulator pattern. The module-level compiled regex is a reasonable optimization without being clever. One minor concern is that `\\w+` also matches Unicode word characters beyond ASCII letters, digits, and underscores, which may not match the spec's intent of 'only letters, digits, and underscores' \u2014 `[a-zA-Z0-9_]+` would be more explicit and correct. There's also no input validation (e.g., raising on non-string elements or non-set `allowed`), which the operational constraints suggest should be present. Otherwise the code is sparse, auditable, and avoids speculative abstractions.\",\n  \"strengths\": [\n    \"Small pure helper isolates the validation logic cleanly\",\n    \"Flat control flow with early-continue guard for deduplication\",\n    \"Explicit data movement via seen set and result list accumulator\",\n    \"Module-level compiled regex avoids repeated compilation without being obscure\",\n    \"Clear, self-explanatory names throughout\"\n  ],\n  \"weaknesses\": [\n    \"`\\\\w+` matches Unicode word characters, not strictly ASCII letters/digits/underscores as specified\",\n    \"No input validation or clear errors for invalid inputs (e.g., non-string fields, wrong types)\",\n    \"Deduplication and filtering are interleaved in one loop; could be marginally clearer if separated, though current form is still readable\"\n  ]\n}",
+    "score": null,
+    "skipped": false,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.702,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 2,
+    "loc": 17,
+    "maintainability_index": 87.791,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_generation"
+}

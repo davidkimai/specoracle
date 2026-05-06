@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4's doctrine: debits and credits are accumulated into separate named accumulators ('debit' and 'credit' keys) before any arithmetic occurs, direction validation is cleanly separated from accumulation, and the balance computation (credit - debit) is isolated in its own final pass with named variables. The code is flat, explicit, and locally auditable with no inline arithmetic inside conditionals that decide monetary direction. Minor deductions: using a dict keyed by direction string ('accounts[account][direction] += ...') is slightly implicit compared to two fully named accumulator variables per account, and the two-pass approach (accumulate then compute balance) adds a small structural overhead that could be unified without violating doctrine.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4's doctrine: debits and credits are accumulated into separate named accumulators ('debit' and 'credit' keys) before any arithmetic occurs, direction validation is cleanly separated from accumulation, and the balance computation (credit - debit) is isolated in its own final pass with named variables. The code is flat, explicit, and locally auditable with no inline arithmetic inside conditionals that decide monetary direction. Minor deductions: using a dict keyed by direction string ('accounts[account][direction] += ...') is slightly implicit compared to two fully named accumulator variables per account, and the two-pass approach (accumulate then compute balance) adds a small structural overhead that could be unified without violating doctrine.\",\n  \"strengths\": [\n    \"Debit and credit are stored in separate named accumulators as required by TR-4\",\n    \"Direction validation is fully separated from accumulation logic\",\n    \"Balance arithmetic uses named variables (debit, credit) not inline expressions inside conditionals\",\n    \"Comprehensive input validation with clear, informative error messages\",\n    \"Flat, readable structure with no nested lambdas or clever abstractions\",\n    \"Type annotations and docstring improve auditability\"\n  ],\n  \"weaknesses\": [\n    \"Using accounts[account][direction] += amount dispatches via string key rather than two explicitly named accumulator variables, slightly obscuring the debit/credit separation at the accumulation site\",\n    \"Two-pass design (accumulate then finalize) is slightly more complex than necessary, though it does cleanly separate concerns\",\n    \"VALID_DIRECTIONS defined inside the function on every call rather than as a module-level constant\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Debit and credit are stored in separate named accumulators as required by TR-4",
+      "Direction validation is fully separated from accumulation logic",
+      "Balance arithmetic uses named variables (debit, credit) not inline expressions inside conditionals",
+      "Comprehensive input validation with clear, informative error messages",
+      "Flat, readable structure with no nested lambdas or clever abstractions",
+      "Type annotations and docstring improve auditability"
+    ],
+    "weaknesses": [
+      "Using accounts[account][direction] += amount dispatches via string key rather than two explicitly named accumulator variables, slightly obscuring the debit/credit separation at the accumulation site",
+      "Two-pass design (accumulate then finalize) is slightly more complex than necessary, though it does cleanly separate concerns",
+      "VALID_DIRECTIONS defined inside the function on every call rather than as a module-level constant"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.699,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 69,
+    "maintainability_index": 79.992,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

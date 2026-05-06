@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden mutation, no speculative abstractions, and no framework-shaped scaffolding. The control flow is straightforward: collect all keys, iterate, apply override-wins logic with the None-removal guard, recurse only when both sides are dicts. Variable names are self-explanatory and the behavior is fully auditable in one read-through. The only minor structural quibble is that the nested `if` chain inside the `key in override` branch could be marginally flatter with an early-continue for the recursive case, but this is a trivial concern and the current nesting depth is entirely acceptable. No input validation is performed (e.g., raising on non-dict inputs), which the operational constraints suggest should be present, but the omission is minor given the type annotations serve as implicit documentation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden mutation, no speculative abstractions, and no framework-shaped scaffolding. The control flow is straightforward: collect all keys, iterate, apply override-wins logic with the None-removal guard, recurse only when both sides are dicts. Variable names are self-explanatory and the behavior is fully auditable in one read-through. The only minor structural quibble is that the nested `if` chain inside the `key in override` branch could be marginally flatter with an early-continue for the recursive case, but this is a trivial concern and the current nesting depth is entirely acceptable. No input validation is performed (e.g., raising on non-dict inputs), which the operational constraints suggest should be present, but the omission is minor given the type annotations serve as implicit documentation.\",\n  \"strengths\": [\n    \"No mutation of either input; result is built fresh\",\n    \"Recursion is applied only when semantically required (both values are dicts)\",\n    \"Control flow is flat and easy to follow in a single pass\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names (defaults, override, result, all_keys) clearly communicate intent\"\n  ],\n  \"weaknesses\": [\n    \"No explicit type validation; passing non-dict arguments silently proceeds until a runtime error\",\n    \"Iteration order over the unordered set may produce non-deterministic key ordering in the result (minor in Python 3.7+ dicts, but set iteration is still unordered)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "No mutation of either input; result is built fresh",
+      "Recursion is applied only when semantically required (both values are dicts)",
+      "Control flow is flat and easy to follow in a single pass",
+      "No speculative abstractions or unused extension points",
+      "Names (defaults, override, result, all_keys) clearly communicate intent"
+    ],
+    "weaknesses": [
+      "No explicit type validation; passing non-dict arguments silently proceeds until a runtime error",
+      "Iteration order over the unordered set may produce non-deterministic key ordering in the result (minor in Python 3.7+ dicts, but set iteration is still unordered)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.852,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 61.56,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

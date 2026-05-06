@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and flat. State transitions are clearly named ('closed', 'open', 'half_open') and inspectable via the `state` attribute, satisfying RCS-5's first requirement. Configuration values `failure_threshold` and `recovery_timeout` are named instance attributes, not magic constants. Half-open trials correctly reopen on failure and close on success. The `call` method is a single, readable function with no deep nesting. The `now` injection makes it testable. Minor quibbles: the failure count isn't reset when transitioning to half_open (though this doesn't affect correctness since a half_open failure immediately reopens), and the guard `failure_threshold <= 0` rejects zero which is reasonable but undocumented. The logic for incrementing `failures` even in half_open state is slightly redundant since the `state == 'half_open'` check already forces reopening, but it's harmless. Overall this is a tight, auditable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and flat. State transitions are clearly named ('closed', 'open', 'half_open') and inspectable via the `state` attribute, satisfying RCS-5's first requirement. Configuration values `failure_threshold` and `recovery_timeout` are named instance attributes, not magic constants. Half-open trials correctly reopen on failure and close on success. The `call` method is a single, readable function with no deep nesting. The `now` injection makes it testable. Minor quibbles: the failure count isn't reset when transitioning to half_open (though this doesn't affect correctness since a half_open failure immediately reopens), and the guard `failure_threshold <= 0` rejects zero which is reasonable but undocumented. The logic for incrementing `failures` even in half_open state is slightly redundant since the `state == 'half_open'` check already forces reopening, but it's harmless. Overall this is a tight, auditable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"State is explicit and inspectable via named string literals\",\n    \"Named configuration attributes, no magic constants\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Flat, single-method control flow with no unnecessary abstraction\",\n    \"Injected `now` clock enables deterministic testing\"\n  ],\n  \"weaknesses\": [\n    \"Failure counter is incremented even during half_open failure, which is redundant (the state check already handles reopening)\",\n    \"Input validation rejects zero values but this constraint is undocumented\",\n    \"No docstring or inline comments explaining the state machine transitions\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "State is explicit and inspectable via named string literals",
+      "Named configuration attributes, no magic constants",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Flat, single-method control flow with no unnecessary abstraction",
+      "Injected `now` clock enables deterministic testing"
+    ],
+    "weaknesses": [
+      "Failure counter is incremented even during half_open failure, which is redundant (the state check already handles reopening)",
+      "Input validation rejects zero values but this constraint is undocumented",
+      "No docstring or inline comments explaining the state machine transitions"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.457,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 2,
+    "loc": 28,
+    "maintainability_index": 51.613,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "human_reference"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit data movement through a single loop. It correctly uses a `seen` set for deduplication, compiles the regex once outside the loop for efficiency, and appends to a result list without hidden mutation. The logic is locally auditable in a few lines. Minor weaknesses: the docstring is verbose for such a simple function (over-documented), there's no input validation (e.g., raising TypeError if `fields` isn't a list or `allowed` isn't a set, as the operational constraints suggest raising clear errors for invalid inputs), and a small pure helper like `is_valid_field(field)` could have been extracted per the 'small pure helpers' preference, though the current monolithic approach is still acceptably simple at this scale. The regex compile outside the loop is a good practical choice. Overall this is a solid, Zen-aligned implementation with only minor structural omissions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit data movement through a single loop. It correctly uses a `seen` set for deduplication, compiles the regex once outside the loop for efficiency, and appends to a result list without hidden mutation. The logic is locally auditable in a few lines. Minor weaknesses: the docstring is verbose for such a simple function (over-documented), there's no input validation (e.g., raising TypeError if `fields` isn't a list or `allowed` isn't a set, as the operational constraints suggest raising clear errors for invalid inputs), and a small pure helper like `is_valid_field(field)` could have been extracted per the 'small pure helpers' preference, though the current monolithic approach is still acceptably simple at this scale. The regex compile outside the loop is a good practical choice. Overall this is a solid, Zen-aligned implementation with only minor structural omissions.\",\n  \"strengths\": [\n    \"Flat control flow with a single loop and guard clause (continue on seen)\",\n    \"Regex compiled once outside the loop \u2014 efficient and explicit\",\n    \"Explicit data movement: seen set and result list are clearly managed\",\n    \"Names are self-explanatory and the behavior is locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"No input validation or type checking \u2014 violates 'raise clear errors for invalid inputs'\",\n    \"Docstring is overly verbose for a simple function\",\n    \"Could extract a small `is_valid(field)` helper per the 'small pure helpers' preference\",\n    \"Deduplication before allowlist check means seen tracks rejected fields too, a subtle ordering choice worth a comment\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single loop and guard clause (continue on seen)",
+      "Regex compiled once outside the loop \u2014 efficient and explicit",
+      "Explicit data movement: seen set and result list are clearly managed",
+      "Names are self-explanatory and the behavior is locally auditable"
+    ],
+    "weaknesses": [
+      "No input validation or type checking \u2014 violates 'raise clear errors for invalid inputs'",
+      "Docstring is overly verbose for a simple function",
+      "Could extract a small `is_valid(field)` helper per the 'small pure helpers' preference",
+      "Deduplication before allowlist check means seen tracks rejected fields too, a subtle ordering choice worth a comment"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.564,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 21,
+    "maintainability_index": 93.719,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "baseline_generation"
+}

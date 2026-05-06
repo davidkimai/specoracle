@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook double-checked locking singleton that maps almost perfectly onto the Zen of Python principles: it is flat, explicit, uses only standard-library threading primitives, names are self-explanatory, there is no speculative abstraction, and the entire behavior can be audited in a single glance. The double-checked locking pattern is the canonical correct approach for lazy thread-safe initialization in Python when using a plain Lock, and every field has a clear purpose. The only minor concern is that double-checked locking on CPython relies on the GIL for the outer None-check to be atomic, which is implementation-specific but practically universal; a purist might prefer checking only inside the lock to be strictly correct across all Python implementations, though this would add a minor performance cost. Overall this is a clean, minimal, and correct realization of the task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a textbook double-checked locking singleton that maps almost perfectly onto the Zen of Python principles: it is flat, explicit, uses only standard-library threading primitives, names are self-explanatory, there is no speculative abstraction, and the entire behavior can be audited in a single glance. The double-checked locking pattern is the canonical correct approach for lazy thread-safe initialization in Python when using a plain Lock, and every field has a clear purpose. The only minor concern is that double-checked locking on CPython relies on the GIL for the outer None-check to be atomic, which is implementation-specific but practically universal; a purist might prefer checking only inside the lock to be strictly correct across all Python implementations, though this would add a minor performance cost. Overall this is a clean, minimal, and correct realization of the task.\",\n  \"strengths\": [\n    \"Minimal surface area: three fields, one method, no unnecessary abstractions\",\n    \"Uses standard threading.Lock directly \u2014 no clever metaprogramming\",\n    \"Names (_factory, _instance, _lock) make the data flow immediately obvious\",\n    \"Double-checked locking avoids lock contention on the hot path after initialization\",\n    \"No hidden global state or implicit mutation outside the constructor and first get() call\"\n  ],\n  \"weaknesses\": [\n    \"Double-checked locking's outer None-check is not guaranteed atomic outside CPython's GIL; a strictly portable version would check only inside the lock\",\n    \"No input validation: passing a non-callable factory silently defers the error to the first get() call rather than raising at construction time\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal surface area: three fields, one method, no unnecessary abstractions",
+      "Uses standard threading.Lock directly \u2014 no clever metaprogramming",
+      "Names (_factory, _instance, _lock) make the data flow immediately obvious",
+      "Double-checked locking avoids lock contention on the hot path after initialization",
+      "No hidden global state or implicit mutation outside the constructor and first get() call"
+    ],
+    "weaknesses": [
+      "Double-checked locking's outer None-check is not guaranteed atomic outside CPython's GIL; a strictly portable version would check only inside the lock",
+      "No input validation: passing a non-callable factory silently defers the error to the first get() call rather than raising at construction time"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.345,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 12,
+    "maintainability_index": 68.937,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "baseline_generation"
+}

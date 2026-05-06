@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen of Python oracle for this task. It decomposes cleanly into one small pure helper (_resolve_path) and one thin orchestrator (extract_fields), with flat control flow using guard clauses rather than deep nesting. Data movement is explicit\u2014no mutation, no hidden state\u2014and the comprehension in extract_fields makes the mapping relationship immediately legible. Input validation raises clear TypeError messages rather than silently coercing. The path-walking logic handles dict, list, and terminal cases in a straightforward sequential manner. The only minor quibbles are the somewhat verbose docstrings (the NumPy-style sections add bulk without much payoff for a small utility) and the negative-index guard (`index < 0`) which is a reasonable defensive choice but slightly departs from Python's conventional list semantics\u2014though it's arguably correct per the spec's intent of treating paths as explicit non-negative indexes. Overall, the code is sparse, auditable, and free of speculative abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen of Python oracle for this task. It decomposes cleanly into one small pure helper (_resolve_path) and one thin orchestrator (extract_fields), with flat control flow using guard clauses rather than deep nesting. Data movement is explicit\u2014no mutation, no hidden state\u2014and the comprehension in extract_fields makes the mapping relationship immediately legible. Input validation raises clear TypeError messages rather than silently coercing. The path-walking logic handles dict, list, and terminal cases in a straightforward sequential manner. The only minor quibbles are the somewhat verbose docstrings (the NumPy-style sections add bulk without much payoff for a small utility) and the negative-index guard (`index < 0`) which is a reasonable defensive choice but slightly departs from Python's conventional list semantics\u2014though it's arguably correct per the spec's intent of treating paths as explicit non-negative indexes. Overall, the code is sparse, auditable, and free of speculative abstractions.\",\n  \"strengths\": [\n    \"Clean separation into a small pure helper and a thin orchestrator\",\n    \"Flat control flow with guard clauses in _resolve_path\",\n    \"Explicit data movement; no mutation of input\",\n    \"Clear TypeError raises for invalid inputs\",\n    \"Comprehension in extract_fields makes key-value mapping transparent\",\n    \"No clever metaprogramming or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are more verbose than necessary for a small utility (NumPy-style sections add bulk)\",\n    \"Blocking negative list indexes is a minor deviation from Python's standard list semantics, though defensible per spec intent\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into a small pure helper and a thin orchestrator",
+      "Flat control flow with guard clauses in _resolve_path",
+      "Explicit data movement; no mutation of input",
+      "Clear TypeError raises for invalid inputs",
+      "Comprehension in extract_fields makes key-value mapping transparent",
+      "No clever metaprogramming or unused extension points"
+    ],
+    "weaknesses": [
+      "Docstrings are more verbose than necessary for a small utility (NumPy-style sections add bulk)",
+      "Blocking negative list indexes is a minor deviation from Python's standard list semantics, though defensible per spec intent"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.751,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 50,
+    "maintainability_index": 82.005,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

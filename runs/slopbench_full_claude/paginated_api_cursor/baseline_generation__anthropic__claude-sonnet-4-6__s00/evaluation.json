@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the task: it is flat, explicit, minimal, and immediately auditable. The loop structure is the simplest correct approach\u2014initialize cursor, fetch, extend, check, advance\u2014with no speculative abstractions, no hidden state, and no unnecessary helpers. The docstring is thorough without being bloated. The only minor quibble is that the docstring is arguably longer than the code itself, and a one-liner summary would suffice for something this simple, but this is a very minor stylistic point rather than a structural flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the task: it is flat, explicit, minimal, and immediately auditable. The loop structure is the simplest correct approach\u2014initialize cursor, fetch, extend, check, advance\u2014with no speculative abstractions, no hidden state, and no unnecessary helpers. The docstring is thorough without being bloated. The only minor quibble is that the docstring is arguably longer than the code itself, and a one-liner summary would suffice for something this simple, but this is a very minor stylistic point rather than a structural flaw.\",\n  \"strengths\": [\n    \"Flat single-loop control flow with a clear guard-clause break\",\n    \"Explicit data movement: cursor and all_items are visible at every step\",\n    \"No speculative abstractions or unused extension points\",\n    \"Correct use of async/await with standard constructs only\",\n    \"Names (all_items, cursor, next_cursor, fetch_page) are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately long relative to the trivial implementation body\",\n    \"No input validation (e.g., checking fetch_page is callable), though the task spec doesn't strictly require it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat single-loop control flow with a clear guard-clause break",
+      "Explicit data movement: cursor and all_items are visible at every step",
+      "No speculative abstractions or unused extension points",
+      "Correct use of async/await with standard constructs only",
+      "Names (all_items, cursor, next_cursor, fetch_page) are self-explanatory"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately long relative to the trivial implementation body",
+      "No input validation (e.g., checking fetch_page is callable), though the task spec doesn't strictly require it"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.396,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.18s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 30,
+    "maintainability_index": 77.444,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "baseline_generation"
+}

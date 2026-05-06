@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the requirements without speculative abstractions. The lock is used consistently across all three public methods, state mutation is explicit and local, guard clauses keep increment() flat, and the snapshot filter for nonzero counts is a single readable comprehension. The redundant `_total` field alongside `_counts` is a minor tradeoff (avoids summing on every `total()` call) that is clearly justified and kept consistent. Error messages are informative without being verbose. The only marginal weakness is that `count != 0` in the snapshot filter is slightly defensive since counts only ever increase, but it's harmless and arguably documents intent.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the requirements without speculative abstractions. The lock is used consistently across all three public methods, state mutation is explicit and local, guard clauses keep increment() flat, and the snapshot filter for nonzero counts is a single readable comprehension. The redundant `_total` field alongside `_counts` is a minor tradeoff (avoids summing on every `total()` call) that is clearly justified and kept consistent. Error messages are informative without being verbose. The only marginal weakness is that `count != 0` in the snapshot filter is slightly defensive since counts only ever increase, but it's harmless and arguably documents intent.\",\n  \"strengths\": [\n    \"Single lock used uniformly \u2014 no subtle race conditions\",\n    \"Guard clause at top of increment() keeps control flow flat\",\n    \"snapshot() returns a true copy with no mutable internal state exposed\",\n    \"Explicit _total field makes total() O(1) without hidden complexity\",\n    \"Clear, informative error messages for both ValueError and OverflowError\",\n    \"No unused extension points or framework-shaped scaffolding\"\n  ],\n  \"weaknesses\": [\n    \"Redundant _total field could drift from _counts if future edits are careless, though it's consistent here\",\n    \"The `count != 0` filter in snapshot() is slightly misleading since counts are monotonically increasing and can never be zero after insertion\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single lock used uniformly \u2014 no subtle race conditions",
+      "Guard clause at top of increment() keeps control flow flat",
+      "snapshot() returns a true copy with no mutable internal state exposed",
+      "Explicit _total field makes total() O(1) without hidden complexity",
+      "Clear, informative error messages for both ValueError and OverflowError",
+      "No unused extension points or framework-shaped scaffolding"
+    ],
+    "weaknesses": [
+      "Redundant _total field could drift from _counts if future edits are careless, though it's consistent here",
+      "The `count != 0` filter in snapshot() is slightly misleading since counts are monotonically increasing and can never be zero after insertion"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.571,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 35,
+    "maintainability_index": 80.151,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_generation"
+}

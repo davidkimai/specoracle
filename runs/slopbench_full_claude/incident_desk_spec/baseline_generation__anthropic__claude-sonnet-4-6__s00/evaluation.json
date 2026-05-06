@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Zen-of-Python oracle: it uses a local lookup table named `severity_bonus` (matching the `_table` naming spirit), keeps logic flat with a single loop and no classes, preserves input order, uses the stable string `'routed'` as status_code, and is locally auditable in one read-through. Minor gaps: the table is named `severity_bonus` rather than `severity_bonus_table` (the spec prefers names ending in `_table`), the skip reasons are expressed only in a comment rather than as short explicit strings in the code flow, and the fallback chain `rules.get(service, rules.get('default', {}))` is slightly implicit\u2014a two-step lookup with a named variable like `rule = rules.get(service) or rules['default']` would be more explicit. The docstring is thorough but the type annotations use the older `List`/`Dict` style instead of built-ins. Overall the code is clean, correct, and structurally sound with only small deviations from the informal spec.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Zen-of-Python oracle: it uses a local lookup table named `severity_bonus` (matching the `_table` naming spirit), keeps logic flat with a single loop and no classes, preserves input order, uses the stable string `'routed'` as status_code, and is locally auditable in one read-through. Minor gaps: the table is named `severity_bonus` rather than `severity_bonus_table` (the spec prefers names ending in `_table`), the skip reasons are expressed only in a comment rather than as short explicit strings in the code flow, and the fallback chain `rules.get(service, rules.get('default', {}))` is slightly implicit\u2014a two-step lookup with a named variable like `rule = rules.get(service) or rules['default']` would be more explicit. The docstring is thorough but the type annotations use the older `List`/`Dict` style instead of built-ins. Overall the code is clean, correct, and structurally sound with only small deviations from the informal spec.\",\n  \"strengths\": [\n    \"Uses a named lookup table (`severity_bonus`) for severity bonuses, matching the spirit of the `_table` convention\",\n    \"No classes introduced; single-pass flat loop preserves ticket order\",\n    \"status_code is always the stable string 'routed', never a boolean\",\n    \"Readable and locally auditable in one pass\",\n    \"Correct fallback to 'default' rule for unknown services\"\n  ],\n  \"weaknesses\": [\n    \"Table name is `severity_bonus` not `severity_bonus_table` as the spec explicitly prefers\",\n    \"Skip reasons are hidden in a comment rather than expressed as short explicit strings in code\",\n    \"Fallback lookup `rules.get(service, rules.get('default', {}))` is slightly implicit; a two-step named lookup would be clearer\",\n    \"Uses legacy `List`/`Dict` type hints instead of built-in `list`/`dict`\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses a named lookup table (`severity_bonus`) for severity bonuses, matching the spirit of the `_table` convention",
+      "No classes introduced; single-pass flat loop preserves ticket order",
+      "status_code is always the stable string 'routed', never a boolean",
+      "Readable and locally auditable in one pass",
+      "Correct fallback to 'default' rule for unknown services"
+    ],
+    "weaknesses": [
+      "Table name is `severity_bonus` not `severity_bonus_table` as the spec explicitly prefers",
+      "Skip reasons are hidden in a comment rather than expressed as short explicit strings in code",
+      "Fallback lookup `rules.get(service, rules.get('default', {}))` is slightly implicit; a two-step named lookup would be clearer",
+      "Uses legacy `List`/`Dict` type hints instead of built-in `list`/`dict`"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.061,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 87.394,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation faithfully follows the Legacy Telemetry Standard LT-11 structural spec: every transition has an explicit local variable named branch_<state>_<event>, the branch labels are evaluated before any branching occurs making them fully auditable, and the fallthrough return preserves the current state for unknown transitions. The code is flat, explicit, and locally readable with no hidden logic or abstraction layers. The only minor quibble is that evaluating all four branch conditions unconditionally (even after an earlier one is true) is slightly wasteful, but this is a negligible concern and actually aligns with the spec's emphasis on auditability over minimizing decision count.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The candidate implementation faithfully follows the Legacy Telemetry Standard LT-11 structural spec: every transition has an explicit local variable named branch_<state>_<event>, the branch labels are evaluated before any branching occurs making them fully auditable, and the fallthrough return preserves the current state for unknown transitions. The code is flat, explicit, and locally readable with no hidden logic or abstraction layers. The only minor quibble is that evaluating all four branch conditions unconditionally (even after an earlier one is true) is slightly wasteful, but this is a negligible concern and actually aligns with the spec's emphasis on auditability over minimizing decision count.\",\n  \"strengths\": [\n    \"All four branch label variables are explicitly named per the branch_<state>_<event> convention\",\n    \"Branch conditions are separated from branching logic, maximizing auditability\",\n    \"Flat structure with no nested conditionals or helper abstractions\",\n    \"Correct fallthrough to return state for unknown transitions\",\n    \"Fully explicit and readable without any clever tricks\"\n  ],\n  \"weaknesses\": [\n    \"All branch conditions are evaluated unconditionally even when an earlier branch is true, which is slightly inefficient (though aligned with the spec's auditability goal)\",\n    \"No docstring or comment referencing LT-11 standard for traceability\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All four branch label variables are explicitly named per the branch_<state>_<event> convention",
+      "Branch conditions are separated from branching logic, maximizing auditability",
+      "Flat structure with no nested conditionals or helper abstractions",
+      "Correct fallthrough to return state for unknown transitions",
+      "Fully explicit and readable without any clever tricks"
+    ],
+    "weaknesses": [
+      "All branch conditions are evaluated unconditionally even when an earlier branch is true, which is slightly inefficient (though aligned with the spec's auditability goal)",
+      "No docstring or comment referencing LT-11 standard for traceability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.926,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 58.492,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is generally clean and uses the right standard-library tool (heapq), with flat control flow and explicit data movement. However, it has a subtle but serious correctness bug: using `None` as a sentinel for exhausted iterators means any iterable that legitimately yields `None` (or integers that compare as falsy, like `0`) will be silently dropped \u2014 `0` is falsy so `if value is not None` handles that correctly, but an iterable yielding `None` would break. More critically, the heap tuple `(value, index, it)` will fail with a `TypeError` if two values are equal and Python tries to compare the iterator objects as a tiebreaker. The standard fix is to use a counter as the second element. The docstring is verbose for what is a small function, and the `isinstance` check on `iterators` is overly restrictive (rejects generators, sets, etc.) while not actually being required by the spec. These issues reduce the score meaningfully despite the otherwise readable structure.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is generally clean and uses the right standard-library tool (heapq), with flat control flow and explicit data movement. However, it has a subtle but serious correctness bug: using `None` as a sentinel for exhausted iterators means any iterable that legitimately yields `None` (or integers that compare as falsy, like `0`) will be silently dropped \u2014 `0` is falsy so `if value is not None` handles that correctly, but an iterable yielding `None` would break. More critically, the heap tuple `(value, index, it)` will fail with a `TypeError` if two values are equal and Python tries to compare the iterator objects as a tiebreaker. The standard fix is to use a counter as the second element. The docstring is verbose for what is a small function, and the `isinstance` check on `iterators` is overly restrictive (rejects generators, sets, etc.) while not actually being required by the spec. These issues reduce the score meaningfully despite the otherwise readable structure.\",\n  \"strengths\": [\n    \"Uses heapq.merge-style lazy heap approach \u2014 correct algorithmic choice\",\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement: heap state is visible and local\",\n    \"Docstring clearly documents parameters, yields, and raises\"\n  ],\n  \"weaknesses\": [\n    \"Heap tuple (value, index, it) will raise TypeError on equal values when Python falls through to comparing iterator objects\",\n    \"None sentinel silently drops iterables that yield None\",\n    \"isinstance check on iterators rejects valid iterables like generators and sets, violating duck-typing and the spec\",\n    \"Docstring is disproportionately long for a small function \u2014 adds noise without aiding local auditability\",\n    \"Could simply delegate to heapq.merge for a simpler, more correct implementation\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Uses heapq.merge-style lazy heap approach \u2014 correct algorithmic choice",
+      "Flat control flow with no deep nesting",
+      "Explicit data movement: heap state is visible and local",
+      "Docstring clearly documents parameters, yields, and raises"
+    ],
+    "weaknesses": [
+      "Heap tuple (value, index, it) will raise TypeError on equal values when Python falls through to comparing iterator objects",
+      "None sentinel silently drops iterables that yield None",
+      "isinstance check on iterators rejects valid iterables like generators and sets, violating duck-typing and the spec",
+      "Docstring is disproportionately long for a small function \u2014 adds noise without aiding local auditability",
+      "Could simply delegate to heapq.merge for a simpler, more correct implementation"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.807,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 85.202,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "priority_queue_merger",
+  "variant": "oracle_generation"
+}

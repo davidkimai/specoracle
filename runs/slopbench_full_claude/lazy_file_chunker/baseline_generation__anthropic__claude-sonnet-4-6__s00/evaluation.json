@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with a straightforward guard-then-loop structure that maps directly to the task semantics. The control flow is minimal and auditable locally. The bool-exclusion check is a reasonable defensive measure given Python's bool-is-int subtype quirk, though it adds a small amount of complexity that the spec doesn't explicitly require. The docstring is thorough but arguably over-engineered for such a small function. The core loop idiom (read, check empty, yield) is idiomatic and correct. No speculative abstractions or hidden state exist. The only minor structural concern is the isinstance/bool guard being slightly more elaborate than a simple `chunk_size <= 0` check would need, but it's not harmful and reflects explicit error handling.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with a straightforward guard-then-loop structure that maps directly to the task semantics. The control flow is minimal and auditable locally. The bool-exclusion check is a reasonable defensive measure given Python's bool-is-int subtype quirk, though it adds a small amount of complexity that the spec doesn't explicitly require. The docstring is thorough but arguably over-engineered for such a small function. The core loop idiom (read, check empty, yield) is idiomatic and correct. No speculative abstractions or hidden state exist. The only minor structural concern is the isinstance/bool guard being slightly more elaborate than a simple `chunk_size <= 0` check would need, but it's not harmful and reflects explicit error handling.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard block followed by a simple while-break loop\",\n    \"Explicit ValueError and TypeError with clear messages for invalid inputs\",\n    \"No whole-file buffering; truly lazy chunk-by-chunk reading\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names are self-explanatory and the behavior is locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"The isinstance/bool type check adds minor complexity beyond what the spec requires; a simple `chunk_size <= 0` guard would cover most practical cases\",\n    \"Docstring is verbose relative to the function's simplicity, slightly inflating the code surface\",\n    \"No helper extraction (though the function is small enough that none is needed, so this is neutral)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard block followed by a simple while-break loop",
+      "Explicit ValueError and TypeError with clear messages for invalid inputs",
+      "No whole-file buffering; truly lazy chunk-by-chunk reading",
+      "No speculative abstractions or unused extension points",
+      "Names are self-explanatory and the behavior is locally auditable"
+    ],
+    "weaknesses": [
+      "The isinstance/bool type check adds minor complexity beyond what the spec requires; a simple `chunk_size <= 0` guard would cover most practical cases",
+      "Docstring is verbose relative to the function's simplicity, slightly inflating the code surface",
+      "No helper extraction (though the function is small enough that none is needed, so this is neutral)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.064,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 21,
+    "maintainability_index": 90.058,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "baseline_generation"
+}

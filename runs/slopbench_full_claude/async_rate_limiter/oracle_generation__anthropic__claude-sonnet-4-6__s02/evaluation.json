@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp log, which is the simplest correct data structure for this task. Control flow is flat with a single guard clause for eviction, explicit data movement (timestamps appended/removed openly), a clear ValueError for invalid input, and no speculative abstractions. The asyncio.Lock is the right ordinary stdlib construct for async mutual exclusion. The only minor quibble is the boundary condition: using `<= window_start` (i.e., `current - 1.0`) means a timestamp exactly one second old is evicted, which could be argued either way for a 'per one-second window' spec, but it's a defensible and common choice. The docstring module header is slightly verbose for the size of the file, but harmless. Overall this is a textbook example of the Zen-aligned approach: simple, explicit, flat, and locally auditable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp log, which is the simplest correct data structure for this task. Control flow is flat with a single guard clause for eviction, explicit data movement (timestamps appended/removed openly), a clear ValueError for invalid input, and no speculative abstractions. The asyncio.Lock is the right ordinary stdlib construct for async mutual exclusion. The only minor quibble is the boundary condition: using `<= window_start` (i.e., `current - 1.0`) means a timestamp exactly one second old is evicted, which could be argued either way for a 'per one-second window' spec, but it's a defensible and common choice. The docstring module header is slightly verbose for the size of the file, but harmless. Overall this is a textbook example of the Zen-aligned approach: simple, explicit, flat, and locally auditable.\",\n  \"strengths\": [\n    \"Minimal architecture: deque + lock + now callable covers all requirements without over-engineering\",\n    \"Explicit data movement: timestamps are visibly appended and removed, no hidden mutation\",\n    \"Flat control flow with a single while-loop guard for window eviction\",\n    \"Clear ValueError with informative message for invalid rate\",\n    \"now callable injection makes deterministic testing straightforward\",\n    \"asyncio.Lock is the correct, ordinary stdlib primitive for async serialization\"\n  ],\n  \"weaknesses\": [\n    \"Module-level docstring and class docstring are slightly redundant for such a small file\",\n    \"Boundary condition (<=) for window eviction is not explicitly justified in comments, leaving subtle semantic ambiguity\",\n    \"Type annotation for now parameter uses a comment-style description rather than a proper Callable type hint\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal architecture: deque + lock + now callable covers all requirements without over-engineering",
+      "Explicit data movement: timestamps are visibly appended and removed, no hidden mutation",
+      "Flat control flow with a single while-loop guard for window eviction",
+      "Clear ValueError with informative message for invalid rate",
+      "now callable injection makes deterministic testing straightforward",
+      "asyncio.Lock is the correct, ordinary stdlib primitive for async serialization"
+    ],
+    "weaknesses": [
+      "Module-level docstring and class docstring are slightly redundant for such a small file",
+      "Boundary condition (<=) for window eviction is not explicitly justified in comments, leaving subtle semantic ambiguity",
+      "Type annotation for now parameter uses a comment-style description rather than a proper Callable type hint"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.246,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.16s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 28,
+    "maintainability_index": 81.904,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_generation"
+}

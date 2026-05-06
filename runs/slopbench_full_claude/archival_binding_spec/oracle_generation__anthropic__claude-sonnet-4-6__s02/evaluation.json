@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the surviving dictionary `bindings_ledger` as required, stages parsing visibly across five clearly commented steps rather than compressing into one-liners, preserves insertion order via standard dict, and raises ValueError messages that explicitly name the archival field being rejected. The code is flat, readable, and locally auditable with no hidden complexity. Minor deductions: the stage comments are slightly verbose (e.g., 'Stage 5' for a simple dict insert is over-annotated), and using `line.index('=')` correctly handles values containing '=' but this could be made more explicit; also the value is stripped but the spec only says to strip whitespace around section/key/value which is satisfied. Overall this is an excellent realization of the informal oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the surviving dictionary `bindings_ledger` as required, stages parsing visibly across five clearly commented steps rather than compressing into one-liners, preserves insertion order via standard dict, and raises ValueError messages that explicitly name the archival field being rejected. The code is flat, readable, and locally auditable with no hidden complexity. Minor deductions: the stage comments are slightly verbose (e.g., 'Stage 5' for a simple dict insert is over-annotated), and using `line.index('=')` correctly handles values containing '=' but this could be made more explicit; also the value is stripped but the spec only says to strip whitespace around section/key/value which is satisfied. Overall this is an excellent realization of the informal oracle.\",\n  \"strengths\": [\n    \"Uses `bindings_ledger` naming convention exactly as specified\",\n    \"Single public function with no extraneous helpers\",\n    \"Visibly staged parsing with clear comments separating each concern\",\n    \"Error messages explicitly name the archival field being rejected\",\n    \"Correctly handles values containing '=' by splitting only on the first occurrence\",\n    \"Insertion order preserved naturally via Python dict\",\n    \"Handles edge cases: blank lines, comments, missing '=', missing '.', empty section, empty key\"\n  ],\n  \"weaknesses\": [\n    \"Stage comments are slightly over-annotated for simple operations (e.g., Stage 5 is trivial)\",\n    \"Type annotation on `bindings_ledger` is redundant given the function return type annotation, minor noise\",\n    \"No handling of duplicate keys within a section (silently overwrites), though spec doesn't forbid it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `bindings_ledger` naming convention exactly as specified",
+      "Single public function with no extraneous helpers",
+      "Visibly staged parsing with clear comments separating each concern",
+      "Error messages explicitly name the archival field being rejected",
+      "Correctly handles values containing '=' by splitting only on the first occurrence",
+      "Insertion order preserved naturally via Python dict",
+      "Handles edge cases: blank lines, comments, missing '=', missing '.', empty section, empty key"
+    ],
+    "weaknesses": [
+      "Stage comments are slightly over-annotated for simple operations (e.g., Stage 5 is trivial)",
+      "Type annotation on `bindings_ledger` is redundant given the function return type annotation, minor noise",
+      "No handling of duplicate keys within a section (silently overwrites), though spec doesn't forbid it"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 3.033,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 51,
+    "maintainability_index": 81.607,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_generation"
+}

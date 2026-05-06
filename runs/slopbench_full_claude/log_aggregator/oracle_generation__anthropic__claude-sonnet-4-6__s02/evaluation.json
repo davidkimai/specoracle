@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a single pass with a seen-dict for deduplication, a small pure helper for the sort key, clear error raising with informative messages, and copies records with dict() to avoid mutation. Control flow is shallow with guard clauses rather than nesting. The _ts_sort_key helper handles missing ts gracefully and is locally auditable. The only minor issues are the verbose docstring (slightly over-documented for the size of the code) and the type annotation `dict[tuple, dict]` which could be more precise as `dict[tuple[Any, Any], dict]`, but neither is a meaningful structural flaw. The architecture is exactly as simple as the task demands with no speculative abstractions or unused extension points.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a single pass with a seen-dict for deduplication, a small pure helper for the sort key, clear error raising with informative messages, and copies records with dict() to avoid mutation. Control flow is shallow with guard clauses rather than nesting. The _ts_sort_key helper handles missing ts gracefully and is locally auditable. The only minor issues are the verbose docstring (slightly over-documented for the size of the code) and the type annotation `dict[tuple, dict]` which could be more precise as `dict[tuple[Any, Any], dict]`, but neither is a meaningful structural flaw. The architecture is exactly as simple as the task demands with no speculative abstractions or unused extension points.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses for validation\",\n    \"Explicit deduplication via seen-dict with shallow copy to prevent mutation\",\n    \"Small, pure _ts_sort_key helper with sensible None-last fallback\",\n    \"Clear, informative error raising for invalid inputs\",\n    \"No speculative abstractions or framework-shaped code\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is slightly over-verbose relative to the code size\",\n    \"Type annotation `dict[tuple, dict]` is imprecise; could use tuple[Any, Any]\",\n    \"Missing 'ts' key is silently tolerated (sorts last) rather than optionally flagged, which may or may not match intent\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses for validation",
+      "Explicit deduplication via seen-dict with shallow copy to prevent mutation",
+      "Small, pure _ts_sort_key helper with sensible None-last fallback",
+      "Clear, informative error raising for invalid inputs",
+      "No speculative abstractions or framework-shaped code"
+    ],
+    "weaknesses": [
+      "Docstring is slightly over-verbose relative to the code size",
+      "Type annotation `dict[tuple, dict]` is imprecise; could use tuple[Any, Any]",
+      "Missing 'ts' key is silently tolerated (sorts last) rather than optionally flagged, which may or may not match intent"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.097,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.5,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 36,
+    "maintainability_index": 84.561,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "log_aggregator",
+  "variant": "oracle_generation"
+}

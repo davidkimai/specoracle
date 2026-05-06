@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, streaming, and uses standard-library constructs appropriately. The `non_empty` helper is a good extraction of filtering logic, and the control flow is flat and readable. However, there are a few structural issues: the stripping logic in `non_empty` is unnecessarily complex (double-stripping with `rstrip('\\n')` then `rstrip('\\r')` instead of a single `strip()` or `rstrip('\\r\\n')`), and silently padding short rows with empty strings rather than raising a clear error contradicts the 'raise clear errors for invalid inputs' constraint. The docstring is verbose for a small function. Using `csv.reader([line])` repeatedly in a loop is slightly awkward compared to feeding the filtered iterator directly into `csv.reader`, which would be more idiomatic and elegant. Overall the architecture is sound but has minor structural impurities.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, streaming, and uses standard-library constructs appropriately. The `non_empty` helper is a good extraction of filtering logic, and the control flow is flat and readable. However, there are a few structural issues: the stripping logic in `non_empty` is unnecessarily complex (double-stripping with `rstrip('\\\\n')` then `rstrip('\\\\r')` instead of a single `strip()` or `rstrip('\\\\r\\\\n')`), and silently padding short rows with empty strings rather than raising a clear error contradicts the 'raise clear errors for invalid inputs' constraint. The docstring is verbose for a small function. Using `csv.reader([line])` repeatedly in a loop is slightly awkward compared to feeding the filtered iterator directly into `csv.reader`, which would be more idiomatic and elegant. Overall the architecture is sound but has minor structural impurities.\",\n  \"strengths\": [\n    \"Preserves streaming behavior \u2014 input iterable is never materialized\",\n    \"Uses `csv.reader` for correct quoted-field handling\",\n    \"Small named helper `non_empty` cleanly separates filtering concern\",\n    \"Handles empty input gracefully with early return\",\n    \"Flat control flow with no deep nesting\"\n  ],\n  \"weaknesses\": [\n    \"Double-strip logic (`rstrip('\\\\n').rstrip('\\\\r')`) is needlessly convoluted; `rstrip('\\\\r\\\\n')` or `strip()` would be cleaner\",\n    \"Silently pads short rows instead of raising a clear error for malformed input\",\n    \"Feeding `csv.reader` a single-element list per row in a loop is awkward; piping the filtered iterator directly into `csv.reader` would be more idiomatic\",\n    \"Docstring is overly verbose relative to the function's simplicity\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Preserves streaming behavior \u2014 input iterable is never materialized",
+      "Uses `csv.reader` for correct quoted-field handling",
+      "Small named helper `non_empty` cleanly separates filtering concern",
+      "Handles empty input gracefully with early return",
+      "Flat control flow with no deep nesting"
+    ],
+    "weaknesses": [
+      "Double-strip logic (`rstrip('\\n').rstrip('\\r')`) is needlessly convoluted; `rstrip('\\r\\n')` or `strip()` would be cleaner",
+      "Silently pads short rows instead of raising a clear error for malformed input",
+      "Feeding `csv.reader` a single-element list per row in a loop is awkward; piping the filtered iterator directly into `csv.reader` would be more idiomatic",
+      "Docstring is overly verbose relative to the function's simplicity"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.727,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 2,
+    "loc": 31,
+    "maintainability_index": 88.841,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "baseline_generation"
+}

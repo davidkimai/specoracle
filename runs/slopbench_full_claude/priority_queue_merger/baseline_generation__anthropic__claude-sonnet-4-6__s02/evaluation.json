@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, idiomatic realization of the heap-merge pattern. It is flat, explicit, and locally auditable: the heap tuple layout is explained inline, empty iterables are handled with a guard-clause continue, and the main loop is a straightforward pop-yield-push cycle. The choice of (value, source_index, iterator) as the heap element is the standard tiebreaker trick and is clearly documented. The only minor imperfections are the absence of an input-validation guard (e.g., raising TypeError if `iterators` is not a list) and the fact that `heapq.merge` already exists in the standard library and would be the simplest correct answer\u2014though implementing it manually is perfectly reasonable for a learning/interview context and the result is still sparse and maintainable. The docstring is slightly verbose for the code's simplicity, but not harmfully so.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, idiomatic realization of the heap-merge pattern. It is flat, explicit, and locally auditable: the heap tuple layout is explained inline, empty iterables are handled with a guard-clause continue, and the main loop is a straightforward pop-yield-push cycle. The choice of (value, source_index, iterator) as the heap element is the standard tiebreaker trick and is clearly documented. The only minor imperfections are the absence of an input-validation guard (e.g., raising TypeError if `iterators` is not a list) and the fact that `heapq.merge` already exists in the standard library and would be the simplest correct answer\u2014though implementing it manually is perfectly reasonable for a learning/interview context and the result is still sparse and maintainable. The docstring is slightly verbose for the code's simplicity, but not harmfully so.\",\n  \"strengths\": [\n    \"Flat control flow with guard-clause continues instead of nested try/else\",\n    \"Explicit tiebreaker via source_index prevents TypeError on equal values\",\n    \"Lazy generator semantics correctly preserved throughout\",\n    \"Clear, minimal variable names that map directly to the algorithm\",\n    \"Handles empty iterables gracefully without special-casing before the loop\"\n  ],\n  \"weaknesses\": [\n    \"No input validation: passing a non-list or non-iterable elements silently misbehaves instead of raising a clear error\",\n    \"heapq.merge from the standard library already implements this exactly; using it would be the simplest correct architecture\",\n    \"Docstring length slightly exceeds what the sparse code warrants\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard-clause continues instead of nested try/else",
+      "Explicit tiebreaker via source_index prevents TypeError on equal values",
+      "Lazy generator semantics correctly preserved throughout",
+      "Clear, minimal variable names that map directly to the algorithm",
+      "Handles empty iterables gracefully without special-casing before the loop"
+    ],
+    "weaknesses": [
+      "No input validation: passing a non-list or non-iterable elements silently misbehaves instead of raising a clear error",
+      "heapq.merge from the standard library already implements this exactly; using it would be the simplest correct architecture",
+      "Docstring length slightly exceeds what the sparse code warrants"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.14,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "priority_queue_merger",
+  "variant": "baseline_generation"
+}

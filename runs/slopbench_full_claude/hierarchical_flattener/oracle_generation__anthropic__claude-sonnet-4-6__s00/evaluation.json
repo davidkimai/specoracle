@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and well-structured. It splits responsibility sensibly between a public entry point that validates input and a private recursive helper that does the traversal, keeping each function small and focused. Control flow is flat within each function, names are self-explanatory, data movement is explicit (no hidden mutation beyond the intentional accumulator pattern), and the edge case of empty dicts as leaves is handled with a clear comment. The only minor quibbles are that the docstring on `flatten_paths` is slightly over-documented for such a simple function, and the `_collect` helper uses an output-accumulator pattern (mutation of `out`) rather than returning a value, which is a minor explicitness trade-off\u2014though it is a common and readable idiom for this pattern. Overall this is a textbook example of the Zen of Python applied to a small utility.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and well-structured. It splits responsibility sensibly between a public entry point that validates input and a private recursive helper that does the traversal, keeping each function small and focused. Control flow is flat within each function, names are self-explanatory, data movement is explicit (no hidden mutation beyond the intentional accumulator pattern), and the edge case of empty dicts as leaves is handled with a clear comment. The only minor quibbles are that the docstring on `flatten_paths` is slightly over-documented for such a simple function, and the `_collect` helper uses an output-accumulator pattern (mutation of `out`) rather than returning a value, which is a minor explicitness trade-off\u2014though it is a common and readable idiom for this pattern. Overall this is a textbook example of the Zen of Python applied to a small utility.\",\n  \"strengths\": [\n    \"Clean separation between input validation (flatten_paths) and recursive traversal (_collect)\",\n    \"Flat control flow within each function with guard clauses\",\n    \"Explicit TypeError with informative message for invalid input\",\n    \"Edge case of empty dicts handled and documented\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names are clear and self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Accumulator mutation pattern in _collect is slightly less explicit than returning a value, though it is idiomatic\",\n    \"Docstring verbosity on flatten_paths slightly exceeds what the simple implementation warrants\",\n    \"No handling or mention of non-string keys, which could silently produce unexpected dot-paths\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation between input validation (flatten_paths) and recursive traversal (_collect)",
+      "Flat control flow within each function with guard clauses",
+      "Explicit TypeError with informative message for invalid input",
+      "Edge case of empty dicts handled and documented",
+      "No speculative abstractions or unused extension points",
+      "Names are clear and self-explanatory"
+    ],
+    "weaknesses": [
+      "Accumulator mutation pattern in _collect is slightly less explicit than returning a value, though it is idiomatic",
+      "Docstring verbosity on flatten_paths slightly exceeds what the simple implementation warrants",
+      "No handling or mention of non-string keys, which could silently produce unexpected dot-paths"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.775,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 32,
+    "maintainability_index": 95.215,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "oracle_generation"
+}

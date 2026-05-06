@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is largely well-aligned with Spec N-9: it uses named lookup tables with the `_table` suffix, avoids classes, preserves ticket order, uses an explicit `routed_status_code` constant instead of a bare string or boolean, and keeps the logic flat and readable in a single pass. The severity boost table and required fields tuple are cleanly named and locally auditable. However, there are notable weaknesses: the redundant falsy-value checks after the `None`-guard (`if not ticket_id and ticket_id != 0`) add noise and suggest uncertainty about the validation logic rather than a clear explicit rule; the spec says to skip tickets missing fields, and the `None` check via `.get()` is already a reasonable interpretation, but the double-check is confusing and not explicitly justified. The `or {}` fallback on the rule lookup silently swallows a missing default, which could mask misconfiguration. The `required_fields_table` is a tuple but named as a table, which is fine, though a dict mapping field names to skip-reasons would better match the 'short explicit strings for branch reasons' guideline. Overall the code is clean, readable, and structurally sound with minor slop in the validation logic.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is largely well-aligned with Spec N-9: it uses named lookup tables with the `_table` suffix, avoids classes, preserves ticket order, uses an explicit `routed_status_code` constant instead of a bare string or boolean, and keeps the logic flat and readable in a single pass. The severity boost table and required fields tuple are cleanly named and locally auditable. However, there are notable weaknesses: the redundant falsy-value checks after the `None`-guard (`if not ticket_id and ticket_id != 0`) add noise and suggest uncertainty about the validation logic rather than a clear explicit rule; the spec says to skip tickets missing fields, and the `None` check via `.get()` is already a reasonable interpretation, but the double-check is confusing and not explicitly justified. The `or {}` fallback on the rule lookup silently swallows a missing default, which could mask misconfiguration. The `required_fields_table` is a tuple but named as a table, which is fine, though a dict mapping field names to skip-reasons would better match the 'short explicit strings for branch reasons' guideline. Overall the code is clean, readable, and structurally sound with minor slop in the validation logic.\",\n  \"strengths\": [\n    \"Uses `_table` suffix for lookup structures as specified\",\n    \"No classes introduced; single-pass flat loop\",\n    \"Explicit `routed_status_code` constant avoids magic strings\",\n    \"Ticket order preserved naturally via sequential append\",\n    \"Severity boost logic is clean and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Redundant falsy checks after None-guard add confusion and implicit logic\",\n    \"Silent `or {}` fallback hides missing 'default' rule misconfiguration\",\n    \"Branch skip reasons are not expressed as short explicit strings per spec\",\n    \"required_fields_table as a tuple is functional but misses opportunity for named skip-reason mapping\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses `_table` suffix for lookup structures as specified",
+      "No classes introduced; single-pass flat loop",
+      "Explicit `routed_status_code` constant avoids magic strings",
+      "Ticket order preserved naturally via sequential append",
+      "Severity boost logic is clean and locally auditable"
+    ],
+    "weaknesses": [
+      "Redundant falsy checks after None-guard add confusion and implicit logic",
+      "Silent `or {}` fallback hides missing 'default' rule misconfiguration",
+      "Branch skip reasons are not expressed as short explicit strings per spec",
+      "required_fields_table as a tuple is functional but misses opportunity for named skip-reason mapping"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.999,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 70.248,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

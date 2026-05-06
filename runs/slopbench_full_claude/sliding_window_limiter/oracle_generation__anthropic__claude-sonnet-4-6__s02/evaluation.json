@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it uses a small, well-named pure helper (_evict_expired) to isolate the expiry logic, keeps allow() flat with a single guard-clause pattern, makes data movement explicit through the deque per key, raises clear ValueError messages with the offending value, and uses only ordinary standard-library constructs (defaultdict, deque). The docstrings are concise and accurate, naming matches the domain precisely, and there are no speculative abstractions or unused extension points. The only minor quibble is that snapshot() does not evict expired entries before returning, which could surprise a caller who expects only live timestamps\u2014but this is arguably a deliberate design choice since snapshot is documented as 'retained' timestamps and eviction is tied to a timestamp argument that snapshot lacks.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it uses a small, well-named pure helper (_evict_expired) to isolate the expiry logic, keeps allow() flat with a single guard-clause pattern, makes data movement explicit through the deque per key, raises clear ValueError messages with the offending value, and uses only ordinary standard-library constructs (defaultdict, deque). The docstrings are concise and accurate, naming matches the domain precisely, and there are no speculative abstractions or unused extension points. The only minor quibble is that snapshot() does not evict expired entries before returning, which could surprise a caller who expects only live timestamps\u2014but this is arguably a deliberate design choice since snapshot is documented as 'retained' timestamps and eviction is tied to a timestamp argument that snapshot lacks.\",\n  \"strengths\": [\n    \"Small, single-responsibility helper _evict_expired keeps allow() flat and readable\",\n    \"Explicit ValueError with offending value for both invalid constructor arguments\",\n    \"Data movement is transparent: deque per key, no hidden global state\",\n    \"Uses only defaultdict and deque from the standard library\u2014no clever metaprogramming\",\n    \"Names (cutoff, queue, evict_expired) make behavior locally auditable without cross-referencing\"\n  ],\n  \"weaknesses\": [\n    \"snapshot() returns stale timestamps without evicting expired entries, which may surprise callers expecting only in-window data\",\n    \"Accessing self._timestamps[key] in _evict_expired via defaultdict silently creates an empty deque for unseen keys, a minor hidden side-effect\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-responsibility helper _evict_expired keeps allow() flat and readable",
+      "Explicit ValueError with offending value for both invalid constructor arguments",
+      "Data movement is transparent: deque per key, no hidden global state",
+      "Uses only defaultdict and deque from the standard library\u2014no clever metaprogramming",
+      "Names (cutoff, queue, evict_expired) make behavior locally auditable without cross-referencing"
+    ],
+    "weaknesses": [
+      "snapshot() returns stale timestamps without evicting expired entries, which may surprise callers expecting only in-window data",
+      "Accessing self._timestamps[key] in _evict_expired via defaultdict silently creates an empty deque for unseen keys, a minor hidden side-effect"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.399,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 28,
+    "maintainability_index": 53.821,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_generation"
+}

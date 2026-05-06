@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, direct realization of the task with no speculative abstractions or framework-shaped scaffolding. It uses OrderedDict as the obvious standard-library primitive for LRU ordering, keeps data movement explicit (pop-then-reinsert on set, move_to_end on get), validates inputs with clear error messages, and exposes only the two required public methods. The small helpers `_current_time` and `_is_expired` are genuinely useful decompositions that make the expiry logic locally auditable. Control flow is flat throughout, with guard clauses handling the absent/expired cases before the happy path. The only minor quibble is that `_current_time` is a trivial one-liner wrapper that adds a layer of indirection without meaningful benefit\u2014`self._now()` could be called directly\u2014but this is a very small cost against an otherwise exemplary implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, direct realization of the task with no speculative abstractions or framework-shaped scaffolding. It uses OrderedDict as the obvious standard-library primitive for LRU ordering, keeps data movement explicit (pop-then-reinsert on set, move_to_end on get), validates inputs with clear error messages, and exposes only the two required public methods. The small helpers `_current_time` and `_is_expired` are genuinely useful decompositions that make the expiry logic locally auditable. Control flow is flat throughout, with guard clauses handling the absent/expired cases before the happy path. The only minor quibble is that `_current_time` is a trivial one-liner wrapper that adds a layer of indirection without meaningful benefit\u2014`self._now()` could be called directly\u2014but this is a very small cost against an otherwise exemplary implementation.\",\n  \"strengths\": [\n    \"OrderedDict is the idiomatic, obvious choice for LRU ordering with no clever tricks\",\n    \"Input validation raises clear, informative errors rather than silently misbehaving\",\n    \"Data movement is explicit: pop-then-append on set, move_to_end on get\",\n    \"Control flow is flat with guard clauses; no deep nesting\",\n    \"Injected `now` parameter makes time-dependent behavior fully testable\",\n    \"Comments explain the data structure invariant concisely\",\n    \"No unused extension points or speculative abstractions\"\n  ],\n  \"weaknesses\": [\n    \"`_current_time` is a trivial wrapper around `self._now()` that adds indirection without meaningful abstraction value\",\n    \"Expired entries are only evicted on access, not proactively on set, which could leave stale entries occupying slots and displacing fresher ones under some usage patterns\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "OrderedDict is the idiomatic, obvious choice for LRU ordering with no clever tricks",
+      "Input validation raises clear, informative errors rather than silently misbehaving",
+      "Data movement is explicit: pop-then-append on set, move_to_end on get",
+      "Control flow is flat with guard clauses; no deep nesting",
+      "Injected `now` parameter makes time-dependent behavior fully testable",
+      "Comments explain the data structure invariant concisely",
+      "No unused extension points or speculative abstractions"
+    ],
+    "weaknesses": [
+      "`_current_time` is a trivial wrapper around `self._now()` that adds indirection without meaningful abstraction value",
+      "Expired entries are only evicted on access, not proactively on set, which could leave stale entries occupying slots and displacing fresher ones under some usage patterns"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.981,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 5,
+    "loc": 42,
+    "maintainability_index": 73.853,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "oracle_generation"
+}

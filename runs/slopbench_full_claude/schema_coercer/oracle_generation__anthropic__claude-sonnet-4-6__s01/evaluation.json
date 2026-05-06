@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it is flat, explicit, and locally auditable with no speculative abstractions. The loop is straightforward, data movement is visible, the guard clause (`continue`) keeps nesting minimal, and the error handling is precise\u2014catching only the expected exceptions and re-raising with the field name as required. The single function is appropriately sized for the task; splitting it further would add indirection without benefit. The only minor quibble is that a small pure helper like `coerce_field` could marginally improve testability and separation of the cast-or-default logic, but the current monolithic form is so compact that the absence of a helper is entirely defensible and arguably cleaner.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it is flat, explicit, and locally auditable with no speculative abstractions. The loop is straightforward, data movement is visible, the guard clause (`continue`) keeps nesting minimal, and the error handling is precise\u2014catching only the expected exceptions and re-raising with the field name as required. The single function is appropriately sized for the task; splitting it further would add indirection without benefit. The only minor quibble is that a small pure helper like `coerce_field` could marginally improve testability and separation of the cast-or-default logic, but the current monolithic form is so compact that the absence of a helper is entirely defensible and arguably cleaner.\",\n  \"strengths\": [\n    \"Flat control flow with a guard clause instead of nested if/else\",\n    \"Explicit data movement into a fresh result dict with no hidden mutation\",\n    \"Precise exception handling\u2014only ValueError and TypeError caught, re-raised with the field name\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names are self-explanatory and the behavior is fully auditable in one glance\"\n  ],\n  \"weaknesses\": [\n    \"Could optionally extract a tiny `coerce_field` helper to isolate the try/except for unit testing, though the current size makes this optional\",\n    \"Does not validate that schema values are actually 2-tuples, but the spec does not require it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a guard clause instead of nested if/else",
+      "Explicit data movement into a fresh result dict with no hidden mutation",
+      "Precise exception handling\u2014only ValueError and TypeError caught, re-raised with the field name",
+      "No speculative abstractions or unused extension points",
+      "Names are self-explanatory and the behavior is fully auditable in one glance"
+    ],
+    "weaknesses": [
+      "Could optionally extract a tiny `coerce_field` helper to isolate the try/except for unit testing, though the current size makes this optional",
+      "Does not validate that schema values are actually 2-tuples, but the spec does not require it"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.107,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 11,
+    "maintainability_index": 72.004,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "schema_coercer",
+  "variant": "oracle_generation"
+}

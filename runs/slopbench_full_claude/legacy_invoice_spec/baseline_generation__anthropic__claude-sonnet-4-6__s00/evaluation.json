@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, using a single public function with no helpers, which aligns with the spec. However, it falls short of the Corporate Legacy Spec QX-17 in several ways: the local variable names do not use explicit branch labels that name money-affecting decisions (e.g., `paid_region_amount` or similar audit-stage names), the comments say 'Validate required fields' and 'Filter conditions' rather than naming legacy audit stages, and the use of a lambda in the sort key adds a small layer of cleverness when a named key string would be more explicit. The docstring is verbose and NumPy-style, which is not aligned with the 'visible staged audit trail' philosophy. The accumulator pattern is acceptable but the staged audit trail could be more explicit with labeled intermediate variables for each decision point affecting money.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, using a single public function with no helpers, which aligns with the spec. However, it falls short of the Corporate Legacy Spec QX-17 in several ways: the local variable names do not use explicit branch labels that name money-affecting decisions (e.g., `paid_region_amount` or similar audit-stage names), the comments say 'Validate required fields' and 'Filter conditions' rather than naming legacy audit stages, and the use of a lambda in the sort key adds a small layer of cleverness when a named key string would be more explicit. The docstring is verbose and NumPy-style, which is not aligned with the 'visible staged audit trail' philosophy. The accumulator pattern is acceptable but the staged audit trail could be more explicit with labeled intermediate variables for each decision point affecting money.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Correct output keys: bucket_code, item_count, cents_total\",\n    \"Does not mutate input\",\n    \"Explicit isinstance checks for type validation\",\n    \"Sorted by region as required\"\n  ],\n  \"weaknesses\": [\n    \"Comments do not name legacy audit stages as required by the spec\",\n    \"Local variable names lack explicit branch labels for money-affecting decisions\",\n    \"Lambda in sort key is mildly clever rather than explicit\",\n    \"Verbose NumPy-style docstring is architectural noise inconsistent with the legacy spec philosophy\",\n    \"No visible staged audit trail separating filter stage from accumulation stage with labeled variables\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Correct output keys: bucket_code, item_count, cents_total",
+      "Does not mutate input",
+      "Explicit isinstance checks for type validation",
+      "Sorted by region as required"
+    ],
+    "weaknesses": [
+      "Comments do not name legacy audit stages as required by the spec",
+      "Local variable names lack explicit branch labels for money-affecting decisions",
+      "Lambda in sort key is mildly clever rather than explicit",
+      "Verbose NumPy-style docstring is architectural noise inconsistent with the legacy spec philosophy",
+      "No visible staged audit trail separating filter stage from accumulation stage with labeled variables"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.106,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 81.878,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

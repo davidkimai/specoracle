@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured with a sensible separation between path resolution and field extraction. The helper `_resolve_path` is small and pure, control flow is reasonably flat, and error handling is explicit with clear TypeError messages. However, `_parse_segment` is defined but never called \u2014 it's dead code that adds noise without contributing anything, which directly violates the 'avoid speculative abstractions' and 'keep code sparse' principles. The resolution logic in `_resolve_path` handles both dict and list cases cleanly using guard clauses, and the main `extract_fields` function is straightforward. The docstring is thorough but slightly over-engineered for a small utility. Overall this is a solid, auditable implementation held back primarily by the unused `_parse_segment` function.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and well-structured with a sensible separation between path resolution and field extraction. The helper `_resolve_path` is small and pure, control flow is reasonably flat, and error handling is explicit with clear TypeError messages. However, `_parse_segment` is defined but never called \u2014 it's dead code that adds noise without contributing anything, which directly violates the 'avoid speculative abstractions' and 'keep code sparse' principles. The resolution logic in `_resolve_path` handles both dict and list cases cleanly using guard clauses, and the main `extract_fields` function is straightforward. The docstring is thorough but slightly over-engineered for a small utility. Overall this is a solid, auditable implementation held back primarily by the unused `_parse_segment` function.\",\n  \"strengths\": [\n    \"Clean separation of concerns: `_resolve_path` is a pure helper with a single responsibility\",\n    \"Explicit input validation with clear TypeError messages\",\n    \"Flat control flow in `_resolve_path` using early returns\",\n    \"No mutation of input data\",\n    \"Ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"`_parse_segment` is defined but never used \u2014 dead speculative code that violates the sparse/no-unused-abstractions principle\",\n    \"Docstring for `extract_fields` is over-formatted (NumPy style) for a small utility function\",\n    \"Negative index rejection (`index < 0`) is a silent policy decision that could reasonably be a documented behavior or error rather than silently returning default\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of concerns: `_resolve_path` is a pure helper with a single responsibility",
+      "Explicit input validation with clear TypeError messages",
+      "Flat control flow in `_resolve_path` using early returns",
+      "No mutation of input data",
+      "Ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "`_parse_segment` is defined but never used \u2014 dead speculative code that violates the sparse/no-unused-abstractions principle",
+      "Docstring for `extract_fields` is over-formatted (NumPy style) for a small utility function",
+      "Negative index rejection (`index < 0`) is a silent policy decision that could reasonably be a documented behavior or error rather than silently returning default"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.183,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 3,
+    "loc": 55,
+    "maintainability_index": 79.447,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

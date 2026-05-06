@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden mutation, no speculative abstractions, and no framework-shaped scaffolding. The control flow reads naturally: collect all keys, check override presence, handle None removal, recurse on dict-dict pairs, otherwise assign. Guard clauses keep nesting minimal. The only minor critique is that input validation (checking that both arguments are actually dicts) is absent, which the operational constraints suggest should raise clear errors, and the key iteration order is non-deterministic (set ordering) though functionally harmless. Overall this is a textbook realization of the Zen principles for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden mutation, no speculative abstractions, and no framework-shaped scaffolding. The control flow reads naturally: collect all keys, check override presence, handle None removal, recurse on dict-dict pairs, otherwise assign. Guard clauses keep nesting minimal. The only minor critique is that input validation (checking that both arguments are actually dicts) is absent, which the operational constraints suggest should raise clear errors, and the key iteration order is non-deterministic (set ordering) though functionally harmless. Overall this is a textbook realization of the Zen principles for this task.\",\n  \"strengths\": [\n    \"No mutation of either input dict\",\n    \"Recursion is natural and locally auditable\",\n    \"Control flow is flat with clear guard-clause ordering\",\n    \"Names are self-explanatory (defaults, override, result, all_keys)\",\n    \"No speculative abstractions or unused extension points\",\n    \"Standard library only, no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"No input validation \u2014 passing non-dict arguments silently misbehaves rather than raising a clear error\",\n    \"Using a set for all_keys loses deterministic key ordering (minor, but could matter for reproducibility in some contexts)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "No mutation of either input dict",
+      "Recursion is natural and locally auditable",
+      "Control flow is flat with clear guard-clause ordering",
+      "Names are self-explanatory (defaults, override, result, all_keys)",
+      "No speculative abstractions or unused extension points",
+      "Standard library only, no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "No input validation \u2014 passing non-dict arguments silently misbehaves rather than raising a clear error",
+      "Using a set for all_keys loses deterministic key ordering (minor, but could matter for reproducibility in some contexts)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.925,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 61.56,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

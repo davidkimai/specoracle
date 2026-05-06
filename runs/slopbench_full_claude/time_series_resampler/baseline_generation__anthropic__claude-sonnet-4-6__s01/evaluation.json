@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with good input validation and explicit data movement. However, it reimplements `bisect_right` manually with a comment acknowledging that `bisect` from the standard library would be fine \u2014 this is a direct violation of 'choose ordinary standard-library constructs' and 'keep code sparse enough to audit locally.' The manual binary search adds noise without benefit. Additionally, the docstring is verbose (NumPy-style) for a small utility function, adding bulk that obscures the simple logic. The while loop for grid generation is idiomatic enough but a `range`-based approach would be more explicit and Pythonic. There are no small pure helpers extracted (e.g., a `find_fill_value` helper), though the function is small enough that this is borderline. Overall the structure is flat and correct, but the deliberate avoidance of `bisect` in favor of a manual reimplementation is the main architectural misstep against the oracle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with good input validation and explicit data movement. However, it reimplements `bisect_right` manually with a comment acknowledging that `bisect` from the standard library would be fine \u2014 this is a direct violation of 'choose ordinary standard-library constructs' and 'keep code sparse enough to audit locally.' The manual binary search adds noise without benefit. Additionally, the docstring is verbose (NumPy-style) for a small utility function, adding bulk that obscures the simple logic. The while loop for grid generation is idiomatic enough but a `range`-based approach would be more explicit and Pythonic. There are no small pure helpers extracted (e.g., a `find_fill_value` helper), though the function is small enough that this is borderline. Overall the structure is flat and correct, but the deliberate avoidance of `bisect` in favor of a manual reimplementation is the main architectural misstep against the oracle.\",\n  \"strengths\": [\n    \"Clear input validation with a meaningful error message\",\n    \"Explicit sorting and timestamp extraction make data movement visible\",\n    \"Flat control flow with no deep nesting\",\n    \"No hidden mutation or global state\",\n    \"Correct forward-fill semantics\"\n  ],\n  \"weaknesses\": [\n    \"Manually reimplements bisect_right despite acknowledging bisect is available in stdlib \u2014 contradicts 'choose ordinary standard-library constructs'\",\n    \"Overly verbose NumPy-style docstring for a small utility adds bulk without clarity benefit\",\n    \"Using a while loop for grid generation instead of range() is less explicit and idiomatic\",\n    \"No extraction of a small pure helper (e.g., find_fill_value) to aid local auditability\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear input validation with a meaningful error message",
+      "Explicit sorting and timestamp extraction make data movement visible",
+      "Flat control flow with no deep nesting",
+      "No hidden mutation or global state",
+      "Correct forward-fill semantics"
+    ],
+    "weaknesses": [
+      "Manually reimplements bisect_right despite acknowledging bisect is available in stdlib \u2014 contradicts 'choose ordinary standard-library constructs'",
+      "Overly verbose NumPy-style docstring for a small utility adds bulk without clarity benefit",
+      "Using a while loop for grid generation instead of range() is less explicit and idiomatic",
+      "No extraction of a small pure helper (e.g., find_fill_value) to aid local auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.83,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 59,
+    "maintainability_index": 77.131,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "baseline_generation"
+}

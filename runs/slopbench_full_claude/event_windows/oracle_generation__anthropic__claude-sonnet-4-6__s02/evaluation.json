@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed into small pure helpers with clear names. Control flow is straightforward with guard clauses handling validation early. Data movement is explicit through two parallel defaultdicts. The use of `math.floor(timestamp / window_size)` instead of the simpler `timestamp // window_size` is a minor unnecessary indirection (floor division operator is more idiomatic and handles negative numbers identically for integers), and importing `math` for this single use adds a small speculative dependency. The `isinstance(window_size, int)` check correctly rejects booleans only if one notes that `bool` is a subclass of `int` \u2014 actually it does NOT reject booleans since `isinstance(True, int)` is True, which could be a subtle correctness gap. The docstring is thorough but slightly verbose for the task size. Overall the architecture is honest, auditable, and avoids framework-shaped abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed into small pure helpers with clear names. Control flow is straightforward with guard clauses handling validation early. Data movement is explicit through two parallel defaultdicts. The use of `math.floor(timestamp / window_size)` instead of the simpler `timestamp // window_size` is a minor unnecessary indirection (floor division operator is more idiomatic and handles negative numbers identically for integers), and importing `math` for this single use adds a small speculative dependency. The `isinstance(window_size, int)` check correctly rejects booleans only if one notes that `bool` is a subclass of `int` \u2014 actually it does NOT reject booleans since `isinstance(True, int)` is True, which could be a subtle correctness gap. The docstring is thorough but slightly verbose for the task size. Overall the architecture is honest, auditable, and avoids framework-shaped abstractions.\",\n  \"strengths\": [\n    \"Small, pure, well-named helpers (_is_valid_event, _window_key) keep the main function readable\",\n    \"Early ValueError with a clear message for invalid window_size\",\n    \"Flat control flow with a single guard-clause continue in the loop\",\n    \"Explicit data movement via two named accumulator dicts\",\n    \"List comprehension for output is clean and sorted correctly\"\n  ],\n  \"weaknesses\": [\n    \"Uses math.floor(timestamp / window_size) instead of the simpler and more idiomatic timestamp // window_size operator\",\n    \"Importing math for a single floor-division operation adds unnecessary dependency\",\n    \"Boolean values (True/False) pass the isinstance(x, int) check and would be accepted as valid window_size or event fields, which may be unintended\",\n    \"Docstring length is disproportionate to the function's complexity\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, pure, well-named helpers (_is_valid_event, _window_key) keep the main function readable",
+      "Early ValueError with a clear message for invalid window_size",
+      "Flat control flow with a single guard-clause continue in the loop",
+      "Explicit data movement via two named accumulator dicts",
+      "List comprehension for output is clean and sorted correctly"
+    ],
+    "weaknesses": [
+      "Uses math.floor(timestamp / window_size) instead of the simpler and more idiomatic timestamp // window_size operator",
+      "Importing math for a single floor-division operation adds unnecessary dependency",
+      "Boolean values (True/False) pass the isinstance(x, int) check and would be accepted as valid window_size or event fields, which may be unintended",
+      "Docstring length is disproportionate to the function's complexity"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.234,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 3,
+    "loc": 50,
+    "maintainability_index": 81.486,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_generation"
+}

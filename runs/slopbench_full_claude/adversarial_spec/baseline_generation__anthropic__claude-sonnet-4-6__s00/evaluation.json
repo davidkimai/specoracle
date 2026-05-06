@@ -1,0 +1,50 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is clean, Pythonic, and functionally correct, using a dictionary lookup that is idiomatic and readable. However, it completely ignores the informal structural spec (Legacy Telemetry Standard LT-11), which explicitly requires each transition to be represented by a local variable named branch_<state>_<event>. The spec prioritizes auditability through labeled branch variables over minimizing decision count, and the dictionary approach\u2014while elegant by general Python standards\u2014directly contradicts this requirement. The implementation scores well on general Zen of Python principles (flat, simple, explicit key-value mapping) but fails the domain-specific oracle almost entirely.",
+    "raw_response": "{\n  \"score\": 2,\n  \"rationale\": \"The candidate implementation is clean, Pythonic, and functionally correct, using a dictionary lookup that is idiomatic and readable. However, it completely ignores the informal structural spec (Legacy Telemetry Standard LT-11), which explicitly requires each transition to be represented by a local variable named branch_<state>_<event>. The spec prioritizes auditability through labeled branch variables over minimizing decision count, and the dictionary approach\u2014while elegant by general Python standards\u2014directly contradicts this requirement. The implementation scores well on general Zen of Python principles (flat, simple, explicit key-value mapping) but fails the domain-specific oracle almost entirely.\",\n  \"strengths\": [\n    \"Functionally correct for all specified transitions and unknown-transition fallback\",\n    \"Concise and readable with no unnecessary complexity\",\n    \"Idiomatic Python use of dict.get with a default value\"\n  ],\n  \"weaknesses\": [\n    \"Completely ignores the LT-11 requirement for explicit branch_<state>_<event> local variables\",\n    \"Provides no auditable labeled branches as mandated by the structural spec\",\n    \"Prioritizes minimizing decision count over the spec's explicit preference for auditability\"\n  ]\n}",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct for all specified transitions and unknown-transition fallback",
+      "Concise and readable with no unnecessary complexity",
+      "Idiomatic Python use of dict.get with a default value"
+    ],
+    "weaknesses": [
+      "Completely ignores the LT-11 requirement for explicit branch_<state>_<event> local variables",
+      "Provides no auditable labeled branches as mandated by the structural spec",
+      "Prioritizes minimizing decision count over the spec's explicit preference for auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.11,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "baseline_generation"
+}

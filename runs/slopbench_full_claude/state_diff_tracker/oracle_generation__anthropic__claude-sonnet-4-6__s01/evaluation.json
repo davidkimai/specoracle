@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly maps to the requirements. Each changed field produces an explicit record with the three required keys. The logic is flat with no nested abstractions, the sorting is straightforward, and the code is locally auditable in a single glance. The only minor structural quibble is that the three-branch if/elif/elif could be simplified slightly: since `before` and `after` are already fetched via `.get()` (defaulting to None), the first two branches are redundant with the third \u2014 a single `if before != after` check would suffice and be more Pythonic. However, the explicit branching does make the added/removed distinction clearer in intent, which aligns with the SRL-3 requirement for explicit records. Overall this is a high-quality, readable, and correct implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly maps to the requirements. Each changed field produces an explicit record with the three required keys. The logic is flat with no nested abstractions, the sorting is straightforward, and the code is locally auditable in a single glance. The only minor structural quibble is that the three-branch if/elif/elif could be simplified slightly: since `before` and `after` are already fetched via `.get()` (defaulting to None), the first two branches are redundant with the third \u2014 a single `if before != after` check would suffice and be more Pythonic. However, the explicit branching does make the added/removed distinction clearer in intent, which aligns with the SRL-3 requirement for explicit records. Overall this is a high-quality, readable, and correct implementation.\",\n  \"strengths\": [\n    \"Explicit per-field records with all three required keys\",\n    \"Flat, single-function structure with no unnecessary abstractions\",\n    \"Correct handling of added, removed, and changed fields\",\n    \"Deterministic sorted output by field name\",\n    \"Locally auditable \u2014 entire logic visible at a glance\"\n  ],\n  \"weaknesses\": [\n    \"Redundant branching: since .get() already returns None for missing keys, the first two branches duplicate what the third would catch, adding slight noise\",\n    \"Minor: variable `before` and `after` are fetched unconditionally but only used conditionally, a trivial inefficiency\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit per-field records with all three required keys",
+      "Flat, single-function structure with no unnecessary abstractions",
+      "Correct handling of added, removed, and changed fields",
+      "Deterministic sorted output by field name",
+      "Locally auditable \u2014 entire logic visible at a glance"
+    ],
+    "weaknesses": [
+      "Redundant branching: since .get() already returns None for missing keys, the first two branches duplicate what the third would catch, adding slight noise",
+      "Minor: variable `before` and `after` are fetched unconditionally but only used conditionally, a trivial inefficiency"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.785,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 60.738,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "oracle_generation"
+}

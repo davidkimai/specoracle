@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. The control flow is a simple while-True loop with a single exit condition, data movement is visible (extend then check cursor), and the two guard clauses (callable check, unpack validation) are placed exactly where they add value without cluttering the happy path. The docstring is thorough without being speculative, and no unused abstractions or extension points are present. The only minor quibble is that the `try/except` around the unpack adds a small amount of noise for an edge case that real callers are unlikely to hit, and a direct `len(result) != 2` check might be marginally clearer; also the `callable()` guard, while reasonable, is a slight speculative addition since the task spec doesn't require it. Neither issue materially harms readability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. The control flow is a simple while-True loop with a single exit condition, data movement is visible (extend then check cursor), and the two guard clauses (callable check, unpack validation) are placed exactly where they add value without cluttering the happy path. The docstring is thorough without being speculative, and no unused abstractions or extension points are present. The only minor quibble is that the `try/except` around the unpack adds a small amount of noise for an edge case that real callers are unlikely to hit, and a direct `len(result) != 2` check might be marginally clearer; also the `callable()` guard, while reasonable, is a slight speculative addition since the task spec doesn't require it. Neither issue materially harms readability or correctness.\",\n  \"strengths\": [\n    \"Flat, single-loop control flow with a clear exit guard\",\n    \"Explicit data movement: collect \u2192 extend \u2192 check cursor \u2192 advance\",\n    \"Meaningful error messages for both invalid callable and bad return shape\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names (collected, cursor, next_cursor, fetch_page) are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"try/except around tuple unpack is slightly noisy for a rare edge case; a direct length/type check could be clearer\",\n    \"callable() guard is a minor speculative addition not required by the spec\",\n    \"Docstring length slightly exceeds what a sparse audit-friendly file needs\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-loop control flow with a clear exit guard",
+      "Explicit data movement: collect \u2192 extend \u2192 check cursor \u2192 advance",
+      "Meaningful error messages for both invalid callable and bad return shape",
+      "No speculative abstractions or unused extension points",
+      "Names (collected, cursor, next_cursor, fetch_page) are self-explanatory"
+    ],
+    "weaknesses": [
+      "try/except around tuple unpack is slightly noisy for a rare edge case; a direct length/type check could be clearer",
+      "callable() guard is a minor speculative addition not required by the spec",
+      "Docstring length slightly exceeds what a sparse audit-friendly file needs"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.871,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 37,
+    "maintainability_index": 89.834,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and easy to audit locally. It validates inputs explicitly with clear error messages, sorts once up front, then uses a single linear scan with a pointer to forward-fill values \u2014 exactly the right algorithm for this task. Control flow is flat (one while loop with one inner while), data movement is explicit (no hidden mutation), names are self-explanatory, and there are no speculative abstractions or unused extension points. The only minor structural quibble is that the inner while loop could arguably be extracted into a small helper (e.g., `advance_pointer`) per the 'small pure helpers' guidance, but the current nesting is shallow enough (two levels) that extraction would add indirection without clarity gain. The docstring is thorough without being excessive. Overall this is a textbook example of the Zen-aligned style the oracle calls for.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, direct, and easy to audit locally. It validates inputs explicitly with clear error messages, sorts once up front, then uses a single linear scan with a pointer to forward-fill values \u2014 exactly the right algorithm for this task. Control flow is flat (one while loop with one inner while), data movement is explicit (no hidden mutation), names are self-explanatory, and there are no speculative abstractions or unused extension points. The only minor structural quibble is that the inner while loop could arguably be extracted into a small helper (e.g., `advance_pointer`) per the 'small pure helpers' guidance, but the current nesting is shallow enough (two levels) that extraction would add indirection without clarity gain. The docstring is thorough without being excessive. Overall this is a textbook example of the Zen-aligned style the oracle calls for.\",\n  \"strengths\": [\n    \"Explicit input validation with informative error messages\",\n    \"Single sort followed by a linear O(n+m) scan \u2014 correct and efficient\",\n    \"Flat control flow; nesting depth is minimal and justified\",\n    \"No hidden mutation or global state; all data movement is visible\",\n    \"Names (sorted_points, point_index, last_value, ts) make behavior self-documenting\",\n    \"No speculative abstractions or framework-shaped scaffolding\"\n  ],\n  \"weaknesses\": [\n    \"The inner while loop could be a small pure helper per the 'prefer small pure helpers' guideline, though the current depth is still acceptable\",\n    \"The `from __future__ import annotations` import is unnecessary in Python 3.10+ where the type hints used are already valid at runtime\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit input validation with informative error messages",
+      "Single sort followed by a linear O(n+m) scan \u2014 correct and efficient",
+      "Flat control flow; nesting depth is minimal and justified",
+      "No hidden mutation or global state; all data movement is visible",
+      "Names (sorted_points, point_index, last_value, ts) make behavior self-documenting",
+      "No speculative abstractions or framework-shaped scaffolding"
+    ],
+    "weaknesses": [
+      "The inner while loop could be a small pure helper per the 'prefer small pure helpers' guideline, though the current depth is still acceptable",
+      "The `from __future__ import annotations` import is unnecessary in Python 3.10+ where the type hints used are already valid at runtime"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.881,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 47,
+    "maintainability_index": 82.925,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_generation"
+}

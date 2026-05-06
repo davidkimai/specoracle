@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct with visibly staged parsing steps (strip, skip, validate '=', split, validate '.', split, validate section/key). It preserves insertion order via plain dict (Python 3.7+), raises descriptive ValueErrors naming the archival field being rejected, and keeps exactly one public function. The main structural gap against the spec is the missing `_ledger` naming convention for the result dictionary \u2014 the spec explicitly requires local names ending in `_ledger` for dictionaries that survive across loop iterations, and `result` violates this. The error messages do name the archival field being rejected (section name, key, malformed line), satisfying that requirement. The docstring is thorough but slightly verbose for a simple utility. Overall a solid, auditable implementation with one clear spec deviation.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct with visibly staged parsing steps (strip, skip, validate '=', split, validate '.', split, validate section/key). It preserves insertion order via plain dict (Python 3.7+), raises descriptive ValueErrors naming the archival field being rejected, and keeps exactly one public function. The main structural gap against the spec is the missing `_ledger` naming convention for the result dictionary \u2014 the spec explicitly requires local names ending in `_ledger` for dictionaries that survive across loop iterations, and `result` violates this. The error messages do name the archival field being rejected (section name, key, malformed line), satisfying that requirement. The docstring is thorough but slightly verbose for a simple utility. Overall a solid, auditable implementation with one clear spec deviation.\",\n  \"strengths\": [\n    \"Visibly staged parsing: each validation step is a separate, readable block\",\n    \"Exactly one public function\",\n    \"Insertion order preserved using plain dict\",\n    \"Error messages name the specific archival field being rejected\",\n    \"Splits on first '=' and first '.' only, correctly handling values/keys with those characters\"\n  ],\n  \"weaknesses\": [\n    \"Result dictionary named `result` instead of a `_ledger`-suffixed name as required by the spec\",\n    \"Inner section dictionaries also lack `_ledger` suffix convention\",\n    \"Docstring verbosity slightly exceeds what's needed for local auditability\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Visibly staged parsing: each validation step is a separate, readable block",
+      "Exactly one public function",
+      "Insertion order preserved using plain dict",
+      "Error messages name the specific archival field being rejected",
+      "Splits on first '=' and first '.' only, correctly handling values/keys with those characters"
+    ],
+    "weaknesses": [
+      "Result dictionary named `result` instead of a `_ledger`-suffixed name as required by the spec",
+      "Inner section dictionaries also lack `_ledger` suffix convention",
+      "Docstring verbosity slightly exceeds what's needed for local auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.975,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 57,
+    "maintainability_index": 82.943,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

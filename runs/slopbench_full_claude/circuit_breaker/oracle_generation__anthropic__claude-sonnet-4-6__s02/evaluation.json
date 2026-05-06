@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State is represented via a proper Enum with an inspectable `.state` property returning the name string. Configuration values are named attributes (`failure_threshold`, `recovery_timeout`). The three-state machine (CLOSED \u2192 OPEN \u2192 HALF_OPEN \u2192 CLOSED/OPEN) is handled with clear, flat branching in `call()` rather than nested conditionals or opaque dispatch tables. Half-open trials correctly close on success and reopen on failure. The `_transition_to` helper is a minor abstraction that adds little but doesn't hurt. The `now` injection pattern is idiomatic and testable. The only minor quibbles are that `_transition_to` is a trivial one-liner that adds indirection without benefit, and the CLOSED branch is reached by fall-through after the HALF_OPEN block rather than an explicit `elif`, which is slightly less readable but still correct and auditable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State is represented via a proper Enum with an inspectable `.state` property returning the name string. Configuration values are named attributes (`failure_threshold`, `recovery_timeout`). The three-state machine (CLOSED \u2192 OPEN \u2192 HALF_OPEN \u2192 CLOSED/OPEN) is handled with clear, flat branching in `call()` rather than nested conditionals or opaque dispatch tables. Half-open trials correctly close on success and reopen on failure. The `_transition_to` helper is a minor abstraction that adds little but doesn't hurt. The `now` injection pattern is idiomatic and testable. The only minor quibbles are that `_transition_to` is a trivial one-liner that adds indirection without benefit, and the CLOSED branch is reached by fall-through after the HALF_OPEN block rather than an explicit `elif`, which is slightly less readable but still correct and auditable.\",\n  \"strengths\": [\n    \"Explicit Enum-based state with inspectable `.state` property satisfying RCS-5\",\n    \"Named configuration attributes, no magic constants\",\n    \"Half-open trial correctly transitions to CLOSED on success and back to OPEN on failure\",\n    \"Flat, readable control flow in `call()` with no deep nesting\",\n    \"Testable via injected `now` callable\",\n    \"Failure count reset on success in both CLOSED and HALF_OPEN paths\"\n  ],\n  \"weaknesses\": [\n    \"`_transition_to` is a trivial wrapper around assignment, adding indirection without meaningful abstraction\",\n    \"CLOSED branch reached by implicit fall-through rather than an explicit `elif self._state == _State.CLOSED:`, slightly reducing auditability\",\n    \"No reset of `_failure_count` when transitioning to OPEN, though this is functionally harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit Enum-based state with inspectable `.state` property satisfying RCS-5",
+      "Named configuration attributes, no magic constants",
+      "Half-open trial correctly transitions to CLOSED on success and back to OPEN on failure",
+      "Flat, readable control flow in `call()` with no deep nesting",
+      "Testable via injected `now` callable",
+      "Failure count reset on success in both CLOSED and HALF_OPEN paths"
+    ],
+    "weaknesses": [
+      "`_transition_to` is a trivial wrapper around assignment, adding indirection without meaningful abstraction",
+      "CLOSED branch reached by implicit fall-through rather than an explicit `elif self._state == _State.CLOSED:`, slightly reducing auditability",
+      "No reset of `_failure_count` when transitioning to OPEN, though this is functionally harmless"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.228,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert 'OPEN' == 'open'\nE         \nE         - open\nE         + OPEN\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 4,
+    "loc": 51,
+    "maintainability_index": 55.748,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_generation"
+}

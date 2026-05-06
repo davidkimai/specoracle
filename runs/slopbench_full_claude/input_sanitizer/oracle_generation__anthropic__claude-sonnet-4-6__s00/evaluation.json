@@ -1,0 +1,42 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": "Invalid \\escape: line 3 column 326 (char 341)",
+    "rationale": "judge failed",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It correctly separates the validation concern into a small pure helper, keeps control flow flat with a guard clause for duplicates, makes data movement explicit through a seen set and result list, and uses ordinary standard-library constructs. The `\\w+` pattern is a minor semantic issue since `\\w` also matches Unicode word characters beyond letters/digits/underscores in Python 3 by default, which could be addressed with `re.ASCII` flag or `[a-zA-Z0-9_]+` to match the spec precisely. The module-level compiled pattern is a reasonable optimization. The docstring is helpful. The only structural quibble is that the deduplication and filtering logic are interleaved in one loop, which is acceptable given the need to preserve order while deduplicating before filtering \u2014 splitting them would require two passes and a temporary structure, making it worse. Overall this is a solid, auditable implementation that closely follows the Zen principles.\",\n  \"strengths\": [\n    \"Small pure helper `_is_valid_field` cleanly separates validation concern\",\n    \"Flat control flow with early-continue guard for duplicates\",\n    \"Explicit data movement: seen set and result list are clearly named and managed\",\n    \"Compiled regex at module level is idiomatic and efficient\",\n    \"Docstring accurately describes behavior\"\n  ],\n  \"weaknesses\": [\n    \"`\\\\w` matches Unicode word characters by default in Python 3, potentially accepting characters beyond letters/digits/underscores; should use `re.ASCII` flag or `[a-zA-Z0-9_]+`\",\n    \"No input validation (e.g., raising TypeError if fields is not a list or allowed is not a set), which the operational constraints suggest should be present\",\n    \"Module-level private pattern adds a small amount of non-local state, though it's a common and acceptable pattern\"\n  ]\n}",
+    "score": null,
+    "skipped": false,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.966,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 2,
+    "loc": 17,
+    "maintainability_index": 87.791,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_generation"
+}

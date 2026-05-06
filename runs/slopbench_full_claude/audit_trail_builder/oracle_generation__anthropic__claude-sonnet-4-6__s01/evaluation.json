@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows RAT-9 requirements: it explicitly names derived fields before insertion, rejects missing source_system or actor_id with a clear custom exception rather than silently inventing values, and assigns monotonic sequence numbers starting at 1. The code is flat, readable, and locally auditable with no hidden logic. The only minor structural concern is that sequence_number is assigned as raw_position (the input position) rather than as a separate counter tied to accepted records \u2014 though since all invalid events raise immediately, these are equivalent in practice. The extra loop to merge remaining event fields is slightly verbose but explicit and correct. Overall this is a clean, well-structured implementation that faithfully realizes the informal spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows RAT-9 requirements: it explicitly names derived fields before insertion, rejects missing source_system or actor_id with a clear custom exception rather than silently inventing values, and assigns monotonic sequence numbers starting at 1. The code is flat, readable, and locally auditable with no hidden logic. The only minor structural concern is that sequence_number is assigned as raw_position (the input position) rather than as a separate counter tied to accepted records \u2014 though since all invalid events raise immediately, these are equivalent in practice. The extra loop to merge remaining event fields is slightly verbose but explicit and correct. Overall this is a clean, well-structured implementation that faithfully realizes the informal spec.\",\n  \"strengths\": [\n    \"Explicit named variable assignments for source_system, actor_id, and sequence_number before record construction, directly satisfying RAT-9's derived-fields rule\",\n    \"Custom MissingRequiredFieldError with informative messages instead of silent fallbacks or generic exceptions\",\n    \"Flat, single-loop structure with no nested helpers or unnecessary abstraction\",\n    \"Type annotations and docstring clearly document behavior and constraints\",\n    \"Mandatory fields are placed first in the audit record dict, making structure self-documenting\"\n  ],\n  \"weaknesses\": [\n    \"sequence_number is derived from raw_position (enumerate start=1) which conflates input position with sequence number \u2014 a separate counter variable would be more explicit and robust if partial rejection semantics ever changed\",\n    \"The secondary loop to copy remaining event fields, while correct, could be replaced with a cleaner dict-merge pattern (e.g., {**event, ...}) for brevity, though current approach is more explicit about ordering\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit named variable assignments for source_system, actor_id, and sequence_number before record construction, directly satisfying RAT-9's derived-fields rule",
+      "Custom MissingRequiredFieldError with informative messages instead of silent fallbacks or generic exceptions",
+      "Flat, single-loop structure with no nested helpers or unnecessary abstraction",
+      "Type annotations and docstring clearly document behavior and constraints",
+      "Mandatory fields are placed first in the audit record dict, making structure self-documenting"
+    ],
+    "weaknesses": [
+      "sequence_number is derived from raw_position (enumerate start=1) which conflates input position with sequence number \u2014 a separate counter variable would be more explicit and robust if partial rejection semantics ever changed",
+      "The secondary loop to copy remaining event fields, while correct, could be replaced with a cleaner dict-merge pattern (e.g., {**event, ...}) for brevity, though current approach is more explicit about ordering"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.136,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n>       assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\nE       AssertionError: assert [{'action': '...stem': 'crm'}] == [{'action': '...stem': 'crm'}]\nE         \nE         At index 0 diff: {'sequence_number': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'} != {'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}\nE         Use -v to get more diff\n\ntest_solution.py:8: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - AssertionError: ...\n1 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 48,
+    "maintainability_index": 87.522,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "oracle_generation"
+}

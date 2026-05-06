@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is largely clean and readable: guard clauses are upfront, batching is a simple list comprehension, the semaphore pattern is idiomatic, and `asyncio.gather` preserves order implicitly. The helper `process_one` is small and purposeful. However, there is one notable structural flaw: the pre-allocated `results` list with `None` sentinels and the subsequent `if batch_result is not None` guard is a hidden-mutation pattern that introduces a subtle bug (a handler legitimately returning `None` or a list containing `None` would be mishandled) and adds cognitive overhead. Since `asyncio.gather` already returns results in submission order, the simpler and more explicit approach would be to collect results directly from `gather` and flatten them, eliminating the shared mutable state entirely. The docstring is verbose for what is a small utility, and the comment rationalizing the `None` check actually highlights the fragility rather than resolving it. These are meaningful structural issues against the Zen oracle's preference for explicitness and absence of hidden mutation, but the overall architecture is otherwise sound.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is largely clean and readable: guard clauses are upfront, batching is a simple list comprehension, the semaphore pattern is idiomatic, and `asyncio.gather` preserves order implicitly. The helper `process_one` is small and purposeful. However, there is one notable structural flaw: the pre-allocated `results` list with `None` sentinels and the subsequent `if batch_result is not None` guard is a hidden-mutation pattern that introduces a subtle bug (a handler legitimately returning `None` or a list containing `None` would be mishandled) and adds cognitive overhead. Since `asyncio.gather` already returns results in submission order, the simpler and more explicit approach would be to collect results directly from `gather` and flatten them, eliminating the shared mutable state entirely. The docstring is verbose for what is a small utility, and the comment rationalizing the `None` check actually highlights the fragility rather than resolving it. These are meaningful structural issues against the Zen oracle's preference for explicitness and absence of hidden mutation, but the overall architecture is otherwise sound.\",\n  \"strengths\": [\n    \"Guard clauses for invalid inputs are clear and placed at the top\",\n    \"Batch construction via list comprehension is simple and readable\",\n    \"Semaphore usage is idiomatic and correctly bounds concurrency\",\n    \"asyncio.gather propagates exceptions naturally without extra machinery\",\n    \"Names (batches, process_one, semaphore, flattened) are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Pre-allocated None-sentinel results list introduces hidden shared mutation when gather's return value could be used directly\",\n    \"The `if batch_result is not None` guard is a latent bug: a handler returning None would silently drop results\",\n    \"asyncio.gather already returns ordered results, making the index-slot pattern redundant and more complex than necessary\",\n    \"Docstring length is disproportionate to the function's complexity, adding noise\",\n    \"Comment explaining the None-branch fragility signals the design smell rather than fixing it\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses for invalid inputs are clear and placed at the top",
+      "Batch construction via list comprehension is simple and readable",
+      "Semaphore usage is idiomatic and correctly bounds concurrency",
+      "asyncio.gather propagates exceptions naturally without extra machinery",
+      "Names (batches, process_one, semaphore, flattened) are self-explanatory"
+    ],
+    "weaknesses": [
+      "Pre-allocated None-sentinel results list introduces hidden shared mutation when gather's return value could be used directly",
+      "The `if batch_result is not None` guard is a latent bug: a handler returning None would silently drop results",
+      "asyncio.gather already returns ordered results, making the index-slot pattern redundant and more complex than necessary",
+      "Docstring length is disproportionate to the function's complexity, adding noise",
+      "Comment explaining the None-branch fragility signals the design smell rather than fixing it"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.855,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 2,
+    "loc": 62,
+    "maintainability_index": 82.263,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "baseline_generation"
+}

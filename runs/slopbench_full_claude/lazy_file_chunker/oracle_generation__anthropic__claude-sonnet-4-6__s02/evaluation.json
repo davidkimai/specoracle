@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it is flat, explicit, minimal, and locally auditable. The guard clauses are upfront and clear, the loop is a simple while-True with an early return, and there are no speculative abstractions or hidden state. The only minor quibble is the isinstance/bool type-check, which goes slightly beyond the functional requirement ('reject non-positive chunk sizes') and adds a small layer of defensive complexity that wasn't asked for\u2014a duck-typing approach would be simpler and more Pythonic\u2014but it is not harmful and the rationale is defensible.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it is flat, explicit, minimal, and locally auditable. The guard clauses are upfront and clear, the loop is a simple while-True with an early return, and there are no speculative abstractions or hidden state. The only minor quibble is the isinstance/bool type-check, which goes slightly beyond the functional requirement ('reject non-positive chunk sizes') and adds a small layer of defensive complexity that wasn't asked for\u2014a duck-typing approach would be simpler and more Pythonic\u2014but it is not harmful and the rationale is defensible.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses before the main loop\",\n    \"Explicit, self-documenting variable names\",\n    \"No hidden mutation or global state\",\n    \"Minimal and correct: does exactly what the spec asks, nothing more\",\n    \"Standard-library constructs only; no metaprogramming or framework scaffolding\",\n    \"Clear ValueError messages with the offending value included\"\n  ],\n  \"weaknesses\": [\n    \"The isinstance/bool type guard is speculative\u2014the spec only requires rejecting non-positive sizes, not enforcing int type; this adds complexity beyond the stated requirement\",\n    \"Docstring is verbose for such a simple function; a shorter summary would suffice\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses before the main loop",
+      "Explicit, self-documenting variable names",
+      "No hidden mutation or global state",
+      "Minimal and correct: does exactly what the spec asks, nothing more",
+      "Standard-library constructs only; no metaprogramming or framework scaffolding",
+      "Clear ValueError messages with the offending value included"
+    ],
+    "weaknesses": [
+      "The isinstance/bool type guard is speculative\u2014the spec only requires rejecting non-positive sizes, not enforcing int type; this adds complexity beyond the stated requirement",
+      "Docstring is verbose for such a simple function; a shorter summary would suffice"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.687,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 30,
+    "maintainability_index": 71.272,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "oracle_generation"
+}

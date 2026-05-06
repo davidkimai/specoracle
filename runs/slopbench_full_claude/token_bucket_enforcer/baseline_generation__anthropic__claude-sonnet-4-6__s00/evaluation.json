@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. The class has a clear single responsibility, the `_refill` helper is small and pure in effect, control flow in `allow` is a straightforward guard-then-consume pattern, input validation raises clear errors with descriptive messages, the `now` seam is explicit and testable, and there is no speculative abstraction or framework-shaped scaffolding. The only minor concerns are that `available_tokens` has a side-effectful property (triggering a refill on read, which is surprising for a property), and the read-only properties for `capacity` and `refill_rate` are mildly speculative since nothing in the task requires external inspection of those values \u2014 but they are harmless and sparse enough not to constitute real slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. The class has a clear single responsibility, the `_refill` helper is small and pure in effect, control flow in `allow` is a straightforward guard-then-consume pattern, input validation raises clear errors with descriptive messages, the `now` seam is explicit and testable, and there is no speculative abstraction or framework-shaped scaffolding. The only minor concerns are that `available_tokens` has a side-effectful property (triggering a refill on read, which is surprising for a property), and the read-only properties for `capacity` and `refill_rate` are mildly speculative since nothing in the task requires external inspection of those values \u2014 but they are harmless and sparse enough not to constitute real slop.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses in both `__init__` and `allow`\",\n    \"Explicit `now` injection makes time dependency auditable and testable\",\n    \"Small, focused `_refill` helper with clear responsibility\",\n    \"Bucket-unchanged-on-denial semantics correctly implemented\",\n    \"Descriptive error messages for invalid inputs\",\n    \"No hidden mutation or implicit global state\"\n  ],\n  \"weaknesses\": [\n    \"`available_tokens` property triggers a side effect (refill) on read, which violates the principle of least surprise for a property\",\n    \"Read-only `capacity` and `refill_rate` properties are mildly speculative \u2014 not required by the task\",\n    \"Docstrings are thorough but slightly verbose relative to the simplicity of the code\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses in both `__init__` and `allow`",
+      "Explicit `now` injection makes time dependency auditable and testable",
+      "Small, focused `_refill` helper with clear responsibility",
+      "Bucket-unchanged-on-denial semantics correctly implemented",
+      "Descriptive error messages for invalid inputs",
+      "No hidden mutation or implicit global state"
+    ],
+    "weaknesses": [
+      "`available_tokens` property triggers a side effect (refill) on read, which violates the principle of least surprise for a property",
+      "Read-only `capacity` and `refill_rate` properties are mildly speculative \u2014 not required by the task",
+      "Docstrings are thorough but slightly verbose relative to the simplicity of the code"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.199,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.143,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 6,
+    "loc": 85,
+    "maintainability_index": 71.35,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "baseline_generation"
+}

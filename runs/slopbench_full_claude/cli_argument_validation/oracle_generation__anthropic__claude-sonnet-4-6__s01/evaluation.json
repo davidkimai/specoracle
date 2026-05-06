@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, flat, and explicit realization of the task. It decomposes responsibility well: small pure helpers (_consume_value, _parse_limit, _parse_format) handle distinct concerns, the main loop is a straightforward while-index pattern with guard clauses rather than deep nesting, data movement is explicit through a single result dict, and errors are raised with clear messages. The known_flags set is defined but only used in the error message rather than for dispatch, which is a minor redundancy, and the while-loop with manual index arithmetic is slightly more verbose than an iterator-based approach, but neither issue meaningfully harms auditability. There are no speculative abstractions, no hidden state, and no framework-shaped scaffolding\u2014just ordinary constructs that a maintainer can read and verify locally.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, flat, and explicit realization of the task. It decomposes responsibility well: small pure helpers (_consume_value, _parse_limit, _parse_format) handle distinct concerns, the main loop is a straightforward while-index pattern with guard clauses rather than deep nesting, data movement is explicit through a single result dict, and errors are raised with clear messages. The known_flags set is defined but only used in the error message rather than for dispatch, which is a minor redundancy, and the while-loop with manual index arithmetic is slightly more verbose than an iterator-based approach, but neither issue meaningfully harms auditability. There are no speculative abstractions, no hidden state, and no framework-shaped scaffolding\u2014just ordinary constructs that a maintainer can read and verify locally.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers keep the main function readable and locally auditable\",\n    \"Control flow is flat; each flag case is a simple branch with no deep nesting\",\n    \"Explicit result dict initialized with defaults makes data movement transparent\",\n    \"Clear, informative ValueError messages for every failure mode\",\n    \"No sys.exit, no global state, no metaprogramming or speculative extension points\"\n  ],\n  \"weaknesses\": [\n    \"known_flags set is defined but only used in the error message string, not for actual dispatch\u2014minor dead abstraction\",\n    \"Manual while-loop with index arithmetic is slightly more verbose than an iterator/peek pattern, though not a serious flaw\",\n    \"_consume_value rejects values starting with '--', which could be a legitimate input value in some edge cases (minor over-restriction)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers keep the main function readable and locally auditable",
+      "Control flow is flat; each flag case is a simple branch with no deep nesting",
+      "Explicit result dict initialized with defaults makes data movement transparent",
+      "Clear, informative ValueError messages for every failure mode",
+      "No sys.exit, no global state, no metaprogramming or speculative extension points"
+    ],
+    "weaknesses": [
+      "known_flags set is defined but only used in the error message string, not for actual dispatch\u2014minor dead abstraction",
+      "Manual while-loop with index arithmetic is slightly more verbose than an iterator/peek pattern, though not a serious flaw",
+      "_consume_value rejects values starting with '--', which could be a legitimate input value in some edge cases (minor over-restriction)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.902,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.75,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 4,
+    "loc": 66,
+    "maintainability_index": 62.646,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_generation"
+}

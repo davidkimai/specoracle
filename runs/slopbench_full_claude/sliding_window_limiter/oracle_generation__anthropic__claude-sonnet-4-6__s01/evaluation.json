@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Validation is upfront with clear error messages, helpers are small and single-purpose, data movement is visible, and the public API is minimal and well-named. The use of a deque for O(1) eviction from the left is the right ordinary-library choice. The only minor quibbles are that `_window_for` could be replaced with a one-liner using `setdefault` (slightly simpler), and `snapshot` could call `_window_for` to unify the lazy-creation path rather than duplicating the key-existence check, but these are very small issues that don't meaningfully affect auditability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Validation is upfront with clear error messages, helpers are small and single-purpose, data movement is visible, and the public API is minimal and well-named. The use of a deque for O(1) eviction from the left is the right ordinary-library choice. The only minor quibbles are that `_window_for` could be replaced with a one-liner using `setdefault` (slightly simpler), and `snapshot` could call `_window_for` to unify the lazy-creation path rather than duplicating the key-existence check, but these are very small issues that don't meaningfully affect auditability or correctness.\",\n  \"strengths\": [\n    \"Guard clauses at construction time with explicit, informative ValueError messages\",\n    \"Small, named helpers (_evict_expired, _window_for) keep allow() easy to read locally\",\n    \"Deque choice is idiomatic and efficient for sliding-window eviction\",\n    \"snapshot returns a copy, making data movement explicit and preventing external mutation\",\n    \"No speculative abstractions or unused extension points anywhere\"\n  ],\n  \"weaknesses\": [\n    \"_window_for duplicates key-existence logic that snapshot also checks separately; setdefault or a unified helper would remove the duplication\",\n    \"snapshot bypasses _window_for, creating a minor inconsistency in the lazy-init path\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses at construction time with explicit, informative ValueError messages",
+      "Small, named helpers (_evict_expired, _window_for) keep allow() easy to read locally",
+      "Deque choice is idiomatic and efficient for sliding-window eviction",
+      "snapshot returns a copy, making data movement explicit and preventing external mutation",
+      "No speculative abstractions or unused extension points anywhere"
+    ],
+    "weaknesses": [
+      "_window_for duplicates key-existence logic that snapshot also checks separately; setdefault or a unified helper would remove the duplication",
+      "snapshot bypasses _window_for, creating a minor inconsistency in the lazy-init path"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.223,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 5,
+    "loc": 49,
+    "maintainability_index": 79.412,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_generation"
+}

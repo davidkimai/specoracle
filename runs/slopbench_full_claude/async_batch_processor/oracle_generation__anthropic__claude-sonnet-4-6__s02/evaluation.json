@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-structured, and follows the Zen of Python closely. It uses small pure helpers (_make_batches, _run_with_semaphore), keeps control flow flat with guard clauses at the top, makes data movement explicit through the (index, result) tuple pattern, and uses ordinary asyncio constructs (Semaphore, gather, create_task) without clever metaprogramming. The naming is clear and locally auditable. Minor weaknesses: the sort after gather is slightly redundant since asyncio.gather already preserves order of results matching the order of tasks submitted, making the index-tracking and sort an unnecessary complexity. The type annotations use List from typing rather than the built-in list (Python 3.9+), which is a minor anachronism. The docstrings are helpful but slightly verbose for the code's simplicity. Overall this is a solid, maintainable implementation with one unnecessary abstraction (the index-based ordering) that adds complexity without benefit.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-structured, and follows the Zen of Python closely. It uses small pure helpers (_make_batches, _run_with_semaphore), keeps control flow flat with guard clauses at the top, makes data movement explicit through the (index, result) tuple pattern, and uses ordinary asyncio constructs (Semaphore, gather, create_task) without clever metaprogramming. The naming is clear and locally auditable. Minor weaknesses: the sort after gather is slightly redundant since asyncio.gather already preserves order of results matching the order of tasks submitted, making the index-tracking and sort an unnecessary complexity. The type annotations use List from typing rather than the built-in list (Python 3.9+), which is a minor anachronism. The docstrings are helpful but slightly verbose for the code's simplicity. Overall this is a solid, maintainable implementation with one unnecessary abstraction (the index-based ordering) that adds complexity without benefit.\",\n  \"strengths\": [\n    \"Small, focused helper functions with clear single responsibilities\",\n    \"Flat control flow with early guard clauses for invalid inputs\",\n    \"Explicit data movement via (index, result) tuples avoids hidden mutation\",\n    \"Uses standard asyncio primitives (Semaphore, gather) without framework-shaped abstractions\",\n    \"Clear, descriptive names that make behavior easy to explain locally\"\n  ],\n  \"weaknesses\": [\n    \"Index-tracking and post-gather sort are unnecessary since asyncio.gather preserves task order, adding accidental complexity\",\n    \"Uses typing.List instead of built-in list type hints (minor anachronism for modern Python)\",\n    \"Docstrings are slightly over-verbose relative to the simplicity of the code\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, focused helper functions with clear single responsibilities",
+      "Flat control flow with early guard clauses for invalid inputs",
+      "Explicit data movement via (index, result) tuples avoids hidden mutation",
+      "Uses standard asyncio primitives (Semaphore, gather) without framework-shaped abstractions",
+      "Clear, descriptive names that make behavior easy to explain locally"
+    ],
+    "weaknesses": [
+      "Index-tracking and post-gather sort are unnecessary since asyncio.gather preserves task order, adding accidental complexity",
+      "Uses typing.List instead of built-in list type hints (minor anachronism for modern Python)",
+      "Docstrings are slightly over-verbose relative to the simplicity of the code"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.075,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.16s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.333,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 3,
+    "loc": 50,
+    "maintainability_index": 84.764,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a guard-clause pattern for input validation, makes data movement transparent, and the core logic is a straightforward two-step lookup that any maintainer can audit in seconds. The docstring restates the contract clearly. The only minor quibble is that the isinstance guards, while defensively correct, add some verbosity for a function whose callers are expected to pass typed arguments; a stricter reading of 'simple and explicit' might omit them or consolidate them, but they do not constitute architectural slop. The separation between 'role not found' and 'permission not in role' is handled cleanly via .get() returning None rather than a nested if/in chain.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a guard-clause pattern for input validation, makes data movement transparent, and the core logic is a straightforward two-step lookup that any maintainer can audit in seconds. The docstring restates the contract clearly. The only minor quibble is that the isinstance guards, while defensively correct, add some verbosity for a function whose callers are expected to pass typed arguments; a stricter reading of 'simple and explicit' might omit them or consolidate them, but they do not constitute architectural slop. The separation between 'role not found' and 'permission not in role' is handled cleanly via .get() returning None rather than a nested if/in chain.\",\n  \"strengths\": [\n    \"Flat control flow with early returns \u2014 no deep nesting\",\n    \"Explicit type checks raise clear errors rather than silently misbehaving\",\n    \"Core logic is two readable lines that directly express the task semantics\",\n    \"No speculative abstractions or unused extension points\",\n    \"Uses ordinary dict.get() and set membership \u2014 standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"Three isinstance guards add boilerplate that may be unnecessary given Python's duck-typing culture and the typed signature already communicating intent\",\n    \"Checking role_permissions is None rather than using 'if role not in matrix' is slightly less idiomatic and could miss an explicit None value stored in the dict\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with early returns \u2014 no deep nesting",
+      "Explicit type checks raise clear errors rather than silently misbehaving",
+      "Core logic is two readable lines that directly express the task semantics",
+      "No speculative abstractions or unused extension points",
+      "Uses ordinary dict.get() and set membership \u2014 standard-library constructs only"
+    ],
+    "weaknesses": [
+      "Three isinstance guards add boilerplate that may be unnecessary given Python's duck-typing culture and the typed signature already communicating intent",
+      "Checking role_permissions is None rather than using 'if role not in matrix' is slightly less idiomatic and could miss an explicit None value stored in the dict"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.442,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 12,
+    "maintainability_index": 64.721,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "permission_gate",
+  "variant": "oracle_generation"
+}

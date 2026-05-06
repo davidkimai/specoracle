@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. It uses an OrderedDict as the natural standard-library primitive for LRU tracking, keeps the two public methods short and readable with flat control flow, validates inputs with clear error messages, and injects the time source for testability without over-engineering. The data model (key \u2192 (value, expiry)) is transparent and locally auditable. Minor quibbles: the `__contains__` helper has a subtle correctness issue (returns False if the stored value is None, though the spec says get returns None for missing/expired), the docstring block is slightly verbose for the class size, and the 'evict more than one' comment in set() is slightly misleading since only one new entry is added per call so at most one eviction is needed\u2014but these are small imperfections in an otherwise exemplary implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. It uses an OrderedDict as the natural standard-library primitive for LRU tracking, keeps the two public methods short and readable with flat control flow, validates inputs with clear error messages, and injects the time source for testability without over-engineering. The data model (key \u2192 (value, expiry)) is transparent and locally auditable. Minor quibbles: the `__contains__` helper has a subtle correctness issue (returns False if the stored value is None, though the spec says get returns None for missing/expired), the docstring block is slightly verbose for the class size, and the 'evict more than one' comment in set() is slightly misleading since only one new entry is added per call so at most one eviction is needed\u2014but these are small imperfections in an otherwise exemplary implementation.\",\n  \"strengths\": [\n    \"OrderedDict is the idiomatic, obvious choice for LRU without reinventing anything\",\n    \"Input validation raises clear ValueError with informative messages\",\n    \"Injected `now` callable makes the class trivially testable\",\n    \"Control flow in both set() and get() is flat with early returns/guards\",\n    \"Data movement (move_to_end, popitem) is explicit and easy to follow\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"`__contains__` delegates to get() which conflates None values with missing/expired entries\",\n    \"Comment 'may need to evict more than one entry' is misleading since set() adds exactly one new key per call\",\n    \"Docstring length is slightly disproportionate to the implementation complexity\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "OrderedDict is the idiomatic, obvious choice for LRU without reinventing anything",
+      "Input validation raises clear ValueError with informative messages",
+      "Injected `now` callable makes the class trivially testable",
+      "Control flow in both set() and get() is flat with early returns/guards",
+      "Data movement (move_to_end, popitem) is explicit and easy to follow",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "`__contains__` delegates to get() which conflates None values with missing/expired entries",
+      "Comment 'may need to evict more than one entry' is misleading since set() adds exactly one new key per call",
+      "Docstring length is slightly disproportionate to the implementation complexity"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.596,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.286,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 6,
+    "loc": 76,
+    "maintainability_index": 76.014,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "oracle_generation"
+}

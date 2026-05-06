@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses ordinary standard-library constructs (OrderedDict) appropriately. Input validation is explicit and clear. The separation of `_is_expired` and `_evict_expired` as small helpers is reasonable, though `_evict_expired` is only called in one place and its benefit is marginal. The main structural concern is the `set` method's two-phase eviction strategy (first expire, then LRU): calling `_evict_expired` during `set` introduces a hidden O(n) scan on every insertion when at capacity, and the logic is slightly convoluted (the `if len > max_size` guard before `_evict_expired` followed by a `while` loop). A simpler approach would be to just pop the LRU entry when over capacity, since expired entries are lazily removed on `get`. The extra methods (`__len__`, `__contains__`, `clear`, `__repr__`) are speculative extensions not required by the task spec, adding surface area without functional necessity. The docstrings are thorough but verbose for a small utility class. Overall the code is locally auditable and correct, with minor structural bloat.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and uses ordinary standard-library constructs (OrderedDict) appropriately. Input validation is explicit and clear. The separation of `_is_expired` and `_evict_expired` as small helpers is reasonable, though `_evict_expired` is only called in one place and its benefit is marginal. The main structural concern is the `set` method's two-phase eviction strategy (first expire, then LRU): calling `_evict_expired` during `set` introduces a hidden O(n) scan on every insertion when at capacity, and the logic is slightly convoluted (the `if len > max_size` guard before `_evict_expired` followed by a `while` loop). A simpler approach would be to just pop the LRU entry when over capacity, since expired entries are lazily removed on `get`. The extra methods (`__len__`, `__contains__`, `clear`, `__repr__`) are speculative extensions not required by the task spec, adding surface area without functional necessity. The docstrings are thorough but verbose for a small utility class. Overall the code is locally auditable and correct, with minor structural bloat.\",\n  \"strengths\": [\n    \"Clear input validation with descriptive error messages\",\n    \"Explicit data representation: (value, expiry) tuple stored in OrderedDict\",\n    \"Flat control flow in get() with guard clauses\",\n    \"Injected `now` callable makes testing straightforward\",\n    \"Readable names throughout\"\n  ],\n  \"weaknesses\": [\n    \"Speculative extras: __len__, __contains__, clear, __repr__ not required by spec\",\n    \"Two-phase eviction in set() (expire scan then LRU pop) adds complexity over simple LRU-only eviction\",\n    \"_evict_expired called only in set(), making it a marginal abstraction\",\n    \"Verbose docstrings for a small utility class add noise without proportional benefit\",\n    \"The if/else in set() for existing vs new key could be collapsed since move_to_end + assignment works for both cases\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear input validation with descriptive error messages",
+      "Explicit data representation: (value, expiry) tuple stored in OrderedDict",
+      "Flat control flow in get() with guard clauses",
+      "Injected `now` callable makes testing straightforward",
+      "Readable names throughout"
+    ],
+    "weaknesses": [
+      "Speculative extras: __len__, __contains__, clear, __repr__ not required by spec",
+      "Two-phase eviction in set() (expire scan then LRU pop) adds complexity over simple LRU-only eviction",
+      "_evict_expired called only in set(), making it a marginal abstraction",
+      "Verbose docstrings for a small utility class add noise without proportional benefit",
+      "The if/else in set() for existing vs new key could be collapsed since move_to_end + assignment works for both cases"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.566,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.3,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 9,
+    "loc": 108,
+    "maintainability_index": 70.331,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

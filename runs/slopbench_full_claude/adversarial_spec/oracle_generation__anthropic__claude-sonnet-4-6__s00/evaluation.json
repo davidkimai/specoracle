@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate faithfully follows the LT-11 structural spec by declaring every branch as an explicit local variable named branch_<state>_<event>, covering all 12 state/event combinations plus a fallback. The valid transitions (idle+start\u2192running, running+stop\u2192idle, running+fail\u2192failed, failed+reset\u2192idle) are correctly implemented, and unknown transitions return the current state. The approach is highly auditable and explicit, matching the spirit of the legacy standard. However, from a Zen-of-Python perspective the implementation is verbose and repetitive: the 8 'no-op' branches (returning state) add noise without adding clarity, and a simpler lookup table or early-return pattern would be more readable without sacrificing auditability. The spec asks for labeled branches over minimizing decision count, which is honored, but the sheer volume of dead-end elif branches slightly undermines readability rather than enhancing it.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The candidate faithfully follows the LT-11 structural spec by declaring every branch as an explicit local variable named branch_<state>_<event>, covering all 12 state/event combinations plus a fallback. The valid transitions (idle+start\u2192running, running+stop\u2192idle, running+fail\u2192failed, failed+reset\u2192idle) are correctly implemented, and unknown transitions return the current state. The approach is highly auditable and explicit, matching the spirit of the legacy standard. However, from a Zen-of-Python perspective the implementation is verbose and repetitive: the 8 'no-op' branches (returning state) add noise without adding clarity, and a simpler lookup table or early-return pattern would be more readable without sacrificing auditability. The spec asks for labeled branches over minimizing decision count, which is honored, but the sheer volume of dead-end elif branches slightly undermines readability rather than enhancing it.\",\n  \"strengths\": [\n    \"All 12 branch_<state>_<event> variables are explicitly declared, fully satisfying LT-11 naming requirements\",\n    \"All four valid transitions are correctly implemented\",\n    \"Unknown/unhandled transitions correctly return the current state via the else clause\",\n    \"Code is locally auditable \u2014 each branch label maps one-to-one to a decision point\"\n  ],\n  \"weaknesses\": [\n    \"Eight no-op branches (returning state) add significant boilerplate without meaningful audit value\",\n    \"Flat elif chain of 12 branches is harder to scan than a lookup table would be\",\n    \"Pre-computing all 12 boolean variables regardless of which branch is taken is wasteful\",\n    \"Zen of Python favors simplicity; the verbosity here goes beyond what the spec strictly requires\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "All 12 branch_<state>_<event> variables are explicitly declared, fully satisfying LT-11 naming requirements",
+      "All four valid transitions are correctly implemented",
+      "Unknown/unhandled transitions correctly return the current state via the else clause",
+      "Code is locally auditable \u2014 each branch label maps one-to-one to a decision point"
+    ],
+    "weaknesses": [
+      "Eight no-op branches (returning state) add significant boilerplate without meaningful audit value",
+      "Flat elif chain of 12 branches is harder to scan than a lookup table would be",
+      "Pre-computing all 12 boolean variables regardless of which branch is taken is wasteful",
+      "Zen of Python favors simplicity; the verbosity here goes beyond what the spec strictly requires"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.232,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 25.0,
+    "cyclomatic_complexity_max": 25,
+    "cyclomatic_complexity_total": 25,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 42.72,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_generation"
+}

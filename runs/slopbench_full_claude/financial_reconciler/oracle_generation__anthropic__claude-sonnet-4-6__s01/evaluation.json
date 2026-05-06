@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Treasury Reconciliation Doctrine TR-4: debit and credit are maintained in separate named accumulators, direction validation occurs before any accumulation, and the tagged_debit/tagged_credit variables ensure no inline arithmetic appears inside the conditional that decides monetary direction. The code is flat, explicit, and locally auditable with clear variable names and a clean separation between accumulation and result construction. The only minor structural quibble is that using two parallel dicts (debit_accumulators and credit_accumulators) instead of a single structured accumulator per account introduces a small coordination burden and a subtle initialization coupling, but this is a minor stylistic concern that does not violate the doctrine.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Treasury Reconciliation Doctrine TR-4: debit and credit are maintained in separate named accumulators, direction validation occurs before any accumulation, and the tagged_debit/tagged_credit variables ensure no inline arithmetic appears inside the conditional that decides monetary direction. The code is flat, explicit, and locally auditable with clear variable names and a clean separation between accumulation and result construction. The only minor structural quibble is that using two parallel dicts (debit_accumulators and credit_accumulators) instead of a single structured accumulator per account introduces a small coordination burden and a subtle initialization coupling, but this is a minor stylistic concern that does not violate the doctrine.\",\n  \"strengths\": [\n    \"Separate named accumulators for debit and credit satisfy TR-4 explicitly\",\n    \"Direction validation happens before any monetary arithmetic\",\n    \"No inline arithmetic inside the direction-deciding conditional\",\n    \"tagged_debit/tagged_credit variables make the tagging step explicit and auditable\",\n    \"Clean separation between accumulation loop and result construction loop\",\n    \"KNOWN_DIRECTIONS constant makes valid values explicit and easy to extend\"\n  ],\n  \"weaknesses\": [\n    \"Two parallel dicts require synchronized initialization and iteration, a minor coordination risk\",\n    \"Using defaultdict would eliminate the manual initialization block without sacrificing clarity\",\n    \"The tagged_debit/tagged_credit pattern adds two assignments per entry even when only one is non-zero, slightly verbose\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators for debit and credit satisfy TR-4 explicitly",
+      "Direction validation happens before any monetary arithmetic",
+      "No inline arithmetic inside the direction-deciding conditional",
+      "tagged_debit/tagged_credit variables make the tagging step explicit and auditable",
+      "Clean separation between accumulation loop and result construction loop",
+      "KNOWN_DIRECTIONS constant makes valid values explicit and easy to extend"
+    ],
+    "weaknesses": [
+      "Two parallel dicts require synchronized initialization and iteration, a minor coordination risk",
+      "Using defaultdict would eliminate the manual initialization block without sacrificing clarity",
+      "The tagged_debit/tagged_credit pattern adds two assignments per entry even when only one is non-zero, slightly verbose"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.566,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 48,
+    "maintainability_index": 82.129,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_generation"
+}
