@@ -68,26 +68,78 @@ variables for monetary decisions. That makes the code more locally auditable but
 mechanically increases decision points. This is a spec-priority tradeoff, not a
 conditioning failure.
 
-## Citation Checklist
+## Citation Checklist (Confirmed)
 
-- Zen of Python: Tim Peters, PEP 20.
-- Radon: Python static analysis package used for CC and MI.
-- Chen et al. 2021: Evaluating Large Language Models Trained on Code, including
-  HumanEval and the unbiased Pass@k estimator.
-- Wilcoxon signed-rank test.
-- LLM-as-a-Judge / MT-Bench: Zheng et al. 2023.
-- Docker sandboxing and container security references for untrusted code
-  execution.
-- Secure program synthesis and executable-oracle framing.
+### Primary Theoretical Context
 
-## Citations to Verify
+- Quinn and Max von Hippel. 2026. "Lies, Damned Lies, and Proofs: Formal
+  Methods are not Slopless." LessWrong. January 12, 2026.
+  https://www.lesswrong.com/posts/rhAPh3YzhPoBNpgHg/lies-damned-lies-and-proofs-formal-methods-are-not-slopless
+  Key use: formal verification does not automatically remove structural slop;
+  specification elicitation and validation remain bottlenecks.
+- Max von Hippel, Simon Henniger, Quinn Dougherty, and miyazono. 2026. "How to
+  Solve Secure Program Synthesis." LessWrong. March 30, 2026.
+  https://www.lesswrong.com/posts/8wtrLoDPyCfMLuHkt/how-to-solve-secure-program-synthesis
+  Key use: SPS should be attacked directly rather than by proxy; specification
+  is one of the hard central problems.
+- Mike Dodds. 2025. "Specifications Don't Exist." Galois Blog. June 16, 2025.
+  https://www.galois.com/articles/specifications-dont-exist
+  Key use: complete coherent formal specifications are absent for many real
+  systems; informal specifications can be wrong but useful communication tools.
+- John Regehr. 2026. "Zero-Degree-of-Freedom LLM Coding using Executable
+  Oracles." Blog post. March 26, 2026.
+  https://john.regehr.org/writing/zero_dof_programming.html
+  Key use: LLM coding improves when executable oracles collapse
+  failure-producing degrees of freedom; SpecOracle tests whether informal specs
+  can act as weaker structural oracles.
 
-These works are referenced in the fellowship proposal and must be verified as
-citable publications before inclusion in the paper bibliography. If any are
-informal references, replace them with the underlying formal work they describe.
+### Closest Technical Prior Work
 
-- "Lies, Damned Lies, and Proofs" by Quinn Dougherty and Max von Hippel.
-- "Specifications Don't Exist" by Mike Dodds.
-- "Approximately Aligned Decoding" by Melcer et al.
-- John Regehr's "collapse the degrees of freedom" framing for executable
-  oracles.
+- Daniel Melcer, Sujan Gonugondla, Pramuditha Perera, Haifeng Qian,
+  Wen-Hao Chiang, Yanjun Wang, Nihal Jain, Pranav Garg, Xiaofei Ma, and Anoop
+  Deoras. 2024. "Approximately Aligned Decoding." arXiv:2410.01103.
+  https://arxiv.org/abs/2410.01103
+  Key use: spec-conditioned decoding that balances distribution distortion with
+  computational efficiency.
+- Remy Wang. "Counterexample-guided Inductive Synthesis." Primer.
+  Key use: formal spec-driven synthesis through oracle feedback loops.
+
+### Empirical / Evaluation Methods
+
+- Mark Chen et al. 2021. "Evaluating Large Language Models Trained on Code."
+  arXiv:2107.03374. https://arxiv.org/abs/2107.03374
+  Key use: HumanEval and the unbiased Pass@k estimator used in `analyze.py`.
+- Lianmin Zheng et al. 2023. "Judging LLM-as-a-Judge with MT-Bench and Chatbot
+  Arena." arXiv:2306.05685. https://arxiv.org/abs/2306.05685
+  Key use: LLM-as-a-Judge methodology.
+- Frank Wilcoxon. 1945. "Individual comparisons by ranking methods."
+  Biometrics Bulletin. Key use: paired signed-rank significance reporting.
+
+### Python / Measurement Tools
+
+- Tim Peters. 2004. "The Zen of Python." PEP 20.
+  https://peps.python.org/pep-0020/
+  Key use: the default informal oracle for `oracle_generation`.
+- Radon. Python static analysis package. https://radon.readthedocs.io/
+  Key use: cyclomatic complexity and maintainability index.
+
+## Differentiation from Melcer et al.
+
+Approximately Aligned Decoding constrains LLM decoding using hard constraints at
+the token distribution level. SpecOracle conditions at the prompt level using
+informal philosophical principles and measures whether this soft conditioning
+produces structurally different outputs. The approaches are complementary:
+AprAD asks whether constraints can be enforced mechanically during generation;
+SpecOracle asks whether informal specs work as soft oracles without decoding
+machinery.
+
+## Differentiation from Regehr
+
+Regehr's framework requires strong executable oracles such as fuzzers,
+property-based testers, and reference implementations to approach zero degrees
+of freedom. SpecOracle is a direct empirical test of the weaker case: whether
+informal specs can collapse structural degrees of freedom at prompt cost. The
+40% CC reduction (p=0.004) suggests that informal Zen-of-Python conditioning
+does collapse some structural freedom, while the context-ablation null result
+supports Regehr's skepticism about using informal structure alone as a
+functional maintenance oracle.
