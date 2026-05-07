@@ -7,7 +7,7 @@ The core experiment is simple:
 
 1. Generate a baseline implementation from a functional prompt.
 2. Generate an oracle implementation from the same prompt plus an informal
-   structural spec: Zen by default, or a task-local `custom_spec_override`.
+   structural spec: Zen of Python by default, or a task-local `custom_spec_override`.
 3. Verify functional correctness with programmatic `pytest`.
 4. Measure structural degradation with `radon` and standard-library `ast`.
 5. Optionally ask an LLM judge to score adherence to the informal oracle.
