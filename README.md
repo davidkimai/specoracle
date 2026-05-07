@@ -4,7 +4,7 @@
 
 SpecOracle is an evaluation pipeline designed to test whether informal specifications can function as zero-cost in-context oracles for secure program synthesis. 
 
-In secure program synthesis, specification elicitation has superseded code generation as the primary bottleneck. While executable oracles successfully restrict a model's degrees of freedom, formalizing subjective architectural quality remains impractically expensive. SpecOracle investigates whether informal engineering principles (e.g., the Zen of Python) can bridge this gap by enforcing structural discipline at inference time.
+In secure program synthesis, specification elicitation has superseded code generation as the primary bottleneck. While executable oracles successfully restrict a model's degrees of freedom, formalizing subjective architectural quality to prevent unmaintainable "vibecoding slop" remains impractically expensive. SpecOracle investigates whether informal engineering principles (e.g., the Zen of Python) can bridge this gap by enforcing structural discipline at inference time.
 
 To measure this, we introduce **SlopBench**: a 50-task benchmark curated specifically to induce architectural degradation, allowing researchers to empirically measure whether soft specification conditioning collapses architectural degrees of freedom without compromising functional correctness.
 
@@ -21,7 +21,7 @@ Based on a comprehensive evaluation using Claude Sonnet 4.6, SpecOracle provides
 **Oracles Follow Semantics, Not Brevity Bias:** To confirm that models respond to specification semantics rather than a generic pressure to "write less code," we introduced an adversarial control task (Task 045) requiring explicit labeled branch variables. Conditioning on this specification successfully forced the model to increase cyclomatic complexity by +18.0 points, confirming strict adherence to the in-context structural constraint.
 
 ### 3. Boundary Conditions: The Maintenance Blind Spot
-**Pass/Fail Evaluations Mask Structural Degradation:** To assess whether structural rigor improves downstream agentic maintainability, we introduced a "Day 2" maintenance stress test. Context-ablation revealed a null result: current frontier maintenance agents successfully brute-force feature patches on highly complex, unconstrained code with near 100% success, even with ablated context. Because frontier models can presently brute-force localized architectural debt, standard pass/fail agentic evaluations actively mask structural degradation. This highlights the necessity of enforcing static structural discipline via soft oracles to ensure long-term human auditability.
+**Pass/Fail Evaluations Mask Structural Slop:** To assess whether structural rigor improves downstream agentic maintainability, we introduced a "Day 2" maintenance stress test. Context-ablation revealed a null result: current frontier maintenance agents successfully brute-force feature patches on highly complex, unconstrained code with near 100% success, even with ablated context. Because frontier models can presently brute-force localized architectural debt, standard pass/fail agentic evaluations actively mask structural slop. This highlights the necessity of enforcing static structural discipline via soft oracles to ensure long-term human auditability.
 
 ---
 
