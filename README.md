@@ -21,7 +21,7 @@ Based on a comprehensive evaluation using Claude Sonnet 4.6, SpecOracle provides
 **Oracles Follow Semantics, Not Brevity Bias:** To confirm that models respond to specification semantics rather than a generic pressure to "write less code," we introduced an adversarial control task (Task 045) requiring explicit labeled branch variables. Conditioning on this specification successfully forced the model to increase cyclomatic complexity by +18.0 points, confirming strict adherence to the in-context structural constraint.
 
 ### 3. Boundary Conditions: The Maintenance Blind Spot
-**Pass/Fail Evaluations Mask Structural Slop:** To assess whether structural rigor improves downstream agentic maintainability, we introduced a "Day 2" maintenance stress test. Context-ablation revealed a null result: current frontier maintenance agents successfully brute-force feature patches on highly complex, unconstrained code with near 100% success, even with ablated context. Because frontier models can presently brute-force localized architectural debt, standard pass/fail agentic evaluations actively mask structural slop. This highlights the necessity of enforcing static structural discipline via soft oracles to ensure long-term human auditability.
+**Pass/Fail Evaluations Mask Structural Slop:** To assess whether structural rigor improves downstream agentic maintainability, we introduced a long-horizon maintenance stress test. Context-ablation revealed a null result: current frontier maintenance agents successfully brute-force feature patches on highly complex, unconstrained code with near 100% success, even with ablated context. Because frontier models can presently brute-force localized architectural debt, standard pass/fail agentic evaluations actively mask structural slop. This highlights the necessity of enforcing static structural discipline via soft oracles to ensure long-term human auditability.
 
 ---
 
@@ -54,7 +54,7 @@ python3 -m pip install -e .
 # 2. Build the Pytest Sandbox Image
 specoracle sandbox prepare
 
-# 3. Run the Offline Smoke Test (Generate -> Evaluate -> Day 2 Stress)
+# 3. Run the Offline Smoke Test (Generate -> Evaluate -> Long-Horizon Stress)
 specoracle run --dataset data/slopbench_min --out runs/smoke --provider mock --judge-provider mock --samples 1
 specoracle stress --run-dir runs/smoke --provider mock --context-ablation
 specoracle validate --run-dir runs/smoke --dataset data/slopbench_min --samples 1 --context-ablation
@@ -83,7 +83,7 @@ specoracle run \
   --temperature 0.8 \
   --require-temperature
 
-# 2. Run the Day 2 Maintenance Stress Test
+# 2. Run the Long-Horizon Maintenance Stress Test
 specoracle stress \
   --run-dir runs/slopbench_full_claude \
   --provider anthropic \
@@ -118,4 +118,4 @@ The repository contains two SlopBench splits:
 - `src/specoracle/config.py`: Prompt templates and the Zen oracle specification.
 - `src/specoracle/generator.py`: LLM routing logic for baseline versus oracle generation.
 - `src/specoracle/evaluator.py`: Static structural metrics (Radon, AST nesting depth) and subprocess Dockerized pytest execution.
-- `src/specoracle/stress.py`: SpecArena Day 2 maintenance-agent stress testing environment.
+- `src/specoracle/stress.py`: SpecArena downstream maintenance-agent stress testing environment.
