@@ -4,8 +4,8 @@ import os
 from dataclasses import dataclass
 from typing import Any, Literal
 
-Provider = Literal["openai", "anthropic", "mock"]
-GenerationMode = Literal["baseline", "oracle", "neutral_style"]
+Provider = Literal["openai", "anthropic", "google", "mock"]
+GenerationMode = Literal["baseline", "oracle", "neutral_style", "hybrid"]
 
 
 ZEN_OF_PYTHON_PRIMITIVES: tuple[str, ...] = (
@@ -264,6 +264,9 @@ def default_model_settings(
     if provider == "anthropic":
         model = os.getenv(f"{prefix}_MODEL", "claude-sonnet-4-6")
         api_key_env = os.getenv(f"{prefix}_API_KEY_ENV", "ANTHROPIC_API_KEY")
+    elif provider == "google":
+        model = os.getenv(f"{prefix}_MODEL", "gemini-2.5-pro")
+        api_key_env = os.getenv(f"{prefix}_API_KEY_ENV", "GEMINI_API_KEY")
     elif provider == "mock":
         model = os.getenv(f"{prefix}_MODEL", "mock-local")
         api_key_env = "SPECORACLE_NO_API_KEY"
@@ -295,7 +298,7 @@ def system_prompt_for_mode(mode: GenerationMode, *, task: Task | None = None) ->
         return BASELINE_SYSTEM_PROMPT
     if mode == "neutral_style":
         return NEUTRAL_STYLE_SYSTEM_PROMPT
-    if mode == "oracle":
+    if mode in {"oracle", "hybrid"}:
         if task is not None and task.custom_spec_override:
             return CUSTOM_ORACLE_SYSTEM_TEMPLATE.format(oracle_spec=oracle_spec_for_task(task))
         return ZEN_ORACLE_SYSTEM_PROMPT
@@ -307,6 +310,8 @@ def variant_name(mode: GenerationMode) -> str:
         return "baseline_generation"
     if mode == "oracle":
         return "oracle_generation"
+    if mode == "hybrid":
+        return "hybrid_generation"
     if mode == "neutral_style":
         return "neutral_style_generation"
     raise ValueError(f"unknown generation mode: {mode}")

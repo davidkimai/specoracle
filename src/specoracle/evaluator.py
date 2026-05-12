@@ -87,6 +87,7 @@ class EvaluationResult:
     static_metrics: StaticMetrics
     pytest: PytestResult
     judge: JudgeResult = field(default_factory=lambda: JudgeResult(True, None, "not requested"))
+    hybrid: dict[str, Any] | None = None
 
     def to_json_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -366,6 +367,7 @@ def evaluate_code(
     pytest_timeout_seconds: float,
     judge_client: LLMClient | None = None,
     judge_settings: ModelSettings | None = None,
+    hybrid: dict[str, Any] | None = None,
 ) -> EvaluationResult:
     active_oracle_spec = oracle_spec or oracle_spec_for_task(task)
     active_oracle_label = oracle_spec_label or oracle_spec_label_for_task(task)
@@ -392,6 +394,7 @@ def evaluate_code(
             client=judge_client,
             settings=judge_settings,
         ),
+        hybrid=hybrid,
     )
 
 

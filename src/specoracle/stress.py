@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from specoracle.config import MAINTENANCE_SYSTEM_PROMPT, MAINTENANCE_USER_TEMPLATE, ModelSettings, Task
-from specoracle.evaluator import PytestResult, run_pytest_for_code
+from specoracle.evaluator import PytestResult, compute_static_metrics, run_pytest_for_code
 from specoracle.generator import LLMClient, extract_python_code
 
 
@@ -37,6 +37,32 @@ class StressResult:
     raw_response: str
     code: str
     error: str | None = None
+
+    def to_json_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ChainStepResult:
+    step: int
+    task_id: str
+    variant: str
+    provider: str
+    model: str
+    sample_index: int
+    maintenance_provider: str
+    maintenance_model: str
+    pass_bool: bool
+    token_estimate: int
+    cc_average: float
+    nesting_depth: int
+    function_count: int
+    elapsed_seconds: float
+    accumulated_score: float
+    failure_type: str
+    failure_detail: str
+    raw_response: str
+    code: str
 
     def to_json_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -192,6 +218,171 @@ class SpecArena:
             results.append(result)
         return results
 
+    def chain_run_dir(
+        self,
+        *,
+        run_dir: Path,
+        task_map: dict[str, Task] | None = None,
+        chain_depth: int = 1,
+    ) -> list[ChainStepResult]:
+        if chain_depth <= 1:
+            return []
+
+        results: list[ChainStepResult] = []
+        for generation_path in sorted(run_dir.rglob("generation.json")):
+            payload = json.loads(generation_path.read_text(encoding="utf-8"))
+            task = _task_for_generation(payload, task_map)
+            existing = load_existing_chain_results(
+                artifact_dir=generation_path.parent,
+                generation_payload=payload,
+                settings=self._settings,
+                chain_depth=chain_depth,
+            )
+            if existing is not None:
+                results.extend(existing)
+                continue
+            chain_results = self.chain_artifact(
+                artifact_dir=generation_path.parent,
+                task=task,
+                generation_payload=payload,
+                chain_depth=chain_depth,
+            )
+            write_chain_results(chain_results, generation_path.parent)
+            results.extend(chain_results)
+        return results
+
+    def chain_artifact(
+        self,
+        *,
+        artifact_dir: Path,
+        task: Task,
+        generation_payload: dict[str, Any],
+        chain_depth: int,
+    ) -> list[ChainStepResult]:
+        if chain_depth <= 1:
+            return []
+
+        steps: list[ChainStepResult] = []
+        accumulated_score = 0.0
+
+        stress_path = artifact_dir / "stress.json"
+        if stress_path.exists():
+            stress = stress_result_from_mapping(json.loads(stress_path.read_text(encoding="utf-8")))
+            step_one_code = stress.code
+            step_one_raw = stress.raw_response
+            step_one_pytest = stress.pytest
+            step_one_passed = stress.pass_at_1
+            step_one_failure_type = stress.maintenance_failure_type
+            step_one_failure_detail = stress.maintenance_failure_detail
+            step_one_elapsed = stress.duration_seconds
+            step_one_tokens = stress.maintenance_token_overhead
+        else:
+            started = time.monotonic()
+            step_one_raw, step_one_code, step_one_pytest = self._run_maintenance(
+                task=task,
+                prompt=_maintenance_prompt(
+                    task,
+                    (artifact_dir / "solution.py").read_text(encoding="utf-8"),
+                ),
+            )
+            step_one_passed = step_one_pytest.passed
+            step_one_failure_type, step_one_failure_detail = _classify_pytest_failure(
+                step_one_pytest
+            )
+            step_one_elapsed = round(time.monotonic() - started, 3)
+            step_one_tokens = _estimate_token_overhead(
+                MAINTENANCE_SYSTEM_PROMPT,
+                _maintenance_prompt(
+                    task,
+                    (artifact_dir / "solution.py").read_text(encoding="utf-8"),
+                ),
+                step_one_raw,
+            )
+        step_one = _chain_step_from_code(
+            step=1,
+            task=task,
+            generation_payload=generation_payload,
+            settings=self._settings,
+            code=step_one_code,
+            raw_response=step_one_raw,
+            pytest_result=step_one_pytest,
+            passed=step_one_passed,
+            token_estimate=step_one_tokens,
+            elapsed_seconds=step_one_elapsed,
+            failure_type=step_one_failure_type,
+            failure_detail=step_one_failure_detail,
+            accumulated_score=accumulated_score,
+        )
+        accumulated_score = step_one.accumulated_score
+        steps.append(step_one)
+
+        current_code = step_one_code
+        for step in range(2, chain_depth + 1):
+            prompt = _chain_prompt(task=task, code=current_code, step=step)
+            started = time.monotonic()
+            try:
+                raw_response, code, pytest_result = self._run_chain_step(
+                    task=task,
+                    prompt=prompt,
+                    fallback_code=current_code,
+                )
+                passed = pytest_result.passed
+                failure_type, failure_detail = _classify_pytest_failure(pytest_result)
+            except Exception as exc:
+                raw_response = ""
+                code = current_code
+                pytest_result = None
+                passed = False
+                failure_type = "maintenance_agent_error"
+                failure_detail = str(exc)
+            token_estimate = _estimate_token_overhead(
+                MAINTENANCE_SYSTEM_PROMPT,
+                prompt,
+                raw_response,
+            )
+            result = _chain_step_from_code(
+                step=step,
+                task=task,
+                generation_payload=generation_payload,
+                settings=self._settings,
+                code=code,
+                raw_response=raw_response,
+                pytest_result=pytest_result,
+                passed=passed,
+                token_estimate=token_estimate,
+                elapsed_seconds=round(time.monotonic() - started, 3),
+                failure_type=failure_type,
+                failure_detail=failure_detail,
+                accumulated_score=accumulated_score,
+            )
+            accumulated_score = result.accumulated_score
+            steps.append(result)
+            current_code = code
+        return steps
+
+    def _run_chain_step(
+        self,
+        *,
+        task: Task,
+        prompt: str,
+        fallback_code: str,
+    ) -> tuple[str, str, PytestResult]:
+        if self._settings.provider == "mock":
+            raw_response = fallback_code
+        else:
+            raw_response = self._client.complete(
+                system_prompt=MAINTENANCE_SYSTEM_PROMPT,
+                user_prompt=prompt,
+                settings=self._settings,
+            )
+        code = extract_python_code(raw_response)
+        pytest_result = run_pytest_for_code(
+            code,
+            task.day2_test_code,
+            timeout_seconds=self._pytest_timeout_seconds,
+        )
+        return raw_response, code, pytest_result
+
 
 def load_existing_stress_result(
     *,
@@ -258,6 +449,90 @@ def write_stress_result(result: StressResult, artifact_dir: Path) -> None:
     (artifact_dir / "stress.json").write_text(
         json.dumps(result.to_json_dict(), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
+    )
+
+
+def load_existing_chain_results(
+    *,
+    artifact_dir: Path,
+    generation_payload: dict[str, Any],
+    settings: ModelSettings,
+    chain_depth: int,
+) -> list[ChainStepResult] | None:
+    chain_path = artifact_dir / "chain_results.json"
+    if not chain_path.exists():
+        return None
+    try:
+        payload = json.loads(chain_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"malformed chain artifact: {chain_path}") from exc
+    steps_payload = payload.get("steps")
+    if not isinstance(steps_payload, list):
+        raise RuntimeError(f"malformed chain artifact: {chain_path}")
+    if len(steps_payload) != chain_depth:
+        raise RuntimeError(
+            f"chain artifact depth mismatch for {chain_path}: "
+            f"expected {chain_depth}, found {len(steps_payload)}"
+        )
+    expected_key = _generation_key(generation_payload)
+    results = [chain_step_from_mapping(step) for step in steps_payload]
+    expected_maintenance = (settings.provider, settings.model)
+    for result in results:
+        actual_key = (
+            result.task_id,
+            result.variant,
+            result.provider,
+            result.model,
+            result.sample_index,
+        )
+        if actual_key != expected_key:
+            raise RuntimeError(
+                f"chain artifact key mismatch for {chain_path}: "
+                f"expected {expected_key}, found {actual_key}"
+            )
+        actual_maintenance = (result.maintenance_provider, result.maintenance_model)
+        if actual_maintenance != expected_maintenance:
+            raise RuntimeError(
+                f"chain artifact maintenance model mismatch for {chain_path}: "
+                f"expected {expected_maintenance}, found {actual_maintenance}"
+            )
+    return results
+
+
+def write_chain_results(results: list[ChainStepResult], artifact_dir: Path) -> None:
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    (artifact_dir / "chain_results.json").write_text(
+        json.dumps(
+            {"steps": [result.to_json_dict() for result in results]},
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+def chain_step_from_mapping(payload: dict[str, Any]) -> ChainStepResult:
+    return ChainStepResult(
+        step=int(payload["step"]),
+        task_id=str(payload["task_id"]),
+        variant=str(payload["variant"]),
+        provider=str(payload["provider"]),
+        model=str(payload["model"]),
+        sample_index=int(payload.get("sample_index", 0)),
+        maintenance_provider=str(payload["maintenance_provider"]),
+        maintenance_model=str(payload["maintenance_model"]),
+        pass_bool=bool(payload["pass_bool"]),
+        token_estimate=int(payload["token_estimate"]),
+        cc_average=float(payload["cc_average"]),
+        nesting_depth=int(payload["nesting_depth"]),
+        function_count=int(payload["function_count"]),
+        elapsed_seconds=float(payload["elapsed_seconds"]),
+        accumulated_score=float(payload["accumulated_score"]),
+        failure_type=str(payload.get("failure_type") or ""),
+        failure_detail=str(payload.get("failure_detail") or ""),
+        raw_response=str(payload.get("raw_response") or ""),
+        code=str(payload.get("code") or ""),
     )
 
 
@@ -354,6 +629,83 @@ def _maintenance_prompt(task: Task, code: str) -> str:
         prompt=task.prompt.strip(),
         code=code,
         day2_prompt=task.day2_prompt.strip(),
+    )
+
+
+def _chain_prompt(task: Task, code: str, step: int) -> str:
+    if step == 2:
+        instruction = (
+            "The code above works. Refactor it: extract any function longer than "
+            "15 lines into named helpers. Do not change behavior."
+        )
+    else:
+        instruction = (
+            "Add input validation and error handling to all public functions. "
+            "Do not change the core algorithm."
+        )
+    return f"""\
+Task id: {task.id}
+Entry point: {task.entry_point}
+
+Original functional requirements:
+{task.prompt.strip()}
+
+Current solution.py:
+```python
+{code}
+```
+
+Chained maintenance step {step}:
+{instruction}
+
+Maintenance instructions:
+- Return a complete replacement Python module.
+- Preserve original and Day 2 behavior.
+- Keep imports standard-library only unless the task explicitly permits otherwise.
+- Prefer small, auditable edits.
+"""
+
+
+def _chain_step_from_code(
+    *,
+    step: int,
+    task: Task,
+    generation_payload: dict[str, Any],
+    settings: ModelSettings,
+    code: str,
+    raw_response: str,
+    pytest_result: PytestResult | None,
+    passed: bool,
+    token_estimate: int,
+    elapsed_seconds: float,
+    failure_type: str,
+    failure_detail: str,
+    accumulated_score: float,
+) -> ChainStepResult:
+    metrics = compute_static_metrics(code)
+    next_accumulated = accumulated_score + (
+        metrics.cyclomatic_complexity_average * token_estimate
+    )
+    return ChainStepResult(
+        step=step,
+        task_id=task.id,
+        variant=str(generation_payload["variant"]),
+        provider=str(generation_payload["provider"]),
+        model=str(generation_payload["model"]),
+        sample_index=int(generation_payload.get("sample_index", 0)),
+        maintenance_provider=settings.provider,
+        maintenance_model=settings.model,
+        pass_bool=passed,
+        token_estimate=token_estimate,
+        cc_average=metrics.cyclomatic_complexity_average,
+        nesting_depth=metrics.max_nesting_depth,
+        function_count=metrics.function_count,
+        elapsed_seconds=elapsed_seconds,
+        accumulated_score=round(next_accumulated, 3),
+        failure_type=failure_type,
+        failure_detail=failure_detail,
+        raw_response=raw_response,
+        code=code,
     )
 
 

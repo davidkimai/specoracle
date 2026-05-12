@@ -47,6 +47,7 @@ class GenerationResult:
     raw_response: str
     system_prompt: str
     user_prompt: str
+    hybrid: dict[str, Any] | None = None
 
     def to_json_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -128,6 +129,47 @@ class AnthropicClient:
         return "\n".join(parts).strip()
 
 
+class GoogleClient:
+    def __init__(self, api_key: str | None = None) -> None:
+        try:
+            from google import genai
+        except ImportError as exc:
+            raise RuntimeError(
+                "Google/Gemini support requires the optional dependency: "
+                "python -m pip install 'specoracle[google]'"
+            ) from exc
+
+        self._client = genai.Client(api_key=api_key)
+        self.last_effective_temperature: float | None = None
+
+    def complete(
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        settings: ModelSettings,
+    ) -> str:
+        try:
+            from google.genai import types
+        except ImportError as exc:
+            raise RuntimeError(
+                "Google/Gemini support requires the optional dependency: "
+                "python -m pip install 'specoracle[google]'"
+            ) from exc
+
+        self.last_effective_temperature = settings.temperature
+        response = self._client.models.generate_content(
+            model=settings.model,
+            contents=user_prompt,
+            config=types.GenerateContentConfig(
+                system_instruction=system_prompt,
+                temperature=settings.temperature,
+                max_output_tokens=settings.max_tokens,
+            ),
+        )
+        return _extract_google_text(response)
+
+
 class MockLLMClient:
     """Offline client for smoke tests; not a research model."""
 
@@ -164,6 +206,8 @@ def build_llm_client(settings: ModelSettings) -> LLMClient:
         return OpenAIClient(api_key=api_key)
     if settings.provider == "anthropic":
         return AnthropicClient(api_key=api_key)
+    if settings.provider == "google":
+        return GoogleClient(api_key=api_key)
     raise ValueError(f"unknown provider: {settings.provider}")
 
 
@@ -175,6 +219,10 @@ class SpecOracleGenerator:
     @property
     def settings(self) -> ModelSettings:
         return self._settings
+
+    @property
+    def client(self) -> LLMClient:
+        return self._client
 
     def baseline_generation(self, task: Task) -> GenerationResult:
         return self.generate(task, mode="baseline")
@@ -268,6 +316,7 @@ def generation_result_from_mapping(
         raw_response=str(payload.get("raw_response") or ""),
         system_prompt=str(payload.get("system_prompt") or ""),
         user_prompt=str(payload.get("user_prompt") or ""),
+        hybrid=dict(payload["hybrid"]) if isinstance(payload.get("hybrid"), dict) else None,
     )
 
 
@@ -285,13 +334,28 @@ def _extract_openai_text(response: Any) -> str:
     return "\n".join(parts).strip()
 
 
+def _extract_google_text(response: Any) -> str:
+    text = getattr(response, "text", None)
+    if text:
+        return str(text).strip()
+
+    parts: list[str] = []
+    for candidate in getattr(response, "candidates", []) or []:
+        content = getattr(candidate, "content", None)
+        for part in getattr(content, "parts", []) or []:
+            part_text = getattr(part, "text", None)
+            if part_text:
+                parts.append(str(part_text))
+    return "\n".join(parts).strip()
+
+
 def _is_unsupported_temperature_error(exc: Exception) -> bool:
     message = str(exc).lower()
     return "unsupported parameter" in message and "temperature" in message
 
 
 def _as_generation_mode(value: Any) -> GenerationMode:
-    if value in {"baseline", "oracle", "neutral_style"}:
+    if value in {"baseline", "oracle", "neutral_style", "hybrid"}:
         return value
     raise ValueError(f"unknown generation mode in artifact: {value}")
 

@@ -35,7 +35,8 @@ from specoracle.generator import (
     build_llm_client,
     generation_result_from_mapping,
 )
-from specoracle.stress import SpecArena, StressResult, stress_result_from_mapping
+from specoracle.hybrid import HybridConstraints, HybridOracle
+from specoracle.stress import ChainStepResult, SpecArena, StressResult, stress_result_from_mapping
 
 
 _SLOPBENCH_MIN_TASK_IDS = frozenset(
@@ -79,6 +80,8 @@ def main(argv: list[str] | None = None) -> int:
             Path(args.out),
             modes=tuple(args.modes),
             samples=args.samples,
+            hybrid_constraints=_hybrid_constraints_from_args(args),
+            pytest_timeout_seconds=getattr(args, "pytest_timeout", 10.0),
         )
         print(f"generated {len(results)} artifact(s) into {Path(args.out).resolve()}")
         return 0
@@ -127,6 +130,8 @@ def main(argv: list[str] | None = None) -> int:
             Path(args.out),
             modes=tuple(args.modes),
             samples=args.samples,
+            hybrid_constraints=_hybrid_constraints_from_args(args),
+            pytest_timeout_seconds=args.pytest_timeout,
         )
 
         judge_settings, judge_client = _judge_from_args(args)
@@ -173,6 +178,13 @@ def main(argv: list[str] | None = None) -> int:
             task_map=task_map,
             context_ablation=args.context_ablation,
         )
+        chain_results = arena.chain_run_dir(
+            run_dir=run_dir,
+            task_map=task_map,
+            chain_depth=args.chain_depth,
+        )
+        if chain_results:
+            write_chain_summary(chain_results, run_dir)
         evaluations = load_evaluation_results(run_dir)
         write_summary(evaluations, run_dir / "summary.csv", stress_results=stress_results)
         print(
@@ -246,7 +258,7 @@ def build_parser() -> argparse.ArgumentParser:
     stress.add_argument("--run-dir", required=True, help="directory containing generation artifacts")
     stress.add_argument("--dataset", default=None, help="optional task dataset for older artifacts")
     stress.add_argument("--limit", type=int, default=None, help="optional task limit")
-    stress.add_argument("--provider", choices=("openai", "anthropic", "mock"), default="openai")
+    stress.add_argument("--provider", choices=("openai", "anthropic", "google", "mock"), default="openai")
     stress.add_argument("--model", default=None)
     stress.add_argument("--temperature", type=float, default=None)
     stress.add_argument("--require-temperature", action="store_true")
@@ -254,6 +266,7 @@ def build_parser() -> argparse.ArgumentParser:
     stress.add_argument("--llm-timeout", type=float, default=None)
     stress.add_argument("--pytest-timeout", type=float, default=10.0)
     stress.add_argument("--context-ablation", action="store_true")
+    stress.add_argument("--chain-depth", type=int, default=1)
 
     validate = subparsers.add_parser("validate", help="validate a task dataset or completed run directory")
     validate.add_argument("--run-dir", default=None)
@@ -282,7 +295,7 @@ def _add_dataset_args(parser: argparse.ArgumentParser) -> None:
 
 
 def _add_generation_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--provider", choices=("openai", "anthropic", "mock"), default="openai")
+    parser.add_argument("--provider", choices=("openai", "anthropic", "google", "mock"), default="openai")
     parser.add_argument("--model", default=None)
     parser.add_argument("--temperature", type=float, default=None)
     parser.add_argument("--max-tokens", type=int, default=None)
@@ -290,17 +303,22 @@ def _add_generation_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--modes",
         nargs="+",
-        choices=("baseline", "oracle", "neutral_style"),
+        choices=("baseline", "oracle", "neutral_style", "hybrid"),
         default=["baseline", "oracle"],
         help="generation modes to run",
     )
     parser.add_argument("--samples", type=int, default=1)
     parser.add_argument("--require-temperature", action="store_true")
+    parser.add_argument("--max-cc", type=int, default=None)
+    parser.add_argument("--max-nesting", type=int, default=None)
+    parser.add_argument("--hybrid-max-retries", type=int, default=3)
+    parser.add_argument("--hybrid-require-pytest", dest="hybrid_require_pytest", action="store_true", default=True)
+    parser.add_argument("--no-hybrid-require-pytest", dest="hybrid_require_pytest", action="store_false")
 
 
 def _add_evaluation_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--pytest-timeout", type=float, default=10.0)
-    parser.add_argument("--judge-provider", choices=("none", "openai", "anthropic", "mock"), default="none")
+    parser.add_argument("--judge-provider", choices=("none", "openai", "anthropic", "google", "mock"), default="none")
     parser.add_argument("--judge-model", default=None)
     parser.add_argument("--judge-temperature", type=float, default=None)
     parser.add_argument("--judge-max-tokens", type=int, default=None)
@@ -347,6 +365,8 @@ def generate_tasks(
     *,
     modes: tuple[str, ...],
     samples: int = 1,
+    hybrid_constraints: HybridConstraints | None = None,
+    pytest_timeout_seconds: float = 10.0,
 ) -> list[GenerationResult]:
     if samples <= 0:
         raise ValueError("--samples must be positive")
@@ -369,7 +389,16 @@ def generate_tasks(
                 if existing is not None:
                     results.append(existing)
                     continue
-                result = generator.generate(task, mode=mode, sample_index=sample_index)
+                if mode == "hybrid":
+                    hybrid = HybridOracle(
+                        client=generator.client,
+                        settings=generator.settings,
+                        constraints=hybrid_constraints or HybridConstraints(),
+                        pytest_timeout_seconds=pytest_timeout_seconds,
+                    )
+                    result = hybrid.generate_with_gates(task=task, sample_index=sample_index)
+                else:
+                    result = generator.generate(task, mode=mode, sample_index=sample_index)
                 write_generation_result(result, out_dir)
                 results.append(result)
     return results
@@ -533,6 +562,7 @@ def evaluate_artifacts(
             pytest_timeout_seconds=pytest_timeout_seconds,
             judge_settings=judge_settings,
             judge_client=judge_client,
+            hybrid=dict(payload["hybrid"]) if isinstance(payload.get("hybrid"), dict) else None,
         )
         write_evaluation_result(result, generation_path.parent)
         results.append(result)
@@ -565,6 +595,7 @@ def evaluate_generation_results(
             pytest_timeout_seconds=pytest_timeout_seconds,
             judge_settings=judge_settings,
             judge_client=judge_client,
+            hybrid=generation.hybrid,
         )
         artifact_dir = _artifact_dir(
             out_dir=out_dir,
@@ -658,6 +689,7 @@ def write_summary(
         )
         seen_keys.add(key)
         stress = stress_by_key.get(key)
+        hybrid = result.hybrid or {}
         rows.append(
             {
                 "task_id": result.task_id,
@@ -709,6 +741,13 @@ def write_summary(
                     else ""
                 ),
                 "stress_duration_seconds": stress.duration_seconds if stress else "",
+                "hybrid_retries": hybrid.get("hybrid_retries", ""),
+                "hybrid_gate_pass": hybrid.get("hybrid_gate_pass", ""),
+                "hard_cc_pass": hybrid.get("hard_cc_pass", ""),
+                "hard_nesting_pass": hybrid.get("hard_nesting_pass", ""),
+                "hard_pytest_pass": hybrid.get("hard_pytest_pass", ""),
+                "hybrid_feedback_cc_delta": hybrid.get("hybrid_feedback_cc_delta", ""),
+                "max_retries_exceeded": hybrid.get("max_retries_exceeded", ""),
             }
         )
 
@@ -756,6 +795,13 @@ def write_summary(
                 "context_ablation_failure_type": stress.context_ablation_failure_type or "",
                 "context_ablation_failure_detail": stress.context_ablation_failure_detail or "",
                 "stress_duration_seconds": stress.duration_seconds,
+                "hybrid_retries": "",
+                "hybrid_gate_pass": "",
+                "hard_cc_pass": "",
+                "hard_nesting_pass": "",
+                "hard_pytest_pass": "",
+                "hybrid_feedback_cc_delta": "",
+                "max_retries_exceeded": "",
             }
         )
 
@@ -764,6 +810,39 @@ def write_summary(
         writer = csv.DictWriter(handle, fieldnames=_SUMMARY_FIELDS)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def write_chain_summary(results: Iterable[ChainStepResult], run_dir: Path) -> None:
+    rows = [result.to_json_dict() for result in results]
+    run_dir.mkdir(parents=True, exist_ok=True)
+    (run_dir / "chain_results.json").write_text(
+        json.dumps(rows, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    fields = [
+        "step",
+        "task_id",
+        "variant",
+        "provider",
+        "model",
+        "sample_index",
+        "maintenance_provider",
+        "maintenance_model",
+        "pass_bool",
+        "token_estimate",
+        "cc_average",
+        "nesting_depth",
+        "function_count",
+        "elapsed_seconds",
+        "accumulated_score",
+        "failure_type",
+        "failure_detail",
+    ]
+    with (run_dir / "chain_summary.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow({field: row.get(field, "") for field in fields})
 
 
 def load_evaluation_results(run_dir: Path) -> list[EvaluationResult]:
@@ -790,6 +869,7 @@ def load_evaluation_results(run_dir: Path) -> list[EvaluationResult]:
                 static_metrics=StaticMetrics(**payload["static_metrics"]),
                 pytest=PytestResult(**pytest_payload),
                 judge=JudgeResult(**judge_payload),
+                hybrid=dict(payload["hybrid"]) if isinstance(payload.get("hybrid"), dict) else None,
             )
         )
     return results
@@ -996,6 +1076,15 @@ def _settings_from_args(args: argparse.Namespace, *, role: str) -> ModelSettings
     )
 
 
+def _hybrid_constraints_from_args(args: argparse.Namespace) -> HybridConstraints:
+    return HybridConstraints(
+        max_cc=getattr(args, "max_cc", None),
+        max_nesting=getattr(args, "max_nesting", None),
+        require_pytest=bool(getattr(args, "hybrid_require_pytest", True)),
+        max_retries=int(getattr(args, "hybrid_max_retries", 3)),
+    )
+
+
 def _judge_from_args(args: argparse.Namespace) -> tuple[ModelSettings | None, Any]:
     if args.judge_provider == "none":
         return None, None
@@ -1058,13 +1147,13 @@ def _safe_slug(value: str) -> str:
 
 
 def _as_provider(value: str) -> Provider:
-    if value in {"openai", "anthropic", "mock"}:
+    if value in {"openai", "anthropic", "google", "mock"}:
         return value  # type: ignore[return-value]
     raise ValueError(f"unknown provider: {value}")
 
 
 def _as_generation_mode(value: str) -> GenerationMode:
-    if value in {"baseline", "oracle", "neutral_style"}:
+    if value in {"baseline", "oracle", "neutral_style", "hybrid"}:
         return value  # type: ignore[return-value]
     raise ValueError(f"unknown generation mode: {value}")
 
@@ -1107,6 +1196,13 @@ _SUMMARY_FIELDS = [
     "context_ablation_failure_type",
     "context_ablation_failure_detail",
     "stress_duration_seconds",
+    "hybrid_retries",
+    "hybrid_gate_pass",
+    "hard_cc_pass",
+    "hard_nesting_pass",
+    "hard_pytest_pass",
+    "hybrid_feedback_cc_delta",
+    "max_retries_exceeded",
 ]
 
 
