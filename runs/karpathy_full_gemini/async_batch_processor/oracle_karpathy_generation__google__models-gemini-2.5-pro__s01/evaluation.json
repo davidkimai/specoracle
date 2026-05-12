@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: it uses a semaphore for concurrency control, asyncio.gather for order-preserving parallel execution, and validates inputs upfront. However, it violates the 'simplicity first' and 'minimum code' principles in several ways. The docstrings are excessively verbose for a straightforward utility function\u2014the module-level docstring alone is longer than the logic itself. The TypeVar generics and custom type alias (AsyncBatchHandler) add abstraction overhead for a single-use function that doesn't benefit from it at runtime. The nested helper _generate_batches is reasonable but could be replaced with a simple list comprehension or itertools.islice pattern inline. The isinstance checks for int type are slightly over-engineered (booleans pass as ints, which may or may not be desired). Overall the architecture is correct and readable, but the ceremony around types and documentation inflates the code well beyond what the task requires.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: it uses a semaphore for concurrency control, asyncio.gather for order-preserving parallel execution, and validates inputs upfront. However, it violates the 'simplicity first' and 'minimum code' principles in several ways. The docstrings are excessively verbose for a straightforward utility function\u2014the module-level docstring alone is longer than the logic itself. The TypeVar generics and custom type alias (AsyncBatchHandler) add abstraction overhead for a single-use function that doesn't benefit from it at runtime. The nested helper _generate_batches is reasonable but could be replaced with a simple list comprehension or itertools.islice pattern inline. The isinstance checks for int type are slightly over-engineered (booleans pass as ints, which may or may not be desired). Overall the architecture is correct and readable, but the ceremony around types and documentation inflates the code well beyond what the task requires.\",\n  \"strengths\": [\n    \"Correct semaphore-based concurrency limiting\",\n    \"asyncio.gather preserves batch order as required\",\n    \"Input validation raises ValueError for non-positive values\",\n    \"Handles empty items gracefully\",\n    \"Flat control flow with no unnecessary nesting\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings inflate code far beyond minimum necessary\",\n    \"TypeVar generics and AsyncBatchHandler alias add abstraction for a single-use function\",\n    \"isinstance(x, int) check also accepts booleans silently, which is a subtle edge case\",\n    \"_generate_batches inner function adds indirection that could be a simple inline expression\",\n    \"Imports Iterable/Callable/Awaitable from typing unnecessarily verbose for this scope\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct semaphore-based concurrency limiting",
+      "asyncio.gather preserves batch order as required",
+      "Input validation raises ValueError for non-positive values",
+      "Handles empty items gracefully",
+      "Flat control flow with no unnecessary nesting"
+    ],
+    "weaknesses": [
+      "Excessive docstrings inflate code far beyond minimum necessary",
+      "TypeVar generics and AsyncBatchHandler alias add abstraction for a single-use function",
+      "isinstance(x, int) check also accepts booleans silently, which is a subtle edge case",
+      "_generate_batches inner function adds indirection that could be a simple inline expression",
+      "Imports Iterable/Callable/Awaitable from typing unnecessarily verbose for this scope"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.496,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 3,
+    "loc": 61,
+    "maintainability_index": 81.711,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "oracle_karpathy_generation"
+}

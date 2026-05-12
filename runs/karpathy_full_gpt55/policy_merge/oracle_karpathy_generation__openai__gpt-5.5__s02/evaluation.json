@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple. The recursive merge logic is clean and explicit, with a clear contract. The main structural concern is the extraction of `_copy_defaults` as a separate helper function \u2014 this is a single-use abstraction that adds indirection without meaningful benefit, since a shallow dict copy (`dict(defaults)`) combined with the recursive merge already handles deep copying implicitly. The simpler approach would be to start with `result = dict(defaults)` and let the recursive `merge_policy` calls on nested dicts handle deep copying naturally, eliminating `_copy_defaults` entirely. The docstring is slightly verbose for such a small function but not egregious. The `merge_policy({}, value)` call for non-dict-default cases is a clean way to deep-copy override dicts. Overall the code is readable, flat, and correct, but the unnecessary helper function is a mild violation of the 'no abstractions for single-use code' guideline.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple. The recursive merge logic is clean and explicit, with a clear contract. The main structural concern is the extraction of `_copy_defaults` as a separate helper function \u2014 this is a single-use abstraction that adds indirection without meaningful benefit, since a shallow dict copy (`dict(defaults)`) combined with the recursive merge already handles deep copying implicitly. The simpler approach would be to start with `result = dict(defaults)` and let the recursive `merge_policy` calls on nested dicts handle deep copying naturally, eliminating `_copy_defaults` entirely. The docstring is slightly verbose for such a small function but not egregious. The `merge_policy({}, value)` call for non-dict-default cases is a clean way to deep-copy override dicts. Overall the code is readable, flat, and correct, but the unnecessary helper function is a mild violation of the 'no abstractions for single-use code' guideline.\",\n  \"strengths\": [\n    \"Correct recursive merge with all edge cases handled (None removal, nested dicts, non-mutating)\",\n    \"Explicit and readable branching logic in the main function\",\n    \"No speculative features or over-engineering beyond the stated requirements\",\n    \"Clean use of recursion for both merging and deep-copying override dicts\"\n  ],\n  \"weaknesses\": [\n    \"`_copy_defaults` is a single-use abstraction that could be eliminated by relying on the recursive merge itself for deep copying\",\n    \"Starting with `dict(defaults)` and letting recursive calls handle nesting would be simpler and more idiomatic\",\n    \"Docstring is slightly over-documented for a small utility function\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct recursive merge with all edge cases handled (None removal, nested dicts, non-mutating)",
+      "Explicit and readable branching logic in the main function",
+      "No speculative features or over-engineering beyond the stated requirements",
+      "Clean use of recursion for both merging and deep-copying override dicts"
+    ],
+    "weaknesses": [
+      "`_copy_defaults` is a single-use abstraction that could be eliminated by relying on the recursive merge itself for deep copying",
+      "Starting with `dict(defaults)` and letting recursive calls handle nesting would be simpler and more idiomatic",
+      "Docstring is slightly over-documented for a small utility function"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.84,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 2,
+    "loc": 26,
+    "maintainability_index": 89.811,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_karpathy_generation"
+}

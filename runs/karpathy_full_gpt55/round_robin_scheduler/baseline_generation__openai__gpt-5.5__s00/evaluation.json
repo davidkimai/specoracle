@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It separates the two logical concerns (filtering enabled workers, then assigning jobs) into clearly readable steps without unnecessary abstraction. The guard clause raises a clear ValueError immediately after the filtering step. Data movement is explicit\u2014no mutation, no hidden state. The use of enumerate with modulo arithmetic is the idiomatic standard-library approach. The only minor quibble is that `worker_count` as a named variable is slightly redundant (could inline `len(enabled_worker_names)` directly in the comprehension), and the `from typing import Any` import adds a small amount of noise for what is essentially a runtime-typed function, but neither of these meaningfully detracts from the overall quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It separates the two logical concerns (filtering enabled workers, then assigning jobs) into clearly readable steps without unnecessary abstraction. The guard clause raises a clear ValueError immediately after the filtering step. Data movement is explicit\u2014no mutation, no hidden state. The use of enumerate with modulo arithmetic is the idiomatic standard-library approach. The only minor quibble is that `worker_count` as a named variable is slightly redundant (could inline `len(enabled_worker_names)` directly in the comprehension), and the `from typing import Any` import adds a small amount of noise for what is essentially a runtime-typed function, but neither of these meaningfully detracts from the overall quality.\",\n  \"strengths\": [\n    \"Flat control flow with a single early guard clause\",\n    \"Explicit data extraction into `enabled_worker_names` makes intent clear\",\n    \"No mutation of inputs, no hidden state\",\n    \"Clear, descriptive variable names\",\n    \"Uses ordinary standard-library constructs (enumerate, list comprehension, modulo)\",\n    \"Docstring accurately describes behavior and exceptions\"\n  ],\n  \"weaknesses\": [\n    \"`from typing import Any` is minor noise for a function that doesn't enforce types at runtime\",\n    \"`worker_count` intermediate variable is marginally redundant but harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single early guard clause",
+      "Explicit data extraction into `enabled_worker_names` makes intent clear",
+      "No mutation of inputs, no hidden state",
+      "Clear, descriptive variable names",
+      "Uses ordinary standard-library constructs (enumerate, list comprehension, modulo)",
+      "Docstring accurately describes behavior and exceptions"
+    ],
+    "weaknesses": [
+      "`from typing import Any` is minor noise for a function that doesn't enforce types at runtime",
+      "`worker_count` intermediate variable is marginally redundant but harmless"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.949,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 21,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

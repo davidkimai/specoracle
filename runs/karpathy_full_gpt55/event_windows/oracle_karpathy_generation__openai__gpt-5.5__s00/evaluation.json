@@ -1,0 +1,43 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": "Expecting ',' delimiter: line 3 column 754 (char 769)",
+    "rationale": "judge failed",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, correct, and reasonably minimal. It handles all the specified edge cases (malformed events, non-positive window_size, bool exclusion) and produces the correct output. The helper `_is_integer` is a sensible extraction since it's used three times, avoiding repetition. The main weakness is using a `list[int]` of two elements as the accumulator value in the `windows` dict \u2014 a named tuple, dataclass, or even a simple `(count, total)` tuple unpacking would be clearer, but more importantly a `defaultdict` or `collections.Counter`-style approach would eliminate the explicit `if start not in windows` guard. The list-of-two-ints pattern is a minor structural smell: it's less readable than `windows[start] = {\"count\": 0, \"total\": 0}` or a simple pair, and the magic indices `[0]` and `[1]` reduce local auditability. The `_is_integer` check rejecting non-int `window_size` (e.g., float) is a conservative and defensible choice given the spec says 'positive integer'. Overall the code is flat, has no speculative abstractions, and is close to the minimum needed.\",\n  \"strengths\": [\n    \"No unnecessary abstractions or classes; single-function logic is flat and direct\",\n    \"Helper `_is_integer` is reused three times, justifying its extraction\",\n    \"Bool exclusion is explicit and correct\",\n    \"Malformed event handling is concise with early `continue`\",\n    \"Output construction is a clean list comprehension over sorted keys\"\n  ],\n  \"weaknesses\": [\n    \"Magic indices `[0]` and `[1]` on the accumulator list reduce readability vs. named keys or unpacking\",\n    \"Explicit `if start not in windows` guard could be replaced with `defaultdict([0, 0])` or similar for less boilerplate\",\n    \"Type annotation `list[dict]` on the parameter is loose; not a blocking issue but slightly inconsistent with the strict int checking elsewhere\",\n    \"Raising ValueError for non-integer window_size types (e.g., float 1.0) is defensible but not explicitly required by the spec, adding a small undocumented constraint\"\n  ]\n}",
+    "score": null,
+    "skipped": false,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.624,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 2,
+    "loc": 22,
+    "maintainability_index": 54.025,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_karpathy_generation"
+}

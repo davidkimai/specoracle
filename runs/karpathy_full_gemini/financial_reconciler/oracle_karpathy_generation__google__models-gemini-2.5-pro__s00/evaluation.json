@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Treasury Reconciliation Doctrine TR-4 with explicit separation of concerns: direction-deciding conditionals contain no arithmetic, separate named delta variables (debit_delta, credit_delta) serve as explicit tags before affecting totals, and accumulation uses clearly named separate accumulators. The code is flat, readable, and locally auditable. The docstring is thorough without being excessive. Minor deductions: the dual-delta pattern (initializing both to 0.0 and only setting one) is slightly verbose compared to a direct accumulator lookup, and the type aliases add marginal complexity without much payoff in a module this size. The custom ReconciliationError is a clean touch. Overall this is a well-structured, doctrine-compliant implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Treasury Reconciliation Doctrine TR-4 with explicit separation of concerns: direction-deciding conditionals contain no arithmetic, separate named delta variables (debit_delta, credit_delta) serve as explicit tags before affecting totals, and accumulation uses clearly named separate accumulators. The code is flat, readable, and locally auditable. The docstring is thorough without being excessive. Minor deductions: the dual-delta pattern (initializing both to 0.0 and only setting one) is slightly verbose compared to a direct accumulator lookup, and the type aliases add marginal complexity without much payoff in a module this size. The custom ReconciliationError is a clean touch. Overall this is a well-structured, doctrine-compliant implementation.\",\n  \"strengths\": [\n    \"Strict TR-4 compliance: arithmetic is fully separated from direction-deciding conditionals\",\n    \"Explicit named delta variables (debit_delta, credit_delta) clearly tag each monetary movement before it affects totals\",\n    \"Separate named accumulators per account for debit and credit\",\n    \"Clean finalization loop that explicitly names intermediate totals before computing balance\",\n    \"Informative custom exception with entry index and content for debuggability\",\n    \"Flat, readable control flow with no nested conditionals or clever one-liners\"\n  ],\n  \"weaknesses\": [\n    \"Dual-delta initialization pattern (both to 0.0, only one set) is slightly redundant; a direct if/elif with accumulator assignment would be equally compliant and more concise\",\n    \"Type aliases (Numeric, Entry, etc.) add boilerplate with minimal benefit at this module scale\",\n    \"Docstring length borders on over-documentation for a straightforward function\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Strict TR-4 compliance: arithmetic is fully separated from direction-deciding conditionals",
+      "Explicit named delta variables (debit_delta, credit_delta) clearly tag each monetary movement before it affects totals",
+      "Separate named accumulators per account for debit and credit",
+      "Clean finalization loop that explicitly names intermediate totals before computing balance",
+      "Informative custom exception with entry index and content for debuggability",
+      "Flat, readable control flow with no nested conditionals or clever one-liners"
+    ],
+    "weaknesses": [
+      "Dual-delta initialization pattern (both to 0.0, only one set) is slightly redundant; a direct if/elif with accumulator assignment would be equally compliant and more concise",
+      "Type aliases (Numeric, Entry, etc.) add boilerplate with minimal benefit at this module scale",
+      "Docstring length borders on over-documentation for a straightforward function"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.762,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 78,
+    "maintainability_index": 79.877,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: it uses a flat class with no unnecessary abstractions, no global state, no speculative features, and the logic is locally auditable in a single glance. The core methods are minimal and direct. The main weakness is over-documentation \u2014 the module docstring, class docstring, and per-method docstrings with Args/Returns/Raises sections add significant boilerplate that the Karpathy oracle would collapse. The `isinstance` check is slightly defensive beyond what was asked (the spec says 'positive', not 'must be int'), and the `from __future__ import annotations` import is unnecessary for this code. These are minor but real violations of 'minimum code that solves the problem' and 'no features beyond what was asked'.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: it uses a flat class with no unnecessary abstractions, no global state, no speculative features, and the logic is locally auditable in a single glance. The core methods are minimal and direct. The main weakness is over-documentation \u2014 the module docstring, class docstring, and per-method docstrings with Args/Returns/Raises sections add significant boilerplate that the Karpathy oracle would collapse. The `isinstance` check is slightly defensive beyond what was asked (the spec says 'positive', not 'must be int'), and the `from __future__ import annotations` import is unnecessary for this code. These are minor but real violations of 'minimum code that solves the problem' and 'no features beyond what was asked'.\",\n  \"strengths\": [\n    \"Flat, single-class design with no unnecessary abstractions or inheritance\",\n    \"All methods are trivially short and locally auditable\",\n    \"No global state, no I/O, no threading \u2014 fully deterministic\",\n    \"remaining() correctly clamps to 0 with max()\",\n    \"ValueError raised as specified for non-positive max_attempts\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings (module, class, and per-method with Args/Returns/Raises) violate 'minimum code' principle\",\n    \"isinstance(max_attempts, int) check is speculative \u2014 spec only requires positive, not type enforcement\",\n    \"from __future__ import annotations is unused/unnecessary overhead\",\n    \"Class docstring restates the obvious rather than adding signal\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-class design with no unnecessary abstractions or inheritance",
+      "All methods are trivially short and locally auditable",
+      "No global state, no I/O, no threading \u2014 fully deterministic",
+      "remaining() correctly clamps to 0 with max()",
+      "ValueError raised as specified for non-positive max_attempts"
+    ],
+    "weaknesses": [
+      "Excessive docstrings (module, class, and per-method with Args/Returns/Raises) violate 'minimum code' principle",
+      "isinstance(max_attempts, int) check is speculative \u2014 spec only requires positive, not type enforcement",
+      "from __future__ import annotations is unused/unnecessary overhead",
+      "Class docstring restates the obvious rather than adding signal"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.187,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 55,
+    "maintainability_index": 49.733,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_karpathy_generation"
+}

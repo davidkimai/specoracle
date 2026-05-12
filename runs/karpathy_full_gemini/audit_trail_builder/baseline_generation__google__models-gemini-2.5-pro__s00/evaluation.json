@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly handles the core functional requirements: it validates presence of source_system and actor_id, assigns monotonic sequence numbers starting at 1, copies events to avoid mutation, and returns a clean list. The code is flat, readable, and locally auditable with no hidden magic. However, it deviates from RAT-9 in one notable way: the spec says to 'reject' invalid records, but the implementation silently ignores them (continues without raising or logging), which the docstring even explicitly calls out as 'silently ignored.' The spec's language 'reject records missing either field' implies an active rejection (e.g., raising ValueError or at minimum collecting rejections), not silent skipping. Additionally, the falsy-value check (treating empty string or 0 as missing) goes slightly beyond what the spec requires (which only mentions missing fields), potentially over-rejecting. The use of collections.abc.Sequence as the type hint is slightly over-engineered for this simple task. The sequence_number variable is explicit and named before insertion, satisfying the 'derived fields named explicitly' requirement. Overall a solid, readable implementation with one meaningful semantic gap around rejection behavior.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation correctly handles the core functional requirements: it validates presence of source_system and actor_id, assigns monotonic sequence numbers starting at 1, copies events to avoid mutation, and returns a clean list. The code is flat, readable, and locally auditable with no hidden magic. However, it deviates from RAT-9 in one notable way: the spec says to 'reject' invalid records, but the implementation silently ignores them (continues without raising or logging), which the docstring even explicitly calls out as 'silently ignored.' The spec's language 'reject records missing either field' implies an active rejection (e.g., raising ValueError or at minimum collecting rejections), not silent skipping. Additionally, the falsy-value check (treating empty string or 0 as missing) goes slightly beyond what the spec requires (which only mentions missing fields), potentially over-rejecting. The use of collections.abc.Sequence as the type hint is slightly over-engineered for this simple task. The sequence_number variable is explicit and named before insertion, satisfying the 'derived fields named explicitly' requirement. Overall a solid, readable implementation with one meaningful semantic gap around rejection behavior.\",\n  \"strengths\": [\n    \"Flat, readable loop with no nested abstractions or unnecessary complexity\",\n    \"Explicit sequence_number variable named before insertion, satisfying RAT-9 derived-field naming requirement\",\n    \"Copies events to avoid mutating caller's data\",\n    \"No silent invention of actor or source values\"\n  ],\n  \"weaknesses\": [\n    \"Invalid events are silently skipped rather than actively rejected (e.g., raising ValueError), contradicting RAT-9's 'reject' language\",\n    \"Falsy-value check over-rejects beyond the spec's 'missing field' requirement (e.g., rejects actor_id=0)\",\n    \"collections.abc.Sequence import is unnecessary overhead for a simple list-processing function\",\n    \"No action field is preserved or validated, though the spec mentions it as part of each event\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat, readable loop with no nested abstractions or unnecessary complexity",
+      "Explicit sequence_number variable named before insertion, satisfying RAT-9 derived-field naming requirement",
+      "Copies events to avoid mutating caller's data",
+      "No silent invention of actor or source values"
+    ],
+    "weaknesses": [
+      "Invalid events are silently skipped rather than actively rejected (e.g., raising ValueError), contradicting RAT-9's 'reject' language",
+      "Falsy-value check over-rejects beyond the spec's 'missing field' requirement (e.g., rejects actor_id=0)",
+      "collections.abc.Sequence import is unnecessary overhead for a simple list-processing function",
+      "No action field is preserved or validated, though the spec mentions it as part of each event"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 4.016,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n>       assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\nE       AssertionError: assert [{'action': '...stem': 'crm'}] == [{'action': '...stem': 'crm'}]\nE         \nE         At index 0 diff: {'source_system': 'crm', 'actor_id': 'u1', 'action': 'create', 'sequence_number': 1} != {'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}\nE         Use -v to get more diff\n\ntest_solution.py:8: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - AssertionError: ...\n1 failed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 79.975,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-structured, and closely follows the Zen of Python principles. The separation into a small pure helper `_resolve_path` and the main `extract_fields` function is appropriate and keeps each function focused. Control flow is flat within each function, guard clauses handle type errors explicitly, and data movement is transparent with no mutation of the input. The traversal logic is straightforward and easy to audit locally. Minor weaknesses include overly verbose docstrings (the module-level Zen quotation block and lengthy Args/Returns/Raises sections add noise without adding clarity), the `Union` type hint import when Python 3.10+ pipe syntax or just `Any` would suffice, and the `typing` imports being slightly dated. The type validation on `paths` keys/values is a reasonable explicit guard, though it slightly over-engineers the error surface for a simple utility. Overall, this is a solid, readable, and maintainable implementation with only minor stylistic excess.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-structured, and closely follows the Zen of Python principles. The separation into a small pure helper `_resolve_path` and the main `extract_fields` function is appropriate and keeps each function focused. Control flow is flat within each function, guard clauses handle type errors explicitly, and data movement is transparent with no mutation of the input. The traversal logic is straightforward and easy to audit locally. Minor weaknesses include overly verbose docstrings (the module-level Zen quotation block and lengthy Args/Returns/Raises sections add noise without adding clarity), the `Union` type hint import when Python 3.10+ pipe syntax or just `Any` would suffice, and the `typing` imports being slightly dated. The type validation on `paths` keys/values is a reasonable explicit guard, though it slightly over-engineers the error surface for a simple utility. Overall, this is a solid, readable, and maintainable implementation with only minor stylistic excess.\",\n  \"strengths\": [\n    \"Clean separation of concerns: pure helper for path resolution, thin orchestration in extract_fields\",\n    \"Flat control flow with guard clauses and early returns instead of deep nesting\",\n    \"Explicit TypeError raises for invalid inputs rather than silent failures\",\n    \"No mutation of input record; returns a fresh dict\",\n    \"Handles both dict keys and list integer indexes naturally in the traversal loop\",\n    \"Readable segment-by-segment traversal that is easy to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are excessively verbose; the Zen quotation block and lengthy Args/Returns/Raises sections add noise\",\n    \"Using `typing.Union` and `typing.Dict`/`typing.Any` imports is dated; built-in generics or simpler annotations would be cleaner\",\n    \"Validating that every path key and value is a string inside the loop is slightly over-engineered for a simple utility\",\n    \"The module-level comment block repeating Zen aphorisms is decorative rather than informative\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of concerns: pure helper for path resolution, thin orchestration in extract_fields",
+      "Flat control flow with guard clauses and early returns instead of deep nesting",
+      "Explicit TypeError raises for invalid inputs rather than silent failures",
+      "No mutation of input record; returns a fresh dict",
+      "Handles both dict keys and list integer indexes naturally in the traversal loop",
+      "Readable segment-by-segment traversal that is easy to audit locally"
+    ],
+    "weaknesses": [
+      "Docstrings are excessively verbose; the Zen quotation block and lengthy Args/Returns/Raises sections add noise",
+      "Using `typing.Union` and `typing.Dict`/`typing.Any` imports is dated; built-in generics or simpler annotations would be cleaner",
+      "Validating that every path key and value is a string inside the loop is slightly over-engineered for a simple utility",
+      "The module-level comment block repeating Zen aphorisms is decorative rather than informative"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.924,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 88,
+    "maintainability_index": 71.373,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

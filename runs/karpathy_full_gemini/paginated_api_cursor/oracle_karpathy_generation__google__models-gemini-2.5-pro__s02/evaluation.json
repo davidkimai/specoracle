@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core logic is correct and minimal \u2014 a simple while-True loop with a break is the right structure for this problem. However, the implementation is significantly over-engineered relative to the Karpathy oracle: it imports six typing constructs and defines two TypeVars for a single small function, adds a lengthy module docstring, a verbose function docstring with Args/Returns sections, and inline comments explaining obvious operations. The actual algorithmic content is ~6 lines but is buried in ~50 lines of scaffolding. The Karpathy guidelines explicitly call for minimum code with no speculative flexibility; the generic TypeVars (TItem, TCursor) are speculative type machinery that adds zero runtime value and considerable visual noise for a single-use async helper.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The core logic is correct and minimal \u2014 a simple while-True loop with a break is the right structure for this problem. However, the implementation is significantly over-engineered relative to the Karpathy oracle: it imports six typing constructs and defines two TypeVars for a single small function, adds a lengthy module docstring, a verbose function docstring with Args/Returns sections, and inline comments explaining obvious operations. The actual algorithmic content is ~6 lines but is buried in ~50 lines of scaffolding. The Karpathy guidelines explicitly call for minimum code with no speculative flexibility; the generic TypeVars (TItem, TCursor) are speculative type machinery that adds zero runtime value and considerable visual noise for a single-use async helper.\",\n  \"strengths\": [\n    \"Correct functional implementation: loop, extend, break on None cursor\",\n    \"Proper use of keyword-only start_cursor parameter\",\n    \"Clean while-True/break pattern is idiomatic for cursor pagination\",\n    \"No extraneous features or side effects beyond the spec\"\n  ],\n  \"weaknesses\": [\n    \"Two TypeVars and six typing imports are speculative over-engineering for a single function\",\n    \"Module-level docstring adds no value for a single-function module\",\n    \"Verbose Google-style docstring with Args/Returns is disproportionate to function complexity\",\n    \"Inline comment explaining `all_items.extend(items)` is noise, not signal\",\n    \"Overall line count (~55) is far above what the task warrants (~10-15)\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct functional implementation: loop, extend, break on None cursor",
+      "Proper use of keyword-only start_cursor parameter",
+      "Clean while-True/break pattern is idiomatic for cursor pagination",
+      "No extraneous features or side effects beyond the spec"
+    ],
+    "weaknesses": [
+      "Two TypeVars and six typing imports are speculative over-engineering for a single function",
+      "Module-level docstring adds no value for a single-function module",
+      "Verbose Google-style docstring with Args/Returns is disproportionate to function complexity",
+      "Inline comment explaining `all_items.extend(items)` is noise, not signal",
+      "Overall line count (~55) is far above what the task warrants (~10-15)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.441,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.18s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 46,
+    "maintainability_index": 96.944,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_karpathy_generation"
+}

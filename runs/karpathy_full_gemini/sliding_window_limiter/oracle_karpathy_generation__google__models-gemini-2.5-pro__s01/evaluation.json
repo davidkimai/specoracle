@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses an appropriate deque-based sliding window approach. The core logic is clean and minimal. However, it suffers from over-documentation (verbose docstrings on every method that restate the obvious, inline comments explaining trivial operations like 'remove timestamps outside the window'), unnecessary type annotation imports from typing (Python 3.9+ supports built-in generics), and an isinstance check that goes beyond the stated requirements (the spec says 'positive' but doesn't mandate int type enforcement, making this speculative strictness). The class-level docstring and method docstrings add significant line count without value. Stripping the excess commentary and the over-engineered isinstance checks would bring this closer to the 50-line ideal the oracle demands.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses an appropriate deque-based sliding window approach. The core logic is clean and minimal. However, it suffers from over-documentation (verbose docstrings on every method that restate the obvious, inline comments explaining trivial operations like 'remove timestamps outside the window'), unnecessary type annotation imports from typing (Python 3.9+ supports built-in generics), and an isinstance check that goes beyond the stated requirements (the spec says 'positive' but doesn't mandate int type enforcement, making this speculative strictness). The class-level docstring and method docstrings add significant line count without value. Stripping the excess commentary and the over-engineered isinstance checks would bring this closer to the 50-line ideal the oracle demands.\",\n  \"strengths\": [\n    \"Correct deque-based O(1) amortized eviction of expired timestamps\",\n    \"Proper half-open window semantics (strictly greater than window_start)\",\n    \"snapshot returns a copy, preventing external mutation\",\n    \"defaultdict usage avoids explicit key initialization boilerplate\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings and inline comments bloat the code well beyond what the task warrants\",\n    \"isinstance type checks are speculative strictness not required by the spec\",\n    \"Imports typing.Deque/Dict/List unnecessarily when built-in generics suffice in modern Python\",\n    \"Class-level docstring restates the class name and adds no information\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct deque-based O(1) amortized eviction of expired timestamps",
+      "Proper half-open window semantics (strictly greater than window_start)",
+      "snapshot returns a copy, preventing external mutation",
+      "defaultdict usage avoids explicit key initialization boilerplate"
+    ],
+    "weaknesses": [
+      "Excessive docstrings and inline comments bloat the code well beyond what the task warrants",
+      "isinstance type checks are speculative strictness not required by the spec",
+      "Imports typing.Deque/Dict/List unnecessarily when built-in generics suffice in modern Python",
+      "Class-level docstring restates the class name and adds no information"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.321,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 3,
+    "loc": 64,
+    "maintainability_index": 65.726,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_karpathy_generation"
+}

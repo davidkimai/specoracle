@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound. The core logic is clean, flat, and direct \u2014 a single loop over schema items with a clear branch for present/absent fields and proper exception handling. The main weaknesses are cosmetic over-engineering: the module-level docstring, the verbose function docstring with Args/Returns/Raises sections, and the unnecessary type alias imports (Dict, Tuple, Callable, Any from typing) when the task is simple enough that plain annotations or no annotations would suffice. The error message wraps the field name in quotes and adds 'Failed to cast field' prose rather than just raising ValueError(field_name) as the spec implies. These are minor but real violations of the 'minimum code' principle \u2014 the docstring alone is longer than the implementation itself.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound. The core logic is clean, flat, and direct \u2014 a single loop over schema items with a clear branch for present/absent fields and proper exception handling. The main weaknesses are cosmetic over-engineering: the module-level docstring, the verbose function docstring with Args/Returns/Raises sections, and the unnecessary type alias imports (Dict, Tuple, Callable, Any from typing) when the task is simple enough that plain annotations or no annotations would suffice. The error message wraps the field name in quotes and adds 'Failed to cast field' prose rather than just raising ValueError(field_name) as the spec implies. These are minor but real violations of the 'minimum code' principle \u2014 the docstring alone is longer than the implementation itself.\",\n  \"strengths\": [\n    \"Core logic is minimal and flat \u2014 one loop, one conditional, no helper functions or classes\",\n    \"Correctly handles both present and missing fields per spec\",\n    \"Catches both ValueError and TypeError during casting, which is appropriate\",\n    \"Chains the original exception with 'from e' for debuggability\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstring (Args/Returns/Raises) is speculative documentation overhead for a simple utility function\",\n    \"Imports from typing (Dict, Tuple, Callable, Any) add noise; built-in generics or no annotations would be simpler\",\n    \"Error message 'Failed to cast field \\\\'field_name\\\\'' adds prose beyond what the spec asks (just the field name)\",\n    \"Module-level docstring is unnecessary for a single-function module\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Core logic is minimal and flat \u2014 one loop, one conditional, no helper functions or classes",
+      "Correctly handles both present and missing fields per spec",
+      "Catches both ValueError and TypeError during casting, which is appropriate",
+      "Chains the original exception with 'from e' for debuggability"
+    ],
+    "weaknesses": [
+      "Verbose docstring (Args/Returns/Raises) is speculative documentation overhead for a simple utility function",
+      "Imports from typing (Dict, Tuple, Callable, Any) add noise; built-in generics or no annotations would be simpler",
+      "Error message 'Failed to cast field \\'field_name\\'' adds prose beyond what the spec asks (just the field name)",
+      "Module-level docstring is unnecessary for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.037,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 84.881,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "schema_coercer",
+  "variant": "oracle_karpathy_generation"
+}

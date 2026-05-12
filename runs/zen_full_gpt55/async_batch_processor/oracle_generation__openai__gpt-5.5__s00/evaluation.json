@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured with clear separation of concerns: validation, batching, handler invocation, cancellation, and flattening are each isolated in small, named helpers. Control flow is flat and readable, errors are explicit, and no speculative abstractions are present. The main entry point reads almost like a specification. However, there are a few structural concerns: `_gather_or_cancel` adds complexity that may be over-engineered for the stated requirements (asyncio.gather already propagates exceptions, and task cancellation on failure is not mentioned in the spec); `_call_handler` using `inspect.isawaitable` post-call is slightly awkward compared to checking `asyncio.iscoroutinefunction` upfront; `_iterator_for` is a thin wrapper that adds indirection without much clarity gain; and the `_validate_positive_int` bool-check, while correct, is a minor defensive over-reach. The `_flatten` helper is clean but could simply be a one-liner list comprehension inline. Overall the code is auditable and honest, but carries a few unnecessary layers that slightly violate 'simple is better than complex.'",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is well-structured with clear separation of concerns: validation, batching, handler invocation, cancellation, and flattening are each isolated in small, named helpers. Control flow is flat and readable, errors are explicit, and no speculative abstractions are present. The main entry point reads almost like a specification. However, there are a few structural concerns: `_gather_or_cancel` adds complexity that may be over-engineered for the stated requirements (asyncio.gather already propagates exceptions, and task cancellation on failure is not mentioned in the spec); `_call_handler` using `inspect.isawaitable` post-call is slightly awkward compared to checking `asyncio.iscoroutinefunction` upfront; `_iterator_for` is a thin wrapper that adds indirection without much clarity gain; and the `_validate_positive_int` bool-check, while correct, is a minor defensive over-reach. The `_flatten` helper is clean but could simply be a one-liner list comprehension inline. Overall the code is auditable and honest, but carries a few unnecessary layers that slightly violate 'simple is better than complex.'\",\n  \"strengths\": [\n    \"Each concern (validation, batching, invocation, cancellation, flattening) is isolated in a named helper\",\n    \"Entry point reads clearly and linearly\",\n    \"Explicit error messages for all invalid inputs\",\n    \"Semaphore-based concurrency control is idiomatic and correct\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"_gather_or_cancel adds cancellation logic not required by the spec, introducing speculative complexity\",\n    \"inspect.isawaitable check after calling handler is awkward; checking iscoroutinefunction before calling would be cleaner\",\n    \"_iterator_for is a thin wrapper that adds indirection without meaningful clarity\",\n    \"_flatten could be a simple inline list comprehension rather than a named helper\",\n    \"bool isinstance guard in _validate_positive_int is a minor over-defensive pattern\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Each concern (validation, batching, invocation, cancellation, flattening) is isolated in a named helper",
+      "Entry point reads clearly and linearly",
+      "Explicit error messages for all invalid inputs",
+      "Semaphore-based concurrency control is idiomatic and correct",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "_gather_or_cancel adds cancellation logic not required by the spec, introducing speculative complexity",
+      "inspect.isawaitable check after calling handler is awkward; checking iscoroutinefunction before calling would be cleaner",
+      "_iterator_for is a thin wrapper that adds indirection without meaningful clarity",
+      "_flatten could be a simple inline list comprehension rather than a named helper",
+      "bool isinstance guard in _validate_positive_int is a minor over-defensive pattern"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.31,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.17s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.286,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 7,
+    "loc": 71,
+    "maintainability_index": 44.693,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the stated requirements without any speculative abstractions or unnecessary complexity. It uses a single lock for all operations, maintains a redundant `_total` counter for O(1) total() calls (a reasonable conservative optimization), and correctly returns copies of internal state to prevent exposure of mutable internals. The `type(max_total) is not int` check is slightly stricter than necessary (rejects bool subclass but also rejects int subclasses like numpy integers), which could be argued as either conservative or overly strict, but it's a minor point. All three methods are lock-protected, the contract is clear and testable, and the code is well under 50 lines with no dead weight.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the stated requirements without any speculative abstractions or unnecessary complexity. It uses a single lock for all operations, maintains a redundant `_total` counter for O(1) total() calls (a reasonable conservative optimization), and correctly returns copies of internal state to prevent exposure of mutable internals. The `type(max_total) is not int` check is slightly stricter than necessary (rejects bool subclass but also rejects int subclasses like numpy integers), which could be argued as either conservative or overly strict, but it's a minor point. All three methods are lock-protected, the contract is clear and testable, and the code is well under 50 lines with no dead weight.\",\n  \"strengths\": [\n    \"Minimal code with no speculative features or unused abstractions\",\n    \"All public methods are lock-protected, ensuring thread safety\",\n    \"snapshot() returns a copy, correctly preventing mutable state exposure\",\n    \"Redundant _total counter avoids O(n) sum on every total() call without adding complexity\",\n    \"Clear, flat structure with no inheritance or unnecessary indirection\"\n  ],\n  \"weaknesses\": [\n    \"type(max_total) is not int rejects valid int subclasses (e.g., numpy.int64, bool is excluded which is actually correct); isinstance would be more Pythonic\",\n    \"No docstrings or inline comments, though the code is simple enough to be self-documenting\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative features or unused abstractions",
+      "All public methods are lock-protected, ensuring thread safety",
+      "snapshot() returns a copy, correctly preventing mutable state exposure",
+      "Redundant _total counter avoids O(n) sum on every total() call without adding complexity",
+      "Clear, flat structure with no inheritance or unnecessary indirection"
+    ],
+    "weaknesses": [
+      "type(max_total) is not int rejects valid int subclasses (e.g., numpy.int64, bool is excluded which is actually correct); isinstance would be more Pythonic",
+      "No docstrings or inline comments, though the code is simple enough to be self-documenting"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.95,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 23,
+    "maintainability_index": 55.883,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_karpathy_generation"
+}

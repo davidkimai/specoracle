@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are named constants and exposed via a public `state` attribute satisfying RCS-5's inspectability requirement. Configuration values (`failure_threshold`, `recovery_timeout`) are named and stored as instance attributes. Half-open trials correctly close on success and reopen on failure. The locking strategy is sound \u2014 the lock is released before calling `func` to avoid holding it during potentially long-running calls, which is correct. The helper methods are small and single-purpose. Minor weaknesses include some over-engineering (the `_half_open_trial_in_progress` flag adds complexity that may not be required by the spec, and the `_record_success_locked` resetting `failure_count` on CLOSED success is a reasonable but undocumented policy choice), and the input validation in `__init__` goes beyond what the spec asks for. The `call` method signature accepts `*args/**kwargs` which is a nice ergonomic touch. Overall this is a high-quality, readable, locally auditable implementation that closely follows the structural spec.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are named constants and exposed via a public `state` attribute satisfying RCS-5's inspectability requirement. Configuration values (`failure_threshold`, `recovery_timeout`) are named and stored as instance attributes. Half-open trials correctly close on success and reopen on failure. The locking strategy is sound \u2014 the lock is released before calling `func` to avoid holding it during potentially long-running calls, which is correct. The helper methods are small and single-purpose. Minor weaknesses include some over-engineering (the `_half_open_trial_in_progress` flag adds complexity that may not be required by the spec, and the `_record_success_locked` resetting `failure_count` on CLOSED success is a reasonable but undocumented policy choice), and the input validation in `__init__` goes beyond what the spec asks for. The `call` method signature accepts `*args/**kwargs` which is a nice ergonomic touch. Overall this is a high-quality, readable, locally auditable implementation that closely follows the structural spec.\",\n  \"strengths\": [\n    \"Explicit named state constants (CLOSED, OPEN, HALF_OPEN) and public `state` attribute\",\n    \"Named configuration values stored as instance attributes\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Lock released before executing func \u2014 avoids holding lock during user code\",\n    \"Small, single-purpose helper methods improve auditability\",\n    \"Thread-safe with RLock\"\n  ],\n  \"weaknesses\": [\n    \"_half_open_trial_in_progress flag adds complexity not required by the spec\",\n    \"Input validation in __init__ is more defensive than the spec requires, adding noise\",\n    \"Resetting failure_count to 0 on CLOSED success is an undocumented policy decision\",\n    \"Slight over-engineering overall compared to a minimal Zen-of-Python-style implementation\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit named state constants (CLOSED, OPEN, HALF_OPEN) and public `state` attribute",
+      "Named configuration values stored as instance attributes",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Lock released before executing func \u2014 avoids holding lock during user code",
+      "Small, single-purpose helper methods improve auditability",
+      "Thread-safe with RLock"
+    ],
+    "weaknesses": [
+      "_half_open_trial_in_progress flag adds complexity not required by the spec",
+      "Input validation in __init__ is more defensive than the spec requires, adding noise",
+      "Resetting failure_count to 0 on CLOSED success is an undocumented policy decision",
+      "Slight over-engineering overall compared to a minimal Zen-of-Python-style implementation"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.069,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.4,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 34,
+    "function_count": 9,
+    "loc": 81,
+    "maintainability_index": 36.188,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_karpathy_generation"
+}

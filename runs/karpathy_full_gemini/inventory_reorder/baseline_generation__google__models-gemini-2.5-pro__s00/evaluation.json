@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with flat control flow using guard clauses and explicit data movement. Variable extraction is clean and the ceiling-division formula is well-commented. However, the monolithic function violates the 'small pure helpers' constraint \u2014 a `_is_valid_item` helper and a `_reorder_quantity` helper would make each concern locally auditable. The docstring is verbose to the point of noise (restating the spec rather than adding insight), and the `typing.Any` import is unnecessary given the actual usage. The `isinstance(velocity, int)` check is a reasonable defensive touch but slightly over-engineered given the type annotation on the parameter. The `required_keys.issubset(item.keys())` pattern is idiomatic but could simply be `required_keys <= item.keys()`. Overall the code is clean and maintainable but misses the 'prefer small pure helpers' and 'sparse enough to audit locally' ideals by keeping everything in one function with a long docstring.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with flat control flow using guard clauses and explicit data movement. Variable extraction is clean and the ceiling-division formula is well-commented. However, the monolithic function violates the 'small pure helpers' constraint \u2014 a `_is_valid_item` helper and a `_reorder_quantity` helper would make each concern locally auditable. The docstring is verbose to the point of noise (restating the spec rather than adding insight), and the `typing.Any` import is unnecessary given the actual usage. The `isinstance(velocity, int)` check is a reasonable defensive touch but slightly over-engineered given the type annotation on the parameter. The `required_keys.issubset(item.keys())` pattern is idiomatic but could simply be `required_keys <= item.keys()`. Overall the code is clean and maintainable but misses the 'prefer small pure helpers' and 'sparse enough to audit locally' ideals by keeping everything in one function with a long docstring.\",\n  \"strengths\": [\n    \"Guard clauses keep nesting flat and control flow easy to follow\",\n    \"Explicit variable extraction (sku, on_hand, target, case_pack) makes each step readable\",\n    \"Ceiling-division formula is correct and commented\",\n    \"Defensive type checks prevent silent misbehavior on malformed input\",\n    \"Sort is applied at the end, keeping data movement explicit\"\n  ],\n  \"weaknesses\": [\n    \"No small pure helpers extracted (e.g., _is_valid_item, _ceil_to_case_pack) as the spec recommends\",\n    \"Docstring is excessively long, restating the task spec rather than adding implementation insight\",\n    \"Unused `from typing import Any` import adds noise\",\n    \"Single monolithic function makes individual behaviors harder to unit-test in isolation\",\n    \"`required_keys.issubset(item.keys())` could be the more idiomatic `required_keys <= item.keys()`\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses keep nesting flat and control flow easy to follow",
+      "Explicit variable extraction (sku, on_hand, target, case_pack) makes each step readable",
+      "Ceiling-division formula is correct and commented",
+      "Defensive type checks prevent silent misbehavior on malformed input",
+      "Sort is applied at the end, keeping data movement explicit"
+    ],
+    "weaknesses": [
+      "No small pure helpers extracted (e.g., _is_valid_item, _ceil_to_case_pack) as the spec recommends",
+      "Docstring is excessively long, restating the task spec rather than adding implementation insight",
+      "Unused `from typing import Any` import adds noise",
+      "Single monolithic function makes individual behaviors harder to unit-test in isolation",
+      "`required_keys.issubset(item.keys())` could be the more idiomatic `required_keys <= item.keys()`"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.038,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 65,
+    "maintainability_index": 74.006,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "baseline_generation"
+}

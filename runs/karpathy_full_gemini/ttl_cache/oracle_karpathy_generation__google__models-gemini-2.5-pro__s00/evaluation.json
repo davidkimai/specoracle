@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses the right data structure (OrderedDict) for LRU tracking. The core logic is clean and minimal. However, it suffers from over-documentation: the module docstring, class docstring, and every method has verbose multi-paragraph docstrings that far exceed what the simple task warrants \u2014 this is speculative documentation overhead that violates the 'minimum code' principle. The type annotations are reasonable but the Tuple import and explicit generic typing add minor noise. The validation in __init__ (raising on bad inputs) is a feature beyond what was asked. The _is_expired helper is a single-line extraction that adds indirection without meaningful benefit. Despite these issues, the architecture is flat, there are no unnecessary abstractions, no inheritance, no extra classes, and the LRU+TTL logic is implemented correctly and readably in ~50 lines of actual logic.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and uses the right data structure (OrderedDict) for LRU tracking. The core logic is clean and minimal. However, it suffers from over-documentation: the module docstring, class docstring, and every method has verbose multi-paragraph docstrings that far exceed what the simple task warrants \u2014 this is speculative documentation overhead that violates the 'minimum code' principle. The type annotations are reasonable but the Tuple import and explicit generic typing add minor noise. The validation in __init__ (raising on bad inputs) is a feature beyond what was asked. The _is_expired helper is a single-line extraction that adds indirection without meaningful benefit. Despite these issues, the architecture is flat, there are no unnecessary abstractions, no inheritance, no extra classes, and the LRU+TTL logic is implemented correctly and readably in ~50 lines of actual logic.\",\n  \"strengths\": [\n    \"Correct use of OrderedDict for O(1) LRU tracking with move_to_end\",\n    \"Flat, single-class architecture with no unnecessary abstractions\",\n    \"Injected `now` callable enables deterministic testing\",\n    \"set() correctly handles both update and insert paths\",\n    \"Eviction on capacity exceeded is clean and correct\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings on every method violate the 'minimum code' principle\",\n    \"_is_expired is a trivial one-liner helper that adds indirection without benefit\",\n    \"Input validation (ValueError raises) is a feature beyond the stated requirements\",\n    \"Verbose type annotations (Tuple, Optional, Callable imports) add noise for a simple task\",\n    \"Module-level docstring is unnecessary overhead for a single-class file\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct use of OrderedDict for O(1) LRU tracking with move_to_end",
+      "Flat, single-class architecture with no unnecessary abstractions",
+      "Injected `now` callable enables deterministic testing",
+      "set() correctly handles both update and insert paths",
+      "Eviction on capacity exceeded is clean and correct"
+    ],
+    "weaknesses": [
+      "Excessive docstrings on every method violate the 'minimum code' principle",
+      "_is_expired is a trivial one-liner helper that adds indirection without benefit",
+      "Input validation (ValueError raises) is a feature beyond the stated requirements",
+      "Verbose type annotations (Tuple, Optional, Callable imports) add noise for a simple task",
+      "Module-level docstring is unnecessary overhead for a single-class file"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.041,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 4,
+    "loc": 90,
+    "maintainability_index": 71.358,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "oracle_karpathy_generation"
+}

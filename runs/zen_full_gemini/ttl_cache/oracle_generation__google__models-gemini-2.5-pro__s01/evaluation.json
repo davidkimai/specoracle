@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses ordinary standard-library constructs (OrderedDict) appropriately. Control flow is flat, data movement is explicit, validation is extracted into a small helper, and the now-injection pattern is idiomatic for testability. The docstrings are thorough without being excessive. Minor issues: the Generic[K, V] typing adds speculative abstraction that isn't required by the task and introduces unused TypeVars; the _validate_constructor_args helper is borderline\u2014it's a single-call function that could be inlined as two guard clauses in __init__ without losing clarity; and the docstring volume slightly exceeds what a maintainer needs for local auditability. Overall the architecture is sound, the LRU eviction via OrderedDict is the canonical simple solution, and there is no hidden mutation or framework-shaped code.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and uses ordinary standard-library constructs (OrderedDict) appropriately. Control flow is flat, data movement is explicit, validation is extracted into a small helper, and the now-injection pattern is idiomatic for testability. The docstrings are thorough without being excessive. Minor issues: the Generic[K, V] typing adds speculative abstraction that isn't required by the task and introduces unused TypeVars; the _validate_constructor_args helper is borderline\u2014it's a single-call function that could be inlined as two guard clauses in __init__ without losing clarity; and the docstring volume slightly exceeds what a maintainer needs for local auditability. Overall the architecture is sound, the LRU eviction via OrderedDict is the canonical simple solution, and there is no hidden mutation or framework-shaped code.\",\n  \"strengths\": [\n    \"Uses OrderedDict as the canonical, simple LRU backing store\u2014no reinvention\",\n    \"Flat control flow with guard clauses (try/except + early return) in get()\",\n    \"Explicit now injection makes time-dependent behavior testable without patching\",\n    \"Validation is separated and raises clear ValueError with descriptive messages\",\n    \"set() correctly handles both insert and update via move_to_end after assignment\"\n  ],\n  \"weaknesses\": [\n    \"Generic[K, V] and TypeVar declarations are speculative abstraction not required by the task\",\n    \"_validate_constructor_args is a single-use helper that adds indirection without meaningful reuse; two guard clauses in __init__ would be simpler\",\n    \"Docstrings are verbose relative to the code's self-explanatory nature, slightly hurting sparseness\",\n    \"isinstance check for int excludes bool subclass edge cases silently (bool is a subclass of int, so True/False pass as max_size=1/0)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses OrderedDict as the canonical, simple LRU backing store\u2014no reinvention",
+      "Flat control flow with guard clauses (try/except + early return) in get()",
+      "Explicit now injection makes time-dependent behavior testable without patching",
+      "Validation is separated and raises clear ValueError with descriptive messages",
+      "set() correctly handles both insert and update via move_to_end after assignment"
+    ],
+    "weaknesses": [
+      "Generic[K, V] and TypeVar declarations are speculative abstraction not required by the task",
+      "_validate_constructor_args is a single-use helper that adds indirection without meaningful reuse; two guard clauses in __init__ would be simpler",
+      "Docstrings are verbose relative to the code's self-explanatory nature, slightly hurting sparseness",
+      "isinstance check for int excludes bool subclass edge cases silently (bool is a subclass of int, so True/False pass as max_size=1/0)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.092,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 4,
+    "loc": 84,
+    "maintainability_index": 74.317,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "oracle_generation"
+}

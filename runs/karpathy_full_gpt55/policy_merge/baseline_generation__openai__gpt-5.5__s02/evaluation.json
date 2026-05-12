@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. The separation into `_copy_dict` and `_merge` helpers is justified and purposeful rather than speculative. Control flow is flat with guard clauses handling each case explicitly (None removal, dict-dict recursive merge, plain override). Data movement is explicit \u2014 no hidden mutation, no global state. The `_copy_dict` helper correctly deep-copies nested dicts to prevent mutation of the defaults. The only minor quibble is that `_merge({}, override_value)` for a non-dict default being overridden by a dict is slightly indirect \u2014 one could argue `_copy_dict(override_value)` is more direct and self-documenting here \u2014 but it is functionally correct and not a meaningful flaw. Names are clear, the docstring on the public entry point is appropriately concise, and there are no unused extension points or framework-shaped abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. The separation into `_copy_dict` and `_merge` helpers is justified and purposeful rather than speculative. Control flow is flat with guard clauses handling each case explicitly (None removal, dict-dict recursive merge, plain override). Data movement is explicit \u2014 no hidden mutation, no global state. The `_copy_dict` helper correctly deep-copies nested dicts to prevent mutation of the defaults. The only minor quibble is that `_merge({}, override_value)` for a non-dict default being overridden by a dict is slightly indirect \u2014 one could argue `_copy_dict(override_value)` is more direct and self-documenting here \u2014 but it is functionally correct and not a meaningful flaw. Names are clear, the docstring on the public entry point is appropriately concise, and there are no unused extension points or framework-shaped abstractions.\",\n  \"strengths\": [\n    \"Clean separation of concerns: `_copy_dict` for deep-copying, `_merge` for merge logic\",\n    \"Flat control flow with explicit guard clauses for each case\",\n    \"No mutation of inputs; data movement is transparent\",\n    \"Names are self-explanatory and the public API has a clear docstring\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"`_merge({}, override_value)` is slightly less direct than `_copy_dict(override_value)` when the default is not a dict\",\n    \"No input validation (e.g., raising TypeError if inputs are not dicts), which the operational constraints suggest should be present\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of concerns: `_copy_dict` for deep-copying, `_merge` for merge logic",
+      "Flat control flow with explicit guard clauses for each case",
+      "No mutation of inputs; data movement is transparent",
+      "Names are self-explanatory and the public API has a clear docstring",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "`_merge({}, override_value)` is slightly less direct than `_copy_dict(override_value)` when the default is not a dict",
+      "No input validation (e.g., raising TypeError if inputs are not dicts), which the operational constraints suggest should be present"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.906,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 3,
+    "loc": 28,
+    "maintainability_index": 90.771,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

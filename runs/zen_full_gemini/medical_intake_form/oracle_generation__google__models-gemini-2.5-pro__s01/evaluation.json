@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the CD-7 structural spec: all required fields are checked for presence before any value validation begins, errors explicitly name the failing field, and the clean dict is only constructed after all validations pass. The code is flat, explicit, and locally auditable with no unnecessary abstraction. The boolean-rejection trick for age using `type() is not int` is a thoughtful edge-case handling. Minor deductions: the docstring is verbose for a small function, and the comment style is slightly over-annotated for the code's simplicity, but these are cosmetic issues that don't harm correctness or structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the CD-7 structural spec: all required fields are checked for presence before any value validation begins, errors explicitly name the failing field, and the clean dict is only constructed after all validations pass. The code is flat, explicit, and locally auditable with no unnecessary abstraction. The boolean-rejection trick for age using `type() is not int` is a thoughtful edge-case handling. Minor deductions: the docstring is verbose for a small function, and the comment style is slightly over-annotated for the code's simplicity, but these are cosmetic issues that don't harm correctness or structural quality.\",\n  \"strengths\": [\n    \"Presence check for all fields is done upfront in a single loop before any type/value validation, satisfying the all-or-nothing CD-7 requirement\",\n    \"Every ValueError message explicitly names the offending field\",\n    \"Boolean values correctly rejected for age via `type() is not int`\",\n    \"Output dict is constructed only after all validations pass, no partial acceptance\",\n    \"Flat, linear control flow with no unnecessary abstraction or dynamic dispatch\",\n    \"Validates list elements are strings, not just that the field is a list\"\n  ],\n  \"weaknesses\": [\n    \"Over-commented for the code's simplicity; numbered step comments add noise without clarity benefit\",\n    \"Docstring is disproportionately long relative to the function's complexity\",\n    \"No validation that patient_id is non-empty string, which is a plausible clinical requirement\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Presence check for all fields is done upfront in a single loop before any type/value validation, satisfying the all-or-nothing CD-7 requirement",
+      "Every ValueError message explicitly names the offending field",
+      "Boolean values correctly rejected for age via `type() is not int`",
+      "Output dict is constructed only after all validations pass, no partial acceptance",
+      "Flat, linear control flow with no unnecessary abstraction or dynamic dispatch",
+      "Validates list elements are strings, not just that the field is a list"
+    ],
+    "weaknesses": [
+      "Over-commented for the code's simplicity; numbered step comments add noise without clarity benefit",
+      "Docstring is disproportionately long relative to the function's complexity",
+      "No validation that patient_id is non-empty string, which is a plausible clinical requirement"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.509,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 50,
+    "maintainability_index": 81.655,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_generation"
+}

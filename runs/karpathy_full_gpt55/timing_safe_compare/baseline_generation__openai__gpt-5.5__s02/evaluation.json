@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, readable, and uses flat guard clauses with clear error messages \u2014 all aligned with the Zen oracle. The three-step validation (left type, right type, same type) is explicit and locally auditable. The main structural concern is the use of `@overload` decorators, which add speculative abstraction and framework-shaped boilerplate for a simple two-argument function; they provide no runtime benefit and inflate the code surface without aiding maintainability. The `__all__` export list is a minor but reasonable addition. Overall the core logic is clean and idiomatic, but the overload scaffolding is unnecessary complexity for this task.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, readable, and uses flat guard clauses with clear error messages \u2014 all aligned with the Zen oracle. The three-step validation (left type, right type, same type) is explicit and locally auditable. The main structural concern is the use of `@overload` decorators, which add speculative abstraction and framework-shaped boilerplate for a simple two-argument function; they provide no runtime benefit and inflate the code surface without aiding maintainability. The `__all__` export list is a minor but reasonable addition. Overall the core logic is clean and idiomatic, but the overload scaffolding is unnecessary complexity for this task.\",\n  \"strengths\": [\n    \"Flat guard clauses with explicit, descriptive TypeError messages\",\n    \"Delegates directly to hmac.compare_digest without reimplementing logic\",\n    \"Type annotations are present and accurate\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"@overload stubs add speculative abstraction with no runtime value for this simple function\",\n    \"Three separate isinstance checks could be collapsed into a single type-pair validation helper, though current form is still readable\",\n    \"Union[str, bytes] import from typing is unnecessary in Python 3.10+ and adds minor clutter\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat guard clauses with explicit, descriptive TypeError messages",
+      "Delegates directly to hmac.compare_digest without reimplementing logic",
+      "Type annotations are present and accurate",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "@overload stubs add speculative abstraction with no runtime value for this simple function",
+      "Three separate isinstance checks could be collapsed into a single type-pair validation helper, though current form is still readable",
+      "Union[str, bytes] import from typing is unnecessary in Python 3.10+ and adds minor clutter"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.014,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 3,
+    "loc": 17,
+    "maintainability_index": 63.816,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "baseline_generation"
+}

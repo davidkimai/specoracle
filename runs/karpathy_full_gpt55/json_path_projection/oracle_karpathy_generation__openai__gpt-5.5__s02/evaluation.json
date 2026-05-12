@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the stated problem without any speculative abstractions or unnecessary complexity. The helper `_resolve_path` is a single-use function that handles the traversal logic clearly with explicit type checks and early returns on failure. The main `extract_fields` uses a straightforward dict comprehension. The code is flat, readable, and locally auditable \u2014 each branch is obvious and the failure modes are explicit. The docstring accurately describes assumptions (string keys for dicts, integer indexes for lists). The only minor quibble is that the helper function could technically be inlined or made a nested function to keep the module surface minimal, but as a module-level private helper it's still clean and doesn't represent architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the stated problem without any speculative abstractions or unnecessary complexity. The helper `_resolve_path` is a single-use function that handles the traversal logic clearly with explicit type checks and early returns on failure. The main `extract_fields` uses a straightforward dict comprehension. The code is flat, readable, and locally auditable \u2014 each branch is obvious and the failure modes are explicit. The docstring accurately describes assumptions (string keys for dicts, integer indexes for lists). The only minor quibble is that the helper function could technically be inlined or made a nested function to keep the module surface minimal, but as a module-level private helper it's still clean and doesn't represent architectural slop.\",\n  \"strengths\": [\n    \"Minimal code with no speculative features or unused abstractions\",\n    \"Explicit type-based dispatch (dict vs list vs scalar) is clear and auditable\",\n    \"Correct handling of all edge cases: missing keys, invalid indexes, non-container nodes\",\n    \"Does not mutate input\",\n    \"Docstring states assumptions explicitly\"\n  ],\n  \"weaknesses\": [\n    \"Helper could be a nested function to reduce module-level surface area, though this is minor\",\n    \"No handling of negative list indexes (not required, but worth noting as an implicit assumption)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative features or unused abstractions",
+      "Explicit type-based dispatch (dict vs list vs scalar) is clear and auditable",
+      "Correct handling of all edge cases: missing keys, invalid indexes, non-container nodes",
+      "Does not mutate input",
+      "Docstring states assumptions explicitly"
+    ],
+    "weaknesses": [
+      "Helper could be a nested function to reduce module-level surface area, though this is minor",
+      "No handling of negative list indexes (not required, but worth noting as an implicit assumption)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.044,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.5,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 30,
+    "maintainability_index": 89.636,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. Guard clauses handle invalid inputs in a clear sequence before delegating to the standard library. Type aliases add minor clarity without over-engineering. The only marginal concern is that three separate isinstance/type checks could be collapsed into a slightly more compact form, but the current style is maximally readable and locally auditable. No speculative abstractions, no hidden state, no nesting \u2014 exactly what the Zen oracle prescribes.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. Guard clauses handle invalid inputs in a clear sequence before delegating to the standard library. Type aliases add minor clarity without over-engineering. The only marginal concern is that three separate isinstance/type checks could be collapsed into a slightly more compact form, but the current style is maximally readable and locally auditable. No speculative abstractions, no hidden state, no nesting \u2014 exactly what the Zen oracle prescribes.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses instead of nested conditionals\",\n    \"Explicit, distinct error messages for each failure mode\",\n    \"Delegates to hmac.compare_digest without reimplementing timing-safe logic\",\n    \"Type alias Comparable communicates intent without over-abstracting\",\n    \"Minimal surface area \u2014 easy to audit in one pass\"\n  ],\n  \"weaknesses\": [\n    \"The two isinstance checks could be unified into a single validation helper to reduce repetition, though this is a minor point\",\n    \"Union type alias adds a small layer of indirection that isn't strictly necessary given the inline isinstance checks already document the accepted types\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses instead of nested conditionals",
+      "Explicit, distinct error messages for each failure mode",
+      "Delegates to hmac.compare_digest without reimplementing timing-safe logic",
+      "Type alias Comparable communicates intent without over-abstracting",
+      "Minimal surface area \u2014 easy to audit in one pass"
+    ],
+    "weaknesses": [
+      "The two isinstance checks could be unified into a single validation helper to reduce repetition, though this is a minor point",
+      "Union type alias adds a small layer of indirection that isn't strictly necessary given the inline isinstance checks already document the accepted types"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.007,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 11,
+    "maintainability_index": 67.94,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "baseline_generation"
+}

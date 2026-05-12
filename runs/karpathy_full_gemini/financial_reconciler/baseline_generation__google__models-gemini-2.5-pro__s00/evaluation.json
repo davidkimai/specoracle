@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4's doctrine: debits and credits are accumulated in separate named accumulators ('debit' and 'credit' keys), the direction check is a clean guard with no inline arithmetic inside the conditional, and the balance computation is deferred to a final pass with an explicit named variable. The code is flat, readable, and locally auditable with no hidden control flow. Minor deductions: the `isinstance(amount, numbers.Number)` check admits booleans (since `bool` is a subclass of `numbers.Number`), and the extra validation (negative amounts, empty account strings, type checks) goes beyond the functional spec but doesn't violate the structural doctrine\u2014it's arguably good defensive practice. The separation of accumulation and result-building into two distinct loops is clean and explicit.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4's doctrine: debits and credits are accumulated in separate named accumulators ('debit' and 'credit' keys), the direction check is a clean guard with no inline arithmetic inside the conditional, and the balance computation is deferred to a final pass with an explicit named variable. The code is flat, readable, and locally auditable with no hidden control flow. Minor deductions: the `isinstance(amount, numbers.Number)` check admits booleans (since `bool` is a subclass of `numbers.Number`), and the extra validation (negative amounts, empty account strings, type checks) goes beyond the functional spec but doesn't violate the structural doctrine\u2014it's arguably good defensive practice. The separation of accumulation and result-building into two distinct loops is clean and explicit.\",\n  \"strengths\": [\n    \"Separate named accumulators for debit and credit, never mixed in a single expression\",\n    \"Direction validation is a pure guard; no arithmetic occurs inside the conditional\",\n    \"Balance computed in a dedicated, clearly named variable after accumulation is complete\",\n    \"Flat, readable structure with no nested lambdas or clever one-liners obscuring intent\",\n    \"Comprehensive error handling with informative messages and correct exception types\"\n  ],\n  \"weaknesses\": [\n    \"`numbers.Number` check admits booleans as valid amounts, which is likely unintended\",\n    \"Two-pass design (accumulate then build result) adds minor verbosity that a single-pass with balance computed at end would also achieve, though it's not harmful\",\n    \"Docstring and type annotations are thorough but slightly verbose for the module's scope\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators for debit and credit, never mixed in a single expression",
+      "Direction validation is a pure guard; no arithmetic occurs inside the conditional",
+      "Balance computed in a dedicated, clearly named variable after accumulation is complete",
+      "Flat, readable structure with no nested lambdas or clever one-liners obscuring intent",
+      "Comprehensive error handling with informative messages and correct exception types"
+    ],
+    "weaknesses": [
+      "`numbers.Number` check admits booleans as valid amounts, which is likely unintended",
+      "Two-pass design (accumulate then build result) adds minor verbosity that a single-pass with balance computed at end would also achieve, though it's not harmful",
+      "Docstring and type annotations are thorough but slightly verbose for the module's scope"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 4.498,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 68,
+    "maintainability_index": 82.146,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

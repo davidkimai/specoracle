@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Zen of Python oracle and the Incident Desk Spec N-9. It uses a named lookup table (`priority_adjustment_table`) with the required `_table` suffix, avoids classes, preserves ticket order, uses an explicit `status_code: 'routed'` string, and keeps logic flat and readable in a single pass. The required fields check via `issubset` is clean and explicit. Minor issues: `rules_table = rules` is a trivial alias that adds no value and slightly obscures intent (the spec says prefer local lookup tables with `_table` names, but this alias doesn't qualify as a meaningful table), and `required_ticket_fields_table` using a set named with `_table` suffix is a mild stretch of the naming convention since it's a set of field names rather than a mapping. These are small cosmetic concerns that don't affect correctness or auditability.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Zen of Python oracle and the Incident Desk Spec N-9. It uses a named lookup table (`priority_adjustment_table`) with the required `_table` suffix, avoids classes, preserves ticket order, uses an explicit `status_code: 'routed'` string, and keeps logic flat and readable in a single pass. The required fields check via `issubset` is clean and explicit. Minor issues: `rules_table = rules` is a trivial alias that adds no value and slightly obscures intent (the spec says prefer local lookup tables with `_table` names, but this alias doesn't qualify as a meaningful table), and `required_ticket_fields_table` using a set named with `_table` suffix is a mild stretch of the naming convention since it's a set of field names rather than a mapping. These are small cosmetic concerns that don't affect correctness or auditability.\",\n  \"strengths\": [\n    \"Uses `priority_adjustment_table` with proper `_table` suffix for the severity-to-adjustment mapping\",\n    \"No classes introduced; single-pass flat loop\",\n    \"Explicit `status_code: 'routed'` string literal, never a boolean\",\n    \"Ticket order preserved via sequential append\",\n    \"Clean field validation using `issubset` on a named set\",\n    \"Explicit type coercions (`str`, `int`) guard against unexpected input types\"\n  ],\n  \"weaknesses\": [\n    \"`rules_table = rules` is a pointless alias that adds noise without meaningful abstraction\",\n    \"`required_ticket_fields_table` stretches the `_table` naming convention \u2014 it's a set, not a lookup table\",\n    \"No guard against missing `rules['default']` key, which would raise an unhelpful KeyError\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses `priority_adjustment_table` with proper `_table` suffix for the severity-to-adjustment mapping",
+      "No classes introduced; single-pass flat loop",
+      "Explicit `status_code: 'routed'` string literal, never a boolean",
+      "Ticket order preserved via sequential append",
+      "Clean field validation using `issubset` on a named set",
+      "Explicit type coercions (`str`, `int`) guard against unexpected input types"
+    ],
+    "weaknesses": [
+      "`rules_table = rules` is a pointless alias that adds noise without meaningful abstraction",
+      "`required_ticket_fields_table` stretches the `_table` naming convention \u2014 it's a set, not a lookup table",
+      "No guard against missing `rules['default']` key, which would raise an unhelpful KeyError"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.208,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 28,
+    "maintainability_index": 65.3,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

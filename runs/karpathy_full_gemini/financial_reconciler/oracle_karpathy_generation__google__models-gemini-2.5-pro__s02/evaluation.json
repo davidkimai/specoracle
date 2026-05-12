@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Treasury Reconciliation Doctrine TR-4 in all three mandated respects: monetary deltas are tagged before affecting totals, debit and credit are maintained in separate named accumulators within a defaultdict, and the conditional branches only select the accumulator while arithmetic is performed outside the conditional body (the intermediate `debit_amount`/`credit_amount` assignments are a minor redundancy but technically satisfy the doctrine). The code is flat, explicit, and locally auditable with clear variable names and a clean two-phase structure (accumulation then finalization). Use of `Decimal` for monetary arithmetic is correct practice. The docstring is thorough and the error handling is precise. Minor weaknesses include the slightly redundant intermediate variables (`debit_amount = monetary_delta` adds no semantic value beyond what a direct assignment would), verbose type annotations that border on over-engineering for a small utility, and the `str(entry['amount'])` conversion being a subtle implicit coercion that could mask type issues rather than validate them explicitly.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Treasury Reconciliation Doctrine TR-4 in all three mandated respects: monetary deltas are tagged before affecting totals, debit and credit are maintained in separate named accumulators within a defaultdict, and the conditional branches only select the accumulator while arithmetic is performed outside the conditional body (the intermediate `debit_amount`/`credit_amount` assignments are a minor redundancy but technically satisfy the doctrine). The code is flat, explicit, and locally auditable with clear variable names and a clean two-phase structure (accumulation then finalization). Use of `Decimal` for monetary arithmetic is correct practice. The docstring is thorough and the error handling is precise. Minor weaknesses include the slightly redundant intermediate variables (`debit_amount = monetary_delta` adds no semantic value beyond what a direct assignment would), verbose type annotations that border on over-engineering for a small utility, and the `str(entry['amount'])` conversion being a subtle implicit coercion that could mask type issues rather than validate them explicitly.\",\n  \"strengths\": [\n    \"Separate named accumulators for debit and credit per TR-4.2\",\n    \"Arithmetic is outside the direction-deciding conditional per TR-4.3\",\n    \"Decimal arithmetic prevents floating-point monetary errors\",\n    \"Clean two-phase structure: accumulation then finalization\",\n    \"Precise, informative error handling with entry index in messages\",\n    \"Flat, readable control flow with no nested complexity\"\n  ],\n  \"weaknesses\": [\n    \"Intermediate `debit_amount = monetary_delta` and `credit_amount = monetary_delta` assignments are semantically redundant\",\n    \"`str(entry['amount'])` silently coerces non-numeric types instead of validating them explicitly\",\n    \"Verbose type annotations and imports add minor noise for a small utility function\",\n    \"Docstring length slightly disproportionate to function complexity\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators for debit and credit per TR-4.2",
+      "Arithmetic is outside the direction-deciding conditional per TR-4.3",
+      "Decimal arithmetic prevents floating-point monetary errors",
+      "Clean two-phase structure: accumulation then finalization",
+      "Precise, informative error handling with entry index in messages",
+      "Flat, readable control flow with no nested complexity"
+    ],
+    "weaknesses": [
+      "Intermediate `debit_amount = monetary_delta` and `credit_amount = monetary_delta` assignments are semantically redundant",
+      "`str(entry['amount'])` silently coerces non-numeric types instead of validating them explicitly",
+      "Verbose type annotations and imports add minor noise for a small utility function",
+      "Docstring length slightly disproportionate to function complexity"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.721,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 77,
+    "maintainability_index": 80.481,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

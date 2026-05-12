@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and direct. It validates inputs explicitly with clear error messages, uses a walrus operator for a tight read-yield loop that avoids reading the whole file at once, and has no speculative abstractions or unnecessary complexity. The docstring is thorough without being excessive. The only minor quibble is the separate isinstance check for TypeError, which adds a small amount of boilerplate that some would argue is unnecessary given Python's duck-typing philosophy and the fact that passing a non-int would likely raise naturally anyway \u2014 but it does satisfy the 'raise clear errors for invalid inputs' constraint explicitly. Overall this is a near-ideal realization of the task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and direct. It validates inputs explicitly with clear error messages, uses a walrus operator for a tight read-yield loop that avoids reading the whole file at once, and has no speculative abstractions or unnecessary complexity. The docstring is thorough without being excessive. The only minor quibble is the separate isinstance check for TypeError, which adds a small amount of boilerplate that some would argue is unnecessary given Python's duck-typing philosophy and the fact that passing a non-int would likely raise naturally anyway \u2014 but it does satisfy the 'raise clear errors for invalid inputs' constraint explicitly. Overall this is a near-ideal realization of the task.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses before the main loop\",\n    \"Walrus operator makes the read-yield loop maximally concise and readable\",\n    \"Explicit, informative error messages for invalid inputs\",\n    \"No hidden state, no speculative abstractions, no unused extension points\",\n    \"Type annotations and __all__ are appropriate without being over-engineered\"\n  ],\n  \"weaknesses\": [\n    \"Separate isinstance check for TypeError is arguably over-explicit for a duck-typed language; a non-int chunk_size would fail naturally or be caught by the <= 0 check\",\n    \"Docstring is slightly verbose for such a simple function, though not harmful\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses before the main loop",
+      "Walrus operator makes the read-yield loop maximally concise and readable",
+      "Explicit, informative error messages for invalid inputs",
+      "No hidden state, no speculative abstractions, no unused extension points",
+      "Type annotations and __all__ are appropriate without being over-engineered"
+    ],
+    "weaknesses": [
+      "Separate isinstance check for TypeError is arguably over-explicit for a duck-typed language; a non-int chunk_size would fail naturally or be caught by the <= 0 check",
+      "Docstring is slightly verbose for such a simple function, though not harmful"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.154,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 24,
+    "maintainability_index": 84.753,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Each method does exactly one thing, names are self-explanatory, `__slots__` prevents accidental attribute sprawl, and the guard clause in `__init__` raises a clear error. The only minor quibble is the `isinstance` check on `max_attempts`\u2014the spec says raise ValueError for non-positive values, and duck-typing an int check is slightly over-defensive (a float like 3.0 would be rejected even though it behaves identically), and the intermediate variable `remaining_attempts` in `remaining()` adds a line without adding clarity over `return max(0, self._max_attempts - self._failures)`. These are trivial nits; the overall structure is exactly what the Zen oracle calls for: simple, explicit, locally auditable, no speculative abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Each method does exactly one thing, names are self-explanatory, `__slots__` prevents accidental attribute sprawl, and the guard clause in `__init__` raises a clear error. The only minor quibble is the `isinstance` check on `max_attempts`\u2014the spec says raise ValueError for non-positive values, and duck-typing an int check is slightly over-defensive (a float like 3.0 would be rejected even though it behaves identically), and the intermediate variable `remaining_attempts` in `remaining()` adds a line without adding clarity over `return max(0, self._max_attempts - self._failures)`. These are trivial nits; the overall structure is exactly what the Zen oracle calls for: simple, explicit, locally auditable, no speculative abstractions.\",\n  \"strengths\": [\n    \"__slots__ makes state explicit and prevents hidden attribute mutation\",\n    \"Guard clause in __init__ raises a clear, descriptive ValueError immediately\",\n    \"Each method is a single responsibility with a descriptive docstring\",\n    \"No global state, no threading, no speculative extension points\",\n    \"Control flow is completely flat across all methods\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(max_attempts, int) check is slightly over-defensive; duck-typing would accept numeric-compatible types the spec doesn't exclude\",\n    \"Intermediate variable `remaining_attempts` in `remaining()` adds a line without meaningful clarity gain over `return max(0, self._max_attempts - self._failures)`\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "__slots__ makes state explicit and prevents hidden attribute mutation",
+      "Guard clause in __init__ raises a clear, descriptive ValueError immediately",
+      "Each method is a single responsibility with a descriptive docstring",
+      "No global state, no threading, no speculative extension points",
+      "Control flow is completely flat across all methods"
+    ],
+    "weaknesses": [
+      "isinstance(max_attempts, int) check is slightly over-defensive; duck-typing would accept numeric-compatible types the spec doesn't exclude",
+      "Intermediate variable `remaining_attempts` in `remaining()` adds a line without meaningful clarity gain over `return max(0, self._max_attempts - self._failures)`"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.982,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.667,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 5,
+    "loc": 21,
+    "maintainability_index": 56.386,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, flat, and explicit realization of the task. It decomposes responsibility into small, single-purpose helpers (_validate_argv, _read_flag_value, _parse_input_path, _parse_limit, _parse_format) that are each locally auditable in isolation. The main loop is straightforward with guard clauses keeping nesting shallow. Data movement is explicit\u2014no hidden mutation, no global state beyond the module-level constants which are clearly named and immutable sets. Error messages are specific and actionable. The module-level constants (_ALLOWED_FORMATS, _VALUE_FLAGS, _BOOLEAN_FLAGS, _ALL_FLAGS) are a mild speculative abstraction since _VALUE_FLAGS and _BOOLEAN_FLAGS are only used to derive _ALL_FLAGS and in _read_flag_value, but they do make the flag taxonomy explicit and readable rather than hiding it in conditionals. The _validate_argv type-checking helper is slightly defensive for a Python function but not harmful. Overall the code is sparse, readable, and a maintainer can trace any execution path without scrolling far.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, flat, and explicit realization of the task. It decomposes responsibility into small, single-purpose helpers (_validate_argv, _read_flag_value, _parse_input_path, _parse_limit, _parse_format) that are each locally auditable in isolation. The main loop is straightforward with guard clauses keeping nesting shallow. Data movement is explicit\u2014no hidden mutation, no global state beyond the module-level constants which are clearly named and immutable sets. Error messages are specific and actionable. The module-level constants (_ALLOWED_FORMATS, _VALUE_FLAGS, _BOOLEAN_FLAGS, _ALL_FLAGS) are a mild speculative abstraction since _VALUE_FLAGS and _BOOLEAN_FLAGS are only used to derive _ALL_FLAGS and in _read_flag_value, but they do make the flag taxonomy explicit and readable rather than hiding it in conditionals. The _validate_argv type-checking helper is slightly defensive for a Python function but not harmful. Overall the code is sparse, readable, and a maintainer can trace any execution path without scrolling far.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers with clear names make each piece locally auditable\",\n    \"Flat control flow in the main loop with guard clauses avoiding deep nesting\",\n    \"Explicit data movement: all state is local variables returned in a plain dict\",\n    \"Clear, specific error messages for every failure mode\",\n    \"Module-level constants make the flag taxonomy explicit and easy to extend correctly\",\n    \"Duplicate flag detection is a nice correctness touch not often seen\"\n  ],\n  \"weaknesses\": [\n    \"_VALUE_FLAGS and _BOOLEAN_FLAGS are only used to compose _ALL_FLAGS and check in _read_flag_value; slightly over-decomposed for the actual usage\",\n    \"_validate_argv type-checking is defensive boilerplate that the task doesn't require and adds noise\",\n    \"The index += 2 at the bottom of the loop after branching on token type is slightly fragile; a unified index advance would be cleaner\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers with clear names make each piece locally auditable",
+      "Flat control flow in the main loop with guard clauses avoiding deep nesting",
+      "Explicit data movement: all state is local variables returned in a plain dict",
+      "Clear, specific error messages for every failure mode",
+      "Module-level constants make the flag taxonomy explicit and easy to extend correctly",
+      "Duplicate flag detection is a nice correctness touch not often seen"
+    ],
+    "weaknesses": [
+      "_VALUE_FLAGS and _BOOLEAN_FLAGS are only used to compose _ALL_FLAGS and check in _read_flag_value; slightly over-decomposed for the actual usage",
+      "_validate_argv type-checking is defensive boilerplate that the task doesn't require and adds noise",
+      "The index += 2 at the bottom of the loop after branching on token type is slightly fragile; a unified index advance would be cleaner"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.555,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.833,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 6,
+    "loc": 70,
+    "maintainability_index": 40.173,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_generation"
+}

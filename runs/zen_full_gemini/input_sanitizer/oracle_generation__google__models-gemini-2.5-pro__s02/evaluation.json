@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and well-structured. The helper `_is_valid_field_syntax` is a small pure function that does one thing clearly. The main function has flat control flow with a guard-clause pattern for input validation, explicit data movement through `seen` and `sanitized_result`, and no hidden mutation or global state. The intermediate variables `is_allowed` and `is_syntactically_valid` are slightly verbose for what could be a single compound condition, but they do aid local readability. The docstrings are thorough to the point of being slightly over-documented for such a simple module, adding bulk without proportional clarity gain. The `TypeError` raises for invalid inputs are appropriate and explicit. Overall this is a solid, auditable implementation that closely follows the Zen principles, with minor deductions for the over-documentation and the slightly unnecessary intermediate boolean variables that add lines without adding clarity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and well-structured. The helper `_is_valid_field_syntax` is a small pure function that does one thing clearly. The main function has flat control flow with a guard-clause pattern for input validation, explicit data movement through `seen` and `sanitized_result`, and no hidden mutation or global state. The intermediate variables `is_allowed` and `is_syntactically_valid` are slightly verbose for what could be a single compound condition, but they do aid local readability. The docstrings are thorough to the point of being slightly over-documented for such a simple module, adding bulk without proportional clarity gain. The `TypeError` raises for invalid inputs are appropriate and explicit. Overall this is a solid, auditable implementation that closely follows the Zen principles, with minor deductions for the over-documentation and the slightly unnecessary intermediate boolean variables that add lines without adding clarity.\",\n  \"strengths\": [\n    \"Clean separation of concerns with a focused pure helper for syntax validation\",\n    \"Flat control flow with early-continue deduplication pattern\",\n    \"Explicit input validation with clear TypeError messages\",\n    \"No hidden mutation, no global state, data movement is transparent\",\n    \"Correct deduplication preserving first-occurrence order\"\n  ],\n  \"weaknesses\": [\n    \"Intermediate variables `is_allowed` and `is_syntactically_valid` add lines without meaningful clarity over a single compound condition\",\n    \"Docstrings are over-engineered for a small utility module, adding noise\",\n    \"Module-level docstring is speculative framing rather than useful documentation\",\n    \"Type checks on `allowed` being a `set` may be overly strict (any container supporting `in` would work functionally)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of concerns with a focused pure helper for syntax validation",
+      "Flat control flow with early-continue deduplication pattern",
+      "Explicit input validation with clear TypeError messages",
+      "No hidden mutation, no global state, data movement is transparent",
+      "Correct deduplication preserving first-occurrence order"
+    ],
+    "weaknesses": [
+      "Intermediate variables `is_allowed` and `is_syntactically_valid` add lines without meaningful clarity over a single compound condition",
+      "Docstrings are over-engineered for a small utility module, adding noise",
+      "Module-level docstring is speculative framing rather than useful documentation",
+      "Type checks on `allowed` being a `set` may be overly strict (any container supporting `in` would work functionally)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.804,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.5,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 2,
+    "loc": 46,
+    "maintainability_index": 78.975,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_generation"
+}

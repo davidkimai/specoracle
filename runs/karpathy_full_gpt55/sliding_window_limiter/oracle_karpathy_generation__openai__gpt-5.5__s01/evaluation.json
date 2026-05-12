@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is mostly clean and minimal, using bisect for efficient window queries which is appropriate. However, it carries unnecessary complexity: the `_latest` dict is an extra data structure that exists solely to support `snapshot`, but `snapshot` could simply use the last element of the sorted events list (or the max timestamp seen) without a separate dict. More critically, `snapshot` doesn't take a `timestamp` parameter, so it uses a stored `_latest` value \u2014 this is a design assumption not stated in the spec and introduces statefulness that makes the snapshot semantics ambiguous (what window does it show?). The spec says 'return retained timestamps for key' which most naturally means all currently stored timestamps, not a windowed slice. The `allow` method also doesn't prune old events, meaning the events list grows unboundedly \u2014 this is a memory leak for long-running use. The `_latest` tracking logic with the `if latest is None or timestamp > latest` branch is also subtly wrong for out-of-order timestamps passed to `snapshot`. Overall the code is readable and not bloated, but the `_latest` auxiliary structure and the snapshot windowing assumption add unjustified complexity and potential correctness issues.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is mostly clean and minimal, using bisect for efficient window queries which is appropriate. However, it carries unnecessary complexity: the `_latest` dict is an extra data structure that exists solely to support `snapshot`, but `snapshot` could simply use the last element of the sorted events list (or the max timestamp seen) without a separate dict. More critically, `snapshot` doesn't take a `timestamp` parameter, so it uses a stored `_latest` value \u2014 this is a design assumption not stated in the spec and introduces statefulness that makes the snapshot semantics ambiguous (what window does it show?). The spec says 'return retained timestamps for key' which most naturally means all currently stored timestamps, not a windowed slice. The `allow` method also doesn't prune old events, meaning the events list grows unboundedly \u2014 this is a memory leak for long-running use. The `_latest` tracking logic with the `if latest is None or timestamp > latest` branch is also subtly wrong for out-of-order timestamps passed to `snapshot`. Overall the code is readable and not bloated, but the `_latest` auxiliary structure and the snapshot windowing assumption add unjustified complexity and potential correctness issues.\",\n  \"strengths\": [\n    \"Uses bisect for O(log n) window boundary queries \u2014 appropriate and efficient\",\n    \"Minimal class structure with no unnecessary abstractions\",\n    \"Clear variable naming and readable logic in allow()\",\n    \"Correct half-open window semantics using bisect_right on lower bound\"\n  ],\n  \"weaknesses\": [\n    \"_latest dict is an unnecessary auxiliary structure; last element of sorted events list suffices\",\n    \"snapshot() applies a windowed filter using _latest, but the spec says 'retained timestamps' \u2014 this interpretation is undocumented and potentially wrong\",\n    \"Events list grows unboundedly; no pruning means memory leak for high-traffic keys\",\n    \"Out-of-order timestamp calls to allow() can corrupt _latest, making snapshot() return wrong results\",\n    \"The allow() method counts only events in the window (start to end) but inserts unconditionally at timestamp \u2014 events outside the window are silently ignored in count but still stored\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Uses bisect for O(log n) window boundary queries \u2014 appropriate and efficient",
+      "Minimal class structure with no unnecessary abstractions",
+      "Clear variable naming and readable logic in allow()",
+      "Correct half-open window semantics using bisect_right on lower bound"
+    ],
+    "weaknesses": [
+      "_latest dict is an unnecessary auxiliary structure; last element of sorted events list suffices",
+      "snapshot() applies a windowed filter using _latest, but the spec says 'retained timestamps' \u2014 this interpretation is undocumented and potentially wrong",
+      "Events list grows unboundedly; no pruning means memory leak for high-traffic keys",
+      "Out-of-order timestamp calls to allow() can corrupt _latest, making snapshot() return wrong results",
+      "The allow() method counts only events in the window (start to end) but inserts unconditionally at timestamp \u2014 events outside the window are silently ignored in count but still stored"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.011,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.25,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 28,
+    "maintainability_index": 50.914,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_karpathy_generation"
+}

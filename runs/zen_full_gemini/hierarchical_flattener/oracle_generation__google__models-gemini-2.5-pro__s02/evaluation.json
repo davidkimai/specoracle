@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and well-structured. It splits responsibility sensibly between a path-builder helper, a recursive flattener, and the public entry point with input validation. Control flow is flat within each function, data movement is explicit (no mutation of inputs, results built via update), and the error for non-dict input is clear. The docstrings are thorough without being excessive. Minor weaknesses: `_build_path` is a trivially small helper that adds a layer of indirection for two lines of logic that would be equally readable inline; the `Dict[Any, Any]` / `Dict[str, object]` typing mix is slightly inconsistent with the public signature using bare `dict`; and the docstring volume (Args/Returns on every private helper) edges toward over-documentation for such simple functions. Overall this is a solid, auditable, Zen-aligned implementation with no speculative abstractions or hidden state.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and well-structured. It splits responsibility sensibly between a path-builder helper, a recursive flattener, and the public entry point with input validation. Control flow is flat within each function, data movement is explicit (no mutation of inputs, results built via update), and the error for non-dict input is clear. The docstrings are thorough without being excessive. Minor weaknesses: `_build_path` is a trivially small helper that adds a layer of indirection for two lines of logic that would be equally readable inline; the `Dict[Any, Any]` / `Dict[str, object]` typing mix is slightly inconsistent with the public signature using bare `dict`; and the docstring volume (Args/Returns on every private helper) edges toward over-documentation for such simple functions. Overall this is a solid, auditable, Zen-aligned implementation with no speculative abstractions or hidden state.\",\n  \"strengths\": [\n    \"Clean separation of concerns: validation in entry point, path construction isolated, recursion isolated\",\n    \"Explicit data movement \u2014 no mutation of input, results assembled via local dicts and update\",\n    \"Guard clause for empty-dict leaf treatment is clearly commented and correct\",\n    \"Clear TypeError raised for invalid input rather than silent failure\",\n    \"Readable names that make behavior easy to explain locally\"\n  ],\n  \"weaknesses\": [\n    \"_build_path is almost too small to justify as a separate helper; the logic is trivial enough to inline without harming readability\",\n    \"Docstring verbosity on private helpers (full Args/Returns blocks) slightly exceeds what sparse, auditable code needs\",\n    \"Minor type annotation inconsistency: public signature uses bare `dict` while helpers use `Dict[Any, Any]`\",\n    \"No handling or comment about non-string keys beyond silent str() coercion, which could silently produce surprising paths\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of concerns: validation in entry point, path construction isolated, recursion isolated",
+      "Explicit data movement \u2014 no mutation of input, results assembled via local dicts and update",
+      "Guard clause for empty-dict leaf treatment is clearly commented and correct",
+      "Clear TypeError raised for invalid input rather than silent failure",
+      "Readable names that make behavior easy to explain locally"
+    ],
+    "weaknesses": [
+      "_build_path is almost too small to justify as a separate helper; the logic is trivial enough to inline without harming readability",
+      "Docstring verbosity on private helpers (full Args/Returns blocks) slightly exceeds what sparse, auditable code needs",
+      "Minor type annotation inconsistency: public signature uses bare `dict` while helpers use `Dict[Any, Any]`",
+      "No handling or comment about non-string keys beyond silent str() coercion, which could silently produce surprising paths"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.006,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.667,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 3,
+    "loc": 57,
+    "maintainability_index": 72.432,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "oracle_generation"
+}

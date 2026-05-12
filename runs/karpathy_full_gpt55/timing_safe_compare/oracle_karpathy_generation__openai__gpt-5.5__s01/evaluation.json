@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and correct. It validates types explicitly, enforces same-type constraint, and delegates to hmac.compare_digest. The only structural concern is the unnecessary encoding of str inputs before passing to compare_digest \u2014 hmac.compare_digest natively accepts str arguments directly, so encoding to bytes is an extra step that adds complexity without benefit and slightly obscures intent. Everything else is tight and well-reasoned.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, minimal, and correct. It validates types explicitly, enforces same-type constraint, and delegates to hmac.compare_digest. The only structural concern is the unnecessary encoding of str inputs before passing to compare_digest \u2014 hmac.compare_digest natively accepts str arguments directly, so encoding to bytes is an extra step that adds complexity without benefit and slightly obscures intent. Everything else is tight and well-reasoned.\",\n  \"strengths\": [\n    \"Minimal code with no speculative abstractions\",\n    \"Explicit type checking with clear TypeError messages\",\n    \"Correct delegation to hmac.compare_digest for timing-safe comparison\",\n    \"Proper use of type() identity check rather than isinstance for same-type enforcement\"\n  ],\n  \"weaknesses\": [\n    \"Unnecessarily encodes str to bytes before calling compare_digest, which already accepts str natively \u2014 adds an unneeded branch and transformation\",\n    \"The isinstance guard for str before encoding is redundant given the earlier type checks already confirm both are str at that point\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative abstractions",
+      "Explicit type checking with clear TypeError messages",
+      "Correct delegation to hmac.compare_digest for timing-safe comparison",
+      "Proper use of type() identity check rather than isinstance for same-type enforcement"
+    ],
+    "weaknesses": [
+      "Unnecessarily encodes str to bytes before calling compare_digest, which already accepts str natively \u2014 adds an unneeded branch and transformation",
+      "The isinstance guard for str before encoding is redundant given the earlier type checks already confirm both are str at that point"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.035,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 68.001,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-labeled local variable names for every money-affecting decision (paid_branch_, region_branch_, amount_branch_, aggregation_branch_, bucket_branch_), stages the work into three visibly named audit-trail variables, uses comments only to name legacy audit stages, returns the exact legacy keys, and does not mutate the input. The bool-exclusion guard on amount_cents shows careful correctness. The only minor deviations are that the intermediate stage-1 list stores stripped dicts rather than passing raw rows (a reasonable audit-trail choice), and the variable names are occasionally verbose to the point of slight redundancy (e.g., `paid_branch_status_value` alongside `paid_branch_is_paid_status`), but this verbosity is actually in the spirit of the spec's explicit-branch-label requirement. Overall this is a near-ideal realization of the informal oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-labeled local variable names for every money-affecting decision (paid_branch_, region_branch_, amount_branch_, aggregation_branch_, bucket_branch_), stages the work into three visibly named audit-trail variables, uses comments only to name legacy audit stages, returns the exact legacy keys, and does not mutate the input. The bool-exclusion guard on amount_cents shows careful correctness. The only minor deviations are that the intermediate stage-1 list stores stripped dicts rather than passing raw rows (a reasonable audit-trail choice), and the variable names are occasionally verbose to the point of slight redundancy (e.g., `paid_branch_status_value` alongside `paid_branch_is_paid_status`), but this verbosity is actually in the spirit of the spec's explicit-branch-label requirement. Overall this is a near-ideal realization of the informal oracle.\",\n  \"strengths\": [\n    \"Single public function, zero helper functions\",\n    \"Every money-affecting branch has an explicit, descriptive local variable name\",\n    \"Three clearly named audit-stage variables provide a visible staged audit trail\",\n    \"Comments are used only to name legacy audit stages, exactly as specified\",\n    \"Correct bool exclusion prevents True/False from being treated as integers\",\n    \"Returns exact legacy keys: bucket_code, item_count, cents_total\",\n    \"Input list is not mutated\"\n  ],\n  \"weaknesses\": [\n    \"Slight redundancy in paired branch variable names (e.g., _value + _is_X) adds line count without extra clarity\",\n    \"Stage-1 intermediate dicts strip fields unnecessarily; passing region/amount is fine but adds a small allocation overhead\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function, zero helper functions",
+      "Every money-affecting branch has an explicit, descriptive local variable name",
+      "Three clearly named audit-stage variables provide a visible staged audit trail",
+      "Comments are used only to name legacy audit stages, exactly as specified",
+      "Correct bool exclusion prevents True/False from being treated as integers",
+      "Returns exact legacy keys: bucket_code, item_count, cents_total",
+      "Input list is not mutated"
+    ],
+    "weaknesses": [
+      "Slight redundancy in paired branch variable names (e.g., _value + _is_X) adds line count without extra clarity",
+      "Stage-1 intermediate dicts strip fields unnecessarily; passing region/amount is fine but adds a small allocation overhead"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.057,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 53,
+    "maintainability_index": 66.99,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

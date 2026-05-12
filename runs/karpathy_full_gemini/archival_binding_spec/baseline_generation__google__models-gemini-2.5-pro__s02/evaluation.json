@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct with visibly staged parsing (pre-process \u2192 parse key=value \u2192 parse section.key \u2192 validate \u2192 populate), which aligns well with the 'visibly staged parsing over compressed one-liners' directive. It keeps exactly one public function and preserves insertion order via plain dict (Python 3.7+). However, it fails the most distinctive structural requirement: the spec explicitly mandates local names ending in `_ledger` for dictionaries that survive across loop iterations, yet the accumulator is named `bindings` instead of something like `bindings_ledger`. The error messages do name the archival field being rejected (section name, key name), satisfying that requirement. The numbered comment stages (1\u20135) are a nice readability touch. The docstring is thorough. The main deduction is the missing `_ledger` naming convention, which is a concrete, unambiguous spec requirement that was ignored.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct with visibly staged parsing (pre-process \u2192 parse key=value \u2192 parse section.key \u2192 validate \u2192 populate), which aligns well with the 'visibly staged parsing over compressed one-liners' directive. It keeps exactly one public function and preserves insertion order via plain dict (Python 3.7+). However, it fails the most distinctive structural requirement: the spec explicitly mandates local names ending in `_ledger` for dictionaries that survive across loop iterations, yet the accumulator is named `bindings` instead of something like `bindings_ledger`. The error messages do name the archival field being rejected (section name, key name), satisfying that requirement. The numbered comment stages (1\u20135) are a nice readability touch. The docstring is thorough. The main deduction is the missing `_ledger` naming convention, which is a concrete, unambiguous spec requirement that was ignored.\",\n  \"strengths\": [\n    \"Visibly staged parsing with numbered comment blocks matches the 'staged over compressed' directive\",\n    \"Exactly one public function exported via __all__\",\n    \"Error messages name the specific archival field being rejected (section, key)\",\n    \"Insertion order preserved using standard dict\",\n    \"Clean, flat loop structure with no unnecessary nesting\"\n  ],\n  \"weaknesses\": [\n    \"Accumulator dict named 'bindings' instead of a name ending in '_ledger' as explicitly required by the spec\",\n    \"line_num is tracked but the spec doesn't ask for it; minor noise, though harmless\",\n    \"Docstring is verbose for an internal utility module, slightly over-engineered\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Visibly staged parsing with numbered comment blocks matches the 'staged over compressed' directive",
+      "Exactly one public function exported via __all__",
+      "Error messages name the specific archival field being rejected (section, key)",
+      "Insertion order preserved using standard dict",
+      "Clean, flat loop structure with no unnecessary nesting"
+    ],
+    "weaknesses": [
+      "Accumulator dict named 'bindings' instead of a name ending in '_ledger' as explicitly required by the spec",
+      "line_num is tracked but the spec doesn't ask for it; minor noise, though harmless",
+      "Docstring is verbose for an internal utility module, slightly over-engineered"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.739,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________ test_parse_bindings_rejects_bad_lines _____________________\n\n    def test_parse_bindings_rejects_bad_lines():\n        with pytest.raises(ValueError, match=\"line\"):\n>           parse_bindings([\"missing\"])\n\ntest_solution.py:21: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nlines = ['missing']\n\n    def parse_bindings(lines: list[str]) -> dict[str, dict[str, str]]:\n        \"\"\"\n        Parses configuration lines into a nested, insertion-ordered dictionary.\n    \n        Each non-empty, non-comment line must be in the format \"section.key=value\".\n        Lines starting with '#' are treated as comments and are ignored.\n        Empty lines are also ignored. Whitespace around the section, key, and\n        value is stripped before processing.\n    \n        Args:\n            lines: A list of strings, where each string is a line of\n                   configuration data.\n    \n        Returns:\n            An insertion-ordered nested dictionary mapping section names to\n            dictionaries of key-value pairs. The insertion order reflects the\n            first appearance of each section and key in the input.\n    \n        Raises:\n            ValueError: If a line is malformed (e.g., missing '=', missing '.',\n                        an empty section name, or an empty key name).\n        \"\"\"\n        bindings: dict[str, dict[str, str]] = {}\n    \n        for line_num, line in enumerate(lines, 1):\n            # 1. Pre-process the line\n            line = line.strip()\n    \n            # Ignore empty lines and comments\n            if not line or line.startswith('#'):\n                continue\n    \n            # 2. Parse the \"key=value\" structure\n            parts = line.split('=', 1)\n            if len(parts) != 2:\n>               raise ValueError(\n                    f\"Line {line_num}: Malformed entry, missing '=' separator: '{line}'\"\n                )\nE               ValueError: Line 1: Malformed entry, missing '=' separator: 'missing'\n\nsolution.py:45: ValueError\n\nDuring handling of the above exception, another exception occurred:\n\n    def test_parse_bindings_rejects_bad_lines():\n>       with pytest.raises(ValueError, match=\"line\"):\nE       AssertionError: Regex pattern did not match.\nE         Expected regex: 'line'\nE         Actual message: \"Line 1: Malformed entry, missing '=' separator: 'missing'\"\n\ntest_solution.py:20: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_parse_bindings_rejects_bad_lines - AssertionErr...\n1 failed, 1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 62,
+    "maintainability_index": 82.201,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

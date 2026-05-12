@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, but carries several pieces of speculative complexity that violate the 'minimum code' principle. The `_idle_ids` set is an optimization for duplicate-release detection that was never asked for in the spec, adding a second data structure that must be kept in sync with `_idle` at every mutation site \u2014 this is exactly the kind of speculative flexibility the oracle warns against. The extensive `__init__` validation (TypeError for non-callable factory, bool/int discrimination for max_size, TypeError for non-callable now) goes well beyond what the task requires and adds ~10 lines of defensive code for edge cases not mentioned in the spec. The `_close_if_present` static method is a reasonable factoring but is only called in two places and could be inlined without loss of clarity. The core logic (acquire/release/evict) is clean, flat, and readable, and the use of a list of (conn, timestamp) tuples is the right minimal structure. Overall the implementation is competent but not minimal.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, but carries several pieces of speculative complexity that violate the 'minimum code' principle. The `_idle_ids` set is an optimization for duplicate-release detection that was never asked for in the spec, adding a second data structure that must be kept in sync with `_idle` at every mutation site \u2014 this is exactly the kind of speculative flexibility the oracle warns against. The extensive `__init__` validation (TypeError for non-callable factory, bool/int discrimination for max_size, TypeError for non-callable now) goes well beyond what the task requires and adds ~10 lines of defensive code for edge cases not mentioned in the spec. The `_close_if_present` static method is a reasonable factoring but is only called in two places and could be inlined without loss of clarity. The core logic (acquire/release/evict) is clean, flat, and readable, and the use of a list of (conn, timestamp) tuples is the right minimal structure. Overall the implementation is competent but not minimal.\",\n  \"strengths\": [\n    \"Core acquire/release/evict logic is flat, readable, and correct\",\n    \"List of (conn, timestamp) tuples is the simplest adequate data structure\",\n    \"evict_idle correctly separates kept vs evicted before closing\",\n    \"now parameter injection is handled cleanly\"\n  ],\n  \"weaknesses\": [\n    \"_idle_ids set is unasked-for speculative complexity that duplicates state and must be kept in sync\",\n    \"Excessive __init__ validation (bool check, TypeError for now, ValueError for negative max_size) adds ~10 lines for unspecified edge cases\",\n    \"_close_if_present is a single-purpose static method used only twice; inlining would be simpler\",\n    \"Duplicate-release guard (conn_id in _idle_ids) is a feature not requested by the spec\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core acquire/release/evict logic is flat, readable, and correct",
+      "List of (conn, timestamp) tuples is the simplest adequate data structure",
+      "evict_idle correctly separates kept vs evicted before closing",
+      "now parameter injection is handled cleanly"
+    ],
+    "weaknesses": [
+      "_idle_ids set is unasked-for speculative complexity that duplicates state and must be kept in sync",
+      "Excessive __init__ validation (bool check, TypeError for now, ValueError for negative max_size) adds ~10 lines for unspecified edge cases",
+      "_close_if_present is a single-purpose static method used only twice; inlining would be simpler",
+      "Duplicate-release guard (conn_id in _idle_ids) is a feature not requested by the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.243,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 5,
+    "loc": 51,
+    "maintainability_index": 45.449,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_karpathy_generation"
+}

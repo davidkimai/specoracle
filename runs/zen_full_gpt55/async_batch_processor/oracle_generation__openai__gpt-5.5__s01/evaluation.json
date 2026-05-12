@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured with small, named helpers that each do one thing clearly: validation, batch splitting, single-batch execution, and flattening are all separated. Control flow in the main function is flat and readable. Data movement is explicit\u2014batches are materialized, tasks are created in order, results are gathered and flattened preserving order. Error handling is explicit and informative. The cancellation logic on failure is a reasonable safety measure. Minor weaknesses: the `inspect.isawaitable` check inside `_run_batch` adds runtime overhead and couples the helper to a meta-concern that could be documented instead; the `_require_positive_int` bool guard is slightly defensive but acceptable; the `__all__` export is a minor speculative addition. Overall the code is clean, auditable, and avoids framework-shaped abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is well-structured with small, named helpers that each do one thing clearly: validation, batch splitting, single-batch execution, and flattening are all separated. Control flow in the main function is flat and readable. Data movement is explicit\u2014batches are materialized, tasks are created in order, results are gathered and flattened preserving order. Error handling is explicit and informative. The cancellation logic on failure is a reasonable safety measure. Minor weaknesses: the `inspect.isawaitable` check inside `_run_batch` adds runtime overhead and couples the helper to a meta-concern that could be documented instead; the `_require_positive_int` bool guard is slightly defensive but acceptable; the `__all__` export is a minor speculative addition. Overall the code is clean, auditable, and avoids framework-shaped abstractions.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers (_require_positive_int, _iter_batches, _run_batch, _flatten) keep the main function thin and readable\",\n    \"Explicit validation with clear error messages for all invalid inputs\",\n    \"Order-preserving result flattening via asyncio.gather task ordering\",\n    \"Cancellation of pending tasks on failure prevents resource leaks\",\n    \"No hidden mutation or global state; data flow is traceable\"\n  ],\n  \"weaknesses\": [\n    \"inspect.isawaitable check inside _run_batch is a runtime type-check that adds noise; a simpler approach would be to just await and let Python raise naturally\",\n    \"bool isinstance guard in _require_positive_int is slightly over-defensive for this context\",\n    \"__all__ is a speculative addition not required by the task\",\n    \"Materializing all batches upfront with list() is fine for most cases but could be noted as a memory trade-off for very large iterables\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers (_require_positive_int, _iter_batches, _run_batch, _flatten) keep the main function thin and readable",
+      "Explicit validation with clear error messages for all invalid inputs",
+      "Order-preserving result flattening via asyncio.gather task ordering",
+      "Cancellation of pending tasks on failure prevents resource leaks",
+      "No hidden mutation or global state; data flow is traceable"
+    ],
+    "weaknesses": [
+      "inspect.isawaitable check inside _run_batch is a runtime type-check that adds noise; a simpler approach would be to just await and let Python raise naturally",
+      "bool isinstance guard in _require_positive_int is slightly over-defensive for this context",
+      "__all__ is a speculative addition not required by the task",
+      "Materializing all batches upfront with list() is fine for most cases but could be noted as a memory trade-off for very large iterables"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.836,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 5,
+    "loc": 55,
+    "maintainability_index": 47.24,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "oracle_generation"
+}

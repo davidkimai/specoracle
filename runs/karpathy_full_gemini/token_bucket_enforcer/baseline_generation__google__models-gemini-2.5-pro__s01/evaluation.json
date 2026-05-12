@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses a small pure helper (_refill) to separate concerns, keeps control flow flat with guard clauses, makes data movement explicit, and raises clear errors for invalid inputs. The naming is self-explanatory and the code is locally auditable. Minor issues: the docstrings are verbose (bordering on over-documentation for a simple class), the `isinstance` check for `capacity` would reject booleans correctly but also rejects subclasses unnecessarily, and `capacity` being stored as a public attribute invites external mutation. The `max(0, ...)` guard in `_refill` is a nice defensive touch. Overall this is a well-structured, idiomatic implementation with no speculative abstractions or framework-shaped code.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses a small pure helper (_refill) to separate concerns, keeps control flow flat with guard clauses, makes data movement explicit, and raises clear errors for invalid inputs. The naming is self-explanatory and the code is locally auditable. Minor issues: the docstrings are verbose (bordering on over-documentation for a simple class), the `isinstance` check for `capacity` would reject booleans correctly but also rejects subclasses unnecessarily, and `capacity` being stored as a public attribute invites external mutation. The `max(0, ...)` guard in `_refill` is a nice defensive touch. Overall this is a well-structured, idiomatic implementation with no speculative abstractions or framework-shaped code.\",\n  \"strengths\": [\n    \"Clean separation of refill logic into a small pure helper method\",\n    \"Flat control flow with early guard clauses in allow()\",\n    \"Explicit input validation with clear error messages\",\n    \"Injected `now` callable makes testing straightforward without hidden global state\",\n    \"Correct use of float for internal token tracking to handle fractional refills\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are overly verbose for the simplicity of the implementation, adding noise\",\n    \"Public `self.capacity` attribute allows external mutation without protection\",\n    \"`isinstance(capacity, int)` rejects valid numeric types like numpy integers that would otherwise work fine\",\n    \"The `max(0, elapsed_time)` guard is defensive but the condition `if elapsed_time > 0` already handles the zero case, making the guard slightly redundant\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of refill logic into a small pure helper method",
+      "Flat control flow with early guard clauses in allow()",
+      "Explicit input validation with clear error messages",
+      "Injected `now` callable makes testing straightforward without hidden global state",
+      "Correct use of float for internal token tracking to handle fractional refills"
+    ],
+    "weaknesses": [
+      "Docstrings are overly verbose for the simplicity of the implementation, adding noise",
+      "Public `self.capacity` attribute allows external mutation without protection",
+      "`isinstance(capacity, int)` rejects valid numeric types like numpy integers that would otherwise work fine",
+      "The `max(0, elapsed_time)` guard is defensive but the condition `if elapsed_time > 0` already handles the zero case, making the guard slightly redundant"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.11,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.25,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 3,
+    "loc": 70,
+    "maintainability_index": 73.097,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "baseline_generation"
+}

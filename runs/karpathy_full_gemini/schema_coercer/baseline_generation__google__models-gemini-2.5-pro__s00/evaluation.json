@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit data movement and no hidden mutation. The control flow is straightforward with a single loop, guard clause for presence check, and clear error handling. The docstring is verbose but the code itself is sparse and locally auditable. Minor issues: the helper-extraction opportunity (a `coerce_field` helper) is skipped but the function is small enough that this is not a real problem; the docstring is disproportionately long relative to the code body, adding noise without aiding local auditability; catching both `ValueError` and `TypeError` is correct and explicit. The type annotations from `typing` are slightly verbose (could use built-ins in Python 3.9+) but not harmful. Overall this is a solid, straightforward realization of the task with no speculative abstractions or framework-shaped code.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit data movement and no hidden mutation. The control flow is straightforward with a single loop, guard clause for presence check, and clear error handling. The docstring is verbose but the code itself is sparse and locally auditable. Minor issues: the helper-extraction opportunity (a `coerce_field` helper) is skipped but the function is small enough that this is not a real problem; the docstring is disproportionately long relative to the code body, adding noise without aiding local auditability; catching both `ValueError` and `TypeError` is correct and explicit. The type annotations from `typing` are slightly verbose (could use built-ins in Python 3.9+) but not harmful. Overall this is a solid, straightforward realization of the task with no speculative abstractions or framework-shaped code.\",\n  \"strengths\": [\n    \"Flat control flow with a single loop and guard clause\",\n    \"Explicit data movement into a new dict with no hidden mutation\",\n    \"Clear ValueError with field name as required\",\n    \"Catches both ValueError and TypeError for robust casting failure detection\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately long relative to the short implementation body\",\n    \"Could extract a small `coerce_field` helper to separate concerns per the structural spec\",\n    \"Uses `typing` module imports instead of built-in generics (minor, Python version dependent)\",\n    \"The `__all__` export list is minor boilerplate that adds no value for a single-function module\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single loop and guard clause",
+      "Explicit data movement into a new dict with no hidden mutation",
+      "Clear ValueError with field name as required",
+      "Catches both ValueError and TypeError for robust casting failure detection",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately long relative to the short implementation body",
+      "Could extract a small `coerce_field` helper to separate concerns per the structural spec",
+      "Uses `typing` module imports instead of built-in generics (minor, Python version dependent)",
+      "The `__all__` export list is minor boilerplate that adds no value for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.034,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 42,
+    "maintainability_index": 87.788,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "schema_coercer",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally clean: flat while-loop, explicit data movement via extend, clear variable names, and no speculative abstractions. The core logic is auditable in a single glance. The main weaknesses are the heavy typing imports and generic TypeVar machinery (FetchPage alias) which add complexity without meaningful benefit for a simple async helper, and the isinstance check on page_items introduces a runtime validation that wasn't specified in the requirements and adds noise. The docstring is verbose relative to the simplicity of the function. These are minor over-engineering choices that slightly violate 'sparse enough to audit locally' and 'avoid speculative abstractions', but the overall structure is sound and Pythonic.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally clean: flat while-loop, explicit data movement via extend, clear variable names, and no speculative abstractions. The core logic is auditable in a single glance. The main weaknesses are the heavy typing imports and generic TypeVar machinery (FetchPage alias) which add complexity without meaningful benefit for a simple async helper, and the isinstance check on page_items introduces a runtime validation that wasn't specified in the requirements and adds noise. The docstring is verbose relative to the simplicity of the function. These are minor over-engineering choices that slightly violate 'sparse enough to audit locally' and 'avoid speculative abstractions', but the overall structure is sound and Pythonic.\",\n  \"strengths\": [\n    \"Flat control flow with a single while-True loop and a guard-clause break\",\n    \"Explicit data movement: extend appends items, cursor is updated visibly\",\n    \"Clear, descriptive variable names (all_items, current_cursor, next_cursor)\",\n    \"No hidden state or global mutation\",\n    \"Correct handling of start_cursor passed to first call\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar and FetchPage alias add unnecessary complexity for a simple helper\",\n    \"isinstance(page_items, list) check is an unspecified requirement that adds noise\",\n    \"Docstring is disproportionately long relative to the function's simplicity\",\n    \"Importing Optional, Tuple, List from typing is verbose; modern Python prefers built-in generics\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single while-True loop and a guard-clause break",
+      "Explicit data movement: extend appends items, cursor is updated visibly",
+      "Clear, descriptive variable names (all_items, current_cursor, next_cursor)",
+      "No hidden state or global mutation",
+      "Correct handling of start_cursor passed to first call"
+    ],
+    "weaknesses": [
+      "TypeVar and FetchPage alias add unnecessary complexity for a simple helper",
+      "isinstance(page_items, list) check is an unspecified requirement that adds noise",
+      "Docstring is disproportionately long relative to the function's simplicity",
+      "Importing Optional, Tuple, List from typing is verbose; modern Python prefers built-in generics"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.328,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.35s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 41,
+    "maintainability_index": 92.864,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_generation"
+}

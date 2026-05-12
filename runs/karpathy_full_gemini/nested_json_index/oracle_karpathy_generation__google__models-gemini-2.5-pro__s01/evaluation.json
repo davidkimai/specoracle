@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, using a clean loop with early-continue guards and a defaultdict for aggregation. The logic is flat, readable, and does not mutate inputs. However, it deviates from the Karpathy simplicity principle in a few ways: the docstring is excessively verbose (nearly as long as the implementation itself), the module-level docstring adds no value, the `isinstance(event, dict)` guard is speculative (not required by the spec), and the `from typing import ...` imports are unnecessary in modern Python 3.9+ where built-in generics suffice. The inline comment 'Filter for valid purchase events based on specified criteria.' restates the obvious. These are minor but real violations of 'minimum code that solves the problem' and 'no features beyond what was asked'.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, using a clean loop with early-continue guards and a defaultdict for aggregation. The logic is flat, readable, and does not mutate inputs. However, it deviates from the Karpathy simplicity principle in a few ways: the docstring is excessively verbose (nearly as long as the implementation itself), the module-level docstring adds no value, the `isinstance(event, dict)` guard is speculative (not required by the spec), and the `from typing import ...` imports are unnecessary in modern Python 3.9+ where built-in generics suffice. The inline comment 'Filter for valid purchase events based on specified criteria.' restates the obvious. These are minor but real violations of 'minimum code that solves the problem' and 'no features beyond what was asked'.\",\n  \"strengths\": [\n    \"Flat control flow with early-continue guards \u2014 no nesting beyond one level\",\n    \"defaultdict pattern is idiomatic and avoids manual key-existence checks\",\n    \"Correctly converts defaultdict to plain dict before returning\",\n    \"Does not mutate input events\",\n    \"Correct filtering logic for all three required conditions\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately long relative to the function body \u2014 violates simplicity-first\",\n    \"Module-level docstring adds no information\",\n    \"isinstance(event, dict) guard is speculative/defensive beyond the spec\",\n    \"Uses legacy typing imports (List, Dict, Any) instead of built-in generics\",\n    \"Inline comments restate what the code already clearly expresses\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with early-continue guards \u2014 no nesting beyond one level",
+      "defaultdict pattern is idiomatic and avoids manual key-existence checks",
+      "Correctly converts defaultdict to plain dict before returning",
+      "Does not mutate input events",
+      "Correct filtering logic for all three required conditions"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately long relative to the function body \u2014 violates simplicity-first",
+      "Module-level docstring adds no information",
+      "isinstance(event, dict) guard is speculative/defensive beyond the spec",
+      "Uses legacy typing imports (List, Dict, Any) instead of built-in generics",
+      "Inline comments restate what the code already clearly expresses"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.967,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 83.379,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "nested_json_index",
+  "variant": "oracle_karpathy_generation"
+}

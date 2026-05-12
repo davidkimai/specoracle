@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, but uses a list of tuples (`windows`) for O(n) key lookup instead of a plain dict, which is the obvious, simpler data structure for this problem. A dict keyed by composite_key would eliminate the inner loop, reduce cognitive load, and be the conservative/minimal choice. The docstring adds a minor assumption note which is fine, but the linear scan is an unnecessary complexity that violates 'simplicity first' \u2014 a dict lookup is both simpler and faster. The bool-check for timestamp is a good defensive touch. Overall the logic is flat and explicit with no over-abstraction, but the core data structure choice is suboptimal in a way that matters structurally.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, but uses a list of tuples (`windows`) for O(n) key lookup instead of a plain dict, which is the obvious, simpler data structure for this problem. A dict keyed by composite_key would eliminate the inner loop, reduce cognitive load, and be the conservative/minimal choice. The docstring adds a minor assumption note which is fine, but the linear scan is an unnecessary complexity that violates 'simplicity first' \u2014 a dict lookup is both simpler and faster. The bool-check for timestamp is a good defensive touch. Overall the logic is flat and explicit with no over-abstraction, but the core data structure choice is suboptimal in a way that matters structurally.\",\n  \"strengths\": [\n    \"Correct handling of malformed events (missing timestamp, missing key fields, bool timestamps)\",\n    \"Flat, single-pass loop with no unnecessary abstractions or helper classes\",\n    \"Preserves insertion order of retained events correctly\",\n    \"Explicit variable names and straightforward control flow\"\n  ],\n  \"weaknesses\": [\n    \"Uses a list of tuples with O(n) linear scan instead of a dict for O(1) key lookup \u2014 the obvious minimal structure\",\n    \"The `window_index` / `kept_timestamp` pattern is more complex than simply doing `windows.get(composite_key)`\",\n    \"Docstring mentions 'rolling' anchor behavior but the spec says 'keep the first event' \u2014 updating the anchor on each retained event may diverge from spec intent\",\n    \"Minor: `windows` list name is misleading; it stores per-key timestamps, not window objects\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct handling of malformed events (missing timestamp, missing key fields, bool timestamps)",
+      "Flat, single-pass loop with no unnecessary abstractions or helper classes",
+      "Preserves insertion order of retained events correctly",
+      "Explicit variable names and straightforward control flow"
+    ],
+    "weaknesses": [
+      "Uses a list of tuples with O(n) linear scan instead of a dict for O(1) key lookup \u2014 the obvious minimal structure",
+      "The `window_index` / `kept_timestamp` pattern is more complex than simply doing `windows.get(composite_key)`",
+      "Docstring mentions 'rolling' anchor behavior but the spec says 'keep the first event' \u2014 updating the anchor on each retained event may diverge from spec intent",
+      "Minor: `windows` list name is misleading; it stores per-key timestamps, not window objects"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.228,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 67.424,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dedupe_event_stream",
+  "variant": "oracle_karpathy_generation"
+}

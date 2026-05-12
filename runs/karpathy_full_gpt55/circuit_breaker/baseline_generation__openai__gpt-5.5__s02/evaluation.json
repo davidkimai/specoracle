@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured and closely follows the RCS-5 spec: state is explicit and inspectable via a named `state` property, configuration values are named attributes (`failure_threshold`, `recovery_timeout`), and half-open trials correctly close on success or reopen on failure. The code is flat, readable, and locally auditable with clear method decomposition. The use of an RLock for thread safety is appropriate. Minor concerns: the `state` property has a side-effect-free read but the actual state mutation happens lazily in `_before_call`, creating a slight inconsistency where `state` can return HALF_OPEN while `_state` is still OPEN \u2014 this dual-tracking adds cognitive overhead. The `_record_success` resetting `_failure_count = 0` on CLOSED mode is unnecessary noise. The input validation in `__init__` is thorough but arguably over-engineered for this context. Overall, the implementation is clean, explicit, and well-aligned with the structural spec with only minor architectural roughness.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is well-structured and closely follows the RCS-5 spec: state is explicit and inspectable via a named `state` property, configuration values are named attributes (`failure_threshold`, `recovery_timeout`), and half-open trials correctly close on success or reopen on failure. The code is flat, readable, and locally auditable with clear method decomposition. The use of an RLock for thread safety is appropriate. Minor concerns: the `state` property has a side-effect-free read but the actual state mutation happens lazily in `_before_call`, creating a slight inconsistency where `state` can return HALF_OPEN while `_state` is still OPEN \u2014 this dual-tracking adds cognitive overhead. The `_record_success` resetting `_failure_count = 0` on CLOSED mode is unnecessary noise. The input validation in `__init__` is thorough but arguably over-engineered for this context. Overall, the implementation is clean, explicit, and well-aligned with the structural spec with only minor architectural roughness.\",\n  \"strengths\": [\n    \"State is explicitly named via class constants and inspectable through a `state` property\",\n    \"Named configuration attributes (`failure_threshold`, `recovery_timeout`) with no magic constants\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Thread-safe with RLock throughout\",\n    \"Clean separation of concerns across `_before_call`, `_record_success`, `_record_failure`\",\n    \"Injected `now` clock enables deterministic testing\"\n  ],\n  \"weaknesses\": [\n    \"`state` property returns HALF_OPEN while internal `_state` remains OPEN, creating a dual-state inconsistency that complicates reasoning\",\n    \"Unnecessary `_failure_count = 0` reset on successful CLOSED-mode call adds noise\",\n    \"Over-engineered input validation in `__init__` for a resilience primitive\",\n    \"`_half_open_trial_in_progress` flag duplicates state that could be inferred from `_state == HALF_OPEN`\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "State is explicitly named via class constants and inspectable through a `state` property",
+      "Named configuration attributes (`failure_threshold`, `recovery_timeout`) with no magic constants",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Thread-safe with RLock throughout",
+      "Clean separation of concerns across `_before_call`, `_record_success`, `_record_failure`",
+      "Injected `now` clock enables deterministic testing"
+    ],
+    "weaknesses": [
+      "`state` property returns HALF_OPEN while internal `_state` remains OPEN, creating a dual-state inconsistency that complicates reasoning",
+      "Unnecessary `_failure_count = 0` reset on successful CLOSED-mode call adds noise",
+      "Over-engineered input validation in `__init__` for a resilience primitive",
+      "`_half_open_trial_in_progress` flag duplicates state that could be inferred from `_state == HALF_OPEN`"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.158,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.111,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 37,
+    "function_count": 8,
+    "loc": 99,
+    "maintainability_index": 34.097,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

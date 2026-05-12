@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation closely follows the Corporate Legacy Spec QX-17 in nearly every respect: it uses a single public function with no helper functions, employs explicit branch-label variable names for money-affecting decisions (e.g., `decision_invoice_is_billable`, `cents_for_total`), returns records with the exact legacy keys, uses a visible three-stage audit trail with named comment headers, avoids clever flattening in favor of readable staged loops, and does not mutate the input. The only minor deviations are the use of `typing` imports (slightly verbose but harmless), and the intermediate copy of each invoice into `invoice_for_aggregation` adds a small extra step that isn't strictly necessary but does reinforce the audit trail philosophy. Overall this is a clean, auditable, and spec-faithful implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The candidate implementation closely follows the Corporate Legacy Spec QX-17 in nearly every respect: it uses a single public function with no helper functions, employs explicit branch-label variable names for money-affecting decisions (e.g., `decision_invoice_is_billable`, `cents_for_total`), returns records with the exact legacy keys, uses a visible three-stage audit trail with named comment headers, avoids clever flattening in favor of readable staged loops, and does not mutate the input. The only minor deviations are the use of `typing` imports (slightly verbose but harmless), and the intermediate copy of each invoice into `invoice_for_aggregation` adds a small extra step that isn't strictly necessary but does reinforce the audit trail philosophy. Overall this is a clean, auditable, and spec-faithful implementation.\",\n  \"strengths\": [\n    \"Three clearly labeled audit stages with legacy-style comment headers\",\n    \"Explicit boolean variable names for each validation decision, especially `decision_invoice_is_billable` for the money gate\",\n    \"No helper functions \u2014 single public entry point\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Input is not mutated; copies are made before aggregation\",\n    \"Flat, readable loops with no clever comprehension tricks\"\n  ],\n  \"weaknesses\": [\n    \"The `typing` module imports (List, Dict, Any) are slightly verbose; modern Python 3.9+ type hints would be cleaner\",\n    \"Creating `invoice_for_aggregation` as an intermediate dict adds a minor unnecessary allocation, though it does reinforce the staged audit philosophy\",\n    \"The `is_region_valid_and_present` check uses a truthy string check rather than an explicit `len(region_value) > 0`, which is slightly less explicit\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Three clearly labeled audit stages with legacy-style comment headers",
+      "Explicit boolean variable names for each validation decision, especially `decision_invoice_is_billable` for the money gate",
+      "No helper functions \u2014 single public entry point",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Input is not mutated; copies are made before aggregation",
+      "Flat, readable loops with no clever comprehension tricks"
+    ],
+    "weaknesses": [
+      "The `typing` module imports (List, Dict, Any) are slightly verbose; modern Python 3.9+ type hints would be cleaner",
+      "Creating `invoice_for_aggregation` as an intermediate dict adds a minor unnecessary allocation, though it does reinforce the staged audit philosophy",
+      "The `is_region_valid_and_present` check uses a truthy string check rather than an explicit `len(region_value) > 0`, which is slightly less explicit"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 4.163,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 69.29,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_karpathy_generation"
+}

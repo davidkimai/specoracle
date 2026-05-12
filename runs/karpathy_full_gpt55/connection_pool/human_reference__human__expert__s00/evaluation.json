@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Each method is short and locally auditable with no hidden state or speculative abstractions. The guard clause on max_size, the simple list-of-tuples for idle tracking, and the straightforward eviction loop all reflect Zen-aligned choices. The only minor quibbles are the use of `hasattr(conn, 'close')` as a duck-type check rather than a documented interface contract (slightly implicit), and the fact that `acquire` doesn't track total connections in use, meaning max_size only bounds the idle pool rather than total connections\u2014which may or may not match the intended semantics but is at least consistent and simple. Overall this is a well-structured, minimal, readable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Each method is short and locally auditable with no hidden state or speculative abstractions. The guard clause on max_size, the simple list-of-tuples for idle tracking, and the straightforward eviction loop all reflect Zen-aligned choices. The only minor quibbles are the use of `hasattr(conn, 'close')` as a duck-type check rather than a documented interface contract (slightly implicit), and the fact that `acquire` doesn't track total connections in use, meaning max_size only bounds the idle pool rather than total connections\u2014which may or may not match the intended semantics but is at least consistent and simple. Overall this is a well-structured, minimal, readable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement: idle pool is a plain list of (conn, timestamp) tuples\",\n    \"Clear ValueError for invalid max_size input\",\n    \"Small, single-responsibility methods that are easy to audit locally\",\n    \"No speculative abstractions or unused extension points\",\n    \"Injected `now` callable makes time behavior testable without patching\"\n  ],\n  \"weaknesses\": [\n    \"`hasattr(conn, 'close')` is implicit duck-typing rather than an explicit interface; silently skipping close on connections without the method could hide bugs\",\n    \"max_size bounds only the idle pool, not total live connections\u2014this is a valid design choice but is not documented or enforced explicitly\",\n    \"No tracking of active (acquired) connections, so pool size semantics differ from typical connection pool expectations\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit data movement: idle pool is a plain list of (conn, timestamp) tuples",
+      "Clear ValueError for invalid max_size input",
+      "Small, single-responsibility methods that are easy to audit locally",
+      "No speculative abstractions or unused extension points",
+      "Injected `now` callable makes time behavior testable without patching"
+    ],
+    "weaknesses": [
+      "`hasattr(conn, 'close')` is implicit duck-typing rather than an explicit interface; silently skipping close on connections without the method could hide bugs",
+      "max_size bounds only the idle pool, not total live connections\u2014this is a valid design choice but is not documented or enforced explicitly",
+      "No tracking of active (acquired) connections, so pool size semantics differ from typical connection pool expectations"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.246,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.2,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 4,
+    "loc": 32,
+    "maintainability_index": 52.748,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "human_reference"
+}

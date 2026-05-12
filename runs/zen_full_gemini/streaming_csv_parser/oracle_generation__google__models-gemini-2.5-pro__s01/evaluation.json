@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It correctly separates concerns with a small pure helper `_parse_line`, keeps control flow flat with guard clauses, makes data movement explicit via `zip` and `dict`, raises clear errors with line numbers, and preserves streaming behavior by using `iter()` and two sequential loops over the same iterator. The docstrings are thorough but slightly verbose for the task's simplicity. The use of `Optional[List[str]]` as a sentinel return from `_parse_line` is a mild code smell\u2014returning an empty list or using a separate predicate would be more explicit\u2014but it's a minor issue. The `header_line_number` tracking for error messages adds complexity that's arguably speculative but is genuinely useful for debugging. Overall, this is a well-structured, auditable implementation that closely follows the Zen principles with only minor quibbles.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It correctly separates concerns with a small pure helper `_parse_line`, keeps control flow flat with guard clauses, makes data movement explicit via `zip` and `dict`, raises clear errors with line numbers, and preserves streaming behavior by using `iter()` and two sequential loops over the same iterator. The docstrings are thorough but slightly verbose for the task's simplicity. The use of `Optional[List[str]]` as a sentinel return from `_parse_line` is a mild code smell\u2014returning an empty list or using a separate predicate would be more explicit\u2014but it's a minor issue. The `header_line_number` tracking for error messages adds complexity that's arguably speculative but is genuinely useful for debugging. Overall, this is a well-structured, auditable implementation that closely follows the Zen principles with only minor quibbles.\",\n  \"strengths\": [\n    \"Small pure helper `_parse_line` cleanly separates line parsing from row assembly\",\n    \"Streaming behavior preserved correctly using `iter()` and two loops over the same iterator\",\n    \"Flat control flow with guard clauses (`if header_fields is not None`, `continue`)\",\n    \"Clear ValueError with line number context for mismatched column counts\",\n    \"Explicit data movement via `zip(header, row_values)` and `dict()`\",\n    \"Handles the no-content case gracefully with an early `return`\"\n  ],\n  \"weaknesses\": [\n    \"`_parse_line` returning `None` as a sentinel mixes parsing and filtering concerns; a predicate or separate empty-check would be more explicit\",\n    \"Docstrings are over-engineered relative to the simplicity of the task (Args/Returns/Raises sections add bulk)\",\n    \"`header_line_number` tracking adds state complexity primarily for error messages, which is mildly speculative\",\n    \"Importing `Optional` and `List` from `typing` instead of using built-in `list | None` syntax (minor modernization issue)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small pure helper `_parse_line` cleanly separates line parsing from row assembly",
+      "Streaming behavior preserved correctly using `iter()` and two loops over the same iterator",
+      "Flat control flow with guard clauses (`if header_fields is not None`, `continue`)",
+      "Clear ValueError with line number context for mismatched column counts",
+      "Explicit data movement via `zip(header, row_values)` and `dict()`",
+      "Handles the no-content case gracefully with an early `return`"
+    ],
+    "weaknesses": [
+      "`_parse_line` returning `None` as a sentinel mixes parsing and filtering concerns; a predicate or separate empty-check would be more explicit",
+      "Docstrings are over-engineered relative to the simplicity of the task (Args/Returns/Raises sections add bulk)",
+      "`header_line_number` tracking adds state complexity primarily for error messages, which is mildly speculative",
+      "Importing `Optional` and `List` from `typing` instead of using built-in `list | None` syntax (minor modernization issue)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 4.049,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 55,
+    "maintainability_index": 80.96,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_generation"
+}

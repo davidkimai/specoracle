@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses the right data structure (OrderedDict) for LRU eviction. The logic is straightforward and locally auditable. However, there are a few structural issues: the `_remove_expired` helper is called on every `set` but not on `get`, creating asymmetry and unnecessary overhead \u2014 a simpler approach would be lazy expiration only at access time, which is what `get` already does. The `_remove_expired` scan on every `set` is speculative complexity not required by the task (LRU eviction already handles capacity, and TTL is checked lazily on `get`). The docstring assumptions block is reasonable but slightly over-engineered for a small utility class. The `now is not None and not callable(now)` guard is a minor addition beyond what was asked. The `current >= expires_at` check for zero/negative TTL is a nice edge-case handle but adds a branch that could be simplified. Overall the code is well-structured and correct, just slightly more complex than the minimal solution warrants.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and uses the right data structure (OrderedDict) for LRU eviction. The logic is straightforward and locally auditable. However, there are a few structural issues: the `_remove_expired` helper is called on every `set` but not on `get`, creating asymmetry and unnecessary overhead \u2014 a simpler approach would be lazy expiration only at access time, which is what `get` already does. The `_remove_expired` scan on every `set` is speculative complexity not required by the task (LRU eviction already handles capacity, and TTL is checked lazily on `get`). The docstring assumptions block is reasonable but slightly over-engineered for a small utility class. The `now is not None and not callable(now)` guard is a minor addition beyond what was asked. The `current >= expires_at` check for zero/negative TTL is a nice edge-case handle but adds a branch that could be simplified. Overall the code is well-structured and correct, just slightly more complex than the minimal solution warrants.\",\n  \"strengths\": [\n    \"Uses OrderedDict correctly for O(1) LRU move_to_end and popitem\",\n    \"Lazy expiration in get() is the right primary mechanism\",\n    \"Injected `now` callable enables deterministic testing\",\n    \"Clear, readable variable names and straightforward control flow\",\n    \"Handles edge cases like max_size <= 0 and zero/negative TTL\"\n  ],\n  \"weaknesses\": [\n    \"_remove_expired called on every set() is unnecessary overhead \u2014 lazy expiration in get() is sufficient for correctness\",\n    \"The callable guard on `now` is a minor addition beyond the task spec\",\n    \"Docstring assumptions block adds lines without proportional value for a small utility\",\n    \"Two-pass expired-key collection in _remove_expired (list comprehension + loop) could be a single pass if kept at all\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses OrderedDict correctly for O(1) LRU move_to_end and popitem",
+      "Lazy expiration in get() is the right primary mechanism",
+      "Injected `now` callable enables deterministic testing",
+      "Clear, readable variable names and straightforward control flow",
+      "Handles edge cases like max_size <= 0 and zero/negative TTL"
+    ],
+    "weaknesses": [
+      "_remove_expired called on every set() is unnecessary overhead \u2014 lazy expiration in get() is sufficient for correctness",
+      "The callable guard on `now` is a minor addition beyond the task spec",
+      "Docstring assumptions block adds lines without proportional value for a small utility",
+      "Two-pass expired-key collection in _remove_expired (list comprehension + loop) could be a single pass if kept at all"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.014,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 4,
+    "loc": 49,
+    "maintainability_index": 68.131,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "oracle_karpathy_generation"
+}

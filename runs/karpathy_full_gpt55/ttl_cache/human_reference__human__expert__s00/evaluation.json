@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and uses exactly the right standard-library construct (OrderedDict) for LRU semantics without any speculative abstraction. Control flow is flat with guard clauses in `get`, data movement is explicit (move_to_end, popitem), invalid inputs raise clear errors, and the injectable `now` clock makes the design testable without hidden global state. The only minor issues are a redundant `move_to_end` call in `set` (the assignment already places the key at the end for a new key, though it correctly handles re-insertion of existing keys) and the use of `typing` imports that could be simplified, but neither meaningfully detracts from auditability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, direct, and uses exactly the right standard-library construct (OrderedDict) for LRU semantics without any speculative abstraction. Control flow is flat with guard clauses in `get`, data movement is explicit (move_to_end, popitem), invalid inputs raise clear errors, and the injectable `now` clock makes the design testable without hidden global state. The only minor issues are a redundant `move_to_end` call in `set` (the assignment already places the key at the end for a new key, though it correctly handles re-insertion of existing keys) and the use of `typing` imports that could be simplified, but neither meaningfully detracts from auditability or correctness.\",\n  \"strengths\": [\n    \"Uses OrderedDict naturally for LRU eviction without reinventing the wheel\",\n    \"Injectable clock (`now`) makes time-dependent behavior explicit and testable\",\n    \"Guard clause in `get` keeps nesting flat and logic easy to follow\",\n    \"Input validation raises ValueError with a clear message\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Redundant `move_to_end` after assignment in `set` (assignment already appends for new keys; harmless but slightly noisy)\",\n    \"Minor: importing `Callable` from `collections.abc` and `Any` from `typing` adds a small amount of boilerplate that could be omitted with a simpler type annotation style\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses OrderedDict naturally for LRU eviction without reinventing the wheel",
+      "Injectable clock (`now`) makes time-dependent behavior explicit and testable",
+      "Guard clause in `get` keeps nesting flat and logic easy to follow",
+      "Input validation raises ValueError with a clear message",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Redundant `move_to_end` after assignment in `set` (assignment already appends for new keys; harmless but slightly noisy)",
+      "Minor: importing `Callable` from `collections.abc` and `Any` from `typing` adds a small amount of boilerplate that could be omitted with a simpler type annotation style"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.059,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.25,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 28,
+    "maintainability_index": 52.639,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "human_reference"
+}

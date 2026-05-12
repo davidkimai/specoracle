@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses visibly staged parsing (partition for '=', then partition for '.', then strip and validate), keeps exactly one public function, preserves insertion order via plain dict (Python 3.7+), and raises errors with contextual messages. However, it misses the spec's explicit requirement to use local names ending in '_ledger' for dictionaries that survive across loop iterations \u2014 'bindings' should be named 'bindings_ledger' (and the inner dicts could follow suit). The error messages name the line number but don't explicitly name the 'archival field' being rejected in the way the spec implies (e.g., naming the section or key value). These are minor but direct violations of the named structural rules in the oracle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses visibly staged parsing (partition for '=', then partition for '.', then strip and validate), keeps exactly one public function, preserves insertion order via plain dict (Python 3.7+), and raises errors with contextual messages. However, it misses the spec's explicit requirement to use local names ending in '_ledger' for dictionaries that survive across loop iterations \u2014 'bindings' should be named 'bindings_ledger' (and the inner dicts could follow suit). The error messages name the line number but don't explicitly name the 'archival field' being rejected in the way the spec implies (e.g., naming the section or key value). These are minor but direct violations of the named structural rules in the oracle.\",\n  \"strengths\": [\n    \"Visibly staged parsing: '=' partition before '.' partition before strip/validate\",\n    \"Exactly one public function exported via __all__\",\n    \"Insertion order preserved naturally with plain dict\",\n    \"Clear, readable error messages with line numbers\",\n    \"No compressed one-liners or clever tricks\"\n  ],\n  \"weaknesses\": [\n    \"Dictionary surviving across loop iterations is named 'bindings' not 'bindings_ledger' as the spec requires\",\n    \"Inner per-section dicts also lack '_ledger' suffix\",\n    \"Error messages reference line numbers but don't name the archival field (section/key value) being rejected as the spec implies\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Visibly staged parsing: '=' partition before '.' partition before strip/validate",
+      "Exactly one public function exported via __all__",
+      "Insertion order preserved naturally with plain dict",
+      "Clear, readable error messages with line numbers",
+      "No compressed one-liners or clever tricks"
+    ],
+    "weaknesses": [
+      "Dictionary surviving across loop iterations is named 'bindings' not 'bindings_ledger' as the spec requires",
+      "Inner per-section dicts also lack '_ledger' suffix",
+      "Error messages reference line numbers but don't name the archival field (section/key value) being rejected as the spec implies"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.855,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 35,
+    "maintainability_index": 78.416,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

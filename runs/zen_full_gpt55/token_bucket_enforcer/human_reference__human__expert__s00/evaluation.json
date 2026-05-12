@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It validates inputs eagerly with clear error messages, uses a simple injectable clock for testability, keeps all state in named instance variables with no hidden mutation, and the `allow` method reads as a straightforward sequence of guard-clause-free steps: compute elapsed time, refill tokens (clamped to capacity), update timestamp, check and deduct. There is no speculative abstraction, no deep nesting, and no unused extension points. The only minor quibble is that `float(self._capacity)` is called on every `allow` invocation rather than storing capacity as a float once in `__init__`, and the `max(0.0, ...)` guard for elapsed time is slightly defensive without explanation, but neither issue meaningfully harms readability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It validates inputs eagerly with clear error messages, uses a simple injectable clock for testability, keeps all state in named instance variables with no hidden mutation, and the `allow` method reads as a straightforward sequence of guard-clause-free steps: compute elapsed time, refill tokens (clamped to capacity), update timestamp, check and deduct. There is no speculative abstraction, no deep nesting, and no unused extension points. The only minor quibble is that `float(self._capacity)` is called on every `allow` invocation rather than storing capacity as a float once in `__init__`, and the `max(0.0, ...)` guard for elapsed time is slightly defensive without explanation, but neither issue meaningfully harms readability or correctness.\",\n  \"strengths\": [\n    \"Eager input validation with descriptive ValueError messages\",\n    \"Injectable `now` callable makes the class trivially testable without monkeypatching\",\n    \"Control flow in `allow` is completely flat and reads top-to-bottom\",\n    \"All state is explicit and locally auditable in `__init__`\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"`float(self._capacity)` recomputed on every call instead of stored once as a float in `__init__`\",\n    \"`max(0.0, elapsed)` silently handles clock regression without a comment explaining the intent\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Eager input validation with descriptive ValueError messages",
+      "Injectable `now` callable makes the class trivially testable without monkeypatching",
+      "Control flow in `allow` is completely flat and reads top-to-bottom",
+      "All state is explicit and locally auditable in `__init__`",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "`float(self._capacity)` recomputed on every call instead of stored once as a float in `__init__`",
+      "`max(0.0, elapsed)` silently handles clock regression without a comment explaining the intent"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.674,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 23,
+    "maintainability_index": 54.376,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "human_reference"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-labeled local variable names for every money-affecting decision (e.g., `invoice_is_paid_branch`, `invoice_has_integer_amount_branch`), returns records with the exact legacy keys, stages the logic visibly across four named audit stages with comments, avoids clever flattening in favor of a readable staged audit trail, and does not mutate the input. The only minor deviations are that the branch-label naming convention is applied somewhat mechanically even to non-money decisions (region validity), and the lambda in the sort could arguably be replaced with `operator.itemgetter` for explicitness, but neither is a meaningful flaw given the spec's intent.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The candidate implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-labeled local variable names for every money-affecting decision (e.g., `invoice_is_paid_branch`, `invoice_has_integer_amount_branch`), returns records with the exact legacy keys, stages the logic visibly across four named audit stages with comments, avoids clever flattening in favor of a readable staged audit trail, and does not mutate the input. The only minor deviations are that the branch-label naming convention is applied somewhat mechanically even to non-money decisions (region validity), and the lambda in the sort could arguably be replaced with `operator.itemgetter` for explicitness, but neither is a meaningful flaw given the spec's intent.\",\n  \"strengths\": [\n    \"Single public function with zero helper functions\",\n    \"Explicit branch-labeled variable names for every conditional affecting money\",\n    \"Four clearly named legacy audit stage comments (STAGE_1 through STAGE_4)\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Visible staged pipeline instead of clever one-liner flattening\",\n    \"Input is never mutated\"\n  ],\n  \"weaknesses\": [\n    \"Branch-label naming applied to region/status checks that don't directly affect money, slightly over-applying the convention\",\n    \"Lambda in sort is a minor cleverness; `operator.itemgetter` or an explicit key function would be marginally more explicit\",\n    \"Verbose typing imports (List, Dict, Any) from `typing` are unnecessary in modern Python and add minor noise\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function with zero helper functions",
+      "Explicit branch-labeled variable names for every conditional affecting money",
+      "Four clearly named legacy audit stage comments (STAGE_1 through STAGE_4)",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Visible staged pipeline instead of clever one-liner flattening",
+      "Input is never mutated"
+    ],
+    "weaknesses": [
+      "Branch-label naming applied to region/status checks that don't directly affect money, slightly over-applying the convention",
+      "Lambda in sort is a minor cleverness; `operator.itemgetter` or an explicit key function would be marginally more explicit",
+      "Verbose typing imports (List, Dict, Any) from `typing` are unnecessary in modern Python and add minor noise"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.698,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 41,
+    "maintainability_index": 71.786,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

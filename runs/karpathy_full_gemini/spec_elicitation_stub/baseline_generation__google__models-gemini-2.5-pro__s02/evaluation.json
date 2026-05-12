@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally clean: it uses a flat guard clause, raises NotImplementedError for unspecified paths, avoids metaprogramming, and has no hidden state or speculative abstractions. The logic is locally auditable in a single glance. The main weakness is over-documentation \u2014 the docstring and inline comments are verbose relative to the simplicity of the code, violating the Zen principle that sparse, self-evident code needs minimal explanation. The strict key-set check (`== {'mode', 'value'}`) is a reasonable interpretation of 'only specified path' but could be seen as over-constraining (the spec doesn't explicitly forbid extra keys), though it does correctly collapse ambiguity by raising NotImplementedError rather than guessing. No unnecessary helpers, no framework-shaped structure, no unused extension points \u2014 the architecture is appropriately minimal for the task.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally clean: it uses a flat guard clause, raises NotImplementedError for unspecified paths, avoids metaprogramming, and has no hidden state or speculative abstractions. The logic is locally auditable in a single glance. The main weakness is over-documentation \u2014 the docstring and inline comments are verbose relative to the simplicity of the code, violating the Zen principle that sparse, self-evident code needs minimal explanation. The strict key-set check (`== {'mode', 'value'}`) is a reasonable interpretation of 'only specified path' but could be seen as over-constraining (the spec doesn't explicitly forbid extra keys), though it does correctly collapse ambiguity by raising NotImplementedError rather than guessing. No unnecessary helpers, no framework-shaped structure, no unused extension points \u2014 the architecture is appropriately minimal for the task.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause and early return\",\n    \"Raises NotImplementedError explicitly for all unspecified paths\",\n    \"No imports, no global state, no hidden mutation\",\n    \"No speculative abstractions or unused extension points\",\n    \"Ordinary, readable constructs throughout\"\n  ],\n  \"weaknesses\": [\n    \"Docstring and inline comments are disproportionately verbose for a ~5-line function, cluttering rather than clarifying\",\n    \"Strict key-set equality check may be slightly over-constraining beyond what the spec requires, though it is defensible\",\n    \"The comment block before the raise is redundant given the self-evident guard condition\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause and early return",
+      "Raises NotImplementedError explicitly for all unspecified paths",
+      "No imports, no global state, no hidden mutation",
+      "No speculative abstractions or unused extension points",
+      "Ordinary, readable constructs throughout"
+    ],
+    "weaknesses": [
+      "Docstring and inline comments are disproportionately verbose for a ~5-line function, cluttering rather than clarifying",
+      "Strict key-set equality check may be slightly over-constraining beyond what the spec requires, though it is defensible",
+      "The comment block before the raise is redundant given the self-evident guard condition"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.963,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 30,
+    "maintainability_index": 65.215,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "baseline_generation"
+}

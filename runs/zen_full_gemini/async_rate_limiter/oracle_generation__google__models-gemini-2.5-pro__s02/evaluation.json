@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with good separation of concerns via small helpers and explicit data movement. However, it carries several Zen violations: `_get_monotonic_time` is a trivial one-liner wrapper that adds indirection without value (just use `time.monotonic` directly as the default); `_validate_rate` is a micro-helper so thin it obscures rather than clarifies; the `_WINDOW_SIZE` class constant is speculative abstraction since the spec fixes it at 1.0; the docstrings are verbose and framework-shaped, padding the file considerably; and the `isinstance(rate, int)` check silently rejects valid numeric types like `bool` subclass edge cases while the spec only says 'non-positive rates'. The busy-wait loop with `asyncio.sleep(0)` fallback is architecturally sound but the overall structure feels over-engineered for what is essentially a sliding-window counter with a lock.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with good separation of concerns via small helpers and explicit data movement. However, it carries several Zen violations: `_get_monotonic_time` is a trivial one-liner wrapper that adds indirection without value (just use `time.monotonic` directly as the default); `_validate_rate` is a micro-helper so thin it obscures rather than clarifies; the `_WINDOW_SIZE` class constant is speculative abstraction since the spec fixes it at 1.0; the docstrings are verbose and framework-shaped, padding the file considerably; and the `isinstance(rate, int)` check silently rejects valid numeric types like `bool` subclass edge cases while the spec only says 'non-positive rates'. The busy-wait loop with `asyncio.sleep(0)` fallback is architecturally sound but the overall structure feels over-engineered for what is essentially a sliding-window counter with a lock.\",\n  \"strengths\": [\n    \"Sliding-window algorithm is correct and auditable\",\n    \"Lock released before sleeping, allowing other tasks to proceed\",\n    \"Explicit data movement with no hidden global state\",\n    \"Pure helper `_prune_timestamps` is well-named and testable\"\n  ],\n  \"weaknesses\": [\n    \"`_get_monotonic_time` wrapper adds indirection with zero value; `time.monotonic` should be the default directly\",\n    \"`_validate_rate` is too thin to justify extraction; inline guard clause would be clearer\",\n    \"`_WINDOW_SIZE` class constant is speculative abstraction for a fixed spec requirement\",\n    \"Verbose docstrings inflate the file and obscure the simple core logic\",\n    \"Busy-wait retry loop is implicit complexity; the spec doesn't require waiting, only returning bool\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Sliding-window algorithm is correct and auditable",
+      "Lock released before sleeping, allowing other tasks to proceed",
+      "Explicit data movement with no hidden global state",
+      "Pure helper `_prune_timestamps` is well-named and testable"
+    ],
+    "weaknesses": [
+      "`_get_monotonic_time` wrapper adds indirection with zero value; `time.monotonic` should be the default directly",
+      "`_validate_rate` is too thin to justify extraction; inline guard clause would be clearer",
+      "`_WINDOW_SIZE` class constant is speculative abstraction for a fixed spec requirement",
+      "Verbose docstrings inflate the file and obscure the simple core logic",
+      "Busy-wait retry loop is implicit complexity; the spec doesn't require waiting, only returning bool"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 10.051,
+    "exit_code": 124,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "",
+    "timed_out": true
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.833,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 5,
+    "loc": 71,
+    "maintainability_index": 74.648,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_generation"
+}

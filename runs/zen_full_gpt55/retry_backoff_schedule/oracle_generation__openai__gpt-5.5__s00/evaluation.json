@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct with flat control flow and explicit guard clauses. The `_require_integer` helper is a reasonable extraction that avoids repetition. However, the helper adds a layer of type-checking that goes beyond the stated requirements (which only mention ValueError for range violations, not type errors), introducing a speculative abstraction. The loop-based accumulation is straightforward and auditable, though a list comprehension with `min(base_seconds * (2**i), cap_seconds) for i in range(attempts)` would be more declarative and eliminate the mutable `delay` variable. The `delay = min(delay * 2, cap_seconds)` line inside the loop is slightly redundant since the cap is already applied on append. Overall the code is well-structured but carries minor unnecessary complexity.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct with flat control flow and explicit guard clauses. The `_require_integer` helper is a reasonable extraction that avoids repetition. However, the helper adds a layer of type-checking that goes beyond the stated requirements (which only mention ValueError for range violations, not type errors), introducing a speculative abstraction. The loop-based accumulation is straightforward and auditable, though a list comprehension with `min(base_seconds * (2**i), cap_seconds) for i in range(attempts)` would be more declarative and eliminate the mutable `delay` variable. The `delay = min(delay * 2, cap_seconds)` line inside the loop is slightly redundant since the cap is already applied on append. Overall the code is well-structured but carries minor unnecessary complexity.\",\n  \"strengths\": [\n    \"Flat control flow with clear guard clauses at the top\",\n    \"Explicit, descriptive error messages for each invalid input\",\n    \"Small helper avoids repeating isinstance checks\",\n    \"Names are self-explanatory and locally auditable\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"Type-checking via _require_integer is speculative \u2014 requirements only specify ValueError for range violations, not type errors\",\n    \"Mutable `delay` variable inside the loop is unnecessary; a pure index-based formula would be cleaner\",\n    \"The `delay = min(delay * 2, cap_seconds)` update redundantly caps a value already capped on append\",\n    \"_require_integer helper is a minor over-abstraction for only three call sites\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with clear guard clauses at the top",
+      "Explicit, descriptive error messages for each invalid input",
+      "Small helper avoids repeating isinstance checks",
+      "Names are self-explanatory and locally auditable",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "Type-checking via _require_integer is speculative \u2014 requirements only specify ValueError for range violations, not type errors",
+      "Mutable `delay` variable inside the loop is unnecessary; a pure index-based formula would be cleaner",
+      "The `delay = min(delay * 2, cap_seconds)` update redundantly caps a value already capped on append",
+      "_require_integer helper is a minor over-abstraction for only three call sites"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.555,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 2,
+    "loc": 25,
+    "maintainability_index": 57.094,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "oracle_generation"
+}

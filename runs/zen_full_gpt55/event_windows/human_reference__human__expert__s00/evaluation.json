@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with a single well-named function that handles all requirements explicitly. The guard clause for window_size is immediate and clear. The loop is straightforward with explicit malformed-event skipping via isinstance checks. Using setdefault to accumulate into a dict-of-dicts is idiomatic and avoids hidden mutation. The final sorted return is explicit. Minor weaknesses: mutating the summary dict in-place (rather than accumulating counts/totals separately and building output dicts at the end) slightly obscures the data flow and makes the output dicts the same objects as the accumulator dicts, which is a mild hidden-mutation smell. A small helper to extract a valid event could improve local auditability, but the function is short enough that this is not a serious concern. Overall this is a solid, maintainable implementation that closely follows the Zen principles.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with a single well-named function that handles all requirements explicitly. The guard clause for window_size is immediate and clear. The loop is straightforward with explicit malformed-event skipping via isinstance checks. Using setdefault to accumulate into a dict-of-dicts is idiomatic and avoids hidden mutation. The final sorted return is explicit. Minor weaknesses: mutating the summary dict in-place (rather than accumulating counts/totals separately and building output dicts at the end) slightly obscures the data flow and makes the output dicts the same objects as the accumulator dicts, which is a mild hidden-mutation smell. A small helper to extract a valid event could improve local auditability, but the function is short enough that this is not a serious concern. Overall this is a solid, maintainable implementation that closely follows the Zen principles.\",\n  \"strengths\": [\n    \"Immediate ValueError guard clause with clear message\",\n    \"Flat control flow with a single loop and a guard-continue pattern\",\n    \"Explicit isinstance checks for malformed event filtering\",\n    \"Idiomatic use of dict.setdefault for accumulation\",\n    \"Sorted output constructed transparently in the return statement\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Output dicts are the same mutable objects as the accumulator dicts, creating a mild hidden-mutation risk if callers modify results\",\n    \"Accumulating directly into the output dict format mixes concerns slightly; separating raw accumulation from output construction would be cleaner\",\n    \"No helper function to validate/parse a single event, reducing local auditability of the validation logic\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Immediate ValueError guard clause with clear message",
+      "Flat control flow with a single loop and a guard-continue pattern",
+      "Explicit isinstance checks for malformed event filtering",
+      "Idiomatic use of dict.setdefault for accumulation",
+      "Sorted output constructed transparently in the return statement",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Output dicts are the same mutable objects as the accumulator dicts, creating a mild hidden-mutation risk if callers modify results",
+      "Accumulating directly into the output dict format mixes concerns slightly; separating raw accumulation from output construction would be cleaner",
+      "No helper function to validate/parse a single event, reducing local auditability of the validation logic"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.584,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 58.61,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "human_reference"
+}

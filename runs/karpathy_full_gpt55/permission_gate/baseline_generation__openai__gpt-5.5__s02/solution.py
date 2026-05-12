@@ -1,0 +1,5 @@
+def has_permission(matrix: dict[str, set[str]], role: str, permission: str) -> bool:
+    """Return True only if the role exists and explicitly includes permission."""
+    if role not in matrix:
+        return False
+    return permission in matrix[role]

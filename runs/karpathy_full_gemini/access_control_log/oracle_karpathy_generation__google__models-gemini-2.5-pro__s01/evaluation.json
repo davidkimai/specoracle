@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly satisfies all requirements of ZT-2. The decision is computed first, logged unconditionally before the single return point, and the log record contains all three required fields. The use of `matrix.get(role, set())` correctly implements deny-by-default. The code is flat, readable, and locally auditable with no hidden control flow. Minor deductions: the verbose docstring and comments slightly over-explain trivial logic (un-Pythonic verbosity), and using `typing.Dict`/`typing.Set`/`typing.List` instead of the modern built-in generics (`dict`, `set`, `list`) is a minor style anachronism in Python 3.9+, though functionally equivalent.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly satisfies all requirements of ZT-2. The decision is computed first, logged unconditionally before the single return point, and the log record contains all three required fields. The use of `matrix.get(role, set())` correctly implements deny-by-default. The code is flat, readable, and locally auditable with no hidden control flow. Minor deductions: the verbose docstring and comments slightly over-explain trivial logic (un-Pythonic verbosity), and using `typing.Dict`/`typing.Set`/`typing.List` instead of the modern built-in generics (`dict`, `set`, `list`) is a minor style anachronism in Python 3.9+, though functionally equivalent.\",\n  \"strengths\": [\n    \"Single return point guarantees log is always written before returning\",\n    \"Deny-by-default correctly implemented via `matrix.get(role, set())`\",\n    \"Log record contains all three required fields: role, permission, allowed\",\n    \"Flat, linear structure with no branching that could bypass logging\",\n    \"Decision computed before logging, ensuring logged value matches returned value\"\n  ],\n  \"weaknesses\": [\n    \"Uses legacy `typing.Dict`/`typing.Set`/`typing.List` instead of modern built-in generics\",\n    \"Overly verbose comments and docstring re-state obvious code behavior\",\n    \"No explicit type annotation on `log_record` variable (minor)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single return point guarantees log is always written before returning",
+      "Deny-by-default correctly implemented via `matrix.get(role, set())`",
+      "Log record contains all three required fields: role, permission, allowed",
+      "Flat, linear structure with no branching that could bypass logging",
+      "Decision computed before logging, ensuring logged value matches returned value"
+    ],
+    "weaknesses": [
+      "Uses legacy `typing.Dict`/`typing.Set`/`typing.List` instead of modern built-in generics",
+      "Overly verbose comments and docstring re-state obvious code behavior",
+      "No explicit type annotation on `log_record` variable (minor)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.373,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 93.409,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "oracle_karpathy_generation"
+}

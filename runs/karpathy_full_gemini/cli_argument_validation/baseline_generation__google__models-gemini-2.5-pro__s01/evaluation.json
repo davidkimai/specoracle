@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, but the choice to subclass `argparse.ArgumentParser` introduces a speculative abstraction layer (a whole class definition) just to override one method, when a simpler try/except or manual parsing approach would be flatter and more locally auditable. The docstrings are verbose to the point of noise \u2014 the module docstring, class docstring with Args/Raises sections, and the lengthy function docstring repeat information already visible in the code itself, violating the Zen principle that sparse code is easier to audit. The `metavar` on `--format` hides the choices from argparse's error messages (a subtle footgun). The `Union[str, int, bool]` return type annotation is less precise than a `TypedDict` but also not wrong. The `add_help=False` is a reasonable guard. Overall the architecture works but carries unnecessary ceremony: the subclass, the import of `NoReturn`/`Union`/`List`/`Dict` instead of modern built-in generics, and the wall of docstring text all add weight without adding clarity.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, but the choice to subclass `argparse.ArgumentParser` introduces a speculative abstraction layer (a whole class definition) just to override one method, when a simpler try/except or manual parsing approach would be flatter and more locally auditable. The docstrings are verbose to the point of noise \u2014 the module docstring, class docstring with Args/Raises sections, and the lengthy function docstring repeat information already visible in the code itself, violating the Zen principle that sparse code is easier to audit. The `metavar` on `--format` hides the choices from argparse's error messages (a subtle footgun). The `Union[str, int, bool]` return type annotation is less precise than a `TypedDict` but also not wrong. The `add_help=False` is a reasonable guard. Overall the architecture works but carries unnecessary ceremony: the subclass, the import of `NoReturn`/`Union`/`List`/`Dict` instead of modern built-in generics, and the wall of docstring text all add weight without adding clarity.\",\n  \"strengths\": [\n    \"Functionally correct: handles all required flags, defaults, and validation\",\n    \"Raises ValueError instead of calling sys.exit via the overridden error method\",\n    \"Explicit return dict with correct key names and types\",\n    \"Post-parse validation for positive limit is clear and correctly placed\",\n    \"add_help=False prevents accidental sys.exit on --help\"\n  ],\n  \"weaknesses\": [\n    \"Subclassing ArgumentParser just to override error() is speculative abstraction; a simple wrapper or manual parse loop would be flatter\",\n    \"Excessive docstring verbosity obscures rather than clarifies the actual logic\",\n    \"metavar='VALUE' on --format suppresses choices in error messages, reducing error clarity\",\n    \"Uses legacy typing imports (List, Dict, Union, NoReturn) instead of built-in generics available since Python 3.9+\",\n    \"No explicit handling of unknown flags \u2014 relies silently on argparse's parse_args behavior, which is correct but not locally obvious\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct: handles all required flags, defaults, and validation",
+      "Raises ValueError instead of calling sys.exit via the overridden error method",
+      "Explicit return dict with correct key names and types",
+      "Post-parse validation for positive limit is clear and correctly placed",
+      "add_help=False prevents accidental sys.exit on --help"
+    ],
+    "weaknesses": [
+      "Subclassing ArgumentParser just to override error() is speculative abstraction; a simple wrapper or manual parse loop would be flatter",
+      "Excessive docstring verbosity obscures rather than clarifies the actual logic",
+      "metavar='VALUE' on --format suppresses choices in error messages, reducing error clarity",
+      "Uses legacy typing imports (List, Dict, Union, NoReturn) instead of built-in generics available since Python 3.9+",
+      "No explicit handling of unknown flags \u2014 relies silently on argparse's parse_args behavior, which is correct but not locally obvious"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.166,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.667,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 2,
+    "loc": 93,
+    "maintainability_index": 90.748,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "baseline_generation"
+}

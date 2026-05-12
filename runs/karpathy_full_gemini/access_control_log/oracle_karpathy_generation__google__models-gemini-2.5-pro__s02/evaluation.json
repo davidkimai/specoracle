@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision first, then unconditionally appends a complete log record containing role, permission, and allowed before returning \u2014 there is no code path that can bypass the log write. The logic is flat (no nesting beyond a single function body), explicit (deny-by-default via an empty-set fallback), and locally auditable at a glance. Type annotations are precise, the docstring accurately describes the contract, and the variable names are self-documenting. There is no architectural slop: no classes, no decorators, no hidden state, no unnecessary abstraction.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision first, then unconditionally appends a complete log record containing role, permission, and allowed before returning \u2014 there is no code path that can bypass the log write. The logic is flat (no nesting beyond a single function body), explicit (deny-by-default via an empty-set fallback), and locally auditable at a glance. Type annotations are precise, the docstring accurately describes the contract, and the variable names are self-documenting. There is no architectural slop: no classes, no decorators, no hidden state, no unnecessary abstraction.\",\n  \"strengths\": [\n    \"Log write is unconditionally executed before every return, satisfying ZT-2 with no possible bypass\",\n    \"Deny-by-default is implemented cleanly via matrix.get(role, set())\",\n    \"Flat, single-function structure with zero unnecessary abstraction\",\n    \"Explicit, readable variable names (permissions_for_role, allowed, log_record)\",\n    \"Accurate and informative docstring that references the security principle\"\n  ],\n  \"weaknesses\": [\n    \"Minor: the Apache license header and boilerplate add noise for a small utility function, but this is cosmetic\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Log write is unconditionally executed before every return, satisfying ZT-2 with no possible bypass",
+      "Deny-by-default is implemented cleanly via matrix.get(role, set())",
+      "Flat, single-function structure with zero unnecessary abstraction",
+      "Explicit, readable variable names (permissions_for_role, allowed, log_record)",
+      "Accurate and informative docstring that references the security principle"
+    ],
+    "weaknesses": [
+      "Minor: the Apache license header and boilerplate add noise for a small utility function, but this is cosmetic"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.356,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 54,
+    "maintainability_index": 71.799,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "oracle_karpathy_generation"
+}

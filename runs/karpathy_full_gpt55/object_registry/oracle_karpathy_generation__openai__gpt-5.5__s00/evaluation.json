@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, direct, and exactly matches the stated requirements with no speculative features or unnecessary abstractions. It uses a plain dict of weakrefs, exposes exactly the three required methods, and each method has a clear single responsibility. The get() method correctly handles both missing keys and dead references in a flat, readable two-step check. The cleanup() method uses a straightforward list comprehension to collect dead keys before deletion, avoiding mutation-during-iteration. The docstring is brief and accurate. The only marginal issue is that get() returns None for both 'key not found' and 'object garbage-collected' cases without distinction, but this matches the spec exactly. No over-engineering, no unnecessary base classes, no callbacks, no thread-safety theater\u2014just the minimum correct solution.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, direct, and exactly matches the stated requirements with no speculative features or unnecessary abstractions. It uses a plain dict of weakrefs, exposes exactly the three required methods, and each method has a clear single responsibility. The get() method correctly handles both missing keys and dead references in a flat, readable two-step check. The cleanup() method uses a straightforward list comprehension to collect dead keys before deletion, avoiding mutation-during-iteration. The docstring is brief and accurate. The only marginal issue is that get() returns None for both 'key not found' and 'object garbage-collected' cases without distinction, but this matches the spec exactly. No over-engineering, no unnecessary base classes, no callbacks, no thread-safety theater\u2014just the minimum correct solution.\",\n  \"strengths\": [\n    \"Exactly three methods matching the spec, nothing more\",\n    \"Flat, readable logic with no unnecessary indirection or abstraction\",\n    \"Correct two-phase cleanup avoids dict mutation during iteration\",\n    \"get() correctly handles both absent keys and dead references uniformly per spec\"\n  ],\n  \"weaknesses\": [\n    \"Docstring on the class adds a minor constraint ('must support weak references') not in the spec, though it is factually correct\",\n    \"No handling of duplicate key registration (silently overwrites), but spec does not require it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Exactly three methods matching the spec, nothing more",
+      "Flat, readable logic with no unnecessary indirection or abstraction",
+      "Correct two-phase cleanup avoids dict mutation during iteration",
+      "get() correctly handles both absent keys and dead references uniformly per spec"
+    ],
+    "weaknesses": [
+      "Docstring on the class adds a minor constraint ('must support weak references') not in the spec, though it is factually correct",
+      "No handling of duplicate key registration (silently overwrites), but spec does not require it"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.889,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 18,
+    "maintainability_index": 87.893,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "oracle_karpathy_generation"
+}

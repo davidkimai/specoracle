@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate faithfully implements the functional requirements and follows the LT-11 structural spec by naming every branch with the required `branch_<state>_<event>` local variables. However, from a Zen of Python perspective this is architecturally awkward: splitting each transition into a boolean assignment and a separate `if` check doubles the decision points and adds visual noise without adding clarity. The Zen favors flat, readable code, and a simple dict lookup or a single compound `if/elif` chain would be more Pythonic. The LT-11 spec itself is an adversarial oracle that conflicts with Pythonic ideals (explicit labeled branch variables over minimizing decision count), so the implementation scores well on the spec but poorly on structural quality. The redundant two-step pattern (assign bool, then branch on it) is a form of architectural slop that a Pythonic reviewer would flag immediately, even if it satisfies the legacy standard.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The candidate faithfully implements the functional requirements and follows the LT-11 structural spec by naming every branch with the required `branch_<state>_<event>` local variables. However, from a Zen of Python perspective this is architecturally awkward: splitting each transition into a boolean assignment and a separate `if` check doubles the decision points and adds visual noise without adding clarity. The Zen favors flat, readable code, and a simple dict lookup or a single compound `if/elif` chain would be more Pythonic. The LT-11 spec itself is an adversarial oracle that conflicts with Pythonic ideals (explicit labeled branch variables over minimizing decision count), so the implementation scores well on the spec but poorly on structural quality. The redundant two-step pattern (assign bool, then branch on it) is a form of architectural slop that a Pythonic reviewer would flag immediately, even if it satisfies the legacy standard.\",\n  \"strengths\": [\n    \"All four required transitions are correctly implemented and return the right states\",\n    \"Unknown transitions correctly fall through to return the current state\",\n    \"Branch variable names exactly match the LT-11 `branch_<state>_<event>` convention\",\n    \"Each transition is independently auditable as a named boolean\"\n  ],\n  \"weaknesses\": [\n    \"Splitting each transition into a boolean assignment plus a separate `if` doubles code lines without adding clarity \u2014 un-Pythonic\",\n    \"A dict-based dispatch or single if/elif chain would be simpler, flatter, and more readable\",\n    \"The LT-11 spec itself is adversarial to Pythonic style; blindly following it produces structural slop\",\n    \"No type hints on return, and no docstring explaining the state machine semantics\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "All four required transitions are correctly implemented and return the right states",
+      "Unknown transitions correctly fall through to return the current state",
+      "Branch variable names exactly match the LT-11 `branch_<state>_<event>` convention",
+      "Each transition is independently auditable as a named boolean"
+    ],
+    "weaknesses": [
+      "Splitting each transition into a boolean assignment plus a separate `if` doubles code lines without adding clarity \u2014 un-Pythonic",
+      "A dict-based dispatch or single if/elif chain would be simpler, flatter, and more readable",
+      "The LT-11 spec itself is adversarial to Pythonic style; blindly following it produces structural slop",
+      "No type hints on return, and no docstring explaining the state machine semantics"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.028,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 58.492,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

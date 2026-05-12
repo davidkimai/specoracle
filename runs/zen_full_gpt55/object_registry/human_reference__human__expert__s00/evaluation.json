@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen of Python oracle for this task. It is flat, explicit, and minimal: a single class with three small methods, each doing exactly one thing. Data movement is transparent\u2014the dict holds weak refs, get() dereferences explicitly, and cleanup() rebuilds the dict with a clear comprehension. There is no speculative abstraction, no hidden mutation, and no framework-shaped scaffolding. The only minor quibble is that `register` silently overwrites existing keys and accepts non-string keys without validation (the type hint says `str` but there's no enforcement), and `get` returns `None` both when the key is absent and when the referent is dead, which conflates two distinct states\u2014a guard clause distinguishing the two cases could improve auditability. These are small issues that don't materially harm correctness or clarity.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen of Python oracle for this task. It is flat, explicit, and minimal: a single class with three small methods, each doing exactly one thing. Data movement is transparent\u2014the dict holds weak refs, get() dereferences explicitly, and cleanup() rebuilds the dict with a clear comprehension. There is no speculative abstraction, no hidden mutation, and no framework-shaped scaffolding. The only minor quibble is that `register` silently overwrites existing keys and accepts non-string keys without validation (the type hint says `str` but there's no enforcement), and `get` returns `None` both when the key is absent and when the referent is dead, which conflates two distinct states\u2014a guard clause distinguishing the two cases could improve auditability. These are small issues that don't materially harm correctness or clarity.\",\n  \"strengths\": [\n    \"Minimal surface area: three focused methods with no unnecessary helpers or extension points\",\n    \"Explicit data flow: weak ref creation, storage, and dereferencing are all visible at the call site\",\n    \"Flat control flow: no nesting beyond a single ternary and a dict comprehension\",\n    \"Standard-library only: uses weakref directly with no clever metaprogramming\",\n    \"cleanup() is pure in spirit\u2014replaces the dict rather than mutating it in place during iteration\"\n  ],\n  \"weaknesses\": [\n    \"get() conflates 'key not found' and 'object garbage-collected' by returning None for both, reducing auditability\",\n    \"register() silently overwrites existing keys without any notice or guard\",\n    \"No input validation on key type despite the str annotation, so invalid inputs fail silently\",\n    \"cleanup() double-dereferences each live ref (once in the comprehension condition, once implicitly kept), which is a minor inefficiency\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal surface area: three focused methods with no unnecessary helpers or extension points",
+      "Explicit data flow: weak ref creation, storage, and dereferencing are all visible at the call site",
+      "Flat control flow: no nesting beyond a single ternary and a dict comprehension",
+      "Standard-library only: uses weakref directly with no clever metaprogramming",
+      "cleanup() is pure in spirit\u2014replaces the dict rather than mutating it in place during iteration"
+    ],
+    "weaknesses": [
+      "get() conflates 'key not found' and 'object garbage-collected' by returning None for both, reducing auditability",
+      "register() silently overwrites existing keys without any notice or guard",
+      "No input validation on key type despite the str annotation, so invalid inputs fail silently",
+      "cleanup() double-dereferences each live ref (once in the comprehension condition, once implicitly kept), which is a minor inefficiency"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.153,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 13,
+    "maintainability_index": 64.932,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "human_reference"
+}

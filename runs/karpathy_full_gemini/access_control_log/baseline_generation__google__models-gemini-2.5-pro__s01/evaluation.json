@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision first, unconditionally appends a complete log entry (role, permission, allowed) before the single return statement, and defaults to deny (allowed = False). There are no early returns, no short-circuit paths that could bypass logging, and the logic is flat, explicit, and immediately auditable in one linear read. The type annotations, docstring, and inline comments add clarity without adding complexity.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision first, unconditionally appends a complete log entry (role, permission, allowed) before the single return statement, and defaults to deny (allowed = False). There are no early returns, no short-circuit paths that could bypass logging, and the logic is flat, explicit, and immediately auditable in one linear read. The type annotations, docstring, and inline comments add clarity without adding complexity.\",\n  \"strengths\": [\n    \"Single return path guarantees every attempt is logged regardless of outcome\",\n    \"Deny-by-default is explicit via `allowed = False` initialization\",\n    \"Log entry is constructed and appended before the return, satisfying ZT-2 ordering\",\n    \"Log record contains exactly the required fields: role, permission, allowed\",\n    \"Flat, linear structure with no nested control flow or helper indirection\",\n    \"Clear docstring and inline comments aid auditability\"\n  ],\n  \"weaknesses\": [\n    \"Minor: `List[Dict[str, any]]` uses lowercase `any` instead of `Any` from typing, though functionally harmless in modern Python\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single return path guarantees every attempt is logged regardless of outcome",
+      "Deny-by-default is explicit via `allowed = False` initialization",
+      "Log entry is constructed and appended before the return, satisfying ZT-2 ordering",
+      "Log record contains exactly the required fields: role, permission, allowed",
+      "Flat, linear structure with no nested control flow or helper indirection",
+      "Clear docstring and inline comments aid auditability"
+    ],
+    "weaknesses": [
+      "Minor: `List[Dict[str, any]]` uses lowercase `any` instead of `Any` from typing, though functionally harmless in modern Python"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.725,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 86.387,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and correct. It uses the standard double-checked locking pattern with a sentinel object, which is the idiomatic Python approach for thread-safe lazy initialization. The code is flat, explicit about data movement (no hidden state), uses ordinary stdlib constructs (Lock), and names are self-explanatory. The sentinel `_MISSING` is a well-known pattern that avoids issues with falsy factory results. The Generic typing adds value without being speculative. The only minor quibbles are the `type: ignore` comment (a small wart from the union type annotation on `_value`) and that `_MISSING` as a module-level sentinel leaks slightly into the module namespace, but these are negligible concerns in practice.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and correct. It uses the standard double-checked locking pattern with a sentinel object, which is the idiomatic Python approach for thread-safe lazy initialization. The code is flat, explicit about data movement (no hidden state), uses ordinary stdlib constructs (Lock), and names are self-explanatory. The sentinel `_MISSING` is a well-known pattern that avoids issues with falsy factory results. The Generic typing adds value without being speculative. The only minor quibbles are the `type: ignore` comment (a small wart from the union type annotation on `_value`) and that `_MISSING` as a module-level sentinel leaks slightly into the module namespace, but these are negligible concerns in practice.\",\n  \"strengths\": [\n    \"Double-checked locking is the correct, minimal thread-safe pattern\",\n    \"Sentinel object correctly handles any factory return value including None/falsy\",\n    \"Flat control flow with guard clause structure\",\n    \"No speculative abstractions or unused extension points\",\n    \"Generic typing is useful without being over-engineered\",\n    \"All state is explicit and local to the instance\"\n  ],\n  \"weaknesses\": [\n    \"Union type `T | object` for `_value` forces a `type: ignore` comment; a cleaner approach would use `Optional[T]` with a separate `_initialized` flag or a typed sentinel class\",\n    \"Module-level `_MISSING` sentinel is a minor namespace leak, though conventional\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Double-checked locking is the correct, minimal thread-safe pattern",
+      "Sentinel object correctly handles any factory return value including None/falsy",
+      "Flat control flow with guard clause structure",
+      "No speculative abstractions or unused extension points",
+      "Generic typing is useful without being over-engineered",
+      "All state is explicit and local to the instance"
+    ],
+    "weaknesses": [
+      "Union type `T | object` for `_value` forces a `type: ignore` comment; a cleaner approach would use `Optional[T]` with a separate `_initialized` flag or a typed sentinel class",
+      "Module-level `_MISSING` sentinel is a minor namespace leak, though conventional"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.859,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.13s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 16,
+    "maintainability_index": 77.395,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "human_reference"
+}

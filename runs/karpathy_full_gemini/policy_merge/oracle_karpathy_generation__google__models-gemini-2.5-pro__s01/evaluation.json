@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, following a clean recursive pattern. However, it suffers from over-documentation relative to the task complexity \u2014 the module docstring, the lengthy function docstring restating the requirements verbatim, and inline comments explaining obvious operations all add noise without value. The Karpathy oracle explicitly discourages this kind of speculative verbosity. The type hints using `Dict[Any, Any]` from `typing` instead of the simpler built-in `dict` (available since Python 3.9) is a minor anachronism. The `merged.get(key)` call is redundant since `key in merged` was already checked \u2014 `merged[key]` would be cleaner. The core logic itself is minimal and correct: shallow copy, iterate overrides, handle None deletion, recurse on dict-dict pairs. The architecture is flat and readable with no unnecessary abstractions.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, following a clean recursive pattern. However, it suffers from over-documentation relative to the task complexity \u2014 the module docstring, the lengthy function docstring restating the requirements verbatim, and inline comments explaining obvious operations all add noise without value. The Karpathy oracle explicitly discourages this kind of speculative verbosity. The type hints using `Dict[Any, Any]` from `typing` instead of the simpler built-in `dict` (available since Python 3.9) is a minor anachronism. The `merged.get(key)` call is redundant since `key in merged` was already checked \u2014 `merged[key]` would be cleaner. The core logic itself is minimal and correct: shallow copy, iterate overrides, handle None deletion, recurse on dict-dict pairs. The architecture is flat and readable with no unnecessary abstractions.\",\n  \"strengths\": [\n    \"Correct recursive merge logic with no mutations of inputs\",\n    \"Flat structure with no unnecessary abstractions or helper functions\",\n    \"Clear handling of all three cases: None removal, recursive dict merge, plain override\"\n  ],\n  \"weaknesses\": [\n    \"Excessive documentation \u2014 module docstring, verbose function docstring, and redundant inline comments bloat a ~10-line algorithm\",\n    \"Redundant `merged.get(key)` after already confirming `key in merged`; should use `merged[key]`\",\n    \"Using `Dict[Any, Any]` from `typing` instead of plain `dict` adds unnecessary import overhead for modern Python\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct recursive merge logic with no mutations of inputs",
+      "Flat structure with no unnecessary abstractions or helper functions",
+      "Clear handling of all three cases: None removal, recursive dict merge, plain override"
+    ],
+    "weaknesses": [
+      "Excessive documentation \u2014 module docstring, verbose function docstring, and redundant inline comments bloat a ~10-line algorithm",
+      "Redundant `merged.get(key)` after already confirming `key in merged`; should use `merged[key]`",
+      "Using `Dict[Any, Any]` from `typing` instead of plain `dict` adds unnecessary import overhead for modern Python"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.127,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 69.669,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_karpathy_generation"
+}

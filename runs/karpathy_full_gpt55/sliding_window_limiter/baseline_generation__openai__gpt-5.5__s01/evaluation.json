@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is mostly clean and readable with good use of bisect for sorted insertion and lookup. The core logic is correct and names are clear. However, there are notable structural issues: the `_max_timestamp` dict is speculative complexity \u2014 snapshot could simply use the last element of the sorted events list or accept a timestamp parameter, making the extra tracking unnecessary. The isinstance/bool guards in `__init__` are overly defensive and verbose for what the task requires (a simple `if limit <= 0` with a try/except or direct check suffices). The `allow` method computes `right = bisect_right(events, timestamp)` but this is always equivalent to the insertion point after all equal timestamps, which is fine, but the `_max_timestamp` tracking adds hidden mutation that complicates auditability without clear benefit. The snapshot semantics are slightly odd \u2014 it uses the max seen timestamp rather than a caller-supplied timestamp, which is an implicit design choice not stated in the spec. Overall the code is readable and mostly flat, but carries unnecessary state and defensive boilerplate that violates the 'sparse enough to audit locally' principle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is mostly clean and readable with good use of bisect for sorted insertion and lookup. The core logic is correct and names are clear. However, there are notable structural issues: the `_max_timestamp` dict is speculative complexity \u2014 snapshot could simply use the last element of the sorted events list or accept a timestamp parameter, making the extra tracking unnecessary. The isinstance/bool guards in `__init__` are overly defensive and verbose for what the task requires (a simple `if limit <= 0` with a try/except or direct check suffices). The `allow` method computes `right = bisect_right(events, timestamp)` but this is always equivalent to the insertion point after all equal timestamps, which is fine, but the `_max_timestamp` tracking adds hidden mutation that complicates auditability without clear benefit. The snapshot semantics are slightly odd \u2014 it uses the max seen timestamp rather than a caller-supplied timestamp, which is an implicit design choice not stated in the spec. Overall the code is readable and mostly flat, but carries unnecessary state and defensive boilerplate that violates the 'sparse enough to audit locally' principle.\",\n  \"strengths\": [\n    \"Uses standard-library bisect correctly for O(log n) window queries\",\n    \"Clear docstrings explaining the half-open interval semantics\",\n    \"Flat control flow in allow() with an early return guard\",\n    \"Explicit data structures with type annotations\"\n  ],\n  \"weaknesses\": [\n    \"_max_timestamp is speculative extra state; snapshot could derive cutoff from events[-1] or a passed timestamp\",\n    \"isinstance/bool guards in __init__ are overly verbose and defensive beyond what the task requires\",\n    \"snapshot() silently returns [] for unknown keys rather than being explicit about the distinction\",\n    \"Hidden mutation in allow() updating _max_timestamp is not obviously necessary and complicates local reasoning\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Uses standard-library bisect correctly for O(log n) window queries",
+      "Clear docstrings explaining the half-open interval semantics",
+      "Flat control flow in allow() with an early return guard",
+      "Explicit data structures with type annotations"
+    ],
+    "weaknesses": [
+      "_max_timestamp is speculative extra state; snapshot could derive cutoff from events[-1] or a passed timestamp",
+      "isinstance/bool guards in __init__ are overly verbose and defensive beyond what the task requires",
+      "snapshot() silently returns [] for unknown keys rather than being explicit about the distinction",
+      "Hidden mutation in allow() updating _max_timestamp is not obviously necessary and complicates local reasoning"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.14,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 3,
+    "loc": 45,
+    "maintainability_index": 68.537,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

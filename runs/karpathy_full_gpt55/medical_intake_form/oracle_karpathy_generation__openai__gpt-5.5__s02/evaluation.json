@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: all fields are validated before any output is produced, every error message explicitly names the offending field, and the function returns only after all validations pass. The sentinel pattern for missing fields is clean and avoids ambiguity with None values. The bool-exclusion guard for age is a thoughtful edge case. Collecting all errors before raising is slightly more user-friendly than raising on the first failure, and it still satisfies 'partial validation is not permitted' since no output dict is returned until everything passes. The code is flat, explicit, and locally auditable with no hidden logic or abstraction layers. The only minor quibble is that accumulating all errors into a single ValueError (rather than raising immediately on the first bad field) is a reasonable design choice but slightly diverges from the spec's implied single-field naming convention, though the messages do still name each field.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: all fields are validated before any output is produced, every error message explicitly names the offending field, and the function returns only after all validations pass. The sentinel pattern for missing fields is clean and avoids ambiguity with None values. The bool-exclusion guard for age is a thoughtful edge case. Collecting all errors before raising is slightly more user-friendly than raising on the first failure, and it still satisfies 'partial validation is not permitted' since no output dict is returned until everything passes. The code is flat, explicit, and locally auditable with no hidden logic or abstraction layers. The only minor quibble is that accumulating all errors into a single ValueError (rather than raising immediately on the first bad field) is a reasonable design choice but slightly diverges from the spec's implied single-field naming convention, though the messages do still name each field.\",\n  \"strengths\": [\n    \"All fields validated before any output is returned, satisfying CD-7's partial-validation prohibition\",\n    \"Every error message explicitly names the failing field\",\n    \"Sentinel object correctly distinguishes missing keys from None values\",\n    \"Bool exclusion from int check prevents silent acceptance of True/False as age\",\n    \"Symptoms list is defensively copied in the return value\",\n    \"Flat, readable structure with no unnecessary abstraction\"\n  ],\n  \"weaknesses\": [\n    \"Collecting all errors before raising deviates slightly from the implied single-field ValueError convention, though field names are still present\",\n    \"No validation that symptoms list is non-empty, which may or may not be a clinical requirement\",\n    \"The payload isinstance check is slightly redundant given the type annotation, but harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All fields validated before any output is returned, satisfying CD-7's partial-validation prohibition",
+      "Every error message explicitly names the failing field",
+      "Sentinel object correctly distinguishes missing keys from None values",
+      "Bool exclusion from int check prevents silent acceptance of True/False as age",
+      "Symptoms list is defensively copied in the return value",
+      "Flat, readable structure with no unnecessary abstraction"
+    ],
+    "weaknesses": [
+      "Collecting all errors before raising deviates slightly from the implied single-field ValueError convention, though field names are still present",
+      "No validation that symptoms list is non-empty, which may or may not be a clinical requirement",
+      "The payload isinstance check is slightly redundant given the type annotation, but harmless"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.193,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 51.715,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_karpathy_generation"
+}

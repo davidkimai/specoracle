@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a straightforward linear scan with a pointer, makes data movement explicit, raises a clear error for invalid interval, and handles edge cases (empty input, start > end, duplicate timestamps) sensibly. The docstring is thorough without being excessive. Minor issues: the 'last point wins for duplicates' behavior for same-timestamp points is correctly handled by the sort+scan approach (last one in original order is NOT preserved after sorting \u2014 stable sort preserves original order for equal keys, so the last duplicate in input will be last after stable sort, which is correct). The use of `Optional[float]` from typing rather than `float | None` is slightly dated given the `from __future__ import annotations` import already present, and the `__all__` export list is mild speculative scaffolding. The function is monolithic rather than using small pure helpers as the spec prefers, though the logic is simple enough that extraction would add noise rather than clarity. Overall, this is a solid, auditable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a straightforward linear scan with a pointer, makes data movement explicit, raises a clear error for invalid interval, and handles edge cases (empty input, start > end, duplicate timestamps) sensibly. The docstring is thorough without being excessive. Minor issues: the 'last point wins for duplicates' behavior for same-timestamp points is correctly handled by the sort+scan approach (last one in original order is NOT preserved after sorting \u2014 stable sort preserves original order for equal keys, so the last duplicate in input will be last after stable sort, which is correct). The use of `Optional[float]` from typing rather than `float | None` is slightly dated given the `from __future__ import annotations` import already present, and the `__all__` export list is mild speculative scaffolding. The function is monolithic rather than using small pure helpers as the spec prefers, though the logic is simple enough that extraction would add noise rather than clarity. Overall, this is a solid, auditable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Clear variable names (point_index, point_count, current_value) make the algorithm easy to follow locally\",\n    \"Explicit error raised for invalid interval\",\n    \"Flat control flow with a single while-inside-for pattern that is easy to audit\",\n    \"Handles unsorted input, duplicate timestamps, and empty input correctly\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"Uses `Optional[float]` from typing instead of the more modern `float | None` despite having `from __future__ import annotations`\",\n    \"Monolithic function rather than small pure helpers (e.g., a separate lookup/fill helper), though the simplicity arguably justifies it\",\n    \"`__all__` is minor speculative scaffolding not required by the task\",\n    \"Docstring claim about 'last such point in input is used' for duplicate timestamps is implementation-dependent on sort stability and could be misleading\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear variable names (point_index, point_count, current_value) make the algorithm easy to follow locally",
+      "Explicit error raised for invalid interval",
+      "Flat control flow with a single while-inside-for pattern that is easy to audit",
+      "Handles unsorted input, duplicate timestamps, and empty input correctly",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "Uses `Optional[float]` from typing instead of the more modern `float | None` despite having `from __future__ import annotations`",
+      "Monolithic function rather than small pure helpers (e.g., a separate lookup/fill helper), though the simplicity arguably justifies it",
+      "`__all__` is minor speculative scaffolding not required by the task",
+      "Docstring claim about 'last such point in input is used' for duplicate timestamps is implementation-dependent on sort stability and could be misleading"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.478,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 83.653,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "baseline_generation"
+}

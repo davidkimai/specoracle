@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured and closely follows the RCS-5 spec: state is explicit and inspectable via a named `state` attribute, configuration values are named (`failure_threshold`, `recovery_timeout`), and half-open trials correctly close on success or reopen on failure. The code is flat, readable, and locally auditable with clear transition methods. The threading lock usage is consistent and correct. Minor concerns include the `_half_open_trial_active` flag adding some complexity (though it's defensively useful for concurrent scenarios), the `_record_success` resetting `failure_count` on closed success (which is reasonable but not required by spec), and the validation boilerplate in `__init__` being somewhat verbose. The `call` signature accepting `*args, **kwargs` is a practical improvement over a no-argument `func`. Overall this is a clean, explicit, and auditable implementation with no significant architectural slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is well-structured and closely follows the RCS-5 spec: state is explicit and inspectable via a named `state` attribute, configuration values are named (`failure_threshold`, `recovery_timeout`), and half-open trials correctly close on success or reopen on failure. The code is flat, readable, and locally auditable with clear transition methods. The threading lock usage is consistent and correct. Minor concerns include the `_half_open_trial_active` flag adding some complexity (though it's defensively useful for concurrent scenarios), the `_record_success` resetting `failure_count` on closed success (which is reasonable but not required by spec), and the validation boilerplate in `__init__` being somewhat verbose. The `call` signature accepting `*args, **kwargs` is a practical improvement over a no-argument `func`. Overall this is a clean, explicit, and auditable implementation with no significant architectural slop.\",\n  \"strengths\": [\n    \"State is explicit, named, and inspectable through a public `state` attribute with named class-level constants\",\n    \"All configuration values are named attributes, no magic constants\",\n    \"Half-open trial correctly transitions to closed on success and reopens on failure\",\n    \"Thread safety handled consistently with a single lock across all state transitions\",\n    \"Transition logic is cleanly encapsulated in dedicated `_transition_to_*` methods\",\n    \"Supports injectable `now` clock for testability\"\n  ],\n  \"weaknesses\": [\n    \"`_half_open_trial_active` flag adds complexity that may be unnecessary for single-threaded use cases described in the spec\",\n    \"Validation boilerplate in `__init__` is verbose and somewhat distracts from the core logic\",\n    \"Resetting `failure_count` to zero on closed success is an undocumented behavior not required by the spec\",\n    \"The `_prepare_call` / `_record_success` / `_record_failure` split across three methods with a `trial_state` token is slightly indirect compared to a more direct state-machine approach\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "State is explicit, named, and inspectable through a public `state` attribute with named class-level constants",
+      "All configuration values are named attributes, no magic constants",
+      "Half-open trial correctly transitions to closed on success and reopens on failure",
+      "Thread safety handled consistently with a single lock across all state transitions",
+      "Transition logic is cleanly encapsulated in dedicated `_transition_to_*` methods",
+      "Supports injectable `now` clock for testability"
+    ],
+    "weaknesses": [
+      "`_half_open_trial_active` flag adds complexity that may be unnecessary for single-threaded use cases described in the spec",
+      "Validation boilerplate in `__init__` is verbose and somewhat distracts from the core logic",
+      "Resetting `failure_count` to zero on closed success is an undocumented behavior not required by the spec",
+      "The `_prepare_call` / `_record_success` / `_record_failure` split across three methods with a `trial_state` token is slightly indirect compared to a more direct state-machine approach"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 3.318,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.6,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 36,
+    "function_count": 9,
+    "loc": 88,
+    "maintainability_index": 35.122,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_generation"
+}

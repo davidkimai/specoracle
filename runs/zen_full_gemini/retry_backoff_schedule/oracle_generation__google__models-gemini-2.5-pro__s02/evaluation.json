@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. Validation is extracted into a pure helper, the delay calculation is a named pure function, and the main entry point reads as a straightforward composition of those two helpers. Control flow is flat throughout with guard clauses doing their job in `_validate_inputs`. The names are self-explanatory and the code is locally auditable. Minor deductions: the `TypeError` checks are speculative abstractions not required by the functional spec (which only mentions `ValueError`), adding noise without a stated requirement; the docstrings are verbose relative to the simplicity of the logic, bordering on over-documentation; and the comment inside the list comprehension explaining that `range(0)` yields an empty list is unnecessary hand-holding. These are small issues \u2014 the overall architecture is sound and Pythonic.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. Validation is extracted into a pure helper, the delay calculation is a named pure function, and the main entry point reads as a straightforward composition of those two helpers. Control flow is flat throughout with guard clauses doing their job in `_validate_inputs`. The names are self-explanatory and the code is locally auditable. Minor deductions: the `TypeError` checks are speculative abstractions not required by the functional spec (which only mentions `ValueError`), adding noise without a stated requirement; the docstrings are verbose relative to the simplicity of the logic, bordering on over-documentation; and the comment inside the list comprehension explaining that `range(0)` yields an empty list is unnecessary hand-holding. These are small issues \u2014 the overall architecture is sound and Pythonic.\",\n  \"strengths\": [\n    \"Clean separation: validation helper, calculation helper, and orchestrator are each single-responsibility\",\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement \u2014 no hidden state or mutation\",\n    \"List comprehension over range(attempts) is idiomatic and handles attempts=0 naturally\",\n    \"Names clearly communicate intent\"\n  ],\n  \"weaknesses\": [\n    \"TypeError checks are speculative \u2014 not required by the spec and add untested surface area\",\n    \"Docstrings are over-verbose for the simplicity of the logic\",\n    \"Inline comment explaining range(0) behavior is unnecessary and condescending to maintainers\",\n    \"Module-level docstring adds little value for a single-function utility\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation: validation helper, calculation helper, and orchestrator are each single-responsibility",
+      "Flat control flow with no deep nesting",
+      "Explicit data movement \u2014 no hidden state or mutation",
+      "List comprehension over range(attempts) is idiomatic and handles attempts=0 naturally",
+      "Names clearly communicate intent"
+    ],
+    "weaknesses": [
+      "TypeError checks are speculative \u2014 not required by the spec and add untested surface area",
+      "Docstrings are over-verbose for the simplicity of the logic",
+      "Inline comment explaining range(0) behavior is unnecessary and condescending to maintainers",
+      "Module-level docstring adds little value for a single-function utility"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.099,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.333,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 3,
+    "loc": 62,
+    "maintainability_index": 74.658,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "oracle_generation"
+}

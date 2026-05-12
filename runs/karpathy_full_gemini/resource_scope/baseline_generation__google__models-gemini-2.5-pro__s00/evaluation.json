@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct for the core requirements. It uses ordinary constructs, explicit data movement, flat control flow, and sensible names. The `_Closable` Protocol and TypeVar are appropriate for type safety without being speculative. However, the docstrings are verbose to the point of noise\u2014the class docstring includes a full usage example that duplicates what tests would cover, and the `__exit__` docstring over-explains standard Python context manager semantics. The `Optional[Type[BaseException]]` annotations could use the modern `type[BaseException] | None` style (though the `from __future__ import annotations` import is present, making this a minor point). The copyright header and module docstring add boilerplate that isn't part of the task. The exception-during-cleanup behavior (capturing first, raising after all resources closed) is a reasonable design choice but is not specified in the requirements and adds complexity; the simpler approach of just letting exceptions propagate naturally or using `contextlib.ExitStack`-style chaining would be more minimal. Overall the code is solid but slightly over-engineered in documentation and exception handling relative to the Zen ideal of simplicity.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct for the core requirements. It uses ordinary constructs, explicit data movement, flat control flow, and sensible names. The `_Closable` Protocol and TypeVar are appropriate for type safety without being speculative. However, the docstrings are verbose to the point of noise\u2014the class docstring includes a full usage example that duplicates what tests would cover, and the `__exit__` docstring over-explains standard Python context manager semantics. The `Optional[Type[BaseException]]` annotations could use the modern `type[BaseException] | None` style (though the `from __future__ import annotations` import is present, making this a minor point). The copyright header and module docstring add boilerplate that isn't part of the task. The exception-during-cleanup behavior (capturing first, raising after all resources closed) is a reasonable design choice but is not specified in the requirements and adds complexity; the simpler approach of just letting exceptions propagate naturally or using `contextlib.ExitStack`-style chaining would be more minimal. Overall the code is solid but slightly over-engineered in documentation and exception handling relative to the Zen ideal of simplicity.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit resource tracking via a plain list\",\n    \"TypeVar + Protocol gives type safety without metaprogramming\",\n    \"LIFO close order implemented simply with reversed()\",\n    \"Names are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are excessively verbose, explaining standard Python semantics unnecessarily\",\n    \"Exception-during-cleanup behavior (capture first, raise after loop) is undocumented in requirements and adds unrequested complexity\",\n    \"Copyright header and module docstring are speculative boilerplate for a small utility\",\n    \"Could use contextlib.ExitStack internally for a simpler, battle-tested implementation\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit resource tracking via a plain list",
+      "TypeVar + Protocol gives type safety without metaprogramming",
+      "LIFO close order implemented simply with reversed()",
+      "Names are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "Docstrings are excessively verbose, explaining standard Python semantics unnecessarily",
+      "Exception-during-cleanup behavior (capture first, raise after loop) is undocumented in requirements and adds unrequested complexity",
+      "Copyright header and module docstring are speculative boilerplate for a small utility",
+      "Could use contextlib.ExitStack internally for a simpler, battle-tested implementation"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.006,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 5,
+    "loc": 103,
+    "maintainability_index": 58.232,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "baseline_generation"
+}

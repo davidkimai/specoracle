@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple: it uses a single pass with an explicit seen-set for deduplication, preserves order, and checks both the allowed set and character validity. The character validation is done manually via ASCII range comparisons rather than using `str.isalnum()` or a regex, which is slightly more verbose than necessary but not wrong. Using `field.replace('_','').isalnum()` or a compiled regex would be more idiomatic and concise. The early-continue pattern for the seen/allowed check is clean. The type annotations are appropriate. The main weakness is the expanded manual character check when a simpler built-in expression would collapse the same degrees of freedom with less code, slightly violating the 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple: it uses a single pass with an explicit seen-set for deduplication, preserves order, and checks both the allowed set and character validity. The character validation is done manually via ASCII range comparisons rather than using `str.isalnum()` or a regex, which is slightly more verbose than necessary but not wrong. Using `field.replace('_','').isalnum()` or a compiled regex would be more idiomatic and concise. The early-continue pattern for the seen/allowed check is clean. The type annotations are appropriate. The main weakness is the expanded manual character check when a simpler built-in expression would collapse the same degrees of freedom with less code, slightly violating the 'minimum code' principle.\",\n  \"strengths\": [\n    \"Single-pass O(n) algorithm with no unnecessary abstractions\",\n    \"Explicit deduplication via seen set preserves order correctly\",\n    \"Early continue for the common rejection cases keeps the hot path flat\",\n    \"No speculative features or configurability beyond the spec\"\n  ],\n  \"weaknesses\": [\n    \"Manual ASCII range comparison is more verbose than `str.isalnum()` combined with underscore check or `re.fullmatch`\",\n    \"The multi-line `all(...)` generator adds visual complexity for a condition expressible in one short line\",\n    \"Empty-string edge case: an empty field passes the `all(...)` check vacuously, which may or may not be intended\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single-pass O(n) algorithm with no unnecessary abstractions",
+      "Explicit deduplication via seen set preserves order correctly",
+      "Early continue for the common rejection cases keeps the hot path flat",
+      "No speculative features or configurability beyond the spec"
+    ],
+    "weaknesses": [
+      "Manual ASCII range comparison is more verbose than `str.isalnum()` combined with underscore check or `re.fullmatch`",
+      "The multi-line `all(...)` generator adds visual complexity for a condition expressible in one short line",
+      "Empty-string edge case: an empty field passes the `all(...)` check vacuously, which may or may not be intended"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.896,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 16,
+    "maintainability_index": 60.163,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_karpathy_generation"
+}

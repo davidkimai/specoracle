@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, but has a notable structural flaw: the worker coroutine uses a shared mutable `next_index` counter without any synchronization primitive (like a `asyncio.Lock`). While this works in CPython's single-threaded asyncio event loop because `await` is the only yield point and the index increment is atomic at the Python bytecode level, it is a subtle correctness assumption that is not made explicit and could mislead readers or break under different execution models. The helper `_split_batches` is a reasonable extraction for a reusable operation, though for single-use code the oracle would prefer inlining it. The error handling block with manual task cancellation adds complexity beyond what was asked \u2014 a simple `await asyncio.gather(*workers)` suffices since exceptions propagate naturally. The type annotations are thorough but the `TypeVar` imports add boilerplate for minimal gain in a task this size. The flattening step uses a `None`-sentinel pattern that is slightly awkward; a direct `list[list[R]]` with `append` would be cleaner. Overall the code is close to correct and readable but carries unnecessary complexity in the cancellation logic and implicit concurrency assumptions.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, but has a notable structural flaw: the worker coroutine uses a shared mutable `next_index` counter without any synchronization primitive (like a `asyncio.Lock`). While this works in CPython's single-threaded asyncio event loop because `await` is the only yield point and the index increment is atomic at the Python bytecode level, it is a subtle correctness assumption that is not made explicit and could mislead readers or break under different execution models. The helper `_split_batches` is a reasonable extraction for a reusable operation, though for single-use code the oracle would prefer inlining it. The error handling block with manual task cancellation adds complexity beyond what was asked \u2014 a simple `await asyncio.gather(*workers)` suffices since exceptions propagate naturally. The type annotations are thorough but the `TypeVar` imports add boilerplate for minimal gain in a task this size. The flattening step uses a `None`-sentinel pattern that is slightly awkward; a direct `list[list[R]]` with `append` would be cleaner. Overall the code is close to correct and readable but carries unnecessary complexity in the cancellation logic and implicit concurrency assumptions.\",\n  \"strengths\": [\n    \"Correct batch ordering preserved via index-based result storage\",\n    \"Validates non-positive batch_size and concurrency upfront with clear error messages\",\n    \"Concurrency is properly bounded via min(concurrency, len(batches))\",\n    \"Clean separation of batching logic into _split_batches\"\n  ],\n  \"weaknesses\": [\n    \"Shared mutable next_index without explicit lock is a hidden correctness assumption not documented\",\n    \"Manual task cancellation on exception is over-engineered; asyncio.gather propagates exceptions without it\",\n    \"None-sentinel pattern for batch_results is awkward; direct append to a list of lists would be simpler\",\n    \"_split_batches is a single-use helper that could be inlined per the simplicity-first guideline\",\n    \"TypeVar and heavy type annotations add boilerplate disproportionate to the task size\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct batch ordering preserved via index-based result storage",
+      "Validates non-positive batch_size and concurrency upfront with clear error messages",
+      "Concurrency is properly bounded via min(concurrency, len(batches))",
+      "Clean separation of batching logic into _split_batches"
+    ],
+    "weaknesses": [
+      "Shared mutable next_index without explicit lock is a hidden correctness assumption not documented",
+      "Manual task cancellation on exception is over-engineered; asyncio.gather propagates exceptions without it",
+      "None-sentinel pattern for batch_results is awkward; direct append to a list of lists would be simpler",
+      "_split_batches is a single-use helper that could be inlined per the simplicity-first guideline",
+      "TypeVar and heavy type annotations add boilerplate disproportionate to the task size"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.934,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.24s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 3,
+    "loc": 52,
+    "maintainability_index": 47.93,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "oracle_karpathy_generation"
+}

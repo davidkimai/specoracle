@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean, with explicit data movement, a clear guard clause for invalid input, and sensible naming. The single-pass iterator approach is efficient and avoids hidden mutation. However, the docstring is over-engineered for a small utility function\u2014it adds bulk without aiding local auditability. The comment about 'stable nature of sorted()' is misleading: sorted() is stable with respect to original order, but the spec says 'latest point at or before each timestamp', which for equal timestamps should mean the last one in the input; the current code does handle this correctly via stable sort, but the explanation conflates stability with correctness in a confusing way. The function is monolithic rather than decomposed into small pure helpers (e.g., a helper to build the sorted lookup or to find the fill value), though the function is small enough that this is a minor concern. Overall it is clean, explicit, and auditable, but the verbose docstring and the slightly misleading comment are minor structural blemishes against the Zen ideal of sparse, self-evident code.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean, with explicit data movement, a clear guard clause for invalid input, and sensible naming. The single-pass iterator approach is efficient and avoids hidden mutation. However, the docstring is over-engineered for a small utility function\u2014it adds bulk without aiding local auditability. The comment about 'stable nature of sorted()' is misleading: sorted() is stable with respect to original order, but the spec says 'latest point at or before each timestamp', which for equal timestamps should mean the last one in the input; the current code does handle this correctly via stable sort, but the explanation conflates stability with correctness in a confusing way. The function is monolithic rather than decomposed into small pure helpers (e.g., a helper to build the sorted lookup or to find the fill value), though the function is small enough that this is a minor concern. Overall it is clean, explicit, and auditable, but the verbose docstring and the slightly misleading comment are minor structural blemishes against the Zen ideal of sparse, self-evident code.\",\n  \"strengths\": [\n    \"Explicit guard clause raises ValueError for non-positive interval\",\n    \"No hidden mutation: sorted() creates a copy, original list untouched\",\n    \"Single-pass iterator keeps logic linear and efficient\",\n    \"Clear, descriptive variable names (last_known_value, current_point, sorted_points)\",\n    \"Flat control flow with minimal nesting\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately verbose for a small utility, adding noise over signal\",\n    \"Comment about 'stable nature of sorted()' is misleading and could confuse maintainers\",\n    \"No decomposition into small pure helpers as the structural spec recommends\",\n    \"Does not validate that start <= end or that points contain valid tuples, leaving silent edge cases\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Explicit guard clause raises ValueError for non-positive interval",
+      "No hidden mutation: sorted() creates a copy, original list untouched",
+      "Single-pass iterator keeps logic linear and efficient",
+      "Clear, descriptive variable names (last_known_value, current_point, sorted_points)",
+      "Flat control flow with minimal nesting"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately verbose for a small utility, adding noise over signal",
+      "Comment about 'stable nature of sorted()' is misleading and could confuse maintainers",
+      "No decomposition into small pure helpers as the structural spec recommends",
+      "Does not validate that start <= end or that points contain valid tuples, leaving silent edge cases"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.861,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 48,
+    "maintainability_index": 79.753,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_generation"
+}

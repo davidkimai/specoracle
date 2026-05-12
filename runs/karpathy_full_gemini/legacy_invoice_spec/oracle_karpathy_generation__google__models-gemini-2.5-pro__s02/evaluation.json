@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (is_billable_invoice_branch, region_bucket_key_for_money), returns records with the exact legacy keys, stages the logic visibly with named audit-stage comments, and avoids clever one-liners in favor of a readable, auditable loop structure. The staged audit trail (initialize \u2192 filter/process \u2192 format \u2192 sort) is explicit and reviewable. Minor deductions: the lambda in the sort step is a small cleverness that could have been a named key function or an explicit loop sort, and `region_bucket_key_for_money` is a somewhat redundant alias for `invoice_region` that adds noise without adding clarity, but these are minor issues in an otherwise well-structured implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (is_billable_invoice_branch, region_bucket_key_for_money), returns records with the exact legacy keys, stages the logic visibly with named audit-stage comments, and avoids clever one-liners in favor of a readable, auditable loop structure. The staged audit trail (initialize \u2192 filter/process \u2192 format \u2192 sort) is explicit and reviewable. Minor deductions: the lambda in the sort step is a small cleverness that could have been a named key function or an explicit loop sort, and `region_bucket_key_for_money` is a somewhat redundant alias for `invoice_region` that adds noise without adding clarity, but these are minor issues in an otherwise well-structured implementation.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Explicit branch-label variable names (is_billable_invoice_branch, region_bucket_key_for_money) for money-affecting logic\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Visible staged audit trail with named legacy audit stage comments\",\n    \"Does not mutate input; builds new structures throughout\",\n    \"Explicit isinstance checks for type safety on amount_cents and region\"\n  ],\n  \"weaknesses\": [\n    \"region_bucket_key_for_money is a redundant alias for invoice_region, adding noise without meaningful audit value\",\n    \"Lambda in sorted() is a minor cleverness; a named key or explicit comparison would be more in the spirit of the spec\",\n    \"Intermediate unstructured_results list is slightly verbose but acceptable per the staged-audit-trail requirement\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Explicit branch-label variable names (is_billable_invoice_branch, region_bucket_key_for_money) for money-affecting logic",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Visible staged audit trail with named legacy audit stage comments",
+      "Does not mutate input; builds new structures throughout",
+      "Explicit isinstance checks for type safety on amount_cents and region"
+    ],
+    "weaknesses": [
+      "region_bucket_key_for_money is a redundant alias for invoice_region, adding noise without meaningful audit value",
+      "Lambda in sorted() is a minor cleverness; a named key or explicit comparison would be more in the spirit of the spec",
+      "Intermediate unstructured_results list is slightly verbose but acceptable per the staged-audit-trail requirement"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.443,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 37,
+    "maintainability_index": 76.12,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_karpathy_generation"
+}

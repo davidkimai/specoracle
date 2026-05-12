@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a compiled regex at module level (a sensible micro-optimization that doesn't obscure intent), keeps control flow flat with early-continue guard clauses, makes data movement explicit through named local variables, and avoids any speculative abstraction. The only minor structural concerns are: the `seen` set tracks only accepted fields rather than all visited fields, which is correct but slightly subtle (a field could appear twice and the second occurrence would re-evaluate the regex/allowed check rather than being skipped immediately\u2014though the outcome is still correct since the first occurrence would have been added to `seen` if valid, or not added if invalid, so the second occurrence correctly skips or re-evaluates). More importantly, there's no input validation (e.g., raising on non-string elements or non-set `allowed`), which the operational constraints suggest should be present. The helper/main split is absent but the function is small enough that extraction would add no clarity. Overall this is a solid, auditable implementation very close to what the Zen of Python would endorse.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a compiled regex at module level (a sensible micro-optimization that doesn't obscure intent), keeps control flow flat with early-continue guard clauses, makes data movement explicit through named local variables, and avoids any speculative abstraction. The only minor structural concerns are: the `seen` set tracks only accepted fields rather than all visited fields, which is correct but slightly subtle (a field could appear twice and the second occurrence would re-evaluate the regex/allowed check rather than being skipped immediately\u2014though the outcome is still correct since the first occurrence would have been added to `seen` if valid, or not added if invalid, so the second occurrence correctly skips or re-evaluates). More importantly, there's no input validation (e.g., raising on non-string elements or non-set `allowed`), which the operational constraints suggest should be present. The helper/main split is absent but the function is small enough that extraction would add no clarity. Overall this is a solid, auditable implementation very close to what the Zen of Python would endorse.\",\n  \"strengths\": [\n    \"Compiled regex at module level keeps the hot path clean without obscuring intent\",\n    \"Flat control flow with guard clauses (continue on seen) avoids nesting\",\n    \"Explicit named accumulators (sanitized, seen) make data movement transparent\",\n    \"No speculative abstractions or unused extension points\",\n    \"Docstring accurately describes behavior\"\n  ],\n  \"weaknesses\": [\n    \"No input validation: passing non-list fields or non-set allowed silently proceeds rather than raising a clear error\",\n    \"The seen set only records accepted fields, so invalid duplicates re-evaluate the regex on each occurrence\u2014minor inefficiency and slight subtlety\",\n    \"Could benefit from a small pure helper (e.g., is_valid_field) to make the compound condition in the loop locally auditable at a glance\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Compiled regex at module level keeps the hot path clean without obscuring intent",
+      "Flat control flow with guard clauses (continue on seen) avoids nesting",
+      "Explicit named accumulators (sanitized, seen) make data movement transparent",
+      "No speculative abstractions or unused extension points",
+      "Docstring accurately describes behavior"
+    ],
+    "weaknesses": [
+      "No input validation: passing non-list fields or non-set allowed silently proceeds rather than raising a clear error",
+      "The seen set only records accepted fields, so invalid duplicates re-evaluate the regex on each occurrence\u2014minor inefficiency and slight subtlety",
+      "Could benefit from a small pure helper (e.g., is_valid_field) to make the compound condition in the loop locally auditable at a glance"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.515,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 18,
+    "maintainability_index": 89.908,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "baseline_generation"
+}

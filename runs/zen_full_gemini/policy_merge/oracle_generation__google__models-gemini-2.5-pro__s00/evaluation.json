@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and well-structured. It uses a guard clause pattern for type validation, keeps control flow flat with a `continue` for the None case, and makes data movement explicit with no hidden mutation. The recursive call is natural and the boolean extraction into `is_recursive_merge` aids local readability. The main weakness is the docstring is overly verbose for a small pure function\u2014the Zen favors sparse documentation when the code is self-explanatory\u2014and the intermediate variable `is_recursive_merge` adds a line without much clarity gain over an inline `if isinstance(...) and isinstance(...)`. The `defaults.copy()` is a shallow copy which is correct and intentional. Overall this is a solid, auditable implementation with no speculative abstractions or framework-shaped code.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and well-structured. It uses a guard clause pattern for type validation, keeps control flow flat with a `continue` for the None case, and makes data movement explicit with no hidden mutation. The recursive call is natural and the boolean extraction into `is_recursive_merge` aids local readability. The main weakness is the docstring is overly verbose for a small pure function\u2014the Zen favors sparse documentation when the code is self-explanatory\u2014and the intermediate variable `is_recursive_merge` adds a line without much clarity gain over an inline `if isinstance(...) and isinstance(...)`. The `defaults.copy()` is a shallow copy which is correct and intentional. Overall this is a solid, auditable implementation with no speculative abstractions or framework-shaped code.\",\n  \"strengths\": [\n    \"Guard clauses with clear TypeError messages at the top\",\n    \"Explicit data movement: starts from a copy, never mutates inputs\",\n    \"Flat control flow with early `continue` for the None removal case\",\n    \"Recursive call reuses the same validated entry point cleanly\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is excessively long for a small, self-evident function\",\n    \"Intermediate boolean variable `is_recursive_merge` adds lines without meaningful clarity gain\",\n    \"Module-level docstring is boilerplate and adds no information\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses with clear TypeError messages at the top",
+      "Explicit data movement: starts from a copy, never mutates inputs",
+      "Flat control flow with early `continue` for the None removal case",
+      "Recursive call reuses the same validated entry point cleanly",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Docstring is excessively long for a small, self-evident function",
+      "Intermediate boolean variable `is_recursive_merge` adds lines without meaningful clarity gain",
+      "Module-level docstring is boilerplate and adds no information"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.084,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 45,
+    "maintainability_index": 82.13,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

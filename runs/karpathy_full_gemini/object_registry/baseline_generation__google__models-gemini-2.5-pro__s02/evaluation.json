@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It uses standard-library weakref, keeps the class small, and names things clearly. The main structural issues are: the `isinstance(key, Hashable)` guard is a no-op (all objects satisfy `isinstance(x, Hashable)` at runtime due to ABC registration, and the dict itself will raise TypeError on unhashable keys anyway), the `get` method has a subtle bug where a stored dead reference (weak_ref returning None) is falsy but so is a live reference to a falsy object \u2014 the guard `if weak_ref:` should be `if weak_ref is not None:`. The cleanup method rebuilds the dict via two passes (list comprehension + dict comprehension) when a single-pass dict comprehension would suffice. The docstrings are verbose relative to the simplicity of the code, adding bulk without proportional clarity. Overall the architecture is appropriate \u2014 no speculative abstractions, no metaprogramming, flat control flow \u2014 but the subtle `if weak_ref:` bug and the dead isinstance check are meaningful correctness and clarity lapses.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It uses standard-library weakref, keeps the class small, and names things clearly. The main structural issues are: the `isinstance(key, Hashable)` guard is a no-op (all objects satisfy `isinstance(x, Hashable)` at runtime due to ABC registration, and the dict itself will raise TypeError on unhashable keys anyway), the `get` method has a subtle bug where a stored dead reference (weak_ref returning None) is falsy but so is a live reference to a falsy object \u2014 the guard `if weak_ref:` should be `if weak_ref is not None:`. The cleanup method rebuilds the dict via two passes (list comprehension + dict comprehension) when a single-pass dict comprehension would suffice. The docstrings are verbose relative to the simplicity of the code, adding bulk without proportional clarity. Overall the architecture is appropriate \u2014 no speculative abstractions, no metaprogramming, flat control flow \u2014 but the subtle `if weak_ref:` bug and the dead isinstance check are meaningful correctness and clarity lapses.\",\n  \"strengths\": [\n    \"Uses weakref.ref directly \u2014 the simplest correct primitive for the task\",\n    \"Flat control flow throughout; no deep nesting\",\n    \"Clear, self-explanatory method names\",\n    \"No speculative extension points or framework-shaped scaffolding\",\n    \"cleanup() avoids mutating the dict while iterating\"\n  ],\n  \"weaknesses\": [\n    \"`if weak_ref:` should be `if weak_ref is not None:` \u2014 a live reference to a falsy object would be incorrectly treated as dead\",\n    \"`isinstance(key, Hashable)` check is effectively a no-op and adds false confidence; the dict insertion already raises TypeError for unhashable keys\",\n    \"cleanup() uses two passes (list then dict comprehension) where one suffices\",\n    \"Docstrings are disproportionately long for such simple methods, reducing sparseness\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses weakref.ref directly \u2014 the simplest correct primitive for the task",
+      "Flat control flow throughout; no deep nesting",
+      "Clear, self-explanatory method names",
+      "No speculative extension points or framework-shaped scaffolding",
+      "cleanup() avoids mutating the dict while iterating"
+    ],
+    "weaknesses": [
+      "`if weak_ref:` should be `if weak_ref is not None:` \u2014 a live reference to a falsy object would be incorrectly treated as dead",
+      "`isinstance(key, Hashable)` check is effectively a no-op and adds false confidence; the dict insertion already raises TypeError for unhashable keys",
+      "cleanup() uses two passes (list then dict comprehension) where one suffices",
+      "Docstrings are disproportionately long for such simple methods, reducing sparseness"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.145,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.13s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 54,
+    "maintainability_index": 63.178,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "baseline_generation"
+}

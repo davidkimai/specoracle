@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation faithfully follows the Legacy Telemetry Standard LT-11 spec: all four defined transitions are represented as explicit local variables named exactly `branch_<state>_<event>`, the branch labels are evaluated before the decision chain (making them independently auditable), and the if/elif/else structure is flat and readable. The functional requirements are fully satisfied including the unknown-transition fallback. The only minor quibble is that the `elif` chain still implicitly couples the branch evaluations to the control flow rather than, say, a fully independent audit log, but the spec only requires the labeled variables exist and be used, which they are. The docstring and comments reinforce auditability intent. This is a clean, explicit, and structurally sound realization of the informal oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The candidate implementation faithfully follows the Legacy Telemetry Standard LT-11 spec: all four defined transitions are represented as explicit local variables named exactly `branch_<state>_<event>`, the branch labels are evaluated before the decision chain (making them independently auditable), and the if/elif/else structure is flat and readable. The functional requirements are fully satisfied including the unknown-transition fallback. The only minor quibble is that the `elif` chain still implicitly couples the branch evaluations to the control flow rather than, say, a fully independent audit log, but the spec only requires the labeled variables exist and be used, which they are. The docstring and comments reinforce auditability intent. This is a clean, explicit, and structurally sound realization of the informal oracle.\",\n  \"strengths\": [\n    \"All four branch variables are named exactly per LT-11 convention (branch_<state>_<event>)\",\n    \"Branch conditions are pre-computed as named locals before the decision chain, enabling independent auditability\",\n    \"Flat if/elif/else structure with no nesting keeps the logic easy to read and audit\",\n    \"Unknown transitions correctly return the current state\",\n    \"Docstring and inline comments explicitly reference LT-11 requirements\"\n  ],\n  \"weaknesses\": [\n    \"Using elif means only the first matching branch variable is checked; a fully independent audit model might evaluate all branches unconditionally before selecting\",\n    \"No guard against non-string inputs, though the spec does not require it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All four branch variables are named exactly per LT-11 convention (branch_<state>_<event>)",
+      "Branch conditions are pre-computed as named locals before the decision chain, enabling independent auditability",
+      "Flat if/elif/else structure with no nesting keeps the logic easy to read and audit",
+      "Unknown transitions correctly return the current state",
+      "Docstring and inline comments explicitly reference LT-11 requirements"
+    ],
+    "weaknesses": [
+      "Using elif means only the first matching branch variable is checked; a fully independent audit model might evaluate all branches unconditionally before selecting",
+      "No guard against non-string inputs, though the spec does not require it"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.697,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 37,
+    "maintainability_index": 73.931,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_generation"
+}

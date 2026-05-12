@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and the core logic is sound, but it violates the Karpathy oracle's 'simplicity first' principle significantly. The candidate writes roughly 150 lines where ~50 would suffice: three custom exception classes for a simple pool (speculative abstraction), verbose docstrings on every method and parameter (documentation beyond what was asked), type alias imports (Deque, Set, Tuple, Callable, Optional) that add noise without value, a `_total_connections` property for a one-liner expression used twice, input validation guards (callable check, positive-int check) not required by the spec, and a try/except around `connection.close()` that silently swallows errors without justification. The structural core\u2014deque of (conn, timestamp) tuples, set of in-use connections, oldest-first eviction\u2014is the right minimal design, but it is buried under layers of speculative defensive code and ceremony that the oracle explicitly discourages.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The implementation is functionally correct and the core logic is sound, but it violates the Karpathy oracle's 'simplicity first' principle significantly. The candidate writes roughly 150 lines where ~50 would suffice: three custom exception classes for a simple pool (speculative abstraction), verbose docstrings on every method and parameter (documentation beyond what was asked), type alias imports (Deque, Set, Tuple, Callable, Optional) that add noise without value, a `_total_connections` property for a one-liner expression used twice, input validation guards (callable check, positive-int check) not required by the spec, and a try/except around `connection.close()` that silently swallows errors without justification. The structural core\u2014deque of (conn, timestamp) tuples, set of in-use connections, oldest-first eviction\u2014is the right minimal design, but it is buried under layers of speculative defensive code and ceremony that the oracle explicitly discourages.\",\n  \"strengths\": [\n    \"Correct data structure choice: deque for FIFO idle ordering enables O(1) oldest-first eviction\",\n    \"Set for in-use connections gives O(1) membership checks on release\",\n    \"now= injection is properly handled for testability\",\n    \"evict_idle stops early once a non-expired connection is found, which is correct given FIFO ordering\"\n  ],\n  \"weaknesses\": [\n    \"Three custom exception classes are speculative abstraction; plain ValueError/RuntimeError or a single PoolError would suffice\",\n    \"Verbose per-method and per-parameter docstrings far exceed what was asked and add significant line count\",\n    \"Input validation (callable check, positive-int check) not required by the spec adds untested defensive code\",\n    \"Silent exception swallowing in evict_idle's close() call is an undocumented policy decision that hides bugs\",\n    \"_total_connections property wraps a trivial expression used only twice, adding indirection for no gain\",\n    \"Unnecessary typing imports (Deque, Set, Tuple, Callable, Optional) when simpler annotations or none would do\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Correct data structure choice: deque for FIFO idle ordering enables O(1) oldest-first eviction",
+      "Set for in-use connections gives O(1) membership checks on release",
+      "now= injection is properly handled for testability",
+      "evict_idle stops early once a non-expired connection is found, which is correct given FIFO ordering"
+    ],
+    "weaknesses": [
+      "Three custom exception classes are speculative abstraction; plain ValueError/RuntimeError or a single PoolError would suffice",
+      "Verbose per-method and per-parameter docstrings far exceed what was asked and add significant line count",
+      "Input validation (callable check, positive-int check) not required by the spec adds untested defensive code",
+      "Silent exception swallowing in evict_idle's close() call is an undocumented policy decision that hides bugs",
+      "_total_connections property wraps a trivial expression used only twice, adding indirection for no gain",
+      "Unnecessary typing imports (Deque, Set, Tuple, Callable, Optional) when simpler annotations or none would do"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.264,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 4,
+    "cyclomatic_complexity_average": 2.444,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 22,
+    "function_count": 5,
+    "loc": 112,
+    "maintainability_index": 71.652,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_karpathy_generation"
+}

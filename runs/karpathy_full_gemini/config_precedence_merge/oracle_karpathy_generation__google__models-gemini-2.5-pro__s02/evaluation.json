@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It correctly handles deep merging, environment variable parsing, precedence order, and non-mutation of inputs. The helper functions are appropriately sized and single-purpose. The main weakness is that the env-var processing mutates the intermediate `settings` dict in-place rather than building a clean env overlay and merging it, which slightly violates the 'never mutate' spirit (though inputs are not mutated). The type annotations and docstrings are more verbose than necessary for code of this size\u2014the Karpathy oracle would prefer leaner documentation. The `merged.get(key)` inside the already-checked `key in merged` branch is redundant (could just be `merged[key]`). Overall the architecture is flat, readable, and avoids speculative abstraction, but the verbosity and minor structural impurity keep it from a top score.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It correctly handles deep merging, environment variable parsing, precedence order, and non-mutation of inputs. The helper functions are appropriately sized and single-purpose. The main weakness is that the env-var processing mutates the intermediate `settings` dict in-place rather than building a clean env overlay and merging it, which slightly violates the 'never mutate' spirit (though inputs are not mutated). The type annotations and docstrings are more verbose than necessary for code of this size\u2014the Karpathy oracle would prefer leaner documentation. The `merged.get(key)` inside the already-checked `key in merged` branch is redundant (could just be `merged[key]`). Overall the architecture is flat, readable, and avoids speculative abstraction, but the verbosity and minor structural impurity keep it from a top score.\",\n  \"strengths\": [\n    \"Correct precedence: defaults < file_config < env vars\",\n    \"Deep merge is clean and non-mutating for inputs\",\n    \"Value parsing is straightforward and handles all required cases\",\n    \"No speculative abstractions or unnecessary configurability\",\n    \"Flat structure with appropriately scoped helpers\"\n  ],\n  \"weaknesses\": [\n    \"Env-var section mutates the intermediate merged dict rather than building an env overlay dict and doing a final deep merge\",\n    \"Docstrings and type annotations are overly verbose for the code size\",\n    \"Redundant `merged.get(key)` when `key in merged` already confirmed presence\",\n    \"Unnecessary `Union` import and explicit type aliases add noise without value\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct precedence: defaults < file_config < env vars",
+      "Deep merge is clean and non-mutating for inputs",
+      "Value parsing is straightforward and handles all required cases",
+      "No speculative abstractions or unnecessary configurability",
+      "Flat structure with appropriately scoped helpers"
+    ],
+    "weaknesses": [
+      "Env-var section mutates the intermediate merged dict rather than building an env overlay dict and doing a final deep merge",
+      "Docstrings and type annotations are overly verbose for the code size",
+      "Redundant `merged.get(key)` when `key in merged` already confirmed presence",
+      "Unnecessary `Union` import and explicit type aliases add noise without value"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.119,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.333,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 3,
+    "loc": 71,
+    "maintainability_index": 76.348,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "oracle_karpathy_generation"
+}

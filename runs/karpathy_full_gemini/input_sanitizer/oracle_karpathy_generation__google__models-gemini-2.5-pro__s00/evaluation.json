@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable approach, but it violates the Karpathy simplicity principle in several ways: the module-level docstring, the verbose function docstring (explaining obvious behavior at length), the pre-compiled regex constant with a multi-line comment, and the explicit type imports from `typing` (unnecessary in Python 3.9+ and adds noise) all constitute speculative overhead. The core logic is clean and correct, but the surrounding scaffolding is disproportionate to the task's simplicity. A minimal implementation would inline the regex or use `str.isidentifier()`/a simple character check, skip the module docstring, and use a much shorter or no docstring. The `seen` set tracking is slightly redundant since duplicates could be handled with a dict-based approach or a simple seen-check inline, but it's not wrong. The regex `\\w+` also matches Unicode word characters, which may or may not match 'only letters, digits, and underscores' depending on interpretation \u2014 a stricter `[a-zA-Z0-9_]+` would be more explicit and conservative per the oracle.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable approach, but it violates the Karpathy simplicity principle in several ways: the module-level docstring, the verbose function docstring (explaining obvious behavior at length), the pre-compiled regex constant with a multi-line comment, and the explicit type imports from `typing` (unnecessary in Python 3.9+ and adds noise) all constitute speculative overhead. The core logic is clean and correct, but the surrounding scaffolding is disproportionate to the task's simplicity. A minimal implementation would inline the regex or use `str.isidentifier()`/a simple character check, skip the module docstring, and use a much shorter or no docstring. The `seen` set tracking is slightly redundant since duplicates could be handled with a dict-based approach or a simple seen-check inline, but it's not wrong. The regex `\\\\w+` also matches Unicode word characters, which may or may not match 'only letters, digits, and underscores' depending on interpretation \u2014 a stricter `[a-zA-Z0-9_]+` would be more explicit and conservative per the oracle.\",\n  \"strengths\": [\n    \"Correct deduplication preserving first-occurrence order\",\n    \"Pre-compiling the regex is a reasonable micro-optimization\",\n    \"Logic is flat with no unnecessary nesting or abstraction\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings and comments for a trivial function \u2014 violates simplicity-first\",\n    \"Module-level docstring and verbose inline comments add noise without value\",\n    \"Using `typing.List` and `typing.Set` instead of built-in `list`/`set` hints is outdated boilerplate\",\n    \"`\\\\w+` matches Unicode word characters, not strictly 'letters, digits, underscores' \u2014 less explicit than `[a-zA-Z0-9_]+`\",\n    \"Named constant `_VALID_FIELD_PATTERN` is over-engineering for a single-use regex\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct deduplication preserving first-occurrence order",
+      "Pre-compiling the regex is a reasonable micro-optimization",
+      "Logic is flat with no unnecessary nesting or abstraction"
+    ],
+    "weaknesses": [
+      "Excessive docstrings and comments for a trivial function \u2014 violates simplicity-first",
+      "Module-level docstring and verbose inline comments add noise without value",
+      "Using `typing.List` and `typing.Set` instead of built-in `list`/`set` hints is outdated boilerplate",
+      "`\\w+` matches Unicode word characters, not strictly 'letters, digits, underscores' \u2014 less explicit than `[a-zA-Z0-9_]+`",
+      "Named constant `_VALID_FIELD_PATTERN` is over-engineering for a single-use regex"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.789,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 35,
+    "maintainability_index": 76.466,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_karpathy_generation"
+}

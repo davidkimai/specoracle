@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly satisfies all functional requirements: it assigns monotonic sequence numbers starting at 1, explicitly rejects events missing source_system or actor_id, and names all fields explicitly before inserting them into the record. The logic is flat, readable, and locally auditable with no hidden magic or silent value invention. The main structural weakness is that the entire record construction is crammed into a single long line inside the loop, which slightly reduces readability and auditability \u2014 RAT-9 specifically calls for derived fields to be named explicitly before insertion, and while the fields are technically named as dict keys, extracting them as named variables first would better satisfy the spirit of that requirement. The use of event.get('action') rather than event['action'] is a minor inconsistency since action is not validated but is silently defaulted to None, which is acceptable given the spec only mandates source_system and actor_id.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation correctly satisfies all functional requirements: it assigns monotonic sequence numbers starting at 1, explicitly rejects events missing source_system or actor_id, and names all fields explicitly before inserting them into the record. The logic is flat, readable, and locally auditable with no hidden magic or silent value invention. The main structural weakness is that the entire record construction is crammed into a single long line inside the loop, which slightly reduces readability and auditability \u2014 RAT-9 specifically calls for derived fields to be named explicitly before insertion, and while the fields are technically named as dict keys, extracting them as named variables first would better satisfy the spirit of that requirement. The use of event.get('action') rather than event['action'] is a minor inconsistency since action is not validated but is silently defaulted to None, which is acceptable given the spec only mandates source_system and actor_id.\",\n  \"strengths\": [\n    \"Monotonic sequence numbers starting at 1 via enumerate(start=1)\",\n    \"Explicit rejection of missing source_system or actor_id with a clear ValueError\",\n    \"No silent invention of actor or source values\",\n    \"All output fields are explicitly named in the returned dict\",\n    \"Flat, simple loop with no unnecessary abstraction\"\n  ],\n  \"weaknesses\": [\n    \"Record construction is a single long line; extracting named variables before dict construction would better satisfy RAT-9's 'derived fields named explicitly before insertion' requirement\",\n    \"action silently defaults to None via .get() without validation or documentation of intent\",\n    \"No distinction between missing key and falsy value (e.g., empty string) \u2014 both are rejected, which may be overly broad\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Monotonic sequence numbers starting at 1 via enumerate(start=1)",
+      "Explicit rejection of missing source_system or actor_id with a clear ValueError",
+      "No silent invention of actor or source values",
+      "All output fields are explicitly named in the returned dict",
+      "Flat, simple loop with no unnecessary abstraction"
+    ],
+    "weaknesses": [
+      "Record construction is a single long line; extracting named variables before dict construction would better satisfy RAT-9's 'derived fields named explicitly before insertion' requirement",
+      "action silently defaults to None via .get() without validation or documentation of intent",
+      "No distinction between missing key and falsy value (e.g., empty string) \u2014 both are rejected, which may be overly broad"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.979,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 69.841,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "human_reference"
+}

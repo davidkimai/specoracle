@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Clinical Data Standard CD-7 requirements: it validates all required fields before accepting any into the output, raises ValueError with explicit field names on every failure path, and returns a clean dict only after all validations pass. The code is flat, explicit, and locally auditable with no hidden control flow or unnecessary abstraction. The bool-subclass edge case for age is correctly handled with a type() check and documented. The only minor weaknesses are that the missing-field loop raises on the first missing field rather than collecting all missing fields (though CD-7 says 'partial validation is not permitted' which is satisfied), and the symptoms list items validation error message doesn't name the offending item index, but these are very minor issues that don't violate the spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Clinical Data Standard CD-7 requirements: it validates all required fields before accepting any into the output, raises ValueError with explicit field names on every failure path, and returns a clean dict only after all validations pass. The code is flat, explicit, and locally auditable with no hidden control flow or unnecessary abstraction. The bool-subclass edge case for age is correctly handled with a type() check and documented. The only minor weaknesses are that the missing-field loop raises on the first missing field rather than collecting all missing fields (though CD-7 says 'partial validation is not permitted' which is satisfied), and the symptoms list items validation error message doesn't name the offending item index, but these are very minor issues that don't violate the spec.\",\n  \"strengths\": [\n    \"All-or-nothing validation: clean dict returned only after every field passes\",\n    \"Every ValueError names the specific failing field explicitly\",\n    \"Bool subclass edge case for age correctly handled and documented\",\n    \"Flat, readable structure with no unnecessary abstraction or indirection\",\n    \"Docstring accurately describes CD-7 compliance and behavior\",\n    \"Returns a new clean dict containing only validated required fields\"\n  ],\n  \"weaknesses\": [\n    \"Missing-field loop raises on first missing field rather than checking all presence upfront before type checks (minor ordering concern)\",\n    \"Symptoms item validation error doesn't identify which index contained the non-string value\",\n    \"patient_id validation doesn't reject empty strings, which may be clinically invalid\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All-or-nothing validation: clean dict returned only after every field passes",
+      "Every ValueError names the specific failing field explicitly",
+      "Bool subclass edge case for age correctly handled and documented",
+      "Flat, readable structure with no unnecessary abstraction or indirection",
+      "Docstring accurately describes CD-7 compliance and behavior",
+      "Returns a new clean dict containing only validated required fields"
+    ],
+    "weaknesses": [
+      "Missing-field loop raises on first missing field rather than checking all presence upfront before type checks (minor ordering concern)",
+      "Symptoms item validation error doesn't identify which index contained the non-string value",
+      "patient_id validation doesn't reject empty strings, which may be clinically invalid"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.685,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 50,
+    "maintainability_index": 81.234,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_karpathy_generation"
+}

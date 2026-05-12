@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a single linear scan with a pointer (index) and a running forward-fill value, which is the simplest correct algorithm for this task. The code is flat, readable, and locally auditable in one pass. The only minor concern is the defensive `interval <= 0` guard, which adds a small amount of speculative robustness not explicitly required by the spec, but this is a very conservative and reasonable addition that doesn't bloat the code. Variable naming is clear, type annotations are present and accurate, and there are no unnecessary helper functions or classes.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a single linear scan with a pointer (index) and a running forward-fill value, which is the simplest correct algorithm for this task. The code is flat, readable, and locally auditable in one pass. The only minor concern is the defensive `interval <= 0` guard, which adds a small amount of speculative robustness not explicitly required by the spec, but this is a very conservative and reasonable addition that doesn't bloat the code. Variable naming is clear, type annotations are present and accurate, and there are no unnecessary helper functions or classes.\",\n  \"strengths\": [\n    \"Minimal code \u2014 solves the problem in ~15 lines with no unnecessary abstractions\",\n    \"Single linear scan with pointer is the optimal and simplest correct algorithm\",\n    \"Flat structure with no nested functions, classes, or speculative flexibility\",\n    \"Clear variable names and accurate type annotations\",\n    \"Correct forward-fill semantics: advances index while point timestamp <= current timestamp\"\n  ],\n  \"weaknesses\": [\n    \"The `interval <= 0` guard is a minor speculative addition not required by the spec\",\n    \"Sorting input is O(n log n) when a presorted assumption could be documented instead, though sorting is the safer conservative choice\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 solves the problem in ~15 lines with no unnecessary abstractions",
+      "Single linear scan with pointer is the optimal and simplest correct algorithm",
+      "Flat structure with no nested functions, classes, or speculative flexibility",
+      "Clear variable names and accurate type annotations",
+      "Correct forward-fill semantics: advances index while point timestamp <= current timestamp"
+    ],
+    "weaknesses": [
+      "The `interval <= 0` guard is a minor speculative addition not required by the spec",
+      "Sorting input is O(n log n) when a presorted assumption could be documented instead, though sorting is the safer conservative choice"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.324,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 59.115,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_karpathy_generation"
+}

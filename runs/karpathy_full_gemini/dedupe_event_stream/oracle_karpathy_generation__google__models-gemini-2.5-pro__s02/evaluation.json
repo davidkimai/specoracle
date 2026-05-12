@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and the core logic is sound, but it violates the Karpathy oracle's 'simplicity first' principle in several ways. The module-level docstring, the verbose function docstring (repeating the spec at length), the explicit type alias imports (`Any`, `Dict`, `Hashable`, `List`, `Tuple`), and the over-commented inline code all add significant bulk without adding clarity. The code could be ~30 lines instead of ~80. The `try/except TypeError` around tuple construction is also misplaced \u2014 building a tuple doesn't raise `TypeError` for unhashable values; that would only surface when used as a dict key, so the guard is both wrong in placement and unnecessary given the spec only mentions missing fields and non-integer timestamps as malformed criteria. The variable names are verbose (`deduplicated_events`, `last_kept_timestamps`, `last_kept_ts`) where shorter names would be cleaner. The architecture itself (a single dict tracking last-kept timestamps) is the right minimal structure, but the surrounding ceremony inflates the implementation well beyond what the task demands.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and the core logic is sound, but it violates the Karpathy oracle's 'simplicity first' principle in several ways. The module-level docstring, the verbose function docstring (repeating the spec at length), the explicit type alias imports (`Any`, `Dict`, `Hashable`, `List`, `Tuple`), and the over-commented inline code all add significant bulk without adding clarity. The code could be ~30 lines instead of ~80. The `try/except TypeError` around tuple construction is also misplaced \u2014 building a tuple doesn't raise `TypeError` for unhashable values; that would only surface when used as a dict key, so the guard is both wrong in placement and unnecessary given the spec only mentions missing fields and non-integer timestamps as malformed criteria. The variable names are verbose (`deduplicated_events`, `last_kept_timestamps`, `last_kept_ts`) where shorter names would be cleaner. The architecture itself (a single dict tracking last-kept timestamps) is the right minimal structure, but the surrounding ceremony inflates the implementation well beyond what the task demands.\",\n  \"strengths\": [\n    \"Correct rolling-window deduplication logic using a single dict\",\n    \"Properly skips events missing key fields or with non-integer timestamps\",\n    \"Preserves insertion order of retained events\",\n    \"No unnecessary abstractions or classes\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings and comments inflate the code to ~80 lines when ~30 would suffice\",\n    \"Unnecessary typing imports (List, Dict, Tuple, Hashable, Any) instead of built-in generics\",\n    \"try/except TypeError around tuple construction is logically misplaced and doesn't catch unhashable key errors\",\n    \"Over-verbose variable names and inline comments narrate obvious logic rather than clarifying intent\",\n    \"Module-level docstring adds no value for a single-function utility module\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct rolling-window deduplication logic using a single dict",
+      "Properly skips events missing key fields or with non-integer timestamps",
+      "Preserves insertion order of retained events",
+      "No unnecessary abstractions or classes"
+    ],
+    "weaknesses": [
+      "Excessive docstrings and comments inflate the code to ~80 lines when ~30 would suffice",
+      "Unnecessary typing imports (List, Dict, Tuple, Hashable, Any) instead of built-in generics",
+      "try/except TypeError around tuple construction is logically misplaced and doesn't catch unhashable key errors",
+      "Over-verbose variable names and inline comments narrate obvious logic rather than clarifying intent",
+      "Module-level docstring adds no value for a single-function utility module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.393,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 74.26,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dedupe_event_stream",
+  "variant": "oracle_karpathy_generation"
+}

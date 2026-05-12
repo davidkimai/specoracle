@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and flat \u2014 a textbook example of Pythonic simplicity. It uses a sentinel object (_MISSING) to correctly distinguish between a missing key and a key explicitly set to None, which is a subtle but important correctness detail. The logic is a single flat loop over a sorted union of keys, with three explicit branches for added, removed, and changed fields. Each branch produces an explicit record with the required field/before/after structure, satisfying SRL-3 directly. The docstring is clear and accurate. The only minor quibble is that the docstring says 'None if the field was added/removed' which slightly misrepresents the sentinel logic (the actual None in the output is intentional for UX, but the sentinel correctly handles None values in the dicts), and one could argue the __all__ export is slightly unnecessary boilerplate for a small utility module, but neither is a meaningful flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and flat \u2014 a textbook example of Pythonic simplicity. It uses a sentinel object (_MISSING) to correctly distinguish between a missing key and a key explicitly set to None, which is a subtle but important correctness detail. The logic is a single flat loop over a sorted union of keys, with three explicit branches for added, removed, and changed fields. Each branch produces an explicit record with the required field/before/after structure, satisfying SRL-3 directly. The docstring is clear and accurate. The only minor quibble is that the docstring says 'None if the field was added/removed' which slightly misrepresents the sentinel logic (the actual None in the output is intentional for UX, but the sentinel correctly handles None values in the dicts), and one could argue the __all__ export is slightly unnecessary boilerplate for a small utility module, but neither is a meaningful flaw.\",\n  \"strengths\": [\n    \"Sentinel pattern correctly handles None values as legitimate dict values\",\n    \"Single flat loop with explicit branches \u2014 no nesting or abstraction overhead\",\n    \"Sorting happens at iteration time over the union of keys, keeping logic local and readable\",\n    \"Records are explicit dicts with required keys, satisfying SRL-3 field label preservation\",\n    \"Minimal, purposeful code with no architectural slop\"\n  ],\n  \"weaknesses\": [\n    \"Docstring slightly misleads by saying 'None if the field was added' \u2014 the sentinel ensures correctness but the doc doesn't explain the None-vs-missing distinction\",\n    \"__all__ is minor boilerplate for a single-function utility module\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Sentinel pattern correctly handles None values as legitimate dict values",
+      "Single flat loop with explicit branches \u2014 no nesting or abstraction overhead",
+      "Sorting happens at iteration time over the union of keys, keeping logic local and readable",
+      "Records are explicit dicts with required keys, satisfying SRL-3 field label preservation",
+      "Minimal, purposeful code with no architectural slop"
+    ],
+    "weaknesses": [
+      "Docstring slightly misleads by saying 'None if the field was added' \u2014 the sentinel ensures correctness but the doc doesn't explain the None-vs-missing distinction",
+      "__all__ is minor boilerplate for a single-function utility module"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.399,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 21,
+    "maintainability_index": 89.106,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "baseline_generation"
+}

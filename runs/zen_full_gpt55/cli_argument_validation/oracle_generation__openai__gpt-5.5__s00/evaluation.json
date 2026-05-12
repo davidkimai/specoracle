@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured with small, named helpers that each do one thing, flat control flow using guard clauses, explicit data movement through function arguments rather than hidden state, and clear error messages. The decomposition into `_validate_argv`, `_reject_duplicate`, `_read_flag_value`, `_apply_value`, and `_parse_positive_integer` is sensible and auditable locally. Minor concerns: `_validate_argv` is speculative defensiveness not required by the spec (argv is typed as list[str]); `_is_ascii_decimal` reimplements `str.isdigit()` or `str.isdecimal()` unnecessarily and slightly incorrectly (it would reject negative signs, which is fine, but `str.isdigit()` would be clearer and more idiomatic); the final return block reconstructing the dict from `parsed` is redundant since `parsed` already has the right shape; and `_apply_value` mutates its argument which is explicit but slightly less pure than returning a value. Overall the code is readable, maintainable, and avoids framework-shaped abstractions, landing solidly above average.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is well-structured with small, named helpers that each do one thing, flat control flow using guard clauses, explicit data movement through function arguments rather than hidden state, and clear error messages. The decomposition into `_validate_argv`, `_reject_duplicate`, `_read_flag_value`, `_apply_value`, and `_parse_positive_integer` is sensible and auditable locally. Minor concerns: `_validate_argv` is speculative defensiveness not required by the spec (argv is typed as list[str]); `_is_ascii_decimal` reimplements `str.isdigit()` or `str.isdecimal()` unnecessarily and slightly incorrectly (it would reject negative signs, which is fine, but `str.isdigit()` would be clearer and more idiomatic); the final return block reconstructing the dict from `parsed` is redundant since `parsed` already has the right shape; and `_apply_value` mutates its argument which is explicit but slightly less pure than returning a value. Overall the code is readable, maintainable, and avoids framework-shaped abstractions, landing solidly above average.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers with descriptive names make each piece locally auditable\",\n    \"Flat control flow with guard clauses and early returns throughout\",\n    \"Explicit data movement \u2014 no hidden globals or implicit mutation paths\",\n    \"Clear, specific error messages for every failure mode\",\n    \"Constants defined at module level make defaults and valid values easy to find\"\n  ],\n  \"weaknesses\": [\n    \"`_validate_argv` is speculative type-checking not required by the spec, adding noise\",\n    \"`_is_ascii_decimal` reinvents `str.isdigit()` without clear benefit\",\n    \"Final dict reconstruction in `parse_cli_args` is redundant since `parsed` already matches the return shape\",\n    \"`_apply_value` mutates its dict argument rather than returning a value, slightly reducing purity\",\n    \"The `seen` set tracks duplicates but `--dry-run` duplicate detection is handled separately, creating a subtle asymmetry\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers with descriptive names make each piece locally auditable",
+      "Flat control flow with guard clauses and early returns throughout",
+      "Explicit data movement \u2014 no hidden globals or implicit mutation paths",
+      "Clear, specific error messages for every failure mode",
+      "Constants defined at module level make defaults and valid values easy to find"
+    ],
+    "weaknesses": [
+      "`_validate_argv` is speculative type-checking not required by the spec, adding noise",
+      "`_is_ascii_decimal` reinvents `str.isdigit()` without clear benefit",
+      "Final dict reconstruction in `parse_cli_args` is redundant since `parsed` already matches the return shape",
+      "`_apply_value` mutates its dict argument rather than returning a value, slightly reducing purity",
+      "The `seen` set tracks duplicates but `--dry-run` duplicate detection is handled separately, creating a subtle asymmetry"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.843,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.16s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.857,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 27,
+    "function_count": 7,
+    "loc": 79,
+    "maintainability_index": 38.948,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_generation"
+}

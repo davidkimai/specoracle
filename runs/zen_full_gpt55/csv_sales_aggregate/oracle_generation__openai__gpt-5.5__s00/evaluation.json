@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, well-decomposed solution that closely follows the Zen of Python principles. Each helper has a single, clear responsibility with an obvious name, control flow is flat throughout, data movement is explicit with no hidden mutation, and the use of guard clauses (returning None) keeps nesting minimal. The integer parsing helper is slightly more elaborate than strictly necessary (could just use a try/except around int()), but it is still locally auditable and correct. The TypeError raise for non-string input is a good explicit contract. The only minor quibbles are that _field_indexes silently returns None for missing fields rather than being more explicit, and the custom _parse_integer could be replaced with a simpler try/except int() pattern, but neither constitutes real architectural slop. Overall this is a sparse, readable, maintainable implementation with no speculative abstractions or framework-shaped code.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, well-decomposed solution that closely follows the Zen of Python principles. Each helper has a single, clear responsibility with an obvious name, control flow is flat throughout, data movement is explicit with no hidden mutation, and the use of guard clauses (returning None) keeps nesting minimal. The integer parsing helper is slightly more elaborate than strictly necessary (could just use a try/except around int()), but it is still locally auditable and correct. The TypeError raise for non-string input is a good explicit contract. The only minor quibbles are that _field_indexes silently returns None for missing fields rather than being more explicit, and the custom _parse_integer could be replaced with a simpler try/except int() pattern, but neither constitutes real architectural slop. Overall this is a sparse, readable, maintainable implementation with no speculative abstractions or framework-shaped code.\",\n  \"strengths\": [\n    \"Each helper has a single clear responsibility and an explanatory name\",\n    \"Control flow is flat throughout; guard clauses replace nested conditionals\",\n    \"Data movement is explicit: no hidden mutation or global state\",\n    \"Raises TypeError for invalid input type rather than silently guessing\",\n    \"Standard-library only (csv, io); no clever metaprogramming\",\n    \"Result construction is isolated in _result_row, making the shape auditable in one place\",\n    \"Handles csv.Error per-row in _data_rows without aborting the whole parse\"\n  ],\n  \"weaknesses\": [\n    \"_parse_integer reimplements sign/digit logic that a simple try/except around int() would handle more idiomatically and concisely\",\n    \"_field_indexes returning None for missing headers is slightly implicit; a comment or inline check would make the contract clearer\",\n    \"REQUIRED_FIELDS as a module-level tuple is a minor speculative abstraction for a fixed four-field schema\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Each helper has a single clear responsibility and an explanatory name",
+      "Control flow is flat throughout; guard clauses replace nested conditionals",
+      "Data movement is explicit: no hidden mutation or global state",
+      "Raises TypeError for invalid input type rather than silently guessing",
+      "Standard-library only (csv, io); no clever metaprogramming",
+      "Result construction is isolated in _result_row, making the shape auditable in one place",
+      "Handles csv.Error per-row in _data_rows without aborting the whole parse"
+    ],
+    "weaknesses": [
+      "_parse_integer reimplements sign/digit logic that a simple try/except around int() would handle more idiomatically and concisely",
+      "_field_indexes returning None for missing headers is slightly implicit; a comment or inline check would make the contract clearer",
+      "REQUIRED_FIELDS as a module-level tuple is a minor speculative abstraction for a fixed four-field schema"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.249,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 28,
+    "function_count": 7,
+    "loc": 73,
+    "maintainability_index": 40.53,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

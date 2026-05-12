@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable with visibly staged parsing steps, but it deviates from the Archival Binder Spec R-04 in a key structural requirement: the accumulator dictionary is named `bindings` rather than something ending in `_ledger` as the spec explicitly mandates for dictionaries that survive across loop iterations. The error messages name the line number but don't consistently name the 'archival field being rejected' in a domain-meaningful way (e.g., 'section', 'key' are mentioned but not framed as archival fields). The parsing is staged and explicit rather than compressed, which is good. There is exactly one public function. Input order is preserved via dict insertion order. The split-then-strip approach on `raw_line` rather than `stripped_line` for the `=` check is a minor inconsistency (checking `raw_line` for `=` but `stripped_line` for comment/empty), though functionally harmless. Overall, the code is clean and correct but misses the `_ledger` naming convention that the spec explicitly calls out, which is a direct structural violation.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable with visibly staged parsing steps, but it deviates from the Archival Binder Spec R-04 in a key structural requirement: the accumulator dictionary is named `bindings` rather than something ending in `_ledger` as the spec explicitly mandates for dictionaries that survive across loop iterations. The error messages name the line number but don't consistently name the 'archival field being rejected' in a domain-meaningful way (e.g., 'section', 'key' are mentioned but not framed as archival fields). The parsing is staged and explicit rather than compressed, which is good. There is exactly one public function. Input order is preserved via dict insertion order. The split-then-strip approach on `raw_line` rather than `stripped_line` for the `=` check is a minor inconsistency (checking `raw_line` for `=` but `stripped_line` for comment/empty), though functionally harmless. Overall, the code is clean and correct but misses the `_ledger` naming convention that the spec explicitly calls out, which is a direct structural violation.\",\n  \"strengths\": [\n    \"Visibly staged parsing: split on '=', then split on '.', then strip each part separately\",\n    \"Exactly one public function as required\",\n    \"Insertion order preserved via standard dict\",\n    \"Error messages include line number and identify the missing element\",\n    \"Clear docstring explaining behavior\"\n  ],\n  \"weaknesses\": [\n    \"Accumulator dict named `bindings` instead of a name ending in `_ledger` as explicitly required by R-04\",\n    \"Error messages reference 'line number' but don't frame rejected fields as 'archival fields' per spec language\",\n    \"Minor inconsistency: checks `raw_line` for '=' presence but uses `stripped_line` for comment/empty detection\",\n    \"Inner dict also lacks a `_ledger` suffix convention when initialized per section\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Visibly staged parsing: split on '=', then split on '.', then strip each part separately",
+      "Exactly one public function as required",
+      "Insertion order preserved via standard dict",
+      "Error messages include line number and identify the missing element",
+      "Clear docstring explaining behavior"
+    ],
+    "weaknesses": [
+      "Accumulator dict named `bindings` instead of a name ending in `_ledger` as explicitly required by R-04",
+      "Error messages reference 'line number' but don't frame rejected fields as 'archival fields' per spec language",
+      "Minor inconsistency: checks `raw_line` for '=' presence but uses `stripped_line` for comment/empty detection",
+      "Inner dict also lacks a `_ledger` suffix convention when initialized per section"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.796,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 82.368,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

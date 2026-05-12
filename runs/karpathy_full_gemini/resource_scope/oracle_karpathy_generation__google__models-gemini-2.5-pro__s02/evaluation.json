@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct but violates the core Karpathy principle of simplicity first. The task requires a trivial list-based LIFO tracker (~15 lines), yet the candidate reaches for `contextlib.ExitStack` as an abstraction layer, adds a `Protocol` definition, a `TypeVar`, and extensive docstrings/comments that dwarf the actual logic. This is speculative abstraction for a single-use class: `ExitStack` itself is a context manager that needs to be entered/exited, adding indirection with no benefit over a plain list. The `Closable` Protocol and `T_Closable` TypeVar are type-system overhead that the task never requested. The docstring volume far exceeds the code volume, which is a signal of over-engineering. A minimal correct solution would be a `__init__` with `self._resources = []`, an `acquire` that appends and returns, and an `__exit__` that iterates in reverse calling `.close()`\u2014roughly 12 lines total.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The implementation is functionally correct but violates the core Karpathy principle of simplicity first. The task requires a trivial list-based LIFO tracker (~15 lines), yet the candidate reaches for `contextlib.ExitStack` as an abstraction layer, adds a `Protocol` definition, a `TypeVar`, and extensive docstrings/comments that dwarf the actual logic. This is speculative abstraction for a single-use class: `ExitStack` itself is a context manager that needs to be entered/exited, adding indirection with no benefit over a plain list. The `Closable` Protocol and `T_Closable` TypeVar are type-system overhead that the task never requested. The docstring volume far exceeds the code volume, which is a signal of over-engineering. A minimal correct solution would be a `__init__` with `self._resources = []`, an `acquire` that appends and returns, and an `__exit__` that iterates in reverse calling `.close()`\u2014roughly 12 lines total.\",\n  \"strengths\": [\n    \"Functionally correct: resources are closed in reverse acquisition order including on exception\",\n    \"Type annotations are present and consistent\",\n    \"LIFO ordering is correctly preserved via ExitStack's callback mechanism\"\n  ],\n  \"weaknesses\": [\n    \"Uses ExitStack as an unnecessary abstraction layer when a plain list suffices\",\n    \"Introduces Protocol and TypeVar for a single-use class with no polymorphic callers\",\n    \"Docstring and comment volume massively exceeds the actual logic, obscuring simplicity\",\n    \"ExitStack requires its own enter/exit lifecycle management, adding accidental complexity\",\n    \"Imports (contextlib, Protocol, TypeVar, Any, Type, Optional) are disproportionate to the task\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct: resources are closed in reverse acquisition order including on exception",
+      "Type annotations are present and consistent",
+      "LIFO ordering is correctly preserved via ExitStack's callback mechanism"
+    ],
+    "weaknesses": [
+      "Uses ExitStack as an unnecessary abstraction layer when a plain list suffices",
+      "Introduces Protocol and TypeVar for a single-use class with no polymorphic callers",
+      "Docstring and comment volume massively exceeds the actual logic, obscuring simplicity",
+      "ExitStack requires its own enter/exit lifecycle management, adding accidental complexity",
+      "Imports (contextlib, Protocol, TypeVar, Any, Type, Optional) are disproportionate to the task"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.194,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 1.286,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 46,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "oracle_karpathy_generation"
+}

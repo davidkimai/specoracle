@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and minimal. It satisfies all functional requirements: monotonic sequence numbers starting at 1, appending to the caller-provided sink, and returning a distinct copy of the record. Input validation is clear and raises typed errors. State is explicit and local. The class is small enough to audit in one reading, with no speculative abstractions or hidden mutation. The only minor quibble is that `dict(record)` creates a shallow copy of an already-constructed dict, which is slightly redundant\u2014one could build the record and copy in one step or just construct two dicts\u2014but this is a trivial cosmetic issue that doesn't affect correctness or clarity.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and minimal. It satisfies all functional requirements: monotonic sequence numbers starting at 1, appending to the caller-provided sink, and returning a distinct copy of the record. Input validation is clear and raises typed errors. State is explicit and local. The class is small enough to audit in one reading, with no speculative abstractions or hidden mutation. The only minor quibble is that `dict(record)` creates a shallow copy of an already-constructed dict, which is slightly redundant\u2014one could build the record and copy in one step or just construct two dicts\u2014but this is a trivial cosmetic issue that doesn't affect correctness or clarity.\",\n  \"strengths\": [\n    \"Explicit input validation with clear TypeError messages\",\n    \"Data movement is transparent: record built, appended, then a copy returned\",\n    \"No hidden state or global mutation; sink ownership stays with the caller\",\n    \"Flat control flow with guard clauses at the top of each method\",\n    \"Names are self-explanatory and match the domain vocabulary\"\n  ],\n  \"weaknesses\": [\n    \"Minor redundancy: building `record` then calling `dict(record)` for the copy; could construct the copy directly to avoid the intermediate step\",\n    \"Docstring is present on the class but absent on `write`, which would benefit from a one-liner\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit input validation with clear TypeError messages",
+      "Data movement is transparent: record built, appended, then a copy returned",
+      "No hidden state or global mutation; sink ownership stays with the caller",
+      "Flat control flow with guard clauses at the top of each method",
+      "Names are self-explanatory and match the domain vocabulary"
+    ],
+    "weaknesses": [
+      "Minor redundancy: building `record` then calling `dict(record)` for the copy; could construct the copy directly to avoid the intermediate step",
+      "Docstring is present on the class but absent on `write`, which would benefit from a one-liner"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.517,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 20,
+    "maintainability_index": 62.531,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_log_writer",
+  "variant": "oracle_generation"
+}

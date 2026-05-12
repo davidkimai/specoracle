@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses the classic double-checked locking pattern, which is the right approach for thread-safe lazy initialization in Python. The use of `__slots__` is a nice touch for memory efficiency. However, there is some unnecessary complexity: the `Generic[T]` and `TypeVar` machinery adds abstraction overhead for what is essentially a simple utility class, the `cast` import and usage adds noise, the docstring assumption about non-caching of factory exceptions is a design decision that should be explicit in the spec rather than assumed, and the `callable()` guard is a speculative defensive check not asked for. The sentinel `_unset = object()` approach is clean and idiomatic. Overall the core logic is minimal and correct, but the type annotation scaffolding crosses into speculative flexibility territory that the oracle would discourage.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and uses the classic double-checked locking pattern, which is the right approach for thread-safe lazy initialization in Python. The use of `__slots__` is a nice touch for memory efficiency. However, there is some unnecessary complexity: the `Generic[T]` and `TypeVar` machinery adds abstraction overhead for what is essentially a simple utility class, the `cast` import and usage adds noise, the docstring assumption about non-caching of factory exceptions is a design decision that should be explicit in the spec rather than assumed, and the `callable()` guard is a speculative defensive check not asked for. The sentinel `_unset = object()` approach is clean and idiomatic. Overall the core logic is minimal and correct, but the type annotation scaffolding crosses into speculative flexibility territory that the oracle would discourage.\",\n  \"strengths\": [\n    \"Correct double-checked locking pattern for thread safety\",\n    \"__slots__ reduces per-instance overhead appropriately\",\n    \"Sentinel object pattern avoids None ambiguity cleanly\",\n    \"Core get() logic is minimal and readable\"\n  ],\n  \"weaknesses\": [\n    \"Generic[T] and TypeVar add abstraction overhead not required by the task\",\n    \"cast() import and usage is noise for a simple utility\",\n    \"callable() guard is speculative defensive code not asked for\",\n    \"Docstring states an unasked-for design decision (no exception caching) as an assumption\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct double-checked locking pattern for thread safety",
+      "__slots__ reduces per-instance overhead appropriately",
+      "Sentinel object pattern avoids None ambiguity cleanly",
+      "Core get() logic is minimal and readable"
+    ],
+    "weaknesses": [
+      "Generic[T] and TypeVar add abstraction overhead not required by the task",
+      "cast() import and usage is noise for a simple utility",
+      "callable() guard is speculative defensive code not asked for",
+      "Docstring states an unasked-for design decision (no exception caching) as an assumption"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.889,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 26,
+    "maintainability_index": 85.802,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "oracle_karpathy_generation"
+}

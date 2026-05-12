@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation cleanly follows TR-4: direction is validated before any monetary accumulation occurs, debit and credit are stored in separate named accumulators within the bucket dict, and there is no inline arithmetic inside the conditional that decides direction. The balance is recomputed after each update using the named accumulators rather than being derived inline during the direction check. The code is flat, explicit, and locally auditable with no unnecessary abstraction. A minor quibble is that balance is recomputed on every iteration rather than once at the end, which is slightly wasteful but not a structural violation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation cleanly follows TR-4: direction is validated before any monetary accumulation occurs, debit and credit are stored in separate named accumulators within the bucket dict, and there is no inline arithmetic inside the conditional that decides direction. The balance is recomputed after each update using the named accumulators rather than being derived inline during the direction check. The code is flat, explicit, and locally auditable with no unnecessary abstraction. A minor quibble is that balance is recomputed on every iteration rather than once at the end, which is slightly wasteful but not a structural violation.\",\n  \"strengths\": [\n    \"Direction validated before any amount is applied, satisfying TR-4 rule 1\",\n    \"Separate named 'debit' and 'credit' accumulators per account, satisfying TR-4 rule 2\",\n    \"No inline arithmetic inside the direction-deciding conditional, satisfying TR-4 rule 3\",\n    \"Flat, readable loop with no unnecessary abstraction or nesting\",\n    \"Uses setdefault cleanly to initialize per-account buckets\"\n  ],\n  \"weaknesses\": [\n    \"Balance is recomputed on every entry rather than in a final pass, minor inefficiency\",\n    \"amount defaults to 0 silently if missing, which could mask malformed entries\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Direction validated before any amount is applied, satisfying TR-4 rule 1",
+      "Separate named 'debit' and 'credit' accumulators per account, satisfying TR-4 rule 2",
+      "No inline arithmetic inside the direction-deciding conditional, satisfying TR-4 rule 3",
+      "Flat, readable loop with no unnecessary abstraction or nesting",
+      "Uses setdefault cleanly to initialize per-account buckets"
+    ],
+    "weaknesses": [
+      "Balance is recomputed on every entry rather than in a final pass, minor inefficiency",
+      "amount defaults to 0 silently if missing, which could mask malformed entries"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.728,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 13,
+    "maintainability_index": 64.405,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "human_reference"
+}

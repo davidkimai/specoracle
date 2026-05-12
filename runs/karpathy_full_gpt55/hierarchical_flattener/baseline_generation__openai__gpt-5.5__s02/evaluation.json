@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with good input validation and a clear docstring with example. However, the use of a nested closure `_flatten` that mutates an outer `flattened` dict is a hidden-mutation pattern that violates the 'make data movement explicit' constraint \u2014 a pure recursive helper returning a dict would be cleaner and more auditable. The duplicate-path check adds speculative defensive logic that can never trigger in practice (dot-path construction from string keys in a well-formed nested dict cannot produce duplicates), making it noise rather than signal. The guard `if item` on empty dicts means an empty dict `{}` is treated as a leaf rather than an empty namespace, which is a subtle semantic choice that isn't documented. Overall the code is compact and mostly flat, but the closure-with-mutation architecture and the speculative error raise are mild structural slops against the Zen oracle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with good input validation and a clear docstring with example. However, the use of a nested closure `_flatten` that mutates an outer `flattened` dict is a hidden-mutation pattern that violates the 'make data movement explicit' constraint \u2014 a pure recursive helper returning a dict would be cleaner and more auditable. The duplicate-path check adds speculative defensive logic that can never trigger in practice (dot-path construction from string keys in a well-formed nested dict cannot produce duplicates), making it noise rather than signal. The guard `if item` on empty dicts means an empty dict `{}` is treated as a leaf rather than an empty namespace, which is a subtle semantic choice that isn't documented. Overall the code is compact and mostly flat, but the closure-with-mutation architecture and the speculative error raise are mild structural slops against the Zen oracle.\",\n  \"strengths\": [\n    \"Clear type guard at entry with an explicit TypeError\",\n    \"String-key validation is explicit and locally auditable\",\n    \"Docstring includes a concrete example\",\n    \"Control flow inside the loop is reasonably flat with a single branch\"\n  ],\n  \"weaknesses\": [\n    \"Nested closure mutating outer `flattened` hides data flow; a pure helper returning a dict would be more explicit\",\n    \"Duplicate-path check is dead code in practice \u2014 adds noise without real safety\",\n    \"Empty-dict-as-leaf behavior is undocumented and potentially surprising\",\n    \"Closure adds an extra layer of indirection that a maintainer must mentally unwrap\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear type guard at entry with an explicit TypeError",
+      "String-key validation is explicit and locally auditable",
+      "Docstring includes a concrete example",
+      "Control flow inside the loop is reasonably flat with a single branch"
+    ],
+    "weaknesses": [
+      "Nested closure mutating outer `flattened` hides data flow; a pure helper returning a dict would be more explicit",
+      "Duplicate-path check is dead code in practice \u2014 adds noise without real safety",
+      "Empty-dict-as-leaf behavior is undocumented and potentially surprising",
+      "Closure adds an extra layer of indirection that a maintainer must mentally unwrap"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.322,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 2,
+    "loc": 24,
+    "maintainability_index": 86.881,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "baseline_generation"
+}

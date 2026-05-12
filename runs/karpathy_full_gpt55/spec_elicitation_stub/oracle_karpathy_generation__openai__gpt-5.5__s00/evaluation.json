@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, explicit, and directly encodes the single specified behavior without any speculative abstraction. The guard condition is precise\u2014checking both key set equality and mode value\u2014ensuring no accidental matches on supersets or subsets of the expected payload. The NotImplementedError with a descriptive message satisfies the 'raise rather than guess' requirement cleanly. The only marginal concern is the `isinstance(payload, dict)` check: since the type annotation already declares `dict`, this adds a small defensive layer that could be seen as either prudent conservatism or minor over-engineering, but it's a trivial line and not architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, explicit, and directly encodes the single specified behavior without any speculative abstraction. The guard condition is precise\u2014checking both key set equality and mode value\u2014ensuring no accidental matches on supersets or subsets of the expected payload. The NotImplementedError with a descriptive message satisfies the 'raise rather than guess' requirement cleanly. The only marginal concern is the `isinstance(payload, dict)` check: since the type annotation already declares `dict`, this adds a small defensive layer that could be seen as either prudent conservatism or minor over-engineering, but it's a trivial line and not architectural slop.\",\n  \"strengths\": [\n    \"Minimum viable code\u2014no unnecessary abstractions, classes, or helper functions\",\n    \"Explicit key-set equality check prevents silent partial matches\",\n    \"NotImplementedError raised for all unspecified paths as required\",\n    \"Descriptive error message aids auditability without verbosity\",\n    \"Flat, single-function structure with no indirection\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(payload, dict) is redundant given the type annotation, adding a tiny unnecessary check\",\n    \"No docstring or inline comment stating the contract, which would aid local auditability\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimum viable code\u2014no unnecessary abstractions, classes, or helper functions",
+      "Explicit key-set equality check prevents silent partial matches",
+      "NotImplementedError raised for all unspecified paths as required",
+      "Descriptive error message aids auditability without verbosity",
+      "Flat, single-function structure with no indirection"
+    ],
+    "weaknesses": [
+      "isinstance(payload, dict) is redundant given the type annotation, adding a tiny unnecessary check",
+      "No docstring or inline comment stating the contract, which would aid local auditability"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.189,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 75.818,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "oracle_karpathy_generation"
+}

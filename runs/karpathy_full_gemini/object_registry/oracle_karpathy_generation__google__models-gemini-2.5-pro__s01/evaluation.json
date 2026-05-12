@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: it uses weakref.ref directly, keeps the registry as a plain dict, and the three methods each have a clear contract. The core logic is minimal and readable. The main deductions come from over-documentation \u2014 the docstrings are verbose beyond what the task warrants, adding noise without value per the 'minimum code' principle. The `get` method has a minor redundancy (checking `if weak_ref is None` when `dict.get` already handles missing keys, but calling `weak_ref()` would return None for dead refs anyway \u2014 the explicit None check is harmless but slightly verbose). The type annotations are reasonable and not excessive. Overall this is a clean, conservative implementation that avoids speculative abstractions, but the docstring verbosity slightly violates the simplicity-first guideline.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: it uses weakref.ref directly, keeps the registry as a plain dict, and the three methods each have a clear contract. The core logic is minimal and readable. The main deductions come from over-documentation \u2014 the docstrings are verbose beyond what the task warrants, adding noise without value per the 'minimum code' principle. The `get` method has a minor redundancy (checking `if weak_ref is None` when `dict.get` already handles missing keys, but calling `weak_ref()` would return None for dead refs anyway \u2014 the explicit None check is harmless but slightly verbose). The type annotations are reasonable and not excessive. Overall this is a clean, conservative implementation that avoids speculative abstractions, but the docstring verbosity slightly violates the simplicity-first guideline.\",\n  \"strengths\": [\n    \"Uses weakref.ref directly \u2014 no unnecessary abstraction layer\",\n    \"Plain dict storage \u2014 simplest possible data structure for the task\",\n    \"cleanup() uses a clean dict comprehension with no mutation during iteration\",\n    \"get() correctly handles both missing keys and dead references\",\n    \"No extra features or speculative flexibility beyond what was asked\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are excessively verbose for a simple utility class \u2014 violates minimum-code principle\",\n    \"The None-check on weak_ref in get() is slightly redundant since calling a dead weakref already returns None, making the two-step check unnecessary\",\n    \"Class-level docstring adds no information beyond the method docstrings\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses weakref.ref directly \u2014 no unnecessary abstraction layer",
+      "Plain dict storage \u2014 simplest possible data structure for the task",
+      "cleanup() uses a clean dict comprehension with no mutation during iteration",
+      "get() correctly handles both missing keys and dead references",
+      "No extra features or speculative flexibility beyond what was asked"
+    ],
+    "weaknesses": [
+      "Docstrings are excessively verbose for a simple utility class \u2014 violates minimum-code principle",
+      "The None-check on weak_ref in get() is slightly redundant since calling a dead weakref already returns None, making the two-step check unnecessary",
+      "Class-level docstring adds no information beyond the method docstrings"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.565,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 48,
+    "maintainability_index": 78.44,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "oracle_karpathy_generation"
+}

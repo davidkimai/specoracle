@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly maps to the SRL-3 requirements. It uses a sentinel `_MISSING` object to distinguish absent fields from `None` values, which is a correct and explicit design choice. The logic is flat, readable, and locally auditable \u2014 no hidden abstractions or unnecessary complexity. Each changed field produces exactly one record with the required `field`, `before`, and `after` keys, and records are sorted by field name as specified. The `__all__` export is a nice touch. The only minor quibble is that the `before is _MISSING and after is _MISSING` guard is logically unreachable given the set union iteration, making it slight dead code, but this is a trivial issue that doesn't detract from overall quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly maps to the SRL-3 requirements. It uses a sentinel `_MISSING` object to distinguish absent fields from `None` values, which is a correct and explicit design choice. The logic is flat, readable, and locally auditable \u2014 no hidden abstractions or unnecessary complexity. Each changed field produces exactly one record with the required `field`, `before`, and `after` keys, and records are sorted by field name as specified. The `__all__` export is a nice touch. The only minor quibble is that the `before is _MISSING and after is _MISSING` guard is logically unreachable given the set union iteration, making it slight dead code, but this is a trivial issue that doesn't detract from overall quality.\",\n  \"strengths\": [\n    \"Sentinel `_MISSING` correctly distinguishes absent keys from `None` values\",\n    \"Flat, single-loop structure with no nested abstractions\",\n    \"Explicit record construction with all three required fields\",\n    \"Sorting is done once via `sorted()` on the union of keys, not as a post-step\",\n    \"Clear docstring explaining the output contract\",\n    \"Proper `__all__` export declaration\"\n  ],\n  \"weaknesses\": [\n    \"The `before is _MISSING and after is _MISSING` guard is unreachable dead code since both keys come from the union of both dicts\",\n    \"Minor: module-level sentinel `_MISSING` is a module-private implementation detail that could confuse readers unfamiliar with the pattern, though it is idiomatic Python\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Sentinel `_MISSING` correctly distinguishes absent keys from `None` values",
+      "Flat, single-loop structure with no nested abstractions",
+      "Explicit record construction with all three required fields",
+      "Sorting is done once via `sorted()` on the union of keys, not as a post-step",
+      "Clear docstring explaining the output contract",
+      "Proper `__all__` export declaration"
+    ],
+    "weaknesses": [
+      "The `before is _MISSING and after is _MISSING` guard is unreachable dead code since both keys come from the union of both dicts",
+      "Minor: module-level sentinel `_MISSING` is a module-private implementation detail that could confuse readers unfamiliar with the pattern, though it is idiomatic Python"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.52,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 27,
+    "maintainability_index": 85.18,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "oracle_karpathy_generation"
+}

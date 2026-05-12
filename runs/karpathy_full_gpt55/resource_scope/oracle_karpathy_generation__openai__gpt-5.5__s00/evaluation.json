@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of minimal, correct, readable code. It uses a plain list as the backing store, leverages `pop()` for natural LIFO ordering without any extra index arithmetic, returns the resource from `acquire` as specified, handles exceptions correctly by not suppressing them (`return False`), and contains zero speculative abstractions or unnecessary features. Every line is load-bearing and immediately auditable.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of minimal, correct, readable code. It uses a plain list as the backing store, leverages `pop()` for natural LIFO ordering without any extra index arithmetic, returns the resource from `acquire` as specified, handles exceptions correctly by not suppressing them (`return False`), and contains zero speculative abstractions or unnecessary features. Every line is load-bearing and immediately auditable.\",\n  \"strengths\": [\n    \"Minimal: exactly the code needed, nothing more\",\n    \"LIFO order achieved simply via list.pop() with no extra logic\",\n    \"acquire() returns the resource, satisfying the functional contract cleanly\",\n    \"return False in __exit__ correctly propagates exceptions without suppression\",\n    \"No inheritance, mixins, decorators, or other unnecessary abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Does not guard against resource.close() raising an exception mid-cleanup (remaining resources would be skipped), but this is not required by the spec so omitting it is correct per simplicity-first\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal: exactly the code needed, nothing more",
+      "LIFO order achieved simply via list.pop() with no extra logic",
+      "acquire() returns the resource, satisfying the functional contract cleanly",
+      "return False in __exit__ correctly propagates exceptions without suppression",
+      "No inheritance, mixins, decorators, or other unnecessary abstractions"
+    ],
+    "weaknesses": [
+      "Does not guard against resource.close() raising an exception mid-cleanup (remaining resources would be skipped), but this is not required by the spec so omitting it is correct per simplicity-first"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.478,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.4,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 4,
+    "loc": 13,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "oracle_karpathy_generation"
+}

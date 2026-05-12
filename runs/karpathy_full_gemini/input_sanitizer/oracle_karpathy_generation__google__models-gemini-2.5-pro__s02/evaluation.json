@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, but carries unnecessary weight for a task this small. The module-level docstring, the verbose function docstring with Args/Returns sections, the inline comment explaining `\\w+`, and the explicit type annotations on local variables (`sanitized_list: List[str]`, `seen: Set[str]`) all add noise without adding clarity. The use of `re.fullmatch` is acceptable but slightly heavy when `str.isidentifier()` or a simple `all(c.isalnum() or c == '_' for c in field)` would be more transparent and dependency-free. The logic itself is clean and flat with no over-abstraction, and the order of checks (dedup first, then allowed, then pattern) is sensible, but the overall presentation is over-documented relative to the Karpathy simplicity principle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, but carries unnecessary weight for a task this small. The module-level docstring, the verbose function docstring with Args/Returns sections, the inline comment explaining `\\\\w+`, and the explicit type annotations on local variables (`sanitized_list: List[str]`, `seen: Set[str]`) all add noise without adding clarity. The use of `re.fullmatch` is acceptable but slightly heavy when `str.isidentifier()` or a simple `all(c.isalnum() or c == '_' for c in field)` would be more transparent and dependency-free. The logic itself is clean and flat with no over-abstraction, and the order of checks (dedup first, then allowed, then pattern) is sensible, but the overall presentation is over-documented relative to the Karpathy simplicity principle.\",\n  \"strengths\": [\n    \"Correct deduplication using a seen set while preserving order\",\n    \"Flat, single-loop structure with no unnecessary abstractions\",\n    \"Checks membership in allowed before running the regex, which is efficient\",\n    \"Functionally correct for all edge cases\"\n  ],\n  \"weaknesses\": [\n    \"Verbose module and function docstrings far exceed what the task warrants\",\n    \"Inline comment explaining \\\\w+ is condescending noise, not clarity\",\n    \"Explicit type annotations on local variables (sanitized_list, seen) add clutter\",\n    \"Importing re for a single fullmatch call is heavier than a pure-string alternative\",\n    \"Using List/Set from typing instead of built-in list/set (Python 3.9+ style) is a minor anachronism\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct deduplication using a seen set while preserving order",
+      "Flat, single-loop structure with no unnecessary abstractions",
+      "Checks membership in allowed before running the regex, which is efficient",
+      "Functionally correct for all edge cases"
+    ],
+    "weaknesses": [
+      "Verbose module and function docstrings far exceed what the task warrants",
+      "Inline comment explaining \\w+ is condescending noise, not clarity",
+      "Explicit type annotations on local variables (sanitized_list, seen) add clutter",
+      "Importing re for a single fullmatch call is heavier than a pure-string alternative",
+      "Using List/Set from typing instead of built-in list/set (Python 3.9+ style) is a minor anachronism"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.246,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 83.384,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_karpathy_generation"
+}

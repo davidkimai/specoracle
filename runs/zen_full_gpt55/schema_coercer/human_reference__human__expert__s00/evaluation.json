@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the Zen oracle: it is flat, explicit, minimal, and locally auditable in under 10 lines. The single loop over schema items makes data movement obvious, the guard-clause-style try/except keeps nesting shallow, and the ValueError with the field name satisfies the error contract precisely. There are no speculative abstractions, no hidden state, and no framework-shaped scaffolding. The only marginal quibble is that casting the default through the caster is a reasonable semantic choice but could surprise callers who supply a pre-typed default\u2014however, this is consistent with the spec's wording ('cast it with the callable' applies to raw values, and using the default directly when the field is missing is arguably more correct). The code is as sparse as the task allows while remaining fully correct.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-perfect realization of the Zen oracle: it is flat, explicit, minimal, and locally auditable in under 10 lines. The single loop over schema items makes data movement obvious, the guard-clause-style try/except keeps nesting shallow, and the ValueError with the field name satisfies the error contract precisely. There are no speculative abstractions, no hidden state, and no framework-shaped scaffolding. The only marginal quibble is that casting the default through the caster is a reasonable semantic choice but could surprise callers who supply a pre-typed default\u2014however, this is consistent with the spec's wording ('cast it with the callable' applies to raw values, and using the default directly when the field is missing is arguably more correct). The code is as sparse as the task allows while remaining fully correct.\",\n  \"strengths\": [\n    \"Flat single-loop structure with no unnecessary nesting\",\n    \"Explicit data movement: input \u2192 cast \u2192 output dict\",\n    \"Clear ValueError with field name matches the spec exactly\",\n    \"No speculative abstractions or unused extension points\",\n    \"Readable names (field, caster, default, output) that self-document intent\"\n  ],\n  \"weaknesses\": [\n    \"Casting the default value through the caster may be unintended if defaults are already the correct type, though it is a defensible interpretation\",\n    \"The from __future__ import annotations is unnecessary for this code and adds a minor noise line\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat single-loop structure with no unnecessary nesting",
+      "Explicit data movement: input \u2192 cast \u2192 output dict",
+      "Clear ValueError with field name matches the spec exactly",
+      "No speculative abstractions or unused extension points",
+      "Readable names (field, caster, default, output) that self-document intent"
+    ],
+    "weaknesses": [
+      "Casting the default value through the caster may be unintended if defaults are already the correct type, though it is a defensible interpretation",
+      "The from __future__ import annotations is unnecessary for this code and adds a minor noise line"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.22,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 10,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "schema_coercer",
+  "variant": "human_reference"
+}

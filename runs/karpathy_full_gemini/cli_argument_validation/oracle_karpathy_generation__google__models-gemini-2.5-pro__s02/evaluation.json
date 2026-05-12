@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and minimal. It uses a simple index-walking loop with explicit conditionals for each flag, no unnecessary abstractions, no external dependencies, and no speculative flexibility. The logic is flat and locally auditable \u2014 every branch is visible in one screen. The docstring is slightly verbose for a function this simple (the spec is already in the module docstring territory), and the `argv[i+1].startswith('-')` heuristic for detecting missing values could misfire on negative numbers passed as paths, but this is a conservative and reasonable interpretation. The `raise ValueError from None` suppression is a minor stylistic choice that keeps error messages clean. Overall this is very close to the minimum correct implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, direct, and minimal. It uses a simple index-walking loop with explicit conditionals for each flag, no unnecessary abstractions, no external dependencies, and no speculative flexibility. The logic is flat and locally auditable \u2014 every branch is visible in one screen. The docstring is slightly verbose for a function this simple (the spec is already in the module docstring territory), and the `argv[i+1].startswith('-')` heuristic for detecting missing values could misfire on negative numbers passed as paths, but this is a conservative and reasonable interpretation. The `raise ValueError from None` suppression is a minor stylistic choice that keeps error messages clean. Overall this is very close to the minimum correct implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Flat, single-function implementation with no unnecessary abstractions or classes\",\n    \"Explicit handling of each flag with clear error messages\",\n    \"Defaults initialized upfront, making the return shape immediately visible\",\n    \"No external dependencies or imports\",\n    \"Correct use of `from None` to suppress chained exception noise\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is overly verbose for a function whose contract is already specified externally\",\n    \"The `startswith('-')` check for missing values would incorrectly reject negative-number paths or values beginning with a dash that are valid\",\n    \"Minor: the inner `raise ValueError` trick to unify the `<= 0` and `int()` failure paths is slightly clever where a simple `if` would be clearer\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-function implementation with no unnecessary abstractions or classes",
+      "Explicit handling of each flag with clear error messages",
+      "Defaults initialized upfront, making the return shape immediately visible",
+      "No external dependencies or imports",
+      "Correct use of `from None` to suppress chained exception noise"
+    ],
+    "weaknesses": [
+      "Docstring is overly verbose for a function whose contract is already specified externally",
+      "The `startswith('-')` check for missing values would incorrectly reject negative-number paths or values beginning with a dash that are valid",
+      "Minor: the inner `raise ValueError` trick to unify the `<= 0` and `int()` failure paths is slightly clever where a simple `if` would be clearer"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.166,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 17.0,
+    "cyclomatic_complexity_max": 17,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 1,
+    "loc": 75,
+    "maintainability_index": 72.044,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_karpathy_generation"
+}

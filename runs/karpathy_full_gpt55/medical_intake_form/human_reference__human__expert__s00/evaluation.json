@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly validates all required fields before accepting any into the output, collects all errors and raises a single ValueError naming the failed fields, and returns a clean dict with only the validated fields. It follows CD-7's 'validate everything before accepting anything' principle well. Minor issues: using `payload.get('age')` twice risks a subtle bug if age is 0 (falsy) but the isinstance check handles that correctly; however, `payload.get('age') < 0` will raise a TypeError if age is None (though the isinstance guard short-circuits this via `and`). The boolean isinstance check on patient_id uses `or not payload.get('patient_id')` which correctly rejects empty strings. The code is flat, explicit, readable, and locally auditable with no unnecessary abstraction.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation correctly validates all required fields before accepting any into the output, collects all errors and raises a single ValueError naming the failed fields, and returns a clean dict with only the validated fields. It follows CD-7's 'validate everything before accepting anything' principle well. Minor issues: using `payload.get('age')` twice risks a subtle bug if age is 0 (falsy) but the isinstance check handles that correctly; however, `payload.get('age') < 0` will raise a TypeError if age is None (though the isinstance guard short-circuits this via `and`). The boolean isinstance check on patient_id uses `or not payload.get('patient_id')` which correctly rejects empty strings. The code is flat, explicit, readable, and locally auditable with no unnecessary abstraction.\",\n  \"strengths\": [\n    \"Validates all fields before returning any output, satisfying CD-7's partial-validation prohibition\",\n    \"Error messages name the failing fields explicitly\",\n    \"Returns a clean, explicitly constructed output dict with only the required fields\",\n    \"Flat, readable structure with no unnecessary abstraction or indirection\",\n    \"Collects all errors before raising, giving complete feedback in one exception\"\n  ],\n  \"weaknesses\": [\n    \"Calling payload.get('patient_id') twice is slightly redundant; could assign to a variable first\",\n    \"Joining multiple field names with a comma in one ValueError slightly obscures which field is 'the' bad field per the spec's singular framing\",\n    \"No validation that symptoms list is non-empty (spec says list[str] but doesn't explicitly require non-empty, so minor ambiguity)\",\n    \"Boolean short-circuit on age isinstance + comparison is correct but slightly non-obvious to a casual reader\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Validates all fields before returning any output, satisfying CD-7's partial-validation prohibition",
+      "Error messages name the failing fields explicitly",
+      "Returns a clean, explicitly constructed output dict with only the required fields",
+      "Flat, readable structure with no unnecessary abstraction or indirection",
+      "Collects all errors before raising, giving complete feedback in one exception"
+    ],
+    "weaknesses": [
+      "Calling payload.get('patient_id') twice is slightly redundant; could assign to a variable first",
+      "Joining multiple field names with a comma in one ValueError slightly obscures which field is 'the' bad field per the spec's singular framing",
+      "No validation that symptoms list is non-empty (spec says list[str] but doesn't explicitly require non-empty, so minor ambiguity)",
+      "Boolean short-circuit on age isinstance + comparison is correct but slightly non-obvious to a casual reader"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.385,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 13,
+    "maintainability_index": 60.173,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "human_reference"
+}

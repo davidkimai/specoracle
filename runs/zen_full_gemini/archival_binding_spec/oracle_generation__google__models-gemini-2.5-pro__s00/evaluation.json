@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation closely follows the Archival Binder Spec R-04 requirements: it uses a `sections_ledger` name for the cross-iteration accumulator, stages parsing visibly into five labeled steps, keeps exactly one public function, preserves insertion order via a plain dict, and raises `ValueError` with messages that explicitly name the archival field being rejected. The docstring is thorough and the code is flat and readable. The only notable issues are that the code is truncated (Stage 5 is incomplete, missing the actual ledger population logic), it imports `Dict` and `List` from `typing` rather than using the modern built-in generics (`dict`, `list`) available since Python 3.9, and the five-stage comment structure, while explicit, is slightly over-annotated for the simplicity of the task. Despite the truncation, the structural quality of what is present is high and clearly aligned with the informal oracle.",
+    "raw_response": "```json\n{\n  \"score\": 8,\n  \"rationale\": \"The candidate implementation closely follows the Archival Binder Spec R-04 requirements: it uses a `sections_ledger` name for the cross-iteration accumulator, stages parsing visibly into five labeled steps, keeps exactly one public function, preserves insertion order via a plain dict, and raises `ValueError` with messages that explicitly name the archival field being rejected. The docstring is thorough and the code is flat and readable. The only notable issues are that the code is truncated (Stage 5 is incomplete, missing the actual ledger population logic), it imports `Dict` and `List` from `typing` rather than using the modern built-in generics (`dict`, `list`) available since Python 3.9, and the five-stage comment structure, while explicit, is slightly over-annotated for the simplicity of the task. Despite the truncation, the structural quality of what is present is high and clearly aligned with the informal oracle.\",\n  \"strengths\": [\n    \"Uses `sections_ledger` naming convention exactly as specified by R-04\",\n    \"Visibly staged parsing with clearly labeled Stage 1\u20135 comments\",\n    \"Error messages explicitly name the archival field being rejected ('section', 'key')\",\n    \"Exactly one public function exposed\",\n    \"Insertion order preserved naturally via dict\",\n    \"Docstring is clear and complete\"\n  ],\n  \"weaknesses\": [\n    \"Code is truncated \u2014 Stage 5 (ledger population) is missing, making the function incomplete\",\n    \"Uses legacy `typing.Dict`/`typing.List` instead of modern built-in `dict`/`list` generics\",\n    \"Five-stage comment scaffolding is slightly over-engineered for a ~30-line parsing task\"\n  ]\n}\n```",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses `sections_ledger` naming convention exactly as specified by R-04",
+      "Visibly staged parsing with clearly labeled Stage 1\u20135 comments",
+      "Error messages explicitly name the archival field being rejected ('section', 'key')",
+      "Exactly one public function exposed",
+      "Insertion order preserved naturally via dict",
+      "Docstring is clear and complete"
+    ],
+    "weaknesses": [
+      "Code is truncated \u2014 Stage 5 (ledger population) is missing, making the function incomplete",
+      "Uses legacy `typing.Dict`/`typing.List` instead of modern built-in `dict`/`list` generics",
+      "Five-stage comment scaffolding is slightly over-engineered for a ~30-line parsing task"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.611,
+    "exit_code": 2,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "\n==================================== ERRORS ====================================\n______________________ ERROR collecting test_solution.py _______________________\n/usr/local/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule\n    mod = import_path(\n/usr/local/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path\n    importlib.import_module(module_name)\n/usr/local/lib/python3.11/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n<frozen importlib._bootstrap>:1204: in _gcd_import\n    ???\n<frozen importlib._bootstrap>:1176: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:690: in _load_unlocked\n    ???\n/usr/local/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntest_solution.py:3: in <module>\n    from solution import parse_bindings\nE     File \"/work/solution.py\", line 86\nE       if section_name not in sections_ledger:\nE                                              ^\nE   IndentationError: expected an indented block after 'if' statement on line 86\n=========================== short test summary info ============================\nERROR test_solution.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.27s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 0.0,
+    "cyclomatic_complexity_max": 0,
+    "cyclomatic_complexity_total": 0,
+    "function_count": 0,
+    "loc": 72,
+    "maintainability_index": null,
+    "max_nesting_depth": 0,
+    "syntax_error": "expected an indented block after 'if' statement on line 86 at line 86",
+    "syntax_ok": false
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_generation"
+}

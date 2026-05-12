@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate code is incomplete (the `__init__` method is cut off mid-signature), so functional correctness cannot be confirmed at all. Beyond incompleteness, the structural choices already visible show unnecessary complexity: a hand-rolled doubly-linked list with a generic `_Node` class, `TypeVar`/`Generic` machinery, and `__slots__` are all speculative abstractions for a simple cache that could be built with `collections.OrderedDict` in a fraction of the code. The docstring-heavy, framework-shaped style with elaborate type annotations adds ceremony without clarity. The Zen of Python favors simplicity and using standard-library constructs (OrderedDict already provides O(1) move-to-end for LRU), so reaching for a custom linked list is architectural slop. Input validation (e.g., negative max_size or ttl) is not yet visible. Overall the approach is over-engineered relative to the task.",
+    "raw_response": "```json\n{\n  \"score\": 3,\n  \"rationale\": \"The candidate code is incomplete (the `__init__` method is cut off mid-signature), so functional correctness cannot be confirmed at all. Beyond incompleteness, the structural choices already visible show unnecessary complexity: a hand-rolled doubly-linked list with a generic `_Node` class, `TypeVar`/`Generic` machinery, and `__slots__` are all speculative abstractions for a simple cache that could be built with `collections.OrderedDict` in a fraction of the code. The docstring-heavy, framework-shaped style with elaborate type annotations adds ceremony without clarity. The Zen of Python favors simplicity and using standard-library constructs (OrderedDict already provides O(1) move-to-end for LRU), so reaching for a custom linked list is architectural slop. Input validation (e.g., negative max_size or ttl) is not yet visible. Overall the approach is over-engineered relative to the task.\",\n  \"strengths\": [\n    \"Uses `__slots__` on the node class, which is a reasonable micro-optimization if a linked list were truly needed\",\n    \"Separates node data (key, value, timestamp) clearly\",\n    \"Module-level docstring explains the design intent\"\n  ],\n  \"weaknesses\": [\n    \"Code is incomplete \u2014 `__init__` is truncated, making functional correctness unverifiable\",\n    \"Hand-rolled doubly linked list is unnecessary; `collections.OrderedDict` covers LRU with far less code\",\n    \"Generic TypeVar machinery (`Generic[KT, VT]`, `TypeVar`) is speculative abstraction not required by the task\",\n    \"No input validation visible for invalid `max_size` or `ttl_seconds` values\",\n    \"Verbose docstrings and type annotations add bulk without improving local auditability\",\n    \"Framework-shaped structure (separate `_Node` class, generics) violates 'simplest architecture that satisfies the task'\"\n  ]\n}\n```",
+    "score": 3,
+    "skipped": false,
+    "strengths": [
+      "Uses `__slots__` on the node class, which is a reasonable micro-optimization if a linked list were truly needed",
+      "Separates node data (key, value, timestamp) clearly",
+      "Module-level docstring explains the design intent"
+    ],
+    "weaknesses": [
+      "Code is incomplete \u2014 `__init__` is truncated, making functional correctness unverifiable",
+      "Hand-rolled doubly linked list is unnecessary; `collections.OrderedDict` covers LRU with far less code",
+      "Generic TypeVar machinery (`Generic[KT, VT]`, `TypeVar`) is speculative abstraction not required by the task",
+      "No input validation visible for invalid `max_size` or `ttl_seconds` values",
+      "Verbose docstrings and type annotations add bulk without improving local auditability",
+      "Framework-shaped structure (separate `_Node` class, generics) violates 'simplest architecture that satisfies the task'"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.642,
+    "exit_code": 2,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "\n==================================== ERRORS ====================================\n______________________ ERROR collecting test_solution.py _______________________\n/usr/local/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule\n    mod = import_path(\n/usr/local/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path\n    importlib.import_module(module_name)\n/usr/local/lib/python3.11/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n<frozen importlib._bootstrap>:1204: in _gcd_import\n    ???\n<frozen importlib._bootstrap>:1176: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:690: in _load_unlocked\n    ???\n/usr/local/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntest_solution.py:1: in <module>\n    from solution import TTLCache\nE     File \"/work/solution.py\", line 40\nE       def __init__(\nE                   ^\nE   SyntaxError: '(' was never closed\n=========================== short test summary info ============================\nERROR test_solution.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.43s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 0.0,
+    "cyclomatic_complexity_max": 0,
+    "cyclomatic_complexity_total": 0,
+    "function_count": 0,
+    "loc": 33,
+    "maintainability_index": null,
+    "max_nesting_depth": 0,
+    "syntax_error": "'(' was never closed at line 40",
+    "syntax_ok": false
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

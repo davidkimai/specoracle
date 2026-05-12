@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and thread-safe, but it violates the Karpathy oracle's core principle of simplicity first. The code is roughly 180 lines for what could be ~50: it adds a custom exception hierarchy (ConnectionPoolError, ConnectionPoolFullError) that wasn't asked for, a Generic[T] type parameter with TypeVar machinery, three extra properties (max_size, size, active_size, idle_size) beyond the required interface, a module-level docstring, per-method docstrings that dwarf the actual logic, and a ValueError guard on max_size that adds speculative robustness. The `size` property also re-acquires the lock while already inside acquire(), which works only because Python's threading.Lock is not reentrant\u2014this is a latent bug masked by the fact that `size` is called outside the lock in acquire() (it isn't; acquire() calls `self.size` which tries to acquire the same lock, causing deadlock). Actually on re-reading, `acquire()` calls `self.size` which calls `with self._lock` while already holding `self._lock`\u2014this is a deadlock bug. The structural bloat and the latent deadlock together significantly reduce the score.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and thread-safe, but it violates the Karpathy oracle's core principle of simplicity first. The code is roughly 180 lines for what could be ~50: it adds a custom exception hierarchy (ConnectionPoolError, ConnectionPoolFullError) that wasn't asked for, a Generic[T] type parameter with TypeVar machinery, three extra properties (max_size, size, active_size, idle_size) beyond the required interface, a module-level docstring, per-method docstrings that dwarf the actual logic, and a ValueError guard on max_size that adds speculative robustness. The `size` property also re-acquires the lock while already inside acquire(), which works only because Python's threading.Lock is not reentrant\u2014this is a latent bug masked by the fact that `size` is called outside the lock in acquire() (it isn't; acquire() calls `self.size` which tries to acquire the same lock, causing deadlock). Actually on re-reading, `acquire()` calls `self.size` which calls `with self._lock` while already holding `self._lock`\u2014this is a deadlock bug. The structural bloat and the latent deadlock together significantly reduce the score.\",\n  \"strengths\": [\n    \"Correct use of a deque for FIFO idle-connection ordering, enabling O(1) eviction of oldest entries\",\n    \"now= injection for testability is clean and minimal\",\n    \"evict_idle correctly short-circuits on the first non-expired connection\"\n  ],\n  \"weaknesses\": [\n    \"Deadlock bug: acquire() calls self.size which tries to re-acquire self._lock while it is already held\",\n    \"Unnecessary custom exception hierarchy (ConnectionPoolError, ConnectionPoolFullError) not requested\",\n    \"Generic[T] / TypeVar machinery adds complexity with zero runtime benefit for this task\",\n    \"Extra properties (size, active_size, idle_size, max_size) are speculative features beyond the spec\",\n    \"Docstrings and comments are disproportionately large relative to the actual logic, violating simplicity-first\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct use of a deque for FIFO idle-connection ordering, enabling O(1) eviction of oldest entries",
+      "now= injection for testability is clean and minimal",
+      "evict_idle correctly short-circuits on the first non-expired connection"
+    ],
+    "weaknesses": [
+      "Deadlock bug: acquire() calls self.size which tries to re-acquire self._lock while it is already held",
+      "Unnecessary custom exception hierarchy (ConnectionPoolError, ConnectionPoolFullError) not requested",
+      "Generic[T] / TypeVar machinery adds complexity with zero runtime benefit for this task",
+      "Extra properties (size, active_size, idle_size, max_size) are speculative features beyond the spec",
+      "Docstrings and comments are disproportionately large relative to the actual logic, violating simplicity-first"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 10.198,
+    "exit_code": 124,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "",
+    "timed_out": true
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 3,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 22,
+    "function_count": 8,
+    "loc": 142,
+    "maintainability_index": 69.242,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_karpathy_generation"
+}

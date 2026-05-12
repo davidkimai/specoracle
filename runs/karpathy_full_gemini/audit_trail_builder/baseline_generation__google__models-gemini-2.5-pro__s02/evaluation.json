@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly satisfies RAT-9 requirements: it validates required fields without silently inventing values, assigns monotonic sequence numbers starting at 1, and names the derived field explicitly before insertion. The code is flat, readable, and locally auditable with no hidden logic. Minor deductions: using a manual counter variable instead of enumerate is slightly less Pythonic, and the docstring is verbose relative to the simplicity of the function, but neither is a structural flaw. The rejection mechanism (silent skip via continue) is acceptable given the spec says 'reject' without mandating error reporting, though raising or logging would be more auditable in a regulatory context.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and directly satisfies RAT-9 requirements: it validates required fields without silently inventing values, assigns monotonic sequence numbers starting at 1, and names the derived field explicitly before insertion. The code is flat, readable, and locally auditable with no hidden logic. Minor deductions: using a manual counter variable instead of enumerate is slightly less Pythonic, and the docstring is verbose relative to the simplicity of the function, but neither is a structural flaw. The rejection mechanism (silent skip via continue) is acceptable given the spec says 'reject' without mandating error reporting, though raising or logging would be more auditable in a regulatory context.\",\n  \"strengths\": [\n    \"Explicit field validation before record construction, no silent value invention\",\n    \"Sequence number named explicitly as a variable before insertion, satisfying RAT-9 naming requirement\",\n    \"Input events are copied rather than mutated, preserving data integrity\",\n    \"Flat, single-loop structure with no nested abstractions or unnecessary complexity\",\n    \"Clear separation of validation logic from record construction\"\n  ],\n  \"weaknesses\": [\n    \"Manual counter instead of enumerate(events, 1) is slightly less idiomatic Python\",\n    \"Silent rejection (continue) with no logging or error signal reduces auditability in a regulatory context\",\n    \"Overly verbose docstring for a straightforward function adds noise without structural benefit\",\n    \"Does not check for falsy/empty values of source_system or actor_id, only key presence\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit field validation before record construction, no silent value invention",
+      "Sequence number named explicitly as a variable before insertion, satisfying RAT-9 naming requirement",
+      "Input events are copied rather than mutated, preserving data integrity",
+      "Flat, single-loop structure with no nested abstractions or unnecessary complexity",
+      "Clear separation of validation logic from record construction"
+    ],
+    "weaknesses": [
+      "Manual counter instead of enumerate(events, 1) is slightly less idiomatic Python",
+      "Silent rejection (continue) with no logging or error signal reduces auditability in a regulatory context",
+      "Overly verbose docstring for a straightforward function adds noise without structural benefit",
+      "Does not check for falsy/empty values of source_system or actor_id, only key presence"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.713,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n>       assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\nE       AssertionError: assert [{'action': '...stem': 'crm'}] == [{'action': '...stem': 'crm'}]\nE         \nE         At index 0 diff: {'source_system': 'crm', 'actor_id': 'u1', 'action': 'create', 'sequence_number': 1} != {'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}\nE         Use -v to get more diff\n\ntest_solution.py:8: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - AssertionError: ...\n1 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 67.646,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "baseline_generation"
+}

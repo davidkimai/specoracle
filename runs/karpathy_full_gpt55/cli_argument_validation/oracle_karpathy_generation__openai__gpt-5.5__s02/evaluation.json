@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a simple index-based while loop to parse argv, handles all required cases explicitly, and raises ValueError with clear messages. The logic is flat and locally auditable \u2014 no classes, no helper functions, no speculative flexibility. The only minor quibble is the `result.copy()` at the end, which is unnecessary since `result` is a local variable that won't be mutated after return, adding a tiny bit of noise. The `argv[i + 1].startswith('--')` heuristic for detecting missing values is a reasonable conservative choice that works for the defined flag set, though it could theoretically reject a valid path starting with '--', but this is an acceptable tradeoff given the task scope. Overall this is a tight, readable, correct implementation that closely matches what the oracle would prescribe.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a simple index-based while loop to parse argv, handles all required cases explicitly, and raises ValueError with clear messages. The logic is flat and locally auditable \u2014 no classes, no helper functions, no speculative flexibility. The only minor quibble is the `result.copy()` at the end, which is unnecessary since `result` is a local variable that won't be mutated after return, adding a tiny bit of noise. The `argv[i + 1].startswith('--')` heuristic for detecting missing values is a reasonable conservative choice that works for the defined flag set, though it could theoretically reject a valid path starting with '--', but this is an acceptable tradeoff given the task scope. Overall this is a tight, readable, correct implementation that closely matches what the oracle would prescribe.\",\n  \"strengths\": [\n    \"Flat, single-function implementation with no unnecessary abstractions\",\n    \"Explicit handling of each flag with clear, testable branches\",\n    \"Minimal code \u2014 approximately 40 lines for a non-trivial parser\",\n    \"Clear ValueError messages for each failure mode\",\n    \"Correct defaults and type handling throughout\"\n  ],\n  \"weaknesses\": [\n    \"Unnecessary `result.copy()` at the end \u2014 local dict won't be mutated after return\",\n    \"The `startswith('--')` check for missing values could reject a legitimate path like '--my-file.txt', though unlikely in practice\",\n    \"Minor: `continue` after each branch is redundant given the loop structure but doesn't hurt readability significantly\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-function implementation with no unnecessary abstractions",
+      "Explicit handling of each flag with clear, testable branches",
+      "Minimal code \u2014 approximately 40 lines for a non-trivial parser",
+      "Clear ValueError messages for each failure mode",
+      "Correct defaults and type handling throughout"
+    ],
+    "weaknesses": [
+      "Unnecessary `result.copy()` at the end \u2014 local dict won't be mutated after return",
+      "The `startswith('--')` check for missing values could reject a legitimate path like '--my-file.txt', though unlikely in practice",
+      "Minor: `continue` after each branch is redundant given the loop structure but doesn't hurt readability significantly"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.076,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 48.628,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_karpathy_generation"
+}

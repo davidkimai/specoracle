@@ -1,0 +1,56 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally solid and shows genuine care for correctness\u2014explicit locking, double-checked release, clean eviction, and clear error messages. However, it over-engineers several aspects relative to the Zen oracle: the `_idle_ids` set is a speculative optimization that adds hidden state and complexity (the pool is bounded by `max_size`, so linear scans are trivially cheap); the double-lock dance in `release` is a TOCTOU workaround that would be unnecessary with a single lock held for the whole operation; `_require_finite_real`, `_require_non_negative_seconds`, and `_require_non_negative_int` are a small validation framework that exceeds what the task needs; `_close_all` with its error-aggregation logic is speculative abstraction for a case the spec doesn't mention; and the `numbers.Real` / `math.isfinite` machinery for the `now` return value is defensive over-engineering. The core data structures (`_IdleConnection` dataclass, list-based idle pool) are appropriate, and the public API is clean and well-named, but the surrounding scaffolding is heavier than the task warrants.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally solid and shows genuine care for correctness\u2014explicit locking, double-checked release, clean eviction, and clear error messages. However, it over-engineers several aspects relative to the Zen oracle: the `_idle_ids` set is a speculative optimization that adds hidden state and complexity (the pool is bounded by `max_size`, so linear scans are trivially cheap); the double-lock dance in `release` is a TOCTOU workaround that would be unnecessary with a single lock held for the whole operation; `_require_finite_real`, `_require_non_negative_seconds`, and `_require_non_negative_int` are a small validation framework that exceeds what the task needs; `_close_all` with its error-aggregation logic is speculative abstraction for a case the spec doesn't mention; and the `numbers.Real` / `math.isfinite` machinery for the `now` return value is defensive over-engineering. The core data structures (`_IdleConnection` dataclass, list-based idle pool) are appropriate, and the public API is clean and well-named, but the surrounding scaffolding is heavier than the task warrants.\",\n  \"strengths\": [\n    \"Clean public API with well-chosen names (acquire, release, evict_idle)\",\n    \"_IdleConnection frozen dataclass makes data movement explicit\",\n    \"Guard clauses and flat control flow in evict_idle\",\n    \"Explicit error raising for invalid inputs rather than silent fallback\",\n    \"Correctly separates lock-holding from I/O (closing connections outside the lock)\"\n  ],\n  \"weaknesses\": [\n    \"_idle_ids set is speculative optimization adding hidden state not justified by bounded pool size\",\n    \"Double-lock pattern in release is unnecessarily complex; a single lock suffices\",\n    \"Validation helpers (_require_finite_real, _require_non_negative_seconds, etc.) form a mini-framework beyond task needs\",\n    \"_close_all error aggregation is unused-extension-point thinking not called for by the spec\",\n    \"numbers.Real and math.isfinite checks on now() return value are over-defensive for a simple time provider\",\n    \"Module-level __all__ and Optional import add boilerplate noise for a small utility\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clean public API with well-chosen names (acquire, release, evict_idle)",
+      "_IdleConnection frozen dataclass makes data movement explicit",
+      "Guard clauses and flat control flow in evict_idle",
+      "Explicit error raising for invalid inputs rather than silent fallback",
+      "Correctly separates lock-holding from I/O (closing connections outside the lock)"
+    ],
+    "weaknesses": [
+      "_idle_ids set is speculative optimization adding hidden state not justified by bounded pool size",
+      "Double-lock pattern in release is unnecessarily complex; a single lock suffices",
+      "Validation helpers (_require_finite_real, _require_non_negative_seconds, etc.) form a mini-framework beyond task needs",
+      "_close_all error aggregation is unused-extension-point thinking not called for by the spec",
+      "numbers.Real and math.isfinite checks on now() return value are over-defensive for a simple time provider",
+      "Module-level __all__ and Optional import add boilerplate noise for a small utility"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.256,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 39,
+    "function_count": 11,
+    "loc": 126,
+    "maintainability_index": 45.694,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_generation"
+}

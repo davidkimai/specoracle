@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. It correctly separates refill logic into a small pure helper, uses guard clauses for validation, makes data movement explicit with named attributes, and avoids speculative abstractions. The docstrings are thorough without being excessive. Minor weaknesses include slightly verbose isinstance checks (a simpler `capacity <= 0` guard after a type check would suffice, and `bool` is a subclass of `int` so `isinstance(True, int)` passes silently), the `_refill` guard `if elapsed_time > 0` is redundant since `max(0.0, ...)` already handles negative time but the branch avoids a needless attribute write, and the module-level docstring plus class docstring plus method docstrings lean toward over-documentation for a small utility. Overall the architecture is flat, auditable, and idiomatic with no hidden state or framework-shaped scaffolding.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. It correctly separates refill logic into a small pure helper, uses guard clauses for validation, makes data movement explicit with named attributes, and avoids speculative abstractions. The docstrings are thorough without being excessive. Minor weaknesses include slightly verbose isinstance checks (a simpler `capacity <= 0` guard after a type check would suffice, and `bool` is a subclass of `int` so `isinstance(True, int)` passes silently), the `_refill` guard `if elapsed_time > 0` is redundant since `max(0.0, ...)` already handles negative time but the branch avoids a needless attribute write, and the module-level docstring plus class docstring plus method docstrings lean toward over-documentation for a small utility. Overall the architecture is flat, auditable, and idiomatic with no hidden state or framework-shaped scaffolding.\",\n  \"strengths\": [\n    \"Clean separation of refill logic into a dedicated `_refill` helper keeps `allow` readable\",\n    \"Explicit validation with clear ValueError messages for invalid inputs\",\n    \"No hidden mutation or global state; all state is named and local to the instance\",\n    \"Injectable `now` callable makes testing straightforward without monkey-patching\",\n    \"Flat control flow with a simple guard clause pattern in `allow`\"\n  ],\n  \"weaknesses\": [\n    \"`isinstance(capacity, int)` silently accepts `bool` values (True/False) as valid capacity\",\n    \"The `if elapsed_time > 0` branch in `_refill` is slightly redundant given the `max(0.0, ...)` clamp already handles the zero case\",\n    \"Docstrings are more verbose than necessary for a small utility, adding noise without proportional clarity gain\",\n    \"Storing both `_capacity` and `_refill_rate` as separate attributes while also casting to float in `__init__` is mildly inconsistent (capacity stays int, rate becomes float)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of refill logic into a dedicated `_refill` helper keeps `allow` readable",
+      "Explicit validation with clear ValueError messages for invalid inputs",
+      "No hidden mutation or global state; all state is named and local to the instance",
+      "Injectable `now` callable makes testing straightforward without monkey-patching",
+      "Flat control flow with a simple guard clause pattern in `allow`"
+    ],
+    "weaknesses": [
+      "`isinstance(capacity, int)` silently accepts `bool` values (True/False) as valid capacity",
+      "The `if elapsed_time > 0` branch in `_refill` is slightly redundant given the `max(0.0, ...)` clamp already handles the zero case",
+      "Docstrings are more verbose than necessary for a small utility, adding noise without proportional clarity gain",
+      "Storing both `_capacity` and `_refill_rate` as separate attributes while also casting to float in `__init__` is mildly inconsistent (capacity stays int, rate becomes float)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.222,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.25,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 3,
+    "loc": 66,
+    "maintainability_index": 74.538,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "oracle_generation"
+}

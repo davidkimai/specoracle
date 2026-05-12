@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. Each format branch is a simple guard clause with no nesting, data movement is transparent, and the error path is clear. The TOML renderer correctly uses json.dumps for strings (to get quoted output) and str() for other primitives, which is a sensible minimal approach. The only minor quibble is that using json.dumps for string quoting in TOML is a slight conceptual mismatch (TOML uses single or double quotes but json.dumps always produces double-quoted JSON strings, which happens to be valid TOML), and there are no small named helpers (e.g., _serialize_csv, _serialize_toml) as the spec mildly prefers, though the function is short enough that extraction would add ceremony without clarity. Overall this is a tight, auditable, zero-slop implementation that closely follows the Zen principles.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. Each format branch is a simple guard clause with no nesting, data movement is transparent, and the error path is clear. The TOML renderer correctly uses json.dumps for strings (to get quoted output) and str() for other primitives, which is a sensible minimal approach. The only minor quibble is that using json.dumps for string quoting in TOML is a slight conceptual mismatch (TOML uses single or double quotes but json.dumps always produces double-quoted JSON strings, which happens to be valid TOML), and there are no small named helpers (e.g., _serialize_csv, _serialize_toml) as the spec mildly prefers, though the function is short enough that extraction would add ceremony without clarity. Overall this is a tight, auditable, zero-slop implementation that closely follows the Zen principles.\",\n  \"strengths\": [\n    \"Flat guard-clause structure with no deep nesting\",\n    \"Explicit ValueError for unsupported formats\",\n    \"No hidden state or mutation; data flow is transparent\",\n    \"Minimal imports; uses only standard library\",\n    \"Each branch is short and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"No extraction into small named helpers as the spec mildly prefers\",\n    \"Using json.dumps for TOML string quoting is a subtle conceptual conflation, even though it produces valid output\",\n    \"CSV output has no quoting for values containing commas or newlines, which could silently produce malformed output\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat guard-clause structure with no deep nesting",
+      "Explicit ValueError for unsupported formats",
+      "No hidden state or mutation; data flow is transparent",
+      "Minimal imports; uses only standard library",
+      "Each branch is short and locally auditable"
+    ],
+    "weaknesses": [
+      "No extraction into small named helpers as the spec mildly prefers",
+      "Using json.dumps for TOML string quoting is a subtle conceptual conflation, even though it produces valid output",
+      "CSV output has no quoting for values containing commas or newlines, which could silently produce malformed output"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 4.028,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 61.517,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "multiformat_serializer",
+  "variant": "human_reference"
+}

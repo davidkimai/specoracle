@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without over-engineering. The sentinel `_MISSING` pattern correctly handles `None` as a valid value, the path resolution logic is flat and readable, and the main `extract_fields` function is a simple loop with no unnecessary abstraction. The helper `_resolve_path` is justified as a single-responsibility extraction that keeps the main function clean. No mutations of input occur, edge cases (missing keys, bad indexes, non-container traversal) are handled conservatively, and the code is locally auditable in under a minute. The only minor quibble is that `_MISSING` as a module-level sentinel is slightly more ceremony than strictly necessary, but it is the correct and idiomatic approach for distinguishing `None` values from absent paths, so it earns its place.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without over-engineering. The sentinel `_MISSING` pattern correctly handles `None` as a valid value, the path resolution logic is flat and readable, and the main `extract_fields` function is a simple loop with no unnecessary abstraction. The helper `_resolve_path` is justified as a single-responsibility extraction that keeps the main function clean. No mutations of input occur, edge cases (missing keys, bad indexes, non-container traversal) are handled conservatively, and the code is locally auditable in under a minute. The only minor quibble is that `_MISSING` as a module-level sentinel is slightly more ceremony than strictly necessary, but it is the correct and idiomatic approach for distinguishing `None` values from absent paths, so it earns its place.\",\n  \"strengths\": [\n    \"Minimal code with no speculative abstractions or unused flexibility\",\n    \"Sentinel pattern correctly distinguishes missing paths from None values\",\n    \"Flat, readable control flow in _resolve_path with explicit early returns\",\n    \"Does not mutate input\",\n    \"Handles all edge cases (missing keys, bad index types, index out of range, non-container mid-path) conservatively\"\n  ],\n  \"weaknesses\": [\n    \"Module-level sentinel adds a tiny bit of ceremony, though it is functionally necessary\",\n    \"No docstring or inline comments, though the code is self-explanatory enough that this is a minor issue\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative abstractions or unused flexibility",
+      "Sentinel pattern correctly distinguishes missing paths from None values",
+      "Flat, readable control flow in _resolve_path with explicit early returns",
+      "Does not mutate input",
+      "Handles all edge cases (missing keys, bad index types, index out of range, non-container mid-path) conservatively"
+    ],
+    "weaknesses": [
+      "Module-level sentinel adds a tiny bit of ceremony, though it is functionally necessary",
+      "No docstring or inline comments, though the code is self-explanatory enough that this is a minor issue"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.166,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 26,
+    "maintainability_index": 59.587,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_karpathy_generation"
+}

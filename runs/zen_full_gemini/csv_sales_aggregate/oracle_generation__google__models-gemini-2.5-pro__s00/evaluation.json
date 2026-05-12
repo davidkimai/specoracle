@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean, with good use of guard clauses and explicit data movement. However, it over-engineers the solution by splitting what is essentially a 20-line task into four functions plus a dense block of type aliases that add noise without clarity. The type aliases (_SalesKey, _SalesTotals, _Aggregates, _AggregatedRow) are speculative abstractions that obscure rather than illuminate\u2014a maintainer must jump between definitions to understand simple dict shapes. The docstrings are verbose to the point of padding, repeating information already obvious from the code. The three-function decomposition (_parse_valid_row, _build_aggregates, _format_and_sort_result) is slightly over-split for this problem size; _build_aggregates and _format_and_sort_result together are short enough to live in aggregate_sales without sacrificing readability. The empty-string early-return guard is a minor speculative addition (DictReader handles empty input gracefully). Strengths include flat control flow, explicit accumulation via defaultdict, clear error raising for non-string input, and sensible naming. The core logic is correct and auditable, but the surrounding scaffolding is heavier than the Zen of Python would endorse for a task of this scope.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean, with good use of guard clauses and explicit data movement. However, it over-engineers the solution by splitting what is essentially a 20-line task into four functions plus a dense block of type aliases that add noise without clarity. The type aliases (_SalesKey, _SalesTotals, _Aggregates, _AggregatedRow) are speculative abstractions that obscure rather than illuminate\u2014a maintainer must jump between definitions to understand simple dict shapes. The docstrings are verbose to the point of padding, repeating information already obvious from the code. The three-function decomposition (_parse_valid_row, _build_aggregates, _format_and_sort_result) is slightly over-split for this problem size; _build_aggregates and _format_and_sort_result together are short enough to live in aggregate_sales without sacrificing readability. The empty-string early-return guard is a minor speculative addition (DictReader handles empty input gracefully). Strengths include flat control flow, explicit accumulation via defaultdict, clear error raising for non-string input, and sensible naming. The core logic is correct and auditable, but the surrounding scaffolding is heavier than the Zen of Python would endorse for a task of this scope.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses in _parse_valid_row avoids deep nesting\",\n    \"Explicit accumulation via defaultdict makes data movement visible\",\n    \"Raises TypeError for non-string input rather than silently guessing\",\n    \"Sorting and formatting are separated from accumulation, keeping each step clear\",\n    \"Uses only standard-library constructs with no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"Type aliases (_SalesKey, _SalesTotals, _Aggregates, _AggregatedRow) are speculative abstractions that add indirection without real benefit\",\n    \"Three-function decomposition is over-split for a ~20-line core task; aggregate_sales could absorb _build_aggregates and _format_and_sort_result cleanly\",\n    \"Docstrings are excessively verbose, restating what the code already makes obvious\",\n    \"The empty-string early-return guard is unnecessary since csv.DictReader handles it gracefully\",\n    \"Module-level comment block and inline comments repeat the code's intent rather than adding insight\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses in _parse_valid_row avoids deep nesting",
+      "Explicit accumulation via defaultdict makes data movement visible",
+      "Raises TypeError for non-string input rather than silently guessing",
+      "Sorting and formatting are separated from accumulation, keeping each step clear",
+      "Uses only standard-library constructs with no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "Type aliases (_SalesKey, _SalesTotals, _Aggregates, _AggregatedRow) are speculative abstractions that add indirection without real benefit",
+      "Three-function decomposition is over-split for a ~20-line core task; aggregate_sales could absorb _build_aggregates and _format_and_sort_result cleanly",
+      "Docstrings are excessively verbose, restating what the code already makes obvious",
+      "The empty-string early-return guard is unnecessary since csv.DictReader handles it gracefully",
+      "Module-level comment block and inline comments repeat the code's intent rather than adding insight"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.289,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.75,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 120,
+    "maintainability_index": 72.409,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

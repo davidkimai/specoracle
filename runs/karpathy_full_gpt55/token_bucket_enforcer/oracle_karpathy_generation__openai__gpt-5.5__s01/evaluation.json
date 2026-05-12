@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core token bucket logic is correct and minimal \u2014 the refill, cap, and deduct pattern is clean and readable. However, the implementation adds speculative defensive validation (TypeError/ValueError checks for capacity, refill_rate, cost, and now) that was never asked for in the functional requirements. This violates the 'minimum code that solves the problem' and 'no features beyond what was asked' principles directly. The docstring is trivially uninformative. The `Optional[Callable[[], float]]` type annotation is fine but the import of `Optional` from typing adds a small unnecessary dependency when `None` default is already self-documenting. The validation code roughly doubles the line count without adding to the stated contract, which is exactly the kind of speculative robustness the oracle warns against.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The core token bucket logic is correct and minimal \u2014 the refill, cap, and deduct pattern is clean and readable. However, the implementation adds speculative defensive validation (TypeError/ValueError checks for capacity, refill_rate, cost, and now) that was never asked for in the functional requirements. This violates the 'minimum code that solves the problem' and 'no features beyond what was asked' principles directly. The docstring is trivially uninformative. The `Optional[Callable[[], float]]` type annotation is fine but the import of `Optional` from typing adds a small unnecessary dependency when `None` default is already self-documenting. The validation code roughly doubles the line count without adding to the stated contract, which is exactly the kind of speculative robustness the oracle warns against.\",\n  \"strengths\": [\n    \"Core algorithm is correct: elapsed-time refill, min-cap to capacity, deduct-on-allow\",\n    \"Monotonic clock default is the right conservative choice\",\n    \"Flat structure with no unnecessary abstractions or classes\",\n    \"now parameter injection supports testability cleanly\"\n  ],\n  \"weaknesses\": [\n    \"Extensive input validation (TypeError/ValueError) was not requested and inflates code size without contract benefit\",\n    \"Docstring adds no information beyond the class name\",\n    \"Optional import from typing is unnecessary overhead for a simple default-None parameter\",\n    \"cost < 0 validation silently changes semantics (zero-cost allow always returns True, which may or may not be intended but is undocumented)\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core algorithm is correct: elapsed-time refill, min-cap to capacity, deduct-on-allow",
+      "Monotonic clock default is the right conservative choice",
+      "Flat structure with no unnecessary abstractions or classes",
+      "now parameter injection supports testability cleanly"
+    ],
+    "weaknesses": [
+      "Extensive input validation (TypeError/ValueError) was not requested and inflates code size without contract benefit",
+      "Docstring adds no information beyond the class name",
+      "Optional import from typing is unnecessary overhead for a simple default-None parameter",
+      "cost < 0 validation silently changes semantics (zero-cost allow always returns True, which may or may not be intended but is undocumented)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.798,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 2,
+    "loc": 31,
+    "maintainability_index": 50.006,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "oracle_karpathy_generation"
+}

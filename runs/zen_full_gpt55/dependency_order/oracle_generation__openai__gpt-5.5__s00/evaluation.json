@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. The main function reads like a straightforward algorithm description: normalize inputs, repeatedly extract ready tasks, detect cycles, accumulate batches. Helper extraction is minimal and purposeful\u2014`_normalized_prerequisites` handles input validation and implicit-task discovery, `_require_string` avoids repetition without over-abstracting. Data flow is explicit (no hidden mutation, `remaining` is a fresh copy, input is not mutated). Control flow is flat with a single while loop and a guard clause for cycle detection. Names are self-explanatory. The only minor quibble is that the input validation in `_normalized_prerequisites` is somewhat defensive for a task that doesn't explicitly require it, and the `_require_string` helper is a very thin wrapper that could arguably be inlined, but these are minor and the overall structure is exemplary.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. The main function reads like a straightforward algorithm description: normalize inputs, repeatedly extract ready tasks, detect cycles, accumulate batches. Helper extraction is minimal and purposeful\u2014`_normalized_prerequisites` handles input validation and implicit-task discovery, `_require_string` avoids repetition without over-abstracting. Data flow is explicit (no hidden mutation, `remaining` is a fresh copy, input is not mutated). Control flow is flat with a single while loop and a guard clause for cycle detection. Names are self-explanatory. The only minor quibble is that the input validation in `_normalized_prerequisites` is somewhat defensive for a task that doesn't explicitly require it, and the `_require_string` helper is a very thin wrapper that could arguably be inlined, but these are minor and the overall structure is exemplary.\",\n  \"strengths\": [\n    \"Main function is a clear, readable Kahn's-algorithm implementation with no deep nesting\",\n    \"Implicit dependency tasks are correctly included via `setdefault` in the normalizer\",\n    \"Input is never mutated; `remaining` uses fresh sets copied from prerequisites\",\n    \"Cycle detection is explicit with a clear ValueError message\",\n    \"Helper decomposition is purposeful and not speculative\"\n  ],\n  \"weaknesses\": [\n    \"`_require_string` is a very thin helper that adds a layer of indirection for minimal gain; inlining would be equally readable\",\n    \"Type validation (isinstance checks) goes beyond the stated requirements and adds noise without being asked for\",\n    \"The docstring on `plan_batches` is minimal and could be omitted or expanded, but as-is adds little\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Main function is a clear, readable Kahn's-algorithm implementation with no deep nesting",
+      "Implicit dependency tasks are correctly included via `setdefault` in the normalizer",
+      "Input is never mutated; `remaining` uses fresh sets copied from prerequisites",
+      "Cycle detection is explicit with a clear ValueError message",
+      "Helper decomposition is purposeful and not speculative"
+    ],
+    "weaknesses": [
+      "`_require_string` is a very thin helper that adds a layer of indirection for minimal gain; inlining would be equally readable",
+      "Type validation (isinstance checks) goes beyond the stated requirements and adds noise without being asked for",
+      "The docstring on `plan_batches` is minimal and could be omitted or expanded, but as-is adds little"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.399,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 3,
+    "loc": 42,
+    "maintainability_index": 51.986,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4 doctrine: debit and credit are accumulated in separate named accumulators ('debit' and 'credit' keys), the aggregation line `reconciliation[clean_account][normalized_direction] += float(amount)` is clean and does not embed arithmetic inside the conditional that decides direction (the direction check is a pure validation step, and the accumulation is a single unconditional dispatch), and the final balance is computed explicitly in a separate named step with `credit - debit`. The code is flat, readable, and locally auditable with no hidden control flow. Validation is thorough and explicit. Minor quibbles: the case-insensitive normalization of direction is a small extra feature not required by the spec but harmless; the docstring is verbose but not harmful; using `collections.defaultdict` is idiomatic and clean. Overall this is a high-quality, doctrine-compliant implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4 doctrine: debit and credit are accumulated in separate named accumulators ('debit' and 'credit' keys), the aggregation line `reconciliation[clean_account][normalized_direction] += float(amount)` is clean and does not embed arithmetic inside the conditional that decides direction (the direction check is a pure validation step, and the accumulation is a single unconditional dispatch), and the final balance is computed explicitly in a separate named step with `credit - debit`. The code is flat, readable, and locally auditable with no hidden control flow. Validation is thorough and explicit. Minor quibbles: the case-insensitive normalization of direction is a small extra feature not required by the spec but harmless; the docstring is verbose but not harmful; using `collections.defaultdict` is idiomatic and clean. Overall this is a high-quality, doctrine-compliant implementation.\",\n  \"strengths\": [\n    \"Debit and credit are accumulated in separate named accumulators as required by TR-4\",\n    \"No inline arithmetic inside the conditional that decides monetary direction\",\n    \"Balance is computed in a clearly separated final step with explicit named variables\",\n    \"Flat, readable structure with no nested logic or architectural slop\",\n    \"Thorough, explicit validation with meaningful error messages\",\n    \"Clean use of defaultdict for zero-initialization\"\n  ],\n  \"weaknesses\": [\n    \"Case-insensitive direction normalization is an undocumented extension beyond the spec\",\n    \"Docstring is overly verbose relative to Zen of Python brevity ideals\",\n    \"Boolean isinstance check on amount accepts bool values (bool is subclass of int) which could be unintended\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Debit and credit are accumulated in separate named accumulators as required by TR-4",
+      "No inline arithmetic inside the conditional that decides monetary direction",
+      "Balance is computed in a clearly separated final step with explicit named variables",
+      "Flat, readable structure with no nested logic or architectural slop",
+      "Thorough, explicit validation with meaningful error messages",
+      "Clean use of defaultdict for zero-initialization"
+    ],
+    "weaknesses": [
+      "Case-insensitive direction normalization is an undocumented extension beyond the spec",
+      "Docstring is overly verbose relative to Zen of Python brevity ideals",
+      "Boolean isinstance check on amount accepts bool values (bool is subclass of int) which could be unintended"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.557,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.20s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 75,
+    "maintainability_index": 77.698,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

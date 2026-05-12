@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and shows good instincts around explicit error handling and flat control flow in the main loop, but it over-engineers the decomposition. The task is simple enough that three private helpers (_fetch_page, _split_page, _extend_items) add indirection without clarity benefit \u2014 a maintainer must jump between four functions to understand a trivial pagination loop. The Zen oracle favors 'simple is better than complex' and 'flat is better than nested'; here the helpers create unnecessary layering. The `_extend_items` helper wrapping `collected.extend(items)` with a try/except is marginally useful but still verbose for what it does. The `_split_page` function's tuple/list isinstance check is speculative over-validation \u2014 the task spec says the callable returns a tuple, and unpacking `items, next_cursor = await fetch_page(cursor)` would be cleaner and more Pythonic. The `inspect.isawaitable` check in `_fetch_page` is reasonable but could be inlined. Overall the code reads as framework-shaped rather than task-shaped.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and shows good instincts around explicit error handling and flat control flow in the main loop, but it over-engineers the decomposition. The task is simple enough that three private helpers (_fetch_page, _split_page, _extend_items) add indirection without clarity benefit \u2014 a maintainer must jump between four functions to understand a trivial pagination loop. The Zen oracle favors 'simple is better than complex' and 'flat is better than nested'; here the helpers create unnecessary layering. The `_extend_items` helper wrapping `collected.extend(items)` with a try/except is marginally useful but still verbose for what it does. The `_split_page` function's tuple/list isinstance check is speculative over-validation \u2014 the task spec says the callable returns a tuple, and unpacking `items, next_cursor = await fetch_page(cursor)` would be cleaner and more Pythonic. The `inspect.isawaitable` check in `_fetch_page` is reasonable but could be inlined. Overall the code reads as framework-shaped rather than task-shaped.\",\n  \"strengths\": [\n    \"Main loop control flow is flat and readable\",\n    \"Explicit TypeError for non-callable fetch_page is a good guard clause\",\n    \"Awaitable check prevents silent failures from sync callables\",\n    \"Clear variable names (cursor, collected, next_cursor)\"\n  ],\n  \"weaknesses\": [\n    \"Three private helpers over-decompose a trivial loop; adds indirection without benefit\",\n    \"_extend_items wrapping a single extend call is speculative abstraction\",\n    \"_split_page's isinstance check is over-validation; direct unpacking would be simpler and more Pythonic\",\n    \"inspect import adds weight for a check that could be a simple inline try/await\",\n    \"Framework-shaped structure (helper-per-step) violates 'simple is better than complex'\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Main loop control flow is flat and readable",
+      "Explicit TypeError for non-callable fetch_page is a good guard clause",
+      "Awaitable check prevents silent failures from sync callables",
+      "Clear variable names (cursor, collected, next_cursor)"
+    ],
+    "weaknesses": [
+      "Three private helpers over-decompose a trivial loop; adds indirection without benefit",
+      "_extend_items wrapping a single extend call is speculative abstraction",
+      "_split_page's isinstance check is over-validation; direct unpacking would be simpler and more Pythonic",
+      "inspect import adds weight for a check that could be a simple inline try/await",
+      "Framework-shaped structure (helper-per-step) violates 'simple is better than complex'"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.43,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.22s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.75,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 37,
+    "maintainability_index": 55.184,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_generation"
+}

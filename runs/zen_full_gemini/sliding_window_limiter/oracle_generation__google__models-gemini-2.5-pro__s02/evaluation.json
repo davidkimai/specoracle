@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses ordinary standard-library constructs (collections.defaultdict, deque), keeps control flow flat, makes data movement explicit, and raises clear errors for invalid inputs. The extraction of `_prune_old_timestamps` as a small pure helper is appropriate and aids local auditability. The `snapshot` method correctly avoids side-effecting the defaultdict by using `.get()`. Minor weaknesses include overly verbose docstrings that add noise without proportional value, the isinstance checks on int inputs being slightly over-engineered for the stated task (the spec says 'positive' but doesn't mandate type checking), and the class-level type annotations being redundant with the constructor assignments. Overall the architecture is sound, sparse enough to audit locally, and free of speculative abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses ordinary standard-library constructs (collections.defaultdict, deque), keeps control flow flat, makes data movement explicit, and raises clear errors for invalid inputs. The extraction of `_prune_old_timestamps` as a small pure helper is appropriate and aids local auditability. The `snapshot` method correctly avoids side-effecting the defaultdict by using `.get()`. Minor weaknesses include overly verbose docstrings that add noise without proportional value, the isinstance checks on int inputs being slightly over-engineered for the stated task (the spec says 'positive' but doesn't mandate type checking), and the class-level type annotations being redundant with the constructor assignments. Overall the architecture is sound, sparse enough to audit locally, and free of speculative abstractions.\",\n  \"strengths\": [\n    \"Clean separation of pruning logic into a focused helper method\",\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement; no hidden mutation or global state\",\n    \"snapshot() correctly avoids defaultdict side-effect with .get()\",\n    \"Clear ValueError messages for invalid constructor arguments\",\n    \"Uses plain standard-library constructs throughout\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are disproportionately verbose relative to the simplicity of the code, adding noise\",\n    \"isinstance(limit, int) type-checking goes beyond what the spec requires and adds speculative defensiveness\",\n    \"Class-level attribute annotations are redundant with constructor assignments and add visual clutter\",\n    \"_prune_old_timestamps mutates in place but is named as if it returns something, slightly obscuring intent\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of pruning logic into a focused helper method",
+      "Flat control flow with no deep nesting",
+      "Explicit data movement; no hidden mutation or global state",
+      "snapshot() correctly avoids defaultdict side-effect with .get()",
+      "Clear ValueError messages for invalid constructor arguments",
+      "Uses plain standard-library constructs throughout"
+    ],
+    "weaknesses": [
+      "Docstrings are disproportionately verbose relative to the simplicity of the code, adding noise",
+      "isinstance(limit, int) type-checking goes beyond what the spec requires and adds speculative defensiveness",
+      "Class-level attribute annotations are redundant with constructor assignments and add visual clutter",
+      "_prune_old_timestamps mutates in place but is named as if it returns something, slightly obscuring intent"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.446,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 4,
+    "loc": 68,
+    "maintainability_index": 66.205,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_generation"
+}

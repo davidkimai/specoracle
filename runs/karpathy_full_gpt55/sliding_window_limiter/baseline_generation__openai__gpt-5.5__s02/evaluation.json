@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is over-engineered relative to the task. It maintains two parallel per-key lists (_events and _retained) plus a _watermark dict, when a single sorted list per key suffices for both rate-limiting and snapshot. The _watermark logic introduces subtle complexity: it only prunes _retained when a new high-water timestamp arrives, meaning _retained can lag behind the actual window for out-of-order or repeated timestamps, and snapshot() may return stale entries. The allow() method counts events in _events (never pruned) using bisect arithmetic while separately maintaining _retained for snapshot, creating hidden divergence between the two structures. The isinstance/bool guards on constructor arguments are speculative over-validation not asked for by the spec. The _discard_expired helper is fine in isolation but the overall architecture violates 'simple is better than complex' and 'flat is better than nested' by splitting what should be one data structure into three dicts with non-obvious invariants. A maintainer cannot audit the snapshot correctness locally without tracing the watermark update path.",
+    "raw_response": "```json\n{\n  \"score\": 3,\n  \"rationale\": \"The implementation is over-engineered relative to the task. It maintains two parallel per-key lists (_events and _retained) plus a _watermark dict, when a single sorted list per key suffices for both rate-limiting and snapshot. The _watermark logic introduces subtle complexity: it only prunes _retained when a new high-water timestamp arrives, meaning _retained can lag behind the actual window for out-of-order or repeated timestamps, and snapshot() may return stale entries. The allow() method counts events in _events (never pruned) using bisect arithmetic while separately maintaining _retained for snapshot, creating hidden divergence between the two structures. The isinstance/bool guards on constructor arguments are speculative over-validation not asked for by the spec. The _discard_expired helper is fine in isolation but the overall architecture violates 'simple is better than complex' and 'flat is better than nested' by splitting what should be one data structure into three dicts with non-obvious invariants. A maintainer cannot audit the snapshot correctness locally without tracing the watermark update path.\",\n  \"strengths\": [\n    \"Uses bisect for O(log n) window counting, a reasonable choice\",\n    \"_discard_expired is a small, named pure helper\",\n    \"__slots__ declared for memory efficiency\",\n    \"Clear ValueError with descriptive message\"\n  ],\n  \"weaknesses\": [\n    \"Three parallel per-key dicts (_events, _retained, _watermark) where one suffices\",\n    \"_events is never pruned, growing unboundedly and diverging from _retained\",\n    \"snapshot() can return stale/expired timestamps due to lazy watermark-based pruning\",\n    \"Speculative isinstance/bool type checks not required by the spec add noise\",\n    \"allow() logic is hard to audit locally due to the dual-list invariant\",\n    \"Watermark pattern is an unnecessary abstraction for a simple sliding window\"\n  ]\n}\n```",
+    "score": 3,
+    "skipped": false,
+    "strengths": [
+      "Uses bisect for O(log n) window counting, a reasonable choice",
+      "_discard_expired is a small, named pure helper",
+      "__slots__ declared for memory efficiency",
+      "Clear ValueError with descriptive message"
+    ],
+    "weaknesses": [
+      "Three parallel per-key dicts (_events, _retained, _watermark) where one suffices",
+      "_events is never pruned, growing unboundedly and diverging from _retained",
+      "snapshot() can return stale/expired timestamps due to lazy watermark-based pruning",
+      "Speculative isinstance/bool type checks not required by the spec add noise",
+      "allow() logic is hard to audit locally due to the dual-list invariant",
+      "Watermark pattern is an unnecessary abstraction for a simple sliding window"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.438,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 25,
+    "function_count": 4,
+    "loc": 53,
+    "maintainability_index": 43.647,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

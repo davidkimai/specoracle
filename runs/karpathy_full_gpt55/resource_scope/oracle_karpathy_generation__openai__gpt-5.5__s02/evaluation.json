@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is concise and correct, delegating to ExitStack which handles reverse-order cleanup and exception propagation natively. However, using ExitStack introduces an indirect abstraction layer for a problem that is trivially solvable with a plain list and a try/finally block \u2014 arguably simpler and more auditable without any imports. The ExitStack approach also assumes resources always have a `.close()` method, which matches the task description, but the indirection makes the reverse-order guarantee implicit rather than explicit. A direct implementation with `self._resources = []` and a loop in `__exit__` would be more locally auditable and equally minimal.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is concise and correct, delegating to ExitStack which handles reverse-order cleanup and exception propagation natively. However, using ExitStack introduces an indirect abstraction layer for a problem that is trivially solvable with a plain list and a try/finally block \u2014 arguably simpler and more auditable without any imports. The ExitStack approach also assumes resources always have a `.close()` method, which matches the task description, but the indirection makes the reverse-order guarantee implicit rather than explicit. A direct implementation with `self._resources = []` and a loop in `__exit__` would be more locally auditable and equally minimal.\",\n  \"strengths\": [\n    \"Very concise \u2014 minimal lines of code\",\n    \"Correctly handles reverse acquisition order via ExitStack's LIFO behavior\",\n    \"Handles exceptions during context exit correctly\",\n    \"Returns the resource from acquire() as required\"\n  ],\n  \"weaknesses\": [\n    \"Delegates to ExitStack, adding an import and an abstraction layer for a problem solvable with a plain list\",\n    \"Reverse-order guarantee is implicit, not visible in the code\",\n    \"Slightly harder to audit locally \u2014 reader must know ExitStack semantics to verify correctness\",\n    \"ExitStack is a heavier tool than needed for this simple use case\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Very concise \u2014 minimal lines of code",
+      "Correctly handles reverse acquisition order via ExitStack's LIFO behavior",
+      "Handles exceptions during context exit correctly",
+      "Returns the resource from acquire() as required"
+    ],
+    "weaknesses": [
+      "Delegates to ExitStack, adding an import and an abstraction layer for a problem solvable with a plain list",
+      "Reverse-order guarantee is implicit, not visible in the code",
+      "Slightly harder to audit locally \u2014 reader must know ExitStack semantics to verify correctness",
+      "ExitStack is a heavier tool than needed for this simple use case"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.889,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.2,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 4,
+    "loc": 12,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "oracle_karpathy_generation"
+}

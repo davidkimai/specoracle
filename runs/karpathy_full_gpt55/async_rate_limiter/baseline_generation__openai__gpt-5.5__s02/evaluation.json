@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and locally auditable. It uses a sliding-window deque approach which is the natural fit for this problem, keeps all state explicit in instance variables, raises a clear ValueError for invalid input, uses a standard asyncio.Lock for concurrency safety, and delegates time to an injected callable for testability. The control flow in acquire() is a straightforward guard-then-act pattern with no deep nesting. The only minor issues are the use of slightly verbose typing imports (Optional, Deque from typing rather than the built-in generics available in Python 3.9+) and the lock may be unnecessary for purely async (cooperative) code since the critical section contains no awaits, but it is a reasonable defensive choice that doesn't hurt correctness. Overall this is a textbook example of simple, explicit, maintainable async code.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and locally auditable. It uses a sliding-window deque approach which is the natural fit for this problem, keeps all state explicit in instance variables, raises a clear ValueError for invalid input, uses a standard asyncio.Lock for concurrency safety, and delegates time to an injected callable for testability. The control flow in acquire() is a straightforward guard-then-act pattern with no deep nesting. The only minor issues are the use of slightly verbose typing imports (Optional, Deque from typing rather than the built-in generics available in Python 3.9+) and the lock may be unnecessary for purely async (cooperative) code since the critical section contains no awaits, but it is a reasonable defensive choice that doesn't hurt correctness. Overall this is a textbook example of simple, explicit, maintainable async code.\",\n  \"strengths\": [\n    \"Flat control flow with a clear guard clause pattern in acquire()\",\n    \"Explicit state: rate, clock, timestamps, and lock are all named instance variables\",\n    \"Injected now callable makes deterministic testing trivial without monkey-patching\",\n    \"Clear ValueError with a descriptive message for invalid rate\",\n    \"Docstrings are concise and accurate without being speculative\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Uses legacy typing.Optional and typing.Deque instead of built-in generics (Python 3.9+)\",\n    \"asyncio.Lock is technically unnecessary since acquire() has no await inside the critical section, making it a minor speculative addition\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a clear guard clause pattern in acquire()",
+      "Explicit state: rate, clock, timestamps, and lock are all named instance variables",
+      "Injected now callable makes deterministic testing trivial without monkey-patching",
+      "Clear ValueError with a descriptive message for invalid rate",
+      "Docstrings are concise and accurate without being speculative",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Uses legacy typing.Optional and typing.Deque instead of built-in generics (Python 3.9+)",
+      "asyncio.Lock is technically unnecessary since acquire() has no await inside the critical section, making it a minor speculative addition"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.981,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 27,
+    "maintainability_index": 74.883,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "baseline_generation"
+}

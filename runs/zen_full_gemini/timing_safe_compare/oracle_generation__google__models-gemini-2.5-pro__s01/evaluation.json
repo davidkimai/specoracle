@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and the guard clauses are reasonably flat, but it contains a significant semantic deviation: hmac.compare_digest accepts both str and bytes natively, so encoding strings to bytes before passing them is an unnecessary transformation that changes the comparison domain (two different str values could theoretically encode to the same bytes under some encoding, though not UTF-8 in practice). The correct approach is to pass the values directly to hmac.compare_digest. Beyond that, the docstring is verbose and Google-style docstrings are speculative ceremony for a small utility; the module-level docstring and __all__ are minor over-engineering; and the inline comments explaining obvious logic add noise rather than clarity. The type-checking logic itself is clean and explicit, using type() identity check before isinstance, which is a reasonable pattern here.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and the guard clauses are reasonably flat, but it contains a significant semantic deviation: hmac.compare_digest accepts both str and bytes natively, so encoding strings to bytes before passing them is an unnecessary transformation that changes the comparison domain (two different str values could theoretically encode to the same bytes under some encoding, though not UTF-8 in practice). The correct approach is to pass the values directly to hmac.compare_digest. Beyond that, the docstring is verbose and Google-style docstrings are speculative ceremony for a small utility; the module-level docstring and __all__ are minor over-engineering; and the inline comments explaining obvious logic add noise rather than clarity. The type-checking logic itself is clean and explicit, using type() identity check before isinstance, which is a reasonable pattern here.\",\n  \"strengths\": [\n    \"Guard clauses are flat and ordered logically (same-type check before valid-type check)\",\n    \"Uses type() identity rather than isinstance for the same-type check, avoiding subclass confusion\",\n    \"Clear, explicit TypeError messages\",\n    \"Correct use of hmac.compare_digest for timing safety\"\n  ],\n  \"weaknesses\": [\n    \"Unnecessarily encodes str to bytes before compare_digest, which accepts str directly and avoids the encoding indirection\",\n    \"Verbose docstring with Args/Returns/Raises sections is speculative ceremony for a small utility\",\n    \"Module-level docstring and __all__ are over-engineering for a single-function module\",\n    \"Inline comments explain obvious code rather than non-obvious intent, adding noise\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses are flat and ordered logically (same-type check before valid-type check)",
+      "Uses type() identity rather than isinstance for the same-type check, avoiding subclass confusion",
+      "Clear, explicit TypeError messages",
+      "Correct use of hmac.compare_digest for timing safety"
+    ],
+    "weaknesses": [
+      "Unnecessarily encodes str to bytes before compare_digest, which accepts str directly and avoids the encoding indirection",
+      "Verbose docstring with Args/Returns/Raises sections is speculative ceremony for a small utility",
+      "Module-level docstring and __all__ are over-engineering for a single-function module",
+      "Inline comments explain obvious code rather than non-obvious intent, adding noise"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.852,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 78.317,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "oracle_generation"
+}

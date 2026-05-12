@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, with a clean helper function and a readable dict comprehension at the top level. The core logic is appropriately minimal and flat. However, the docstrings are excessively verbose for what is simple, self-evident code \u2014 the Karpathy oracle explicitly discourages over-documentation and speculative elaboration. The `typing.Any` import and type annotations on the inner helper are minor over-engineering for a single-use private function. The `import typing` at the module level rather than using the built-in `Any` from Python 3.11+ or simply omitting the annotation on `default` is a small but unnecessary dependency. The exception comment block inside the loop, while informative, adds noise that the code itself already communicates. Stripping the docstrings to a single line each and removing the inner function's type hints would bring this closer to the oracle's 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, with a clean helper function and a readable dict comprehension at the top level. The core logic is appropriately minimal and flat. However, the docstrings are excessively verbose for what is simple, self-evident code \u2014 the Karpathy oracle explicitly discourages over-documentation and speculative elaboration. The `typing.Any` import and type annotations on the inner helper are minor over-engineering for a single-use private function. The `import typing` at the module level rather than using the built-in `Any` from Python 3.11+ or simply omitting the annotation on `default` is a small but unnecessary dependency. The exception comment block inside the loop, while informative, adds noise that the code itself already communicates. Stripping the docstrings to a single line each and removing the inner function's type hints would bring this closer to the oracle's 'minimum code' principle.\",\n  \"strengths\": [\n    \"Core traversal logic is minimal and correct\",\n    \"Clean separation of path resolution into a helper function\",\n    \"Handles all required edge cases (missing keys, out-of-bounds, non-indexable types)\",\n    \"Dict comprehension at the return site is idiomatic and readable\",\n    \"Does not mutate the input\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are far too verbose for the simplicity of the task \u2014 violates 'minimum code' principle\",\n    \"Inner helper function has unnecessary type annotations for single-use private code\",\n    \"Exception comment block is redundant given the exception names are self-explanatory\",\n    \"Using `typing.Any` import instead of just omitting or using built-in annotation style adds unnecessary overhead\",\n    \"Slight over-engineering in the helper's signature with explicit type hints\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core traversal logic is minimal and correct",
+      "Clean separation of path resolution into a helper function",
+      "Handles all required edge cases (missing keys, out-of-bounds, non-indexable types)",
+      "Dict comprehension at the return site is idiomatic and readable",
+      "Does not mutate the input"
+    ],
+    "weaknesses": [
+      "Docstrings are far too verbose for the simplicity of the task \u2014 violates 'minimum code' principle",
+      "Inner helper function has unnecessary type annotations for single-use private code",
+      "Exception comment block is redundant given the exception names are self-explanatory",
+      "Using `typing.Any` import instead of just omitting or using built-in annotation style adds unnecessary overhead",
+      "Slight over-engineering in the helper's signature with explicit type hints"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.612,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 2,
+    "loc": 47,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_karpathy_generation"
+}

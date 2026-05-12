@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Each method is small and does exactly one thing; the lock is acquired only where needed and released immediately; data movement is visible at every step. The guard clause in `__init__` is clear and raises a named error with a message. The `isinstance`/`bool` check for `max_total` is slightly over-engineered for the stated requirements (the spec only says 'positive', not 'must be int'), and the `TypeError` guard on `name` in `increment` is speculative \u2014 the spec doesn't ask for it \u2014 but neither addition is harmful and both are locally auditable. The cached `_total` field avoids recomputing `sum(_counts.values())` on every call, which is a sensible micro-optimization that keeps `total()` O(1) without obscuring intent. `snapshot()` correctly returns a shallow copy, satisfying the 'must not expose mutable internal state' constraint. Overall the code is sparse, ordinary, and easy to explain line by line.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Each method is small and does exactly one thing; the lock is acquired only where needed and released immediately; data movement is visible at every step. The guard clause in `__init__` is clear and raises a named error with a message. The `isinstance`/`bool` check for `max_total` is slightly over-engineered for the stated requirements (the spec only says 'positive', not 'must be int'), and the `TypeError` guard on `name` in `increment` is speculative \u2014 the spec doesn't ask for it \u2014 but neither addition is harmful and both are locally auditable. The cached `_total` field avoids recomputing `sum(_counts.values())` on every call, which is a sensible micro-optimization that keeps `total()` O(1) without obscuring intent. `snapshot()` correctly returns a shallow copy, satisfying the 'must not expose mutable internal state' constraint. Overall the code is sparse, ordinary, and easy to explain line by line.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses at the top of each method\",\n    \"Explicit lock acquisition wrapping only the critical section\",\n    \"Cached _total avoids O(n) recomputation while remaining transparent\",\n    \"snapshot() returns a true copy, preventing external mutation of internal state\",\n    \"Clear, descriptive names throughout with no speculative abstractions\"\n  ],\n  \"weaknesses\": [\n    \"isinstance/bool check for max_total is stricter than the spec requires and adds noise\",\n    \"TypeError guard on name is speculative \u2014 the spec does not ask for it\",\n    \"Docstring on the class is slightly redundant with the method docstrings but harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses at the top of each method",
+      "Explicit lock acquisition wrapping only the critical section",
+      "Cached _total avoids O(n) recomputation while remaining transparent",
+      "snapshot() returns a true copy, preventing external mutation of internal state",
+      "Clear, descriptive names throughout with no speculative abstractions"
+    ],
+    "weaknesses": [
+      "isinstance/bool check for max_total is stricter than the spec requires and adds noise",
+      "TypeError guard on name is speculative \u2014 the spec does not ask for it",
+      "Docstring on the class is slightly redundant with the method docstrings but harmless"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.866,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 30,
+    "maintainability_index": 52.797,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "baseline_generation"
+}

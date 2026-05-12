@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04 in nearly every respect: it uses a single public function, names the surviving dictionary `sections_ledger`, stages parsing visibly with numbered comments, preserves insertion order, and raises `ValueError` messages that name the archival field being rejected (section, key). The staged comments are slightly over-verbose for the simplicity of the logic, and the error messages for structural issues (missing `=`, missing `.`) don't explicitly use the 'archival field' phrasing, but the semantic validation messages do. The use of `List`/`Dict` from `typing` instead of built-in generics is a minor anachronism in modern Python but not a structural flaw. Overall this is a clean, auditable, flat implementation that faithfully realizes the informal oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04 in nearly every respect: it uses a single public function, names the surviving dictionary `sections_ledger`, stages parsing visibly with numbered comments, preserves insertion order, and raises `ValueError` messages that name the archival field being rejected (section, key). The staged comments are slightly over-verbose for the simplicity of the logic, and the error messages for structural issues (missing `=`, missing `.`) don't explicitly use the 'archival field' phrasing, but the semantic validation messages do. The use of `List`/`Dict` from `typing` instead of built-in generics is a minor anachronism in modern Python but not a structural flaw. Overall this is a clean, auditable, flat implementation that faithfully realizes the informal oracle.\",\n  \"strengths\": [\n    \"Uses `sections_ledger` naming convention exactly as specified\",\n    \"Visibly staged parsing with clearly labeled comment blocks\",\n    \"Single public function with no unnecessary helpers\",\n    \"Insertion order preserved for both sections and keys\",\n    \"Error messages name the archival field ('section', 'key') for semantic violations\",\n    \"Flat loop structure with no nested functions or classes\"\n  ],\n  \"weaknesses\": [\n    \"Stage comments are slightly mechanical/over-annotated for such simple logic, reducing readability slightly\",\n    \"Structural error messages (missing '=', missing '.') don't use 'archival field' phrasing consistently with semantic ones\",\n    \"Uses legacy `typing.Dict`/`typing.List` instead of built-in `dict`/`list` generics (Python 3.9+)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `sections_ledger` naming convention exactly as specified",
+      "Visibly staged parsing with clearly labeled comment blocks",
+      "Single public function with no unnecessary helpers",
+      "Insertion order preserved for both sections and keys",
+      "Error messages name the archival field ('section', 'key') for semantic violations",
+      "Flat loop structure with no nested functions or classes"
+    ],
+    "weaknesses": [
+      "Stage comments are slightly mechanical/over-annotated for such simple logic, reducing readability slightly",
+      "Structural error messages (missing '=', missing '.') don't use 'archival field' phrasing consistently with semantic ones",
+      "Uses legacy `typing.Dict`/`typing.List` instead of built-in `dict`/`list` generics (Python 3.9+)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.715,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________ test_parse_bindings_rejects_bad_lines _____________________\n\n    def test_parse_bindings_rejects_bad_lines():\n        with pytest.raises(ValueError, match=\"line\"):\n>           parse_bindings([\"missing\"])\n\ntest_solution.py:21: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nlines = ['missing']\n\n    def parse_bindings(lines: List[str]) -> Dict[str, Dict[str, str]]:\n        \"\"\"\n        Parses a list of strings into a nested dictionary of bindings.\n    \n        Each non-empty, non-comment line must conform to the \"section.key=value\"\n        format. Comments are lines that start with '#'. Whitespace around the\n        section, key, and value is stripped.\n    \n        Args:\n            lines: A list of strings, where each string is a line from the\n                   binding specification file.\n    \n        Returns:\n            An insertion-ordered nested dictionary mapping section names to\n            dictionaries of key-value pairs.\n    \n        Raises:\n            ValueError: If a line is malformed, or if a section or key is empty.\n        \"\"\"\n        sections_ledger: Dict[str, Dict[str, str]] = {}\n    \n        for line_number, line in enumerate(lines, 1):\n            # Stage 1: Line preprocessing.\n            # Ignore empty lines and comments.\n            processed_line = line.strip()\n            if not processed_line or processed_line.startswith('#'):\n                continue\n    \n            # Stage 2: Structural parsing of the key-value assignment.\n            # A valid line must contain an '=' separating the identifier from the value.\n            if '=' not in processed_line:\n>               raise ValueError(\n                    f\"Line {line_number}: Malformed binding, missing '=' separator.\"\n                )\nE               ValueError: Line 1: Malformed binding, missing '=' separator.\n\nsolution.py:42: ValueError\n\nDuring handling of the above exception, another exception occurred:\n\n    def test_parse_bindings_rejects_bad_lines():\n>       with pytest.raises(ValueError, match=\"line\"):\nE       AssertionError: Regex pattern did not match.\nE         Expected regex: 'line'\nE         Actual message: \"Line 1: Malformed binding, missing '=' separator.\"\n\ntest_solution.py:20: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_parse_bindings_rejects_bad_lines - AssertionErr...\n1 failed, 1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 63,
+    "maintainability_index": 80.981,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_karpathy_generation"
+}

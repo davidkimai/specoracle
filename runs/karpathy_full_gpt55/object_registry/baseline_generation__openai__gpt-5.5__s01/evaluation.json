@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, minimal realization of the task. It uses a single private dict of weak refs, exposes exactly the three required methods, keeps control flow flat with guard clauses, makes data movement explicit, and relies entirely on ordinary standard-library constructs (weakref, dict). The cleanup method correctly separates key collection from deletion to avoid mutating the dict during iteration. Type annotations add clarity without adding complexity. The only minor quibbles are the use of `pop(key, None)` instead of `del self._refs[key]` in cleanup (the key is guaranteed present, so the guard is slightly misleading), and the docstring on `register` documents a TypeError that Python raises implicitly rather than one the code raises explicitly\u2014a small honesty gap. Neither issue meaningfully harms auditability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, minimal realization of the task. It uses a single private dict of weak refs, exposes exactly the three required methods, keeps control flow flat with guard clauses, makes data movement explicit, and relies entirely on ordinary standard-library constructs (weakref, dict). The cleanup method correctly separates key collection from deletion to avoid mutating the dict during iteration. Type annotations add clarity without adding complexity. The only minor quibbles are the use of `pop(key, None)` instead of `del self._refs[key]` in cleanup (the key is guaranteed present, so the guard is slightly misleading), and the docstring on `register` documents a TypeError that Python raises implicitly rather than one the code raises explicitly\u2014a small honesty gap. Neither issue meaningfully harms auditability or correctness.\",\n  \"strengths\": [\n    \"Minimal, flat structure with no speculative abstractions or unused extension points\",\n    \"Explicit data movement: one dict, one weak-ref per entry, no hidden state\",\n    \"Guard clause in get() keeps the happy path readable\",\n    \"cleanup() avoids mutating the dict during iteration by collecting dead keys first\",\n    \"Appropriate use of standard-library weakref without clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"`del self._refs[key]` would be clearer than `pop(key, None)` inside cleanup since the key is guaranteed to exist\",\n    \"Docstring claims TypeError is raised by register, but the code does not raise it explicitly\u2014it relies on implicit Python behavior\",\n    \"No validation that key is not None or otherwise sentinel-like, though the task doesn't require it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal, flat structure with no speculative abstractions or unused extension points",
+      "Explicit data movement: one dict, one weak-ref per entry, no hidden state",
+      "Guard clause in get() keeps the happy path readable",
+      "cleanup() avoids mutating the dict during iteration by collecting dead keys first",
+      "Appropriate use of standard-library weakref without clever metaprogramming"
+    ],
+    "weaknesses": [
+      "`del self._refs[key]` would be clearer than `pop(key, None)` inside cleanup since the key is guaranteed to exist",
+      "Docstring claims TypeError is raised by register, but the code does not raise it explicitly\u2014it relies on implicit Python behavior",
+      "No validation that key is not None or otherwise sentinel-like, though the task doesn't require it"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.854,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 28,
+    "maintainability_index": 90.677,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into three small, pure, well-named helpers with flat control flow, explicit data movement, and no speculative abstractions. `_parse_item` centralizes all validation and returns a typed tuple or None, keeping the main loop clean. Guard clauses in both `_parse_item` and the main loop avoid deep nesting. `_round_up_to_case` is a single-expression pure function that is trivially auditable. The only minor quibble is that `_parse_item` silently swallows a broad exception set (KeyError, TypeError, ValueError) rather than distinguishing truly malformed items from type-coercion surprises, but the spec explicitly says to skip malformed items, so this is acceptable. The sort is explicit and the output shape is clear. Overall the code is sparse, readable, and locally auditable with no hidden state or framework-shaped scaffolding.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into three small, pure, well-named helpers with flat control flow, explicit data movement, and no speculative abstractions. `_parse_item` centralizes all validation and returns a typed tuple or None, keeping the main loop clean. Guard clauses in both `_parse_item` and the main loop avoid deep nesting. `_round_up_to_case` is a single-expression pure function that is trivially auditable. The only minor quibble is that `_parse_item` silently swallows a broad exception set (KeyError, TypeError, ValueError) rather than distinguishing truly malformed items from type-coercion surprises, but the spec explicitly says to skip malformed items, so this is acceptable. The sort is explicit and the output shape is clear. Overall the code is sparse, readable, and locally auditable with no hidden state or framework-shaped scaffolding.\",\n  \"strengths\": [\n    \"Three small, pure helpers with single responsibilities\",\n    \"Flat control flow using guard clauses and early continues\",\n    \"Explicit data movement: no mutation, no global state\",\n    \"Descriptive names that make behavior self-documenting\",\n    \"`_round_up_to_case` is a clean, standard ceiling-division idiom\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Broad exception catch in `_parse_item` could mask unexpected errors (e.g., a TypeError from a non-dict item silently skipped rather than surfaced)\",\n    \"Empty-string check for `sku` (`if not sku`) is implicit; an explicit `isinstance(sku, str) and sku` would be clearer\",\n    \"Minor: `int()` coercion of already-int values is harmless but slightly surprising for callers who pass well-typed dicts\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Three small, pure helpers with single responsibilities",
+      "Flat control flow using guard clauses and early continues",
+      "Explicit data movement: no mutation, no global state",
+      "Descriptive names that make behavior self-documenting",
+      "`_round_up_to_case` is a clean, standard ceiling-division idiom",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Broad exception catch in `_parse_item` could mask unexpected errors (e.g., a TypeError from a non-dict item silently skipped rather than surfaced)",
+      "Empty-string check for `sku` (`if not sku`) is implicit; an explicit `isinstance(sku, str) and sku` would be clearer",
+      "Minor: `int()` coercion of already-int values is harmless but slightly surprising for callers who pass well-typed dicts"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.825,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.333,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 3,
+    "loc": 30,
+    "maintainability_index": 52.114,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "human_reference"
+}

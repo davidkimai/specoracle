@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate faithfully implements the correct functional semantics and does follow the LT-11 naming convention for branch label variables. However, from a Zen-of-Python structural standpoint the implementation is awkward: it separates condition evaluation from the branching logic, creating redundant indirection (each boolean is computed eagerly and then immediately tested in a one-liner if-block), which adds verbosity without clarity. A Pythonic approach would either use a lookup dict (simple, flat, readable) or inline the conditions directly in the if-statements. The LT-11 spec is itself an adversarial/legacy constraint that conflicts with Pythonic ideals, and the candidate mechanically satisfies the letter of that spec while producing code that is neither idiomatic Python nor genuinely more auditable than a plain dict lookup. The docstring is over-long and mostly restates the spec rather than adding insight. The separation of boolean assignment from conditional use is a mild form of architectural slop\u2014it looks like compliance theater rather than genuine clarity.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The candidate faithfully implements the correct functional semantics and does follow the LT-11 naming convention for branch label variables. However, from a Zen-of-Python structural standpoint the implementation is awkward: it separates condition evaluation from the branching logic, creating redundant indirection (each boolean is computed eagerly and then immediately tested in a one-liner if-block), which adds verbosity without clarity. A Pythonic approach would either use a lookup dict (simple, flat, readable) or inline the conditions directly in the if-statements. The LT-11 spec is itself an adversarial/legacy constraint that conflicts with Pythonic ideals, and the candidate mechanically satisfies the letter of that spec while producing code that is neither idiomatic Python nor genuinely more auditable than a plain dict lookup. The docstring is over-long and mostly restates the spec rather than adding insight. The separation of boolean assignment from conditional use is a mild form of architectural slop\u2014it looks like compliance theater rather than genuine clarity.\",\n  \"strengths\": [\n    \"Correctly implements all four transitions and the unknown-transition fallback\",\n    \"Branch variable names exactly match the LT-11 mandated pattern (branch_<state>_<event>)\",\n    \"Each transition is individually named and visually distinct, satisfying the 'auditable' requirement\",\n    \"No nested conditionals; flat structure\"\n  ],\n  \"weaknesses\": [\n    \"Separating boolean assignment from the if-check adds indirection without real benefit\u2014conditions are evaluated eagerly even when an earlier branch already matched\",\n    \"A dict-based dispatch table would be simpler, flatter, and equally auditable without the redundant variable layer\",\n    \"Overly verbose docstring that mostly restates the spec rather than clarifying intent\",\n    \"The pattern feels like compliance theater: the branch_ variables don't actually improve auditability over inline conditions\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Correctly implements all four transitions and the unknown-transition fallback",
+      "Branch variable names exactly match the LT-11 mandated pattern (branch_<state>_<event>)",
+      "Each transition is individually named and visually distinct, satisfying the 'auditable' requirement",
+      "No nested conditionals; flat structure"
+    ],
+    "weaknesses": [
+      "Separating boolean assignment from the if-check adds indirection without real benefit\u2014conditions are evaluated eagerly even when an earlier branch already matched",
+      "A dict-based dispatch table would be simpler, flatter, and equally auditable without the redundant variable layer",
+      "Overly verbose docstring that mostly restates the spec rather than clarifying intent",
+      "The pattern feels like compliance theater: the branch_ variables don't actually improve auditability over inline conditions"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.34,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 67.873,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_generation"
+}

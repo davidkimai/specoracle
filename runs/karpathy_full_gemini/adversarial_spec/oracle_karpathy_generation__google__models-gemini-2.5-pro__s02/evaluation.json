@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation faithfully follows the LT-11 structural spec by declaring all four transitions as explicitly named boolean local variables (branch_idle_start, branch_running_stop, branch_running_fail, branch_failed_reset) before any branching occurs, then using flat, sequential if-statements to act on each labeled branch. This matches the oracle's demands for auditability, explicit labeling, and favoring readable branch labels over minimizing decision count. The fallthrough to returning the current state correctly handles unknown transitions. The code is flat, explicit, locally auditable, and free of architectural slop such as nested dicts, lambdas, or dynamic dispatch. Minor deductions: the type annotations on the branch variables (`: bool`) are slightly verbose but not harmful, and the docstring is thorough to the point of mild over-documentation, but neither constitutes a real flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The candidate implementation faithfully follows the LT-11 structural spec by declaring all four transitions as explicitly named boolean local variables (branch_idle_start, branch_running_stop, branch_running_fail, branch_failed_reset) before any branching occurs, then using flat, sequential if-statements to act on each labeled branch. This matches the oracle's demands for auditability, explicit labeling, and favoring readable branch labels over minimizing decision count. The fallthrough to returning the current state correctly handles unknown transitions. The code is flat, explicit, locally auditable, and free of architectural slop such as nested dicts, lambdas, or dynamic dispatch. Minor deductions: the type annotations on the branch variables (`: bool`) are slightly verbose but not harmful, and the docstring is thorough to the point of mild over-documentation, but neither constitutes a real flaw.\",\n  \"strengths\": [\n    \"All four transitions represented as explicitly named branch_<state>_<event> local variables, exactly as mandated by LT-11\",\n    \"Flat sequential if-statements make each branch independently auditable\",\n    \"Correct fallthrough behavior for unknown transitions\",\n    \"No clever abstractions (dicts, tuples, lambdas) that would obscure the branch structure\",\n    \"Clear, self-documenting variable names that map directly to the transition table\"\n  ],\n  \"weaknesses\": [\n    \"Type annotations on boolean branch variables add minor verbosity without benefit\",\n    \"Docstring is slightly over-engineered for a simple state machine function\",\n    \"Four separate if-statements instead of if/elif chain is technically redundant since branches are mutually exclusive, though it does reinforce the LT-11 auditability intent\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All four transitions represented as explicitly named branch_<state>_<event> local variables, exactly as mandated by LT-11",
+      "Flat sequential if-statements make each branch independently auditable",
+      "Correct fallthrough behavior for unknown transitions",
+      "No clever abstractions (dicts, tuples, lambdas) that would obscure the branch structure",
+      "Clear, self-documenting variable names that map directly to the transition table"
+    ],
+    "weaknesses": [
+      "Type annotations on boolean branch variables add minor verbosity without benefit",
+      "Docstring is slightly over-engineered for a simple state machine function",
+      "Four separate if-statements instead of if/elif chain is technically redundant since branches are mutually exclusive, though it does reinforce the LT-11 auditability intent"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.712,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 41,
+    "maintainability_index": 69.531,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

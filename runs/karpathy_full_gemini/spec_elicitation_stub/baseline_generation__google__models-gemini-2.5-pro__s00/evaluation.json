@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: it uses guard clauses, raises clear errors, avoids hidden state, and names things plainly. The logic is flat and locally auditable. The main weaknesses are minor over-engineering: the docstring is verbose to the point of noise (explaining what the code already says clearly), the `isinstance` check raises `NotImplementedError` where `TypeError` would be more semantically precise, the `import typing` is unused, and the numbered comment blocks add ceremony without clarity gain. The strict two-key check (`payload.keys() == {'mode', 'value'}`) is a reasonable interpretation of the spec but is slightly speculative\u2014the spec only mandates behavior for that exact form, so it's defensible. Overall the code is clean, explicit, and avoids speculative abstractions, but the docstring bloat and unused import are small violations of the 'sparse enough to audit locally' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: it uses guard clauses, raises clear errors, avoids hidden state, and names things plainly. The logic is flat and locally auditable. The main weaknesses are minor over-engineering: the docstring is verbose to the point of noise (explaining what the code already says clearly), the `isinstance` check raises `NotImplementedError` where `TypeError` would be more semantically precise, the `import typing` is unused, and the numbered comment blocks add ceremony without clarity gain. The strict two-key check (`payload.keys() == {'mode', 'value'}`) is a reasonable interpretation of the spec but is slightly speculative\u2014the spec only mandates behavior for that exact form, so it's defensible. Overall the code is clean, explicit, and avoids speculative abstractions, but the docstring bloat and unused import are small violations of the 'sparse enough to audit locally' principle.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses rather than nested conditionals\",\n    \"Explicit key-set check prevents silent acceptance of extra keys\",\n    \"Clear, distinct error messages for different failure modes\",\n    \"No hidden mutation, global state, or speculative extension points\",\n    \"Ordinary constructs only; no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"Unused `import typing` is dead code\",\n    \"Raising `NotImplementedError` for a non-dict input is semantically wrong; `TypeError` is the correct exception\",\n    \"Docstring is excessively verbose, restating what the code already makes obvious\",\n    \"Numbered comment blocks add bureaucratic ceremony without aiding local auditability\",\n    \"No helper extraction needed here, but the single function is fine\u2014no real structural issue beyond the above\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses rather than nested conditionals",
+      "Explicit key-set check prevents silent acceptance of extra keys",
+      "Clear, distinct error messages for different failure modes",
+      "No hidden mutation, global state, or speculative extension points",
+      "Ordinary constructs only; no metaprogramming"
+    ],
+    "weaknesses": [
+      "Unused `import typing` is dead code",
+      "Raising `NotImplementedError` for a non-dict input is semantically wrong; `TypeError` is the correct exception",
+      "Docstring is excessively verbose, restating what the code already makes obvious",
+      "Numbered comment blocks add bureaucratic ceremony without aiding local auditability",
+      "No helper extraction needed here, but the single function is fine\u2014no real structural issue beyond the above"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.926,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 37,
+    "maintainability_index": 41.038,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "baseline_generation"
+}

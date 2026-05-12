@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and minimal \u2014 exactly what the task requires. It uses a single loop with early-continue guards, no unnecessary abstractions, no helper functions, and no speculative flexibility. The ceiling-division idiom is correct and idiomatic. The only minor quibble is the use of `type(x) is not int` instead of `not isinstance(x, int)`, which is slightly more restrictive (rejects bool subclass values and numeric subclasses), but this is a defensible conservative interpretation given the spec says 'malformed items'. The sorted key lambda is simple and correct. Overall the code is highly readable, locally auditable, and does exactly what was asked with no excess.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and minimal \u2014 exactly what the task requires. It uses a single loop with early-continue guards, no unnecessary abstractions, no helper functions, and no speculative flexibility. The ceiling-division idiom is correct and idiomatic. The only minor quibble is the use of `type(x) is not int` instead of `not isinstance(x, int)`, which is slightly more restrictive (rejects bool subclass values and numeric subclasses), but this is a defensible conservative interpretation given the spec says 'malformed items'. The sorted key lambda is simple and correct. Overall the code is highly readable, locally auditable, and does exactly what was asked with no excess.\",\n  \"strengths\": [\n    \"Flat single-loop structure with guard clauses \u2014 no nesting beyond what's necessary\",\n    \"Correct ceiling-division arithmetic without importing math\",\n    \"No unnecessary abstractions, helper functions, or classes\",\n    \"Explicit field extraction and type checks make validation logic easy to audit\",\n    \"Sorting is deferred to the end and expressed simply\"\n  ],\n  \"weaknesses\": [\n    \"`type(x) is not int` rejects bool values (True/False) which are int subclasses \u2014 `isinstance` would be more conventional, though the stricter check is arguably defensible\",\n    \"The `not isinstance(item, dict)` check is slightly redundant given the type annotation, but harmless and arguably good defensive practice\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat single-loop structure with guard clauses \u2014 no nesting beyond what's necessary",
+      "Correct ceiling-division arithmetic without importing math",
+      "No unnecessary abstractions, helper functions, or classes",
+      "Explicit field extraction and type checks make validation logic easy to audit",
+      "Sorting is deferred to the end and expressed simply"
+    ],
+    "weaknesses": [
+      "`type(x) is not int` rejects bool values (True/False) which are int subclasses \u2014 `isinstance` would be more conventional, though the stricter check is arguably defensible",
+      "The `not isinstance(item, dict)` check is slightly redundant given the type annotation, but harmless and arguably good defensive practice"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.167,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 11.0,
+    "cyclomatic_complexity_max": 11,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 1,
+    "loc": 23,
+    "maintainability_index": 51.452,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_karpathy_generation"
+}

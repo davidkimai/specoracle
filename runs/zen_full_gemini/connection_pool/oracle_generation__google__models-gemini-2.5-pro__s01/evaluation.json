@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core implementation is clean and correct: the three required methods (acquire, release, evict_idle) are well-structured with flat control flow, explicit data movement between two clearly-named collections, and sensible error raising. However, the candidate adds significant speculative abstractions beyond the task spec \u2014 `close_all`, `connection` context manager, `__enter__`/`__exit__`, `PoolError`/`PoolFullError` hierarchy, a `size` property, and `_close_connection` helper \u2014 none of which were requested. The Zen warns against speculative abstractions and unused extension points; this code is framework-shaped rather than minimal. The type annotations and docstrings are thorough but verbose to the point of obscuring the simplicity of the underlying logic. The `_close_connection` silently swallows exceptions without even a comment explaining the policy tradeoff in the required methods. The eviction loop correctly exploits deque ordering (FIFO idle times) but this assumption is implicit rather than documented at the data-structure level.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The core implementation is clean and correct: the three required methods (acquire, release, evict_idle) are well-structured with flat control flow, explicit data movement between two clearly-named collections, and sensible error raising. However, the candidate adds significant speculative abstractions beyond the task spec \u2014 `close_all`, `connection` context manager, `__enter__`/`__exit__`, `PoolError`/`PoolFullError` hierarchy, a `size` property, and `_close_connection` helper \u2014 none of which were requested. The Zen warns against speculative abstractions and unused extension points; this code is framework-shaped rather than minimal. The type annotations and docstrings are thorough but verbose to the point of obscuring the simplicity of the underlying logic. The `_close_connection` silently swallows exceptions without even a comment explaining the policy tradeoff in the required methods. The eviction loop correctly exploits deque ordering (FIFO idle times) but this assumption is implicit rather than documented at the data-structure level.\",\n  \"strengths\": [\n    \"Core acquire/release/evict_idle logic is correct and easy to follow\",\n    \"Flat control flow with guard clauses in acquire and evict_idle\",\n    \"Explicit data movement between _idle_connections and _active_connections\",\n    \"Clear ValueError/PoolFullError raises for invalid states\",\n    \"now= injection makes time-dependent behavior testable\"\n  ],\n  \"weaknesses\": [\n    \"Speculative extras (close_all, connection CM, __enter__/__exit__, PoolError hierarchy) not in spec inflate surface area\",\n    \"Exception hierarchy (PoolError base) is over-engineered for a single error case\",\n    \"Silent exception suppression in _close_connection is a hidden policy decision with no caller visibility\",\n    \"Verbose docstrings and type annotations obscure the simplicity of the implementation\",\n    \"size property adds indirection where direct len arithmetic at call sites would be clearer\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core acquire/release/evict_idle logic is correct and easy to follow",
+      "Flat control flow with guard clauses in acquire and evict_idle",
+      "Explicit data movement between _idle_connections and _active_connections",
+      "Clear ValueError/PoolFullError raises for invalid states",
+      "now= injection makes time-dependent behavior testable"
+    ],
+    "weaknesses": [
+      "Speculative extras (close_all, connection CM, __enter__/__exit__, PoolError hierarchy) not in spec inflate surface area",
+      "Exception hierarchy (PoolError base) is over-engineered for a single error case",
+      "Silent exception suppression in _close_connection is a hidden policy decision with no caller visibility",
+      "Verbose docstrings and type annotations obscure the simplicity of the implementation",
+      "size property adds indirection where direct len arithmetic at call sites would be clearer"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.695,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 3,
+    "cyclomatic_complexity_average": 2.077,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 27,
+    "function_count": 10,
+    "loc": 148,
+    "maintainability_index": 67.557,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_generation"
+}

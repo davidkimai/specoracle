@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally reasonable, with good separation into small helpers and explicit data movement. However, it over-validates inputs in ways the task doesn't require\u2014checking isinstance for bool, str, dict, and list types adds speculative defensive code that the functional spec never asked for, violating 'avoid speculative abstractions' and 'keep code sparse enough that a maintainer can audit behavior locally.' The Zen favors simplicity and practicality over exhaustive type-checking that duplicates what a type system or caller should handle. The helper decomposition is sensible but slightly over-engineered: _require_worker_name and _require_worker_enabled could be inlined into _enabled_worker_names without loss of clarity, and _validated_jobs is essentially a type-checked list copy that adds noise. The core logic (the list comprehension with modulo indexing) is clean and idiomatic.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally reasonable, with good separation into small helpers and explicit data movement. However, it over-validates inputs in ways the task doesn't require\u2014checking isinstance for bool, str, dict, and list types adds speculative defensive code that the functional spec never asked for, violating 'avoid speculative abstractions' and 'keep code sparse enough that a maintainer can audit behavior locally.' The Zen favors simplicity and practicality over exhaustive type-checking that duplicates what a type system or caller should handle. The helper decomposition is sensible but slightly over-engineered: _require_worker_name and _require_worker_enabled could be inlined into _enabled_worker_names without loss of clarity, and _validated_jobs is essentially a type-checked list copy that adds noise. The core logic (the list comprehension with modulo indexing) is clean and idiomatic.\",\n  \"strengths\": [\n    \"Core round-robin logic is clean and idiomatic using enumerate + modulo\",\n    \"No mutation of inputs\",\n    \"Clear ValueError raised when no enabled workers\",\n    \"Helper functions have descriptive names that explain intent\",\n    \"Flat control flow within each function\"\n  ],\n  \"weaknesses\": [\n    \"Excessive isinstance type-checking not required by the spec\u2014speculative defensive code\",\n    \"_validated_jobs is nearly a no-op that adds indirection without value\",\n    \"_require_worker_name and _require_worker_enabled are thin wrappers that could be inlined\",\n    \"TypeError raises for non-string names/non-bool enabled are beyond the stated requirements\",\n    \"Overall code volume is larger than necessary for the task complexity\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core round-robin logic is clean and idiomatic using enumerate + modulo",
+      "No mutation of inputs",
+      "Clear ValueError raised when no enabled workers",
+      "Helper functions have descriptive names that explain intent",
+      "Flat control flow within each function"
+    ],
+    "weaknesses": [
+      "Excessive isinstance type-checking not required by the spec\u2014speculative defensive code",
+      "_validated_jobs is nearly a no-op that adds indirection without value",
+      "_require_worker_name and _require_worker_enabled are thin wrappers that could be inlined",
+      "TypeError raises for non-string names/non-bool enabled are beyond the stated requirements",
+      "Overall code volume is larger than necessary for the task complexity"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.35,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.4,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 5,
+    "loc": 42,
+    "maintainability_index": 49.895,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

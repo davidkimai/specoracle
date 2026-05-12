@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, well-decomposed solution that closely follows the Zen of Python principles. Each helper has a single clear responsibility, control flow is flat with guard clauses, data movement is explicit (no hidden mutation, inputs are copied before modification), errors are raised clearly with descriptive messages, and names are self-explanatory. The main `resolve_flags` function reads almost like a specification of the algorithm. The only minor quibbles are that `_copy_segments` eagerly validates and copies all segment data even though only user-referenced segments are used (a small speculative overhead), and the `_require_mapping` helper returning `Mapping[str, Any]` while the callers immediately re-validate contents is slightly redundant layering\u2014but these are very minor issues that don't meaningfully harm auditability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, well-decomposed solution that closely follows the Zen of Python principles. Each helper has a single clear responsibility, control flow is flat with guard clauses, data movement is explicit (no hidden mutation, inputs are copied before modification), errors are raised clearly with descriptive messages, and names are self-explanatory. The main `resolve_flags` function reads almost like a specification of the algorithm. The only minor quibbles are that `_copy_segments` eagerly validates and copies all segment data even though only user-referenced segments are used (a small speculative overhead), and the `_require_mapping` helper returning `Mapping[str, Any]` while the callers immediately re-validate contents is slightly redundant layering\u2014but these are very minor issues that don't meaningfully harm auditability or correctness.\",\n  \"strengths\": [\n    \"Small, pure helpers with single responsibilities\",\n    \"Flat control flow with guard clauses throughout\",\n    \"Explicit data copying prevents any input mutation\",\n    \"Clear, descriptive error messages for invalid inputs\",\n    \"Main function reads as a near-literal description of the algorithm\",\n    \"No speculative abstractions or unused extension points\",\n    \"Ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"Eagerly copies and validates all segments even if none are referenced by the user\",\n    \"Slight redundancy between _require_mapping and the per-key validation in _copy_flag_map\",\n    \"Type annotations on the public signature use plain `dict` but helpers use `Mapping`, a minor inconsistency\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helpers with single responsibilities",
+      "Flat control flow with guard clauses throughout",
+      "Explicit data copying prevents any input mutation",
+      "Clear, descriptive error messages for invalid inputs",
+      "Main function reads as a near-literal description of the algorithm",
+      "No speculative abstractions or unused extension points",
+      "Ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "Eagerly copies and validates all segments even if none are referenced by the user",
+      "Slight redundancy between _require_mapping and the per-key validation in _copy_flag_map",
+      "Type annotations on the public signature use plain `dict` but helpers use `Mapping`, a minor inconsistency"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.411,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.167,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 6,
+    "loc": 53,
+    "maintainability_index": 47.466,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "oracle_generation"
+}

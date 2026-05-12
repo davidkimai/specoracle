@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04: it uses visibly staged parsing with clearly separated steps (strip, skip, validate, split, validate parts), maintains exactly one public function, uses `section_ledger` as the surviving cross-iteration dictionary name, preserves insertion order via dict, and raises errors with messages that name the archival field being rejected. The `key_ledger` local alias for the inner dict is a nice touch that satisfies the _ledger naming convention for a dict that survives (within the section scope). Minor deductions: `key_ledger` is assigned inside the loop but only used once immediately after, making it slightly ceremonial rather than genuinely useful for readability; and the `if section not in section_ledger` guard could be replaced with `setdefault` but the explicit form is actually more readable and aligned with the spec's preference for visibility.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04: it uses visibly staged parsing with clearly separated steps (strip, skip, validate, split, validate parts), maintains exactly one public function, uses `section_ledger` as the surviving cross-iteration dictionary name, preserves insertion order via dict, and raises errors with messages that name the archival field being rejected. The `key_ledger` local alias for the inner dict is a nice touch that satisfies the _ledger naming convention for a dict that survives (within the section scope). Minor deductions: `key_ledger` is assigned inside the loop but only used once immediately after, making it slightly ceremonial rather than genuinely useful for readability; and the `if section not in section_ledger` guard could be replaced with `setdefault` but the explicit form is actually more readable and aligned with the spec's preference for visibility.\",\n  \"strengths\": [\n    \"Uses `section_ledger` naming convention exactly as specified\",\n    \"Visibly staged parsing: each validation step is a separate, readable block\",\n    \"Exactly one public function\",\n    \"Error messages name the archival field being rejected (section, key, binding line)\",\n    \"Insertion order preserved via standard dict\",\n    \"Line numbers included in error messages for auditability\",\n    \"`key_ledger` alias follows _ledger naming for inner dict\"\n  ],\n  \"weaknesses\": [\n    \"`key_ledger` is used only once immediately after assignment, making it marginally ceremonial\",\n    \"No docstring documenting the function contract, which would aid archival review\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `section_ledger` naming convention exactly as specified",
+      "Visibly staged parsing: each validation step is a separate, readable block",
+      "Exactly one public function",
+      "Error messages name the archival field being rejected (section, key, binding line)",
+      "Insertion order preserved via standard dict",
+      "Line numbers included in error messages for auditability",
+      "`key_ledger` alias follows _ledger naming for inner dict"
+    ],
+    "weaknesses": [
+      "`key_ledger` is used only once immediately after assignment, making it marginally ceremonial",
+      "No docstring documenting the function contract, which would aid archival review"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.151,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.25s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 31,
+    "maintainability_index": 54.781,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_karpathy_generation"
+}

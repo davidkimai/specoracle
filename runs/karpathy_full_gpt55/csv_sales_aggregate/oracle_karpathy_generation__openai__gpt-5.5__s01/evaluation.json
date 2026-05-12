@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses stdlib csv.DictReader appropriately, handles all the required edge cases (malformed rows, missing fields, non-integer values), and produces correctly sorted output. The early-return guard for missing headers is a reasonable conservative choice. Minor issues: the `None in row` check (detecting extra fields/overflow columns) is slightly non-obvious and could use a comment; the repeated `.get()` calls after already checking fieldnames are mildly redundant since DictReader guarantees those keys exist when headers are valid and no overflow columns are present; and using a `list[int]` as a mutable accumulator instead of a simple tuple-of-ints or a named structure is a small readability cost. Overall the code is flat, explicit, locally auditable, and avoids speculative complexity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses stdlib csv.DictReader appropriately, handles all the required edge cases (malformed rows, missing fields, non-integer values), and produces correctly sorted output. The early-return guard for missing headers is a reasonable conservative choice. Minor issues: the `None in row` check (detecting extra fields/overflow columns) is slightly non-obvious and could use a comment; the repeated `.get()` calls after already checking fieldnames are mildly redundant since DictReader guarantees those keys exist when headers are valid and no overflow columns are present; and using a `list[int]` as a mutable accumulator instead of a simple tuple-of-ints or a named structure is a small readability cost. Overall the code is flat, explicit, locally auditable, and avoids speculative complexity.\",\n  \"strengths\": [\n    \"Minimal and direct \u2014 no unnecessary classes, helpers, or abstractions\",\n    \"Correct use of csv.DictReader with StringIO for proper CSV parsing\",\n    \"Handles all required skip conditions (missing fields, non-integer values, overflow columns)\",\n    \"Sorted output produced cleanly via sorted() on dict items\",\n    \"Clear, readable list comprehension for final output shaping\"\n  ],\n  \"weaknesses\": [\n    \"`None in row` check (detecting extra columns beyond header count) is non-obvious without a comment\",\n    \"Redundant `.get()` calls with None-checks after fieldnames are already validated \u2014 DictReader guarantees those keys exist\",\n    \"Using a mutable `list[int]` accumulator is slightly less readable than a simple two-variable approach or defaultdict pattern\",\n    \"Early return on missing headers silently swallows all data rather than skipping only affected rows, which may be overly conservative\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal and direct \u2014 no unnecessary classes, helpers, or abstractions",
+      "Correct use of csv.DictReader with StringIO for proper CSV parsing",
+      "Handles all required skip conditions (missing fields, non-integer values, overflow columns)",
+      "Sorted output produced cleanly via sorted() on dict items",
+      "Clear, readable list comprehension for final output shaping"
+    ],
+    "weaknesses": [
+      "`None in row` check (detecting extra columns beyond header count) is non-obvious without a comment",
+      "Redundant `.get()` calls with None-checks after fieldnames are already validated \u2014 DictReader guarantees those keys exist",
+      "Using a mutable `list[int]` accumulator is slightly less readable than a simple two-variable approach or defaultdict pattern",
+      "Early return on missing headers silently swallows all data rather than skipping only affected rows, which may be overly conservative"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.033,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 52.116,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_karpathy_generation"
+}

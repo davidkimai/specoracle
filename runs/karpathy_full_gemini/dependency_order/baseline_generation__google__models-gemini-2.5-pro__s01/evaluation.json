@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a clean Kahn's algorithm approach with explicit data movement and no hidden mutation. The control flow is reasonably flat and the variable names are descriptive. The main structural weaknesses are the verbose docstring (which borders on over-documentation for a small utility), the lack of extraction into small pure helpers (the spec explicitly prefers these), and the step-comment style which partially compensates for a monolithic function that could be decomposed into `build_graph`, `initial_queue`, and `run_kahn` helpers. The code is auditable locally and uses ordinary stdlib constructs with no metaprogramming or speculative abstractions, which is good. The `processed_count` counter is a minor redundancy since `len(all_tasks)` is already available and comparing against it is clear, but it's not harmful. Overall this is solid, readable code that slightly misses the 'small pure helpers' and 'sparse enough' ideals from the oracle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and uses a clean Kahn's algorithm approach with explicit data movement and no hidden mutation. The control flow is reasonably flat and the variable names are descriptive. The main structural weaknesses are the verbose docstring (which borders on over-documentation for a small utility), the lack of extraction into small pure helpers (the spec explicitly prefers these), and the step-comment style which partially compensates for a monolithic function that could be decomposed into `build_graph`, `initial_queue`, and `run_kahn` helpers. The code is auditable locally and uses ordinary stdlib constructs with no metaprogramming or speculative abstractions, which is good. The `processed_count` counter is a minor redundancy since `len(all_tasks)` is already available and comparing against it is clear, but it's not harmful. Overall this is solid, readable code that slightly misses the 'small pure helpers' and 'sparse enough' ideals from the oracle.\",\n  \"strengths\": [\n    \"Correct Kahn's algorithm with clear cycle detection via processed_count check\",\n    \"No mutation of input; builds fresh data structures explicitly\",\n    \"Flat control flow with no deep nesting\",\n    \"Ordinary dict/list constructs, no clever metaprogramming\",\n    \"Handles tasks that only appear as dependencies correctly\",\n    \"Alphabetical sorting applied at batch construction time, not as an afterthought\"\n  ],\n  \"weaknesses\": [\n    \"Monolithic function; could be decomposed into small pure helpers (build_graph, find_roots, kahn_step) per the spec\",\n    \"Docstring is excessively verbose for a function of this size, reducing sparseness\",\n    \"Step comments partially substitute for proper decomposition rather than complementing it\",\n    \"Module-level docstring adds little value for a single-function module\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct Kahn's algorithm with clear cycle detection via processed_count check",
+      "No mutation of input; builds fresh data structures explicitly",
+      "Flat control flow with no deep nesting",
+      "Ordinary dict/list constructs, no clever metaprogramming",
+      "Handles tasks that only appear as dependencies correctly",
+      "Alphabetical sorting applied at batch construction time, not as an afterthought"
+    ],
+    "weaknesses": [
+      "Monolithic function; could be decomposed into small pure helpers (build_graph, find_roots, kahn_step) per the spec",
+      "Docstring is excessively verbose for a function of this size, reducing sparseness",
+      "Step comments partially substitute for proper decomposition rather than complementing it",
+      "Module-level docstring adds little value for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.437,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 63,
+    "maintainability_index": 76.085,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

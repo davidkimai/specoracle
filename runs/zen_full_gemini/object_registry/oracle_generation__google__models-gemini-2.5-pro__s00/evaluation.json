@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the task requirements without speculative abstractions. Each method is small and does exactly one thing; control flow is flat with a simple guard clause in `get`; data movement is explicit (no hidden mutation beyond the intentional registry replacement in `cleanup`); names are self-explanatory. The docstrings are slightly verbose for such a simple module but do not obscure the logic. The only minor structural note is that `cleanup` rebuilds the dict via comprehension rather than mutating in place, which is actually the cleaner choice here. No framework-shaped code, no unused extension points, and standard-library `weakref` is used straightforwardly.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the task requirements without speculative abstractions. Each method is small and does exactly one thing; control flow is flat with a simple guard clause in `get`; data movement is explicit (no hidden mutation beyond the intentional registry replacement in `cleanup`); names are self-explanatory. The docstrings are slightly verbose for such a simple module but do not obscure the logic. The only minor structural note is that `cleanup` rebuilds the dict via comprehension rather than mutating in place, which is actually the cleaner choice here. No framework-shaped code, no unused extension points, and standard-library `weakref` is used straightforwardly.\",\n  \"strengths\": [\n    \"Flat, readable control flow with a single guard clause in `get`\",\n    \"Explicit data movement: `_registry` is the sole state, mutated only in `register` and `cleanup`\",\n    \"Uses plain `weakref.ref` \u2014 the simplest correct tool for the job\",\n    \"`cleanup` uses a comprehension that is easy to audit locally\",\n    \"No speculative abstractions or unused hooks\"\n  ],\n  \"weaknesses\": [\n    \"Module and class docstrings are more verbose than necessary for such a small, obvious implementation\",\n    \"`get` returns `None` both for missing keys and dead references without distinguishing the two cases, which may be intentional but is worth noting\",\n    \"No validation that `key` is hashable (though Python will raise naturally, an explicit check could improve clarity per the 'raise clear errors' constraint)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, readable control flow with a single guard clause in `get`",
+      "Explicit data movement: `_registry` is the sole state, mutated only in `register` and `cleanup`",
+      "Uses plain `weakref.ref` \u2014 the simplest correct tool for the job",
+      "`cleanup` uses a comprehension that is easy to audit locally",
+      "No speculative abstractions or unused hooks"
+    ],
+    "weaknesses": [
+      "Module and class docstrings are more verbose than necessary for such a small, obvious implementation",
+      "`get` returns `None` both for missing keys and dead references without distinguishing the two cases, which may be intentional but is worth noting",
+      "No validation that `key` is hashable (though Python will raise naturally, an explicit check could improve clarity per the 'raise clear errors' constraint)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.666,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 56,
+    "maintainability_index": 66.715,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "oracle_generation"
+}

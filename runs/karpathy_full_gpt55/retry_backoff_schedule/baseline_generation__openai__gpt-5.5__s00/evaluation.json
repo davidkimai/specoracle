@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct with flat control flow and explicit validation. The guard clauses are upfront and clear. The loop is simple and easy to audit locally. However, the isinstance/bool checks add verbosity that goes beyond what the functional spec requires (the spec says 'validate non-negative / positive', not 'validate integer type'), and the optimization `if delay < cap_seconds: delay *= 2` is a minor cleverness that avoids overflow but adds a conditional that could simply be `delay = min(delay * 2, cap_seconds)` outside the append, keeping the loop body even simpler. The docstring is thorough but slightly over-engineered for a small utility. Overall it's a solid, maintainable implementation with minor structural over-specification.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct with flat control flow and explicit validation. The guard clauses are upfront and clear. The loop is simple and easy to audit locally. However, the isinstance/bool checks add verbosity that goes beyond what the functional spec requires (the spec says 'validate non-negative / positive', not 'validate integer type'), and the optimization `if delay < cap_seconds: delay *= 2` is a minor cleverness that avoids overflow but adds a conditional that could simply be `delay = min(delay * 2, cap_seconds)` outside the append, keeping the loop body even simpler. The docstring is thorough but slightly over-engineered for a small utility. Overall it's a solid, maintainable implementation with minor structural over-specification.\",\n  \"strengths\": [\n    \"Flat control flow with upfront guard clauses\",\n    \"Explicit, named variables (delay, schedule) make data movement obvious\",\n    \"No hidden mutation or global state\",\n    \"Loop logic is locally auditable in a few lines\",\n    \"Clear ValueError messages for each invalid input\"\n  ],\n  \"weaknesses\": [\n    \"isinstance + bool checks are overly strict type enforcement not required by the spec, adding noise\",\n    \"The `if delay < cap_seconds: delay *= 2` branch inside the loop is a minor cleverness; a simpler post-append `delay = min(delay * 2, cap_seconds)` would be flatter\",\n    \"Docstring length is disproportionate to the function's simplicity\",\n    \"The `__all__` export declaration is speculative boilerplate for a single-function module\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with upfront guard clauses",
+      "Explicit, named variables (delay, schedule) make data movement obvious",
+      "No hidden mutation or global state",
+      "Loop logic is locally auditable in a few lines",
+      "Clear ValueError messages for each invalid input"
+    ],
+    "weaknesses": [
+      "isinstance + bool checks are overly strict type enforcement not required by the spec, adding noise",
+      "The `if delay < cap_seconds: delay *= 2` branch inside the loop is a minor cleverness; a simpler post-append `delay = min(delay * 2, cap_seconds)` would be flatter",
+      "Docstring length is disproportionate to the function's simplicity",
+      "The `__all__` export declaration is speculative boilerplate for a single-function module"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.089,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 29,
+    "maintainability_index": 83.78,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "baseline_generation"
+}

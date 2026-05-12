@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, using a nested closure for recursion which is acceptable for single-use code. However, there are several structural issues against the oracle: the empty-dict edge case is handled via a subtle `elif path:` condition that is non-obvious and requires mental overhead to audit (a reader must reason about why an empty top-level dict returns `{}` correctly). The docstring is verbose and over-engineered for a small utility function. The `TypeError` guard adds speculative defensive programming not asked for. The type annotations use the older `Dict` from `typing` instead of the built-in `dict` (Python 3.9+), which is a minor inconsistency with the signature in the spec. The nested `_traverse` function is a reasonable choice but the empty-string sentinel for path tracking is a subtle design that could be replaced with a cleaner iterative or explicit prefix approach. Overall it solves the problem with minimal abstraction but carries unnecessary docstring weight and a non-obvious control-flow trick for the empty-dict case.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, using a nested closure for recursion which is acceptable for single-use code. However, there are several structural issues against the oracle: the empty-dict edge case is handled via a subtle `elif path:` condition that is non-obvious and requires mental overhead to audit (a reader must reason about why an empty top-level dict returns `{}` correctly). The docstring is verbose and over-engineered for a small utility function. The `TypeError` guard adds speculative defensive programming not asked for. The type annotations use the older `Dict` from `typing` instead of the built-in `dict` (Python 3.9+), which is a minor inconsistency with the signature in the spec. The nested `_traverse` function is a reasonable choice but the empty-string sentinel for path tracking is a subtle design that could be replaced with a cleaner iterative or explicit prefix approach. Overall it solves the problem with minimal abstraction but carries unnecessary docstring weight and a non-obvious control-flow trick for the empty-dict case.\",\n  \"strengths\": [\n    \"Correct handling of lists as leaf values\",\n    \"No unnecessary abstractions or classes\",\n    \"Recursive traversal is concise and contained\",\n    \"Handles empty dicts as leaf values correctly\"\n  ],\n  \"weaknesses\": [\n    \"Empty-string sentinel for path is a subtle trick that hurts local auditability\",\n    \"Verbose docstring with example, args, returns, raises sections is over-engineered for a small utility\",\n    \"Unsolicited TypeError guard adds speculative defensive code not required by the spec\",\n    \"Uses legacy `typing.Dict` instead of built-in `dict` inconsistent with the spec signature\",\n    \"Module-level docstring adds noise for a single-function module\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct handling of lists as leaf values",
+      "No unnecessary abstractions or classes",
+      "Recursive traversal is concise and contained",
+      "Handles empty dicts as leaf values correctly"
+    ],
+    "weaknesses": [
+      "Empty-string sentinel for path is a subtle trick that hurts local auditability",
+      "Verbose docstring with example, args, returns, raises sections is over-engineered for a small utility",
+      "Unsolicited TypeError guard adds speculative defensive code not required by the spec",
+      "Uses legacy `typing.Dict` instead of built-in `dict` inconsistent with the spec signature",
+      "Module-level docstring adds noise for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.114,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 2,
+    "loc": 35,
+    "maintainability_index": 82.935,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "oracle_karpathy_generation"
+}

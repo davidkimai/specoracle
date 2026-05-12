@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4's doctrine: direction validation occurs before any accumulation, debit and credit are maintained as separate named accumulators (not a single net figure), and the balance computation is deferred to a clean post-processing loop entirely separate from the directional logic. There is no inline arithmetic inside the conditional that decides monetary direction \u2014 the direction string is used as a dictionary key to dispatch to the correct accumulator, which is idiomatic and flat. The code is explicit, readable, and locally auditable with no hidden state or clever abstractions. The only minor quibble is that initializing 'balance': 0 in the per-account dict and then overwriting it in a second pass is slightly redundant, but it does not violate any doctrine clause and arguably improves clarity by making the schema explicit at construction time.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4's doctrine: direction validation occurs before any accumulation, debit and credit are maintained as separate named accumulators (not a single net figure), and the balance computation is deferred to a clean post-processing loop entirely separate from the directional logic. There is no inline arithmetic inside the conditional that decides monetary direction \u2014 the direction string is used as a dictionary key to dispatch to the correct accumulator, which is idiomatic and flat. The code is explicit, readable, and locally auditable with no hidden state or clever abstractions. The only minor quibble is that initializing 'balance': 0 in the per-account dict and then overwriting it in a second pass is slightly redundant, but it does not violate any doctrine clause and arguably improves clarity by making the schema explicit at construction time.\",\n  \"strengths\": [\n    \"Debit and credit are kept in separate named accumulators as required by TR-4\",\n    \"Direction validation is fully resolved before any monetary accumulation occurs\",\n    \"Balance computation is isolated in a dedicated post-processing loop, not mixed with directional logic\",\n    \"No inline arithmetic inside the conditional that decides direction\",\n    \"Clear docstring, explicit error messages, and straightforward flat structure\"\n  ],\n  \"weaknesses\": [\n    \"Initializing 'balance': 0 at account creation is redundant since it is always overwritten in the second pass\",\n    \"Using direction as a dict key for dispatch is clever but slightly implicit compared to an explicit if/elif block, though it avoids arithmetic in conditionals\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Debit and credit are kept in separate named accumulators as required by TR-4",
+      "Direction validation is fully resolved before any monetary accumulation occurs",
+      "Balance computation is isolated in a dedicated post-processing loop, not mixed with directional logic",
+      "No inline arithmetic inside the conditional that decides direction",
+      "Clear docstring, explicit error messages, and straightforward flat structure"
+    ],
+    "weaknesses": [
+      "Initializing 'balance': 0 at account creation is redundant since it is always overwritten in the second pass",
+      "Using direction as a dict key for dispatch is clever but slightly implicit compared to an explicit if/elif block, though it avoids arithmetic in conditionals"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.888,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 85.745,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

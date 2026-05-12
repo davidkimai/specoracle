@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate correctly implements the functional requirements\u2014filtering, aggregating, and sorting with the exact legacy keys\u2014but diverges from the structural spec in several ways. The spec calls for explicit branch labels in local variable names when a decision affects money (the `is_valid` boolean is a step in that direction but is generic rather than money-specific, e.g., `paid_and_valid`), a visible staged audit trail rather than clever flattening, and comments only when naming a legacy audit stage. Instead, the code uses a `defaultdict` with a lambda (a clever shortcut the spec discourages), collapses the output construction into a list comprehension (flattening the staged audit trail), and fills comments with generic docstring-style prose rather than named audit stages. The docstring is thorough but not in the spirit of the legacy spec. The `isinstance(invoice, dict)` guard is a reasonable defensive addition not required by the spec. Overall the code is clean and correct but prioritizes Pythonic idiom over the explicit, auditable, staged-loop style the oracle demands.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The candidate correctly implements the functional requirements\u2014filtering, aggregating, and sorting with the exact legacy keys\u2014but diverges from the structural spec in several ways. The spec calls for explicit branch labels in local variable names when a decision affects money (the `is_valid` boolean is a step in that direction but is generic rather than money-specific, e.g., `paid_and_valid`), a visible staged audit trail rather than clever flattening, and comments only when naming a legacy audit stage. Instead, the code uses a `defaultdict` with a lambda (a clever shortcut the spec discourages), collapses the output construction into a list comprehension (flattening the staged audit trail), and fills comments with generic docstring-style prose rather than named audit stages. The docstring is thorough but not in the spirit of the legacy spec. The `isinstance(invoice, dict)` guard is a reasonable defensive addition not required by the spec. Overall the code is clean and correct but prioritizes Pythonic idiom over the explicit, auditable, staged-loop style the oracle demands.\",\n  \"strengths\": [\n    \"Correct output keys (bucket_code, item_count, cents_total) and sort order\",\n    \"Does not mutate the input\",\n    \"Explicit validity check with named variable `is_valid`\",\n    \"Handles missing keys safely with `.get()`\"\n  ],\n  \"weaknesses\": [\n    \"Uses `defaultdict` with a lambda\u2014a clever shortcut the spec discourages\",\n    \"List comprehension for output construction hides the staged audit trail\",\n    \"Comments describe mechanics rather than naming legacy audit stages\",\n    \"Branch label `is_valid` is generic, not money-specific as the spec requires\",\n    \"Verbose docstring is not in the spirit of the legacy structural spec\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct output keys (bucket_code, item_count, cents_total) and sort order",
+      "Does not mutate the input",
+      "Explicit validity check with named variable `is_valid`",
+      "Handles missing keys safely with `.get()`"
+    ],
+    "weaknesses": [
+      "Uses `defaultdict` with a lambda\u2014a clever shortcut the spec discourages",
+      "List comprehension for output construction hides the staged audit trail",
+      "Comments describe mechanics rather than naming legacy audit stages",
+      "Branch label `is_valid` is generic, not money-specific as the spec requires",
+      "Verbose docstring is not in the spirit of the legacy structural spec"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.052,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 51,
+    "maintainability_index": 86.359,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

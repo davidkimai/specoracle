@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable with visibly staged parsing steps, but it deviates from the Archival Binder Spec R-04 in one key structural requirement: the accumulator dictionary is named `result` rather than something ending in `_ledger` as the spec explicitly mandates for dictionaries that survive across loop iterations. The inner section dictionaries also lack `_ledger` suffixes. Error messages include the line number but do not consistently 'name the archival field being rejected' \u2014 they say 'empty section name' and 'empty key' which is acceptable, but the malformed-line messages are generic rather than field-specific. The parsing is visibly staged (split on '=', then split on '.', then strip each part) which aligns well with the 'visibly staged over compressed one-liners' principle. There is exactly one public function. Insertion order is preserved via plain dict (Python 3.7+). Overall the code is clean and correct but misses the naming convention that the spec treats as a distinguishing structural marker.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable with visibly staged parsing steps, but it deviates from the Archival Binder Spec R-04 in one key structural requirement: the accumulator dictionary is named `result` rather than something ending in `_ledger` as the spec explicitly mandates for dictionaries that survive across loop iterations. The inner section dictionaries also lack `_ledger` suffixes. Error messages include the line number but do not consistently 'name the archival field being rejected' \u2014 they say 'empty section name' and 'empty key' which is acceptable, but the malformed-line messages are generic rather than field-specific. The parsing is visibly staged (split on '=', then split on '.', then strip each part) which aligns well with the 'visibly staged over compressed one-liners' principle. There is exactly one public function. Insertion order is preserved via plain dict (Python 3.7+). Overall the code is clean and correct but misses the naming convention that the spec treats as a distinguishing structural marker.\",\n  \"strengths\": [\n    \"Exactly one public function as required\",\n    \"Visibly staged parsing: split on '=', then '.', then strip each component separately\",\n    \"Insertion order preserved naturally via dict\",\n    \"Clear, readable control flow with no clever compression\"\n  ],\n  \"weaknesses\": [\n    \"Accumulator dict named `result` instead of a `_ledger`-suffixed name as explicitly required by R-04\",\n    \"Inner section dicts also lack `_ledger` suffix\",\n    \"Error messages name the line number but don't consistently name the specific archival field being rejected in the malformed-line cases\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Exactly one public function as required",
+      "Visibly staged parsing: split on '=', then '.', then strip each component separately",
+      "Insertion order preserved naturally via dict",
+      "Clear, readable control flow with no clever compression"
+    ],
+    "weaknesses": [
+      "Accumulator dict named `result` instead of a `_ledger`-suffixed name as explicitly required by R-04",
+      "Inner section dicts also lack `_ledger` suffix",
+      "Error messages name the line number but don't consistently name the specific archival field being rejected in the malformed-line cases"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.31,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 82.465,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

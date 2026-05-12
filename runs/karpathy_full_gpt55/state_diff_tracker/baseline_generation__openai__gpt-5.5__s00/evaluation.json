@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly maps to the SRL-3 requirements. It uses a sentinel object to distinguish missing keys from None values, which is a thoughtful design choice that avoids ambiguity. The single loop over sorted union of keys is flat and readable, with no unnecessary abstraction layers. Each change record is explicitly constructed with the required field, before, and after keys. Type guards at the top are explicit and fail fast. The only minor quibble is that the docstring says 'Added fields have before set to None' which is technically a slight semantic compression (it's actually _MISSING mapped to None), but this is a documentation nuance rather than a structural flaw. The code is locally auditable, has no architectural slop, and follows Pythonic idioms throughout.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly maps to the SRL-3 requirements. It uses a sentinel object to distinguish missing keys from None values, which is a thoughtful design choice that avoids ambiguity. The single loop over sorted union of keys is flat and readable, with no unnecessary abstraction layers. Each change record is explicitly constructed with the required field, before, and after keys. Type guards at the top are explicit and fail fast. The only minor quibble is that the docstring says 'Added fields have before set to None' which is technically a slight semantic compression (it's actually _MISSING mapped to None), but this is a documentation nuance rather than a structural flaw. The code is locally auditable, has no architectural slop, and follows Pythonic idioms throughout.\",\n  \"strengths\": [\n    \"Sentinel pattern correctly distinguishes missing keys from None values\",\n    \"Single flat loop with no nested abstractions\",\n    \"Sorting happens at the iteration level, not as a post-processing step\",\n    \"Explicit record construction with all three required keys\",\n    \"Input validation is explicit and fails fast with clear error messages\",\n    \"Minimal and readable \u2014 easy to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"Docstring slightly misrepresents the sentinel logic by saying 'before set to None' rather than explaining the _MISSING sentinel\",\n    \"Module-level _MISSING sentinel is a minor global side effect, though it's a standard Python pattern\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Sentinel pattern correctly distinguishes missing keys from None values",
+      "Single flat loop with no nested abstractions",
+      "Sorting happens at the iteration level, not as a post-processing step",
+      "Explicit record construction with all three required keys",
+      "Input validation is explicit and fails fast with clear error messages",
+      "Minimal and readable \u2014 easy to audit locally"
+    ],
+    "weaknesses": [
+      "Docstring slightly misrepresents the sentinel logic by saying 'before set to None' rather than explaining the _MISSING sentinel",
+      "Module-level _MISSING sentinel is a minor global side effect, though it's a standard Python pattern"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.21,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 24,
+    "maintainability_index": 84.021,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "baseline_generation"
+}

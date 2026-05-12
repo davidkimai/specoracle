@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-aligned with RAT-9 requirements. It correctly rejects events missing source_system or actor_id, assigns monotonic sequence numbers starting at 1, and explicitly names the derived sequence number in a local variable before insertion. The code avoids mutating input events by copying them. The structure is flat, readable, and locally auditable with no hidden logic. Minor weaknesses include a slightly redundant intermediate variable (derived_sequence_number is just an alias for current_sequence_number with no transformation, making it feel ceremonial rather than genuinely clarifying), and the use of typing.Dict/List instead of the modern built-in generics (dict/list) is a minor style anachronism. The docstring is thorough but slightly verbose for the simplicity of the function. Overall, this is a solid, compliant implementation with only cosmetic issues.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-aligned with RAT-9 requirements. It correctly rejects events missing source_system or actor_id, assigns monotonic sequence numbers starting at 1, and explicitly names the derived sequence number in a local variable before insertion. The code avoids mutating input events by copying them. The structure is flat, readable, and locally auditable with no hidden logic. Minor weaknesses include a slightly redundant intermediate variable (derived_sequence_number is just an alias for current_sequence_number with no transformation, making it feel ceremonial rather than genuinely clarifying), and the use of typing.Dict/List instead of the modern built-in generics (dict/list) is a minor style anachronism. The docstring is thorough but slightly verbose for the simplicity of the function. Overall, this is a solid, compliant implementation with only cosmetic issues.\",\n  \"strengths\": [\n    \"Explicitly names derived field (sequence_number) in a local variable before insertion, directly satisfying RAT-9\",\n    \"Rejects events missing source_system or actor_id without silently inventing values\",\n    \"Avoids mutating input events via event.copy()\",\n    \"Flat, single-loop structure with no unnecessary abstraction layers\",\n    \"Sequence number increments only on valid records, preserving monotonicity\"\n  ],\n  \"weaknesses\": [\n    \"derived_sequence_number is a trivial alias for current_sequence_number with no transformation, making the explicit naming feel ceremonial rather than meaningful\",\n    \"Uses legacy typing.Dict/List instead of modern built-in dict/list generics\",\n    \"Docstring is overly verbose relative to the simplicity of the function\",\n    \"No explicit ValueError or similar raised on rejection \u2014 silent skipping may be insufficient for strict regulatory contexts\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicitly names derived field (sequence_number) in a local variable before insertion, directly satisfying RAT-9",
+      "Rejects events missing source_system or actor_id without silently inventing values",
+      "Avoids mutating input events via event.copy()",
+      "Flat, single-loop structure with no unnecessary abstraction layers",
+      "Sequence number increments only on valid records, preserving monotonicity"
+    ],
+    "weaknesses": [
+      "derived_sequence_number is a trivial alias for current_sequence_number with no transformation, making the explicit naming feel ceremonial rather than meaningful",
+      "Uses legacy typing.Dict/List instead of modern built-in dict/list generics",
+      "Docstring is overly verbose relative to the simplicity of the function",
+      "No explicit ValueError or similar raised on rejection \u2014 silent skipping may be insufficient for strict regulatory contexts"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.584,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n>       assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\nE       AssertionError: assert [{'action': '...stem': 'crm'}] == [{'action': '...stem': 'crm'}]\nE         \nE         At index 0 diff: {'source_system': 'crm', 'actor_id': 'u1', 'action': 'create', 'sequence_number': 1} != {'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}\nE         Use -v to get more diff\n\ntest_solution.py:8: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - AssertionError: ...\n1 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 51,
+    "maintainability_index": 64.776,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "oracle_karpathy_generation"
+}

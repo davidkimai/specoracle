@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is compact, readable, and functionally correct. It uses a simple linear scan with a running forward-fill value, which is the natural algorithm for this problem. Data movement is explicit, control flow is flat, and names are clear. The main weaknesses are the absence of input validation (no guard clauses for invalid interval, start > end, or negative interval) and the monolithic structure that mixes iteration logic with output accumulation\u2014a small helper to build the sorted lookup or validate inputs would improve auditability without adding speculative abstraction. Overall it is clean and idiomatic but misses the 'raise clear errors for invalid inputs' constraint entirely.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is compact, readable, and functionally correct. It uses a simple linear scan with a running forward-fill value, which is the natural algorithm for this problem. Data movement is explicit, control flow is flat, and names are clear. The main weaknesses are the absence of input validation (no guard clauses for invalid interval, start > end, or negative interval) and the monolithic structure that mixes iteration logic with output accumulation\u2014a small helper to build the sorted lookup or validate inputs would improve auditability without adding speculative abstraction. Overall it is clean and idiomatic but misses the 'raise clear errors for invalid inputs' constraint entirely.\",\n  \"strengths\": [\n    \"Minimal and readable: the entire logic fits in one short function with no unnecessary abstractions\",\n    \"Explicit data movement: sorted copy, explicit index and current state, no hidden mutation\",\n    \"Flat control flow: the while-inside-for pattern is idiomatic and easy to audit locally\",\n    \"Correct forward-fill semantics with None for unknown leading values\"\n  ],\n  \"weaknesses\": [\n    \"No input validation: invalid interval (zero or negative), start > end, or non-integer inputs are silently mishandled\",\n    \"Monolithic: mixing scan logic and output accumulation in one function body; a small helper (e.g., find_value_at) would improve local auditability\",\n    \"Variable name 'current' is slightly ambiguous; 'last_known_value' would be more self-documenting\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Minimal and readable: the entire logic fits in one short function with no unnecessary abstractions",
+      "Explicit data movement: sorted copy, explicit index and current state, no hidden mutation",
+      "Flat control flow: the while-inside-for pattern is idiomatic and easy to audit locally",
+      "Correct forward-fill semantics with None for unknown leading values"
+    ],
+    "weaknesses": [
+      "No input validation: invalid interval (zero or negative), start > end, or non-integer inputs are silently mishandled",
+      "Monolithic: mixing scan logic and output accumulation in one function body; a small helper (e.g., find_value_at) would improve local auditability",
+      "Variable name 'current' is slightly ambiguous; 'last_known_value' would be more self-documenting"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.246,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.15s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 12,
+    "maintainability_index": 63.803,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "human_reference"
+}

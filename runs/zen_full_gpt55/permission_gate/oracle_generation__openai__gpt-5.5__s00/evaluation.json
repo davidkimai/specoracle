@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit with no unnecessary abstractions or nesting. Guard clauses handle invalid inputs clearly, the deny-by-default logic is straightforward, and the function is small enough to audit locally in one read. The only minor structural concern is that the isinstance checks add some verbosity for a task that doesn't strictly require runtime type validation (the spec says 'raise clear errors for invalid inputs' but the inputs here are typed and the checks feel slightly defensive/speculative), and the lazy validation of matrix values (only checking after role lookup) is a minor inconsistency \u2014 a fully consistent approach would either validate all values upfront or none. Overall, this is a solid, readable, Zen-aligned implementation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and explicit with no unnecessary abstractions or nesting. Guard clauses handle invalid inputs clearly, the deny-by-default logic is straightforward, and the function is small enough to audit locally in one read. The only minor structural concern is that the isinstance checks add some verbosity for a task that doesn't strictly require runtime type validation (the spec says 'raise clear errors for invalid inputs' but the inputs here are typed and the checks feel slightly defensive/speculative), and the lazy validation of matrix values (only checking after role lookup) is a minor inconsistency \u2014 a fully consistent approach would either validate all values upfront or none. Overall, this is a solid, readable, Zen-aligned implementation.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses instead of nested conditionals\",\n    \"Explicit deny-by-default with clear early return for unknown roles\",\n    \"Docstring accurately describes behavior\",\n    \"Named intermediate 'permissions' variable makes the final check readable\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Runtime isinstance checks add verbosity that may be speculative given typed inputs\",\n    \"Inconsistent validation: matrix values are only checked after role lookup, not upfront\",\n    \"The __all__ declaration is minor overhead for a single-function module\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses instead of nested conditionals",
+      "Explicit deny-by-default with clear early return for unknown roles",
+      "Docstring accurately describes behavior",
+      "Named intermediate 'permissions' variable makes the final check readable",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Runtime isinstance checks add verbosity that may be speculative given typed inputs",
+      "Inconsistent validation: matrix values are only checked after role lookup, not upfront",
+      "The __all__ declaration is minor overhead for a single-function module"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 3.963,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 17,
+    "maintainability_index": 85.678,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "permission_gate",
+  "variant": "oracle_generation"
+}

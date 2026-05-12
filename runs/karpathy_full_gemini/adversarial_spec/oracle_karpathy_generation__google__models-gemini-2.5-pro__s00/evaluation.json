@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation faithfully follows the LT-11 informal oracle: every transition has an explicit local variable named branch_<state>_<event>, all four required transitions are covered, the branch labels are initialized to False and then conditionally set in a readable nested-if block, and the final resolution is a flat sequence of independent if-checks that makes each branch auditable in isolation. The functional semantics are correct for all specified transitions and unknown combinations. Minor imperfection: the nested elif structure in the evaluation block slightly reduces independence between branches (though it is logically equivalent and arguably more readable), and the flat final checks use independent ifs rather than elif, which is the right choice for auditability per LT-11.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation faithfully follows the LT-11 informal oracle: every transition has an explicit local variable named branch_<state>_<event>, all four required transitions are covered, the branch labels are initialized to False and then conditionally set in a readable nested-if block, and the final resolution is a flat sequence of independent if-checks that makes each branch auditable in isolation. The functional semantics are correct for all specified transitions and unknown combinations. Minor imperfection: the nested elif structure in the evaluation block slightly reduces independence between branches (though it is logically equivalent and arguably more readable), and the flat final checks use independent ifs rather than elif, which is the right choice for auditability per LT-11.\",\n  \"strengths\": [\n    \"All four branch_<state>_<event> local variables are explicitly declared and named per LT-11\",\n    \"Flat, independent if-checks in the resolution block make each branch individually auditable\",\n    \"Correct functional behavior for all specified transitions and unknown combinations\",\n    \"Clear docstring and inline comments referencing LT-11 rationale\",\n    \"Default next_state = state correctly handles unknown transitions\"\n  ],\n  \"weaknesses\": [\n    \"Nested elif in the evaluation block couples branch evaluation slightly, reducing full independence between branches\",\n    \"Boolean flag pattern adds minor verbosity compared to a direct assignment approach, though this is intentional per LT-11\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All four branch_<state>_<event> local variables are explicitly declared and named per LT-11",
+      "Flat, independent if-checks in the resolution block make each branch individually auditable",
+      "Correct functional behavior for all specified transitions and unknown combinations",
+      "Clear docstring and inline comments referencing LT-11 rationale",
+      "Default next_state = state correctly handles unknown transitions"
+    ],
+    "weaknesses": [
+      "Nested elif in the evaluation block couples branch evaluation slightly, reducing full independence between branches",
+      "Boolean flag pattern adds minor verbosity compared to a direct assignment approach, though this is intentional per LT-11"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.69,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 61,
+    "maintainability_index": 74.307,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

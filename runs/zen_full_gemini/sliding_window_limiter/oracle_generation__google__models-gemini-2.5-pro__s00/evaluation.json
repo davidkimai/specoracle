@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound. It uses ordinary standard-library constructs (collections.defaultdict, deque), keeps control flow flat with a guard-clause style prune loop, makes data movement explicit, and raises clear errors. The main weaknesses are over-documentation (the docstrings are verbose and explain the obvious, violating 'sparse enough to audit locally'), the isinstance checks on int are arguably over-engineered for the task spec (which just says positive), and the type alias imports (Deque, Dict, List from typing) are legacy Python 3.8 style when built-in generics suffice in modern Python. The snapshot method correctly avoids mutating the defaultdict for missing keys. No speculative abstractions or unused extension points are present. Overall a clean, readable implementation that slightly over-explains itself.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound. It uses ordinary standard-library constructs (collections.defaultdict, deque), keeps control flow flat with a guard-clause style prune loop, makes data movement explicit, and raises clear errors. The main weaknesses are over-documentation (the docstrings are verbose and explain the obvious, violating 'sparse enough to audit locally'), the isinstance checks on int are arguably over-engineered for the task spec (which just says positive), and the type alias imports (Deque, Dict, List from typing) are legacy Python 3.8 style when built-in generics suffice in modern Python. The snapshot method correctly avoids mutating the defaultdict for missing keys. No speculative abstractions or unused extension points are present. Overall a clean, readable implementation that slightly over-explains itself.\",\n  \"strengths\": [\n    \"Flat control flow with efficient deque pruning from the left\",\n    \"snapshot uses .get() to avoid polluting the defaultdict with phantom keys\",\n    \"Clear ValueError messages with explicit positive-integer validation\",\n    \"No hidden mutation or implicit global state\",\n    \"Ordinary standard-library constructs throughout\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are excessively verbose, reducing sparseness and local auditability\",\n    \"isinstance(x, int) checks go beyond the spec's 'positive' requirement and add noise\",\n    \"Uses legacy typing.Deque/Dict/List imports instead of built-in generics (dict, list, collections.deque) available since Python 3.9\",\n    \"Class-level docstring restates the obvious rather than adding insight\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with efficient deque pruning from the left",
+      "snapshot uses .get() to avoid polluting the defaultdict with phantom keys",
+      "Clear ValueError messages with explicit positive-integer validation",
+      "No hidden mutation or implicit global state",
+      "Ordinary standard-library constructs throughout"
+    ],
+    "weaknesses": [
+      "Docstrings are excessively verbose, reducing sparseness and local auditability",
+      "isinstance(x, int) checks go beyond the spec's 'positive' requirement and add noise",
+      "Uses legacy typing.Deque/Dict/List imports instead of built-in generics (dict, list, collections.deque) available since Python 3.9",
+      "Class-level docstring restates the obvious rather than adding insight"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.883,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 3,
+    "loc": 68,
+    "maintainability_index": 62.214,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_generation"
+}

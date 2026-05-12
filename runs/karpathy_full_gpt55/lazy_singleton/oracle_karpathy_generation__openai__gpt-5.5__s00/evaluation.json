@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and correct. It uses the classic double-checked locking pattern which is the standard thread-safe lazy initialization approach in Python. The code is flat, readable, and does exactly what was asked with no speculative features. The only minor issue is the unnecessary `callable()` guard in `__init__` \u2014 the task doesn't ask for input validation, and this adds a small amount of code beyond the minimum required. Using a separate `_created` boolean flag instead of a sentinel value (like `_value = _MISSING`) is a reasonable choice but slightly more verbose than needed. Overall, this is a tight, auditable implementation that closely follows the spirit of simplicity-first design.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and correct. It uses the classic double-checked locking pattern which is the standard thread-safe lazy initialization approach in Python. The code is flat, readable, and does exactly what was asked with no speculative features. The only minor issue is the unnecessary `callable()` guard in `__init__` \u2014 the task doesn't ask for input validation, and this adds a small amount of code beyond the minimum required. Using a separate `_created` boolean flag instead of a sentinel value (like `_value = _MISSING`) is a reasonable choice but slightly more verbose than needed. Overall, this is a tight, auditable implementation that closely follows the spirit of simplicity-first design.\",\n  \"strengths\": [\n    \"Double-checked locking correctly avoids lock contention on the hot path after initialization\",\n    \"Minimal state: only what is needed (_factory, _lock, _created, _value)\",\n    \"Flat structure with no unnecessary abstractions or inheritance\",\n    \"Readable and locally auditable in a single glance\"\n  ],\n  \"weaknesses\": [\n    \"Unnecessary `callable()` check adds code beyond what the task requires\",\n    \"Separate `_created` flag is slightly more verbose than a sentinel-based approach, though functionally equivalent\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Double-checked locking correctly avoids lock contention on the hot path after initialization",
+      "Minimal state: only what is needed (_factory, _lock, _created, _value)",
+      "Flat structure with no unnecessary abstractions or inheritance",
+      "Readable and locally auditable in a single glance"
+    ],
+    "weaknesses": [
+      "Unnecessary `callable()` check adds code beyond what the task requires",
+      "Separate `_created` flag is slightly more verbose than a sentinel-based approach, though functionally equivalent"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.145,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 16,
+    "maintainability_index": 66.077,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "oracle_karpathy_generation"
+}

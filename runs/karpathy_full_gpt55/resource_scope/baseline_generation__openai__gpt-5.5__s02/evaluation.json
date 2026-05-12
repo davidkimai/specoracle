@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable standard-library construct (ExitStack), but it introduces unnecessary complexity. The `_active` flag and re-entrancy guard are speculative abstractions not required by the task. The `close()` method is an unused extension point. The `getattr(resource, 'close')` call without a default is functionally equivalent to `resource.close` but less readable and hides the AttributeError message. A simpler, flatter implementation would just maintain a list of resources and close them in reverse order in `__exit__`, making the behavior immediately auditable without needing to understand ExitStack's delegation semantics. The ExitStack delegation, while not wrong, adds an indirection layer that obscures the straightforward reverse-close logic the task describes.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable standard-library construct (ExitStack), but it introduces unnecessary complexity. The `_active` flag and re-entrancy guard are speculative abstractions not required by the task. The `close()` method is an unused extension point. The `getattr(resource, 'close')` call without a default is functionally equivalent to `resource.close` but less readable and hides the AttributeError message. A simpler, flatter implementation would just maintain a list of resources and close them in reverse order in `__exit__`, making the behavior immediately auditable without needing to understand ExitStack's delegation semantics. The ExitStack delegation, while not wrong, adds an indirection layer that obscures the straightforward reverse-close logic the task describes.\",\n  \"strengths\": [\n    \"Correctly closes resources in reverse acquisition order via ExitStack's LIFO callback mechanism\",\n    \"Handles exceptions during context exit properly by delegating to ExitStack\",\n    \"Type annotations present and consistent\",\n    \"Returns the resource from acquire(), satisfying the functional requirement\"\n  ],\n  \"weaknesses\": [\n    \"ExitStack is an over-engineered dependency for a task that only needs a list reversed on exit\",\n    \"_active flag and re-entrancy guard are speculative abstractions not required by the spec\",\n    \"close() method is an unused extension point / framework-shaped addition\",\n    \"getattr(resource, 'close') is less readable than resource.close with no benefit\",\n    \"Behavior requires understanding ExitStack internals to audit locally, violating the local-auditability principle\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correctly closes resources in reverse acquisition order via ExitStack's LIFO callback mechanism",
+      "Handles exceptions during context exit properly by delegating to ExitStack",
+      "Type annotations present and consistent",
+      "Returns the resource from acquire(), satisfying the functional requirement"
+    ],
+    "weaknesses": [
+      "ExitStack is an over-engineered dependency for a task that only needs a list reversed on exit",
+      "_active flag and re-entrancy guard are speculative abstractions not required by the spec",
+      "close() method is an unused extension point / framework-shaped addition",
+      "getattr(resource, 'close') is less readable than resource.close with no benefit",
+      "Behavior requires understanding ExitStack internals to audit locally, violating the local-auditability principle"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.093,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 26,
+    "maintainability_index": 65.95,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "baseline_generation"
+}

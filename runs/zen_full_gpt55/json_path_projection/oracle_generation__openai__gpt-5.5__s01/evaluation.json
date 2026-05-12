@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "This implementation is a near-ideal realization of the Zen of Python oracle for this task. It decomposes the problem into small, pure, single-responsibility helpers (_validate_inputs, _validate_path, _resolve_path, _resolve_part, _list_value_at, _value_or_default) with no hidden mutation or global state. Control flow is flat throughout\u2014each helper uses guard clauses rather than deep nesting. The sentinel _MISSING pattern is explicit and locally auditable. Names are self-explanatory and the data movement is transparent. Validation raises clear, typed errors. The only minor quibbles are that _value_or_default is a thin wrapper that could arguably be inlined into the comprehension without harming clarity, and the _validate_inputs loop doing both key/value type checks and path validation in one pass is slightly dense, but neither rises to a real structural flaw. The absence of speculative abstractions, framework-shaped code, or clever metaprogramming is commendable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"This implementation is a near-ideal realization of the Zen of Python oracle for this task. It decomposes the problem into small, pure, single-responsibility helpers (_validate_inputs, _validate_path, _resolve_path, _resolve_part, _list_value_at, _value_or_default) with no hidden mutation or global state. Control flow is flat throughout\u2014each helper uses guard clauses rather than deep nesting. The sentinel _MISSING pattern is explicit and locally auditable. Names are self-explanatory and the data movement is transparent. Validation raises clear, typed errors. The only minor quibbles are that _value_or_default is a thin wrapper that could arguably be inlined into the comprehension without harming clarity, and the _validate_inputs loop doing both key/value type checks and path validation in one pass is slightly dense, but neither rises to a real structural flaw. The absence of speculative abstractions, framework-shaped code, or clever metaprogramming is commendable.\",\n  \"strengths\": [\n    \"Small, pure helpers with single responsibilities and no side effects\",\n    \"Flat control flow using guard clauses throughout\",\n    \"Explicit sentinel _MISSING avoids ambiguity with None as a valid value\",\n    \"Clear, typed error messages for invalid inputs\",\n    \"Transparent data movement; no hidden mutation of the input record\",\n    \"Ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"_value_or_default is a trivially thin wrapper that adds a layer without meaningful abstraction\",\n    \"_validate_inputs mixes key/value type checking with path structural validation in one loop, slightly reducing locality\",\n    \"isdecimal() allows some Unicode decimal digits that int() would accept but may surprise maintainers; isdigit() or a try/except int() would be more explicit\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helpers with single responsibilities and no side effects",
+      "Flat control flow using guard clauses throughout",
+      "Explicit sentinel _MISSING avoids ambiguity with None as a valid value",
+      "Clear, typed error messages for invalid inputs",
+      "Transparent data movement; no hidden mutation of the input record",
+      "Ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "_value_or_default is a trivially thin wrapper that adds a layer without meaningful abstraction",
+      "_validate_inputs mixes key/value type checking with path structural validation in one loop, slightly reducing locality",
+      "isdecimal() allows some Unicode decimal digits that int() would accept but may surprise maintainers; isdigit() or a try/except int() would be more explicit"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.318,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.429,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 7,
+    "loc": 50,
+    "maintainability_index": 45.88,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

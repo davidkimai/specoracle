@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses ordinary standard-library constructs (deque, asyncio.Lock, time.monotonic) without speculative abstractions. The sliding window logic is correct and the lock is released during sleep to allow concurrency. Names are clear and the control flow is reasonably flat. The main structural concerns are: the docstrings are verbose and framework-shaped (Args/Returns/Raises sections add noise for a small utility class), the `isinstance(rate, int)` check is slightly over-engineered for the stated requirement of rejecting non-positive rates (a simple `rate <= 0` guard would suffice and also handle floats gracefully), and the comment density is high relative to the code's complexity, reducing sparseness. The busy-loop retry pattern is functionally correct but slightly inelegant \u2014 a condition variable or asyncio.Event could express the intent more directly, though the current approach is simpler to audit locally. Overall it's a solid, maintainable implementation that mostly follows the Zen principles with minor verbosity issues.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and uses ordinary standard-library constructs (deque, asyncio.Lock, time.monotonic) without speculative abstractions. The sliding window logic is correct and the lock is released during sleep to allow concurrency. Names are clear and the control flow is reasonably flat. The main structural concerns are: the docstrings are verbose and framework-shaped (Args/Returns/Raises sections add noise for a small utility class), the `isinstance(rate, int)` check is slightly over-engineered for the stated requirement of rejecting non-positive rates (a simple `rate <= 0` guard would suffice and also handle floats gracefully), and the comment density is high relative to the code's complexity, reducing sparseness. The busy-loop retry pattern is functionally correct but slightly inelegant \u2014 a condition variable or asyncio.Event could express the intent more directly, though the current approach is simpler to audit locally. Overall it's a solid, maintainable implementation that mostly follows the Zen principles with minor verbosity issues.\",\n  \"strengths\": [\n    \"Uses plain standard-library constructs: deque, asyncio.Lock, time.monotonic\",\n    \"Lock released during sleep \u2014 correct concurrent behavior\",\n    \"Clear variable names (window_start, oldest_timestamp, wait_time)\",\n    \"Explicit ValueError for invalid input\",\n    \"Sliding window correctly prunes stale timestamps before checking capacity\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are overly verbose and framework-shaped for a small utility class\",\n    \"isinstance(rate, int) check is stricter than necessary and silently rejects valid float rates like 1.0\",\n    \"High comment density relative to code complexity reduces sparseness\",\n    \"Busy-loop retry pattern could be replaced by a more expressive asyncio primitive (e.g., Event or Condition)\",\n    \"Typing import (Callable) adds a dependency that could be avoided with a simple comment or inline annotation\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses plain standard-library constructs: deque, asyncio.Lock, time.monotonic",
+      "Lock released during sleep \u2014 correct concurrent behavior",
+      "Clear variable names (window_start, oldest_timestamp, wait_time)",
+      "Explicit ValueError for invalid input",
+      "Sliding window correctly prunes stale timestamps before checking capacity"
+    ],
+    "weaknesses": [
+      "Docstrings are overly verbose and framework-shaped for a small utility class",
+      "isinstance(rate, int) check is stricter than necessary and silently rejects valid float rates like 1.0",
+      "High comment density relative to code complexity reduces sparseness",
+      "Busy-loop retry pattern could be replaced by a more expressive asyncio primitive (e.g., Event or Condition)",
+      "Typing import (Callable) adds a dependency that could be avoided with a simple comment or inline annotation"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 10.061,
+    "exit_code": 124,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "",
+    "timed_out": true
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 2,
+    "loc": 62,
+    "maintainability_index": 69.62,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "baseline_generation"
+}

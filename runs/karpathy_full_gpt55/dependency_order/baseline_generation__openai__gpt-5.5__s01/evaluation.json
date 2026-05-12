@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and follows a standard Kahn's algorithm approach with good separation of concerns. Data movement is explicit, there's no hidden mutation, and the cycle detection is clear. The variable names are descriptive and the control flow is flat. Minor issues: the `prerequisite_sets` intermediate dict adds a small layer of indirection that could be collapsed, and the `indegree` initialization followed by overwrite in the loop is slightly redundant (tasks only appearing as dependencies get indegree 0 from initialization, which is correct, but the pattern of initializing then overwriting for tasks in `prerequisites_sets` is slightly awkward). The adjacency dict is built cleanly. Overall this is a well-structured, auditable implementation that a maintainer can follow locally without difficulty.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and follows a standard Kahn's algorithm approach with good separation of concerns. Data movement is explicit, there's no hidden mutation, and the cycle detection is clear. The variable names are descriptive and the control flow is flat. Minor issues: the `prerequisite_sets` intermediate dict adds a small layer of indirection that could be collapsed, and the `indegree` initialization followed by overwrite in the loop is slightly redundant (tasks only appearing as dependencies get indegree 0 from initialization, which is correct, but the pattern of initializing then overwriting for tasks in `prerequisites_sets` is slightly awkward). The adjacency dict is built cleanly. Overall this is a well-structured, auditable implementation that a maintainer can follow locally without difficulty.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement: all_tasks, adjacency, indegree are built transparently\",\n    \"Clear cycle detection with informative error message\",\n    \"Sorted outputs at each stage ensure deterministic alphabetical ordering\",\n    \"Handles tasks that only appear as dependencies correctly\",\n    \"No mutation of input dict\"\n  ],\n  \"weaknesses\": [\n    \"The `prerequisite_sets` intermediate dict is an extra pass that could be folded into the adjacency/indegree construction loop\",\n    \"Initializing `indegree[task] = len(prereq_set)` after already setting it to 0 in the dict comprehension is slightly redundant\",\n    \"Could be split into small pure helpers (e.g., `build_graph`) per the spec's preference, though the current size is still manageable\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit data movement: all_tasks, adjacency, indegree are built transparently",
+      "Clear cycle detection with informative error message",
+      "Sorted outputs at each stage ensure deterministic alphabetical ordering",
+      "Handles tasks that only appear as dependencies correctly",
+      "No mutation of input dict"
+    ],
+    "weaknesses": [
+      "The `prerequisite_sets` intermediate dict is an extra pass that could be folded into the adjacency/indegree construction loop",
+      "Initializing `indegree[task] = len(prereq_set)` after already setting it to 0 in the dict comprehension is slightly redundant",
+      "Could be split into small pure helpers (e.g., `build_graph`) per the spec's preference, though the current size is still manageable"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.094,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 31,
+    "maintainability_index": 51.925,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

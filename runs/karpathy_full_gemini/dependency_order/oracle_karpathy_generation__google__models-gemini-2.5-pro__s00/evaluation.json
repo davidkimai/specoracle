@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a clean Kahn's algorithm approach, but it violates the Karpathy simplicity oracle in several ways: the docstring is verbose and over-explained for a straightforward function, type aliases add noise without value (Dict/List/Set imports from typing are unnecessary in modern Python and the task signature already uses built-in generics), and the inline comments are excessive and state the obvious ('Sort the current batch alphabetically for deterministic output', 'If a dependent has no more prerequisites, add it to the next batch'). The core algorithm is about 20 lines of logic padded to ~50 with documentation and commentary that a competent reader doesn't need. The variable name `processed_tasks_count` is wordier than necessary. These are not catastrophic flaws, but they represent real violations of 'write the minimum code that solves the problem' and 'no features beyond what was asked'.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and uses a clean Kahn's algorithm approach, but it violates the Karpathy simplicity oracle in several ways: the docstring is verbose and over-explained for a straightforward function, type aliases add noise without value (Dict/List/Set imports from typing are unnecessary in modern Python and the task signature already uses built-in generics), and the inline comments are excessive and state the obvious ('Sort the current batch alphabetically for deterministic output', 'If a dependent has no more prerequisites, add it to the next batch'). The core algorithm is about 20 lines of logic padded to ~50 with documentation and commentary that a competent reader doesn't need. The variable name `processed_tasks_count` is wordier than necessary. These are not catastrophic flaws, but they represent real violations of 'write the minimum code that solves the problem' and 'no features beyond what was asked'.\",\n  \"strengths\": [\n    \"Correct Kahn's algorithm implementation with proper cycle detection\",\n    \"Does not mutate the input dictionary\",\n    \"Correctly includes tasks that only appear as dependencies\",\n    \"Alphabetical sorting within each batch is properly applied\"\n  ],\n  \"weaknesses\": [\n    \"Overly verbose docstring that restates the task spec rather than adding insight\",\n    \"Unnecessary typing imports (Dict, List, Set) when built-in generics suffice in Python 3.9+\",\n    \"Excessive inline comments that explain obvious algorithmic steps\",\n    \"Variable name `processed_tasks_count` is unnecessarily verbose; `count` or `n` suffices\",\n    \"Type annotations on local variables (adj_list, in_degree, queue, etc.) add clutter without aiding readability\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct Kahn's algorithm implementation with proper cycle detection",
+      "Does not mutate the input dictionary",
+      "Correctly includes tasks that only appear as dependencies",
+      "Alphabetical sorting within each batch is properly applied"
+    ],
+    "weaknesses": [
+      "Overly verbose docstring that restates the task spec rather than adding insight",
+      "Unnecessary typing imports (Dict, List, Set) when built-in generics suffice in Python 3.9+",
+      "Excessive inline comments that explain obvious algorithmic steps",
+      "Variable name `processed_tasks_count` is unnecessarily verbose; `count` or `n` suffices",
+      "Type annotations on local variables (adj_list, in_degree, queue, etc.) add clutter without aiding readability"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.81,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 53,
+    "maintainability_index": 79.744,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_karpathy_generation"
+}

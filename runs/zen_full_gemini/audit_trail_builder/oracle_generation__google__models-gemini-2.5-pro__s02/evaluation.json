@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly follows RAT-9 requirements. It validates required fields, rejects missing source_system or actor_id (including None values), assigns monotonic sequence numbers starting at 1, and explicitly names derived fields before insertion. The code is flat, readable, and locally auditable with no hidden magic. Minor weaknesses include overly verbose docstring that restates the spec rather than adding insight, the sequence counter could be expressed more idiomatically with enumerate, and the action field is included via event.get('action') which silently returns None if missing rather than preserving the original key presence semantics \u2014 though this is a minor point since action is not a required field per the spec.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and directly follows RAT-9 requirements. It validates required fields, rejects missing source_system or actor_id (including None values), assigns monotonic sequence numbers starting at 1, and explicitly names derived fields before insertion. The code is flat, readable, and locally auditable with no hidden magic. Minor weaknesses include overly verbose docstring that restates the spec rather than adding insight, the sequence counter could be expressed more idiomatically with enumerate, and the action field is included via event.get('action') which silently returns None if missing rather than preserving the original key presence semantics \u2014 though this is a minor point since action is not a required field per the spec.\",\n  \"strengths\": [\n    \"Explicit field extraction and naming before record construction, fully compliant with RAT-9 derived-field rule\",\n    \"Rejects events with missing or None source_system/actor_id without inventing values\",\n    \"Monotonic sequence numbering starting at 1 is correct and clear\",\n    \"Explicit record construction prevents unintended data leakage from raw events\",\n    \"Flat, readable loop structure with no unnecessary abstraction layers\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is excessively long and mostly restates the spec verbatim rather than adding value\",\n    \"Manual counter variable could be replaced with enumerate for more idiomatic Python\",\n    \"action field uses event.get('action') which silently returns None if absent; minor inconsistency with the explicit rejection pattern used for required fields\",\n    \"Type annotations use legacy List/Dict from typing instead of built-in list/dict (Python 3.9+)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit field extraction and naming before record construction, fully compliant with RAT-9 derived-field rule",
+      "Rejects events with missing or None source_system/actor_id without inventing values",
+      "Monotonic sequence numbering starting at 1 is correct and clear",
+      "Explicit record construction prevents unintended data leakage from raw events",
+      "Flat, readable loop structure with no unnecessary abstraction layers"
+    ],
+    "weaknesses": [
+      "Docstring is excessively long and mostly restates the spec verbatim rather than adding value",
+      "Manual counter variable could be replaced with enumerate for more idiomatic Python",
+      "action field uses event.get('action') which silently returns None if absent; minor inconsistency with the explicit rejection pattern used for required fields",
+      "Type annotations use legacy List/Dict from typing instead of built-in list/dict (Python 3.9+)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.41,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n>       assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\nE       AssertionError: assert [{'action': '...stem': 'crm'}] == [{'action': '...stem': 'crm'}]\nE         \nE         At index 0 diff: {'source_system': 'crm', 'actor_id': 'u1', 'action': 'create', 'sequence_number': 1} != {'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}\nE         Use -v to get more diff\n\ntest_solution.py:8: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - AssertionError: ...\n1 failed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 58,
+    "maintainability_index": 62.413,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "oracle_generation"
+}

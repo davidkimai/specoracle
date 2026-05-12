@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean, but it diverges from several explicit structural directives in the Zen spec. The spec calls for 'local lookup tables with names ending in _table' for the severity-to-adjustment mapping, but instead the code uses named constants and an if/elif chain \u2014 a minor but explicit miss. The spec says 'keep branch reasons as short explicit strings, not hidden in comments,' yet the code leans on inline comments to explain branching logic rather than using named string literals or table-driven dispatch. The proliferation of module-level constants (_SEVERITY_CRITICAL, _SEVERITY_HIGH, etc.) adds indirection without meaningful benefit for a single-pass function \u2014 the spec discourages this kind of abstraction overhead. On the positive side, the code avoids classes, preserves ticket order, uses a stable 'routed' status_code string (not a boolean), and the core loop is flat and readable. The docstring is thorough but verbose for what is a simple routing function.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean, but it diverges from several explicit structural directives in the Zen spec. The spec calls for 'local lookup tables with names ending in _table' for the severity-to-adjustment mapping, but instead the code uses named constants and an if/elif chain \u2014 a minor but explicit miss. The spec says 'keep branch reasons as short explicit strings, not hidden in comments,' yet the code leans on inline comments to explain branching logic rather than using named string literals or table-driven dispatch. The proliferation of module-level constants (_SEVERITY_CRITICAL, _SEVERITY_HIGH, etc.) adds indirection without meaningful benefit for a single-pass function \u2014 the spec discourages this kind of abstraction overhead. On the positive side, the code avoids classes, preserves ticket order, uses a stable 'routed' status_code string (not a boolean), and the core loop is flat and readable. The docstring is thorough but verbose for what is a simple routing function.\",\n  \"strengths\": [\n    \"Preserves ticket order correctly\",\n    \"Uses stable string 'routed' for status_code, never a boolean\",\n    \"No classes introduced for single-pass routing\",\n    \"Flat loop structure with clear skip logic\",\n    \"Correct fallback to default rule\"\n  ],\n  \"weaknesses\": [\n    \"Severity-to-priority mapping should be a lookup table (e.g., severity_adjustment_table) per spec, not an if/elif chain with named constants\",\n    \"Excessive module-level constants add indirection without clarity benefit\",\n    \"Branch reasons explained via comments rather than explicit short strings as the spec requires\",\n    \"Overly verbose docstring for a simple routing function\",\n    \"import typing is unused\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Preserves ticket order correctly",
+      "Uses stable string 'routed' for status_code, never a boolean",
+      "No classes introduced for single-pass routing",
+      "Flat loop structure with clear skip logic",
+      "Correct fallback to default rule"
+    ],
+    "weaknesses": [
+      "Severity-to-priority mapping should be a lookup table (e.g., severity_adjustment_table) per spec, not an if/elif chain with named constants",
+      "Excessive module-level constants add indirection without clarity benefit",
+      "Branch reasons explained via comments rather than explicit short strings as the spec requires",
+      "Overly verbose docstring for a simple routing function",
+      "import typing is unused"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.193,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 81.915,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "baseline_generation"
+}

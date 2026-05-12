@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, but carries unnecessary complexity. The `enumerate` trick to handle duplicate timestamps by insertion order is clever but obscure \u2014 the spec says nothing about tie-breaking behavior for same-timestamp duplicates, so this is speculative flexibility. A simpler approach would sort `points` directly (or use a dict for O(1) lookup), avoiding the `(original_index, point)` indirection that forces readers to mentally unwrap `ordered_points[point_index][1][0]` and `ordered_points[point_index][1][1]`. The docstring assumption 'later input point wins' is an undocumented design choice not required by the spec. The two-pointer scan is a reasonable algorithmic choice for the forward-fill, but the nested indexing makes local auditability harder than it needs to be. A plain `sorted(points, key=lambda p: p[0])` with direct tuple access would be cleaner and equally correct for the stated requirements.",
+    "raw_response": "```json\n{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, but carries unnecessary complexity. The `enumerate` trick to handle duplicate timestamps by insertion order is clever but obscure \u2014 the spec says nothing about tie-breaking behavior for same-timestamp duplicates, so this is speculative flexibility. A simpler approach would sort `points` directly (or use a dict for O(1) lookup), avoiding the `(original_index, point)` indirection that forces readers to mentally unwrap `ordered_points[point_index][1][0]` and `ordered_points[point_index][1][1]`. The docstring assumption 'later input point wins' is an undocumented design choice not required by the spec. The two-pointer scan is a reasonable algorithmic choice for the forward-fill, but the nested indexing makes local auditability harder than it needs to be. A plain `sorted(points, key=lambda p: p[0])` with direct tuple access would be cleaner and equally correct for the stated requirements.\",\n  \"strengths\": [\n    \"Correct forward-fill logic using a two-pointer scan\",\n    \"Handles unsorted input\",\n    \"No unnecessary abstractions or classes\",\n    \"Raises ValueError for invalid interval \u2014 explicit guard\"\n  ],\n  \"weaknesses\": [\n    \"enumerate trick for tie-breaking is speculative \u2014 not required by spec, adds cognitive overhead\",\n    \"Double-nested indexing `ordered_points[point_index][1][0]` hurts readability and auditability\",\n    \"Docstring states an assumption ('later input point wins') that is an undocumented design choice beyond the spec\",\n    \"Could simplify to `sorted(points)` directly since tie-breaking policy is unspecified\"\n  ]\n}\n```",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct forward-fill logic using a two-pointer scan",
+      "Handles unsorted input",
+      "No unnecessary abstractions or classes",
+      "Raises ValueError for invalid interval \u2014 explicit guard"
+    ],
+    "weaknesses": [
+      "enumerate trick for tie-breaking is speculative \u2014 not required by spec, adds cognitive overhead",
+      "Double-nested indexing `ordered_points[point_index][1][0]` hurts readability and auditability",
+      "Docstring states an assumption ('later input point wins') that is an undocumented design choice beyond the spec",
+      "Could simplify to `sorted(points)` directly since tie-breaking policy is unspecified"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.123,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 25,
+    "maintainability_index": 84.858,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_karpathy_generation"
+}

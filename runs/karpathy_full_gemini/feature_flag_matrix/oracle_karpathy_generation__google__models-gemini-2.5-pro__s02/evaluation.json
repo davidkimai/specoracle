@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core logic is correct and reasonably simple \u2014 copy defaults, apply segment overrides in order, apply user overrides \u2014 which matches the task contract well. However, the implementation carries unnecessary weight: a verbose module-level docstring, a lengthy function docstring that restates the spec rather than adding insight, and explicit `isinstance` guards that add defensive complexity not asked for. The type hints import `Any` and use legacy `Dict`/`List` from `typing` instead of the built-in generics available since Python 3.9. The `isinstance(user_segments, list)` and `isinstance(user_overrides, dict)` checks are speculative defensive programming beyond what the spec requires, violating the 'no features beyond what was asked' guideline. A minimal, clean implementation would be roughly 6\u20138 lines with no module docstring and a simple function body, which would score higher on the Karpathy oracle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The core logic is correct and reasonably simple \u2014 copy defaults, apply segment overrides in order, apply user overrides \u2014 which matches the task contract well. However, the implementation carries unnecessary weight: a verbose module-level docstring, a lengthy function docstring that restates the spec rather than adding insight, and explicit `isinstance` guards that add defensive complexity not asked for. The type hints import `Any` and use legacy `Dict`/`List` from `typing` instead of the built-in generics available since Python 3.9. The `isinstance(user_segments, list)` and `isinstance(user_overrides, dict)` checks are speculative defensive programming beyond what the spec requires, violating the 'no features beyond what was asked' guideline. A minimal, clean implementation would be roughly 6\u20138 lines with no module docstring and a simple function body, which would score higher on the Karpathy oracle.\",\n  \"strengths\": [\n    \"Correct functional behavior: defaults copied, segments applied in order, unknown segments ignored, overrides applied last\",\n    \"Does not mutate inputs\",\n    \"Readable linear control flow with no unnecessary abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Overly verbose docstrings that restate the spec add noise without value\",\n    \"Speculative isinstance guards for user_segments and user_overrides go beyond the stated contract\",\n    \"Uses legacy typing.Dict/List instead of built-in dict/list generics\",\n    \"Module-level docstring is unnecessary boilerplate for a single-function module\",\n    \"Imports Any and List from typing but List is never used in annotations\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct functional behavior: defaults copied, segments applied in order, unknown segments ignored, overrides applied last",
+      "Does not mutate inputs",
+      "Readable linear control flow with no unnecessary abstractions"
+    ],
+    "weaknesses": [
+      "Overly verbose docstrings that restate the spec add noise without value",
+      "Speculative isinstance guards for user_segments and user_overrides go beyond the stated contract",
+      "Uses legacy typing.Dict/List instead of built-in dict/list generics",
+      "Module-level docstring is unnecessary boilerplate for a single-function module",
+      "Imports Any and List from typing but List is never used in annotations"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.062,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 86.187,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "oracle_karpathy_generation"
+}

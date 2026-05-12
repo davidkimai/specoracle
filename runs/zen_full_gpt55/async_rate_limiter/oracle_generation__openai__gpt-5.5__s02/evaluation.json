@@ -1,0 +1,56 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with good separation into small helpers and explicit data movement. However, it over-engineers several aspects relative to the task's simplicity: the `_validate_now` and `_validate_time` helpers add defensive validation that the spec doesn't require and that clutters the core logic; the monotonicity check on `_last_time` is speculative (the spec only asks for a `now` callable for deterministic tests, not a full contract enforcer); `_validate_rate` rejects booleans explicitly which is pedantic beyond the spec; the `Real` type from `numbers` is an unusual choice over plain `float`; and `_WINDOW_SECONDS` as a class constant is a minor speculative abstraction. The core sliding-window logic itself is clean and flat, the lock usage is correct, and the deque-based approach is the right standard-library construct. The implementation would score higher if it stripped the speculative validation layers and kept only what the spec demands.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with good separation into small helpers and explicit data movement. However, it over-engineers several aspects relative to the task's simplicity: the `_validate_now` and `_validate_time` helpers add defensive validation that the spec doesn't require and that clutters the core logic; the monotonicity check on `_last_time` is speculative (the spec only asks for a `now` callable for deterministic tests, not a full contract enforcer); `_validate_rate` rejects booleans explicitly which is pedantic beyond the spec; the `Real` type from `numbers` is an unusual choice over plain `float`; and `_WINDOW_SECONDS` as a class constant is a minor speculative abstraction. The core sliding-window logic itself is clean and flat, the lock usage is correct, and the deque-based approach is the right standard-library construct. The implementation would score higher if it stripped the speculative validation layers and kept only what the spec demands.\",\n  \"strengths\": [\n    \"Clean sliding-window logic using deque with explicit cutoff calculation\",\n    \"Flat control flow in acquire() with guard clause for rate exceeded\",\n    \"Explicit lock usage prevents hidden concurrency mutation\",\n    \"Small focused helpers separate concerns reasonably\",\n    \"Correct default to time.monotonic when now is None\"\n  ],\n  \"weaknesses\": [\n    \"Over-validates inputs beyond spec requirements (bool rejection, Real type checks, monotonicity enforcement)\",\n    \"_validate_time and monotonicity check are speculative abstractions not asked for\",\n    \"_last_time state adds hidden mutation purely for validation, not core logic\",\n    \"Using numbers.Real instead of plain float/int is unnecessarily exotic\",\n    \"_WINDOW_SECONDS class constant is minor speculative abstraction for a fixed value\",\n    \"TypeError vs ValueError distinctions add noise without spec justification\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clean sliding-window logic using deque with explicit cutoff calculation",
+      "Flat control flow in acquire() with guard clause for rate exceeded",
+      "Explicit lock usage prevents hidden concurrency mutation",
+      "Small focused helpers separate concerns reasonably",
+      "Correct default to time.monotonic when now is None"
+    ],
+    "weaknesses": [
+      "Over-validates inputs beyond spec requirements (bool rejection, Real type checks, monotonicity enforcement)",
+      "_validate_time and monotonicity check are speculative abstractions not asked for",
+      "_last_time state adds hidden mutation purely for validation, not core logic",
+      "Using numbers.Real instead of plain float/int is unnecessarily exotic",
+      "_WINDOW_SECONDS class constant is minor speculative abstraction for a fixed value",
+      "TypeError vs ValueError distinctions add noise without spec justification"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.758,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.875,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 7,
+    "loc": 54,
+    "maintainability_index": 42.918,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_generation"
+}

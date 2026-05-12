@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and the core algorithm is sound (group by session, sort, scan for first B within window), but it violates the Karpathy simplicity principle in several ways: the docstring is excessively verbose for a small utility function, the type annotations use the legacy `List`/`Dict`/`Tuple` from `typing` instead of the built-in generics available since Python 3.9, the `collections.defaultdict` import adds a dependency that a plain `dict` with `setdefault` or a simple grouping loop would avoid, the validation of extra keys via dummy `_ = event[key]` assignments is awkward and the `ValueError` wrapping of `KeyError` is speculative error-handling not asked for in the spec, and the inline comment about 'optimization' is over-explained. The code is roughly 2-3x longer than a minimal correct solution would be, with no functional benefit from the extra lines.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and the core algorithm is sound (group by session, sort, scan for first B within window), but it violates the Karpathy simplicity principle in several ways: the docstring is excessively verbose for a small utility function, the type annotations use the legacy `List`/`Dict`/`Tuple` from `typing` instead of the built-in generics available since Python 3.9, the `collections.defaultdict` import adds a dependency that a plain `dict` with `setdefault` or a simple grouping loop would avoid, the validation of extra keys via dummy `_ = event[key]` assignments is awkward and the `ValueError` wrapping of `KeyError` is speculative error-handling not asked for in the spec, and the inline comment about 'optimization' is over-explained. The code is roughly 2-3x longer than a minimal correct solution would be, with no functional benefit from the extra lines.\",\n  \"strengths\": [\n    \"Core algorithm is correct: groups by session, sorts chronologically, finds first B after each A within the time window\",\n    \"Early-break optimization on time_delta > within is valid and efficient\",\n    \"Each A is paired with at most one B as required\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstring length for a simple utility function violates simplicity-first\",\n    \"Uses legacy typing.List/Dict/Tuple instead of built-in generics (Python 3.9+)\",\n    \"Unsolicited ValueError validation for missing keys and negative `within` adds speculative error-handling not in the spec\",\n    \"Dummy `_ = event['key']` pattern for key validation is awkward and unnecessary\",\n    \"Over-commented: inline explanations restate what the code already clearly shows\",\n    \"collections.defaultdict import is unnecessary overhead for a simple grouping task\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Core algorithm is correct: groups by session, sorts chronologically, finds first B after each A within the time window",
+      "Early-break optimization on time_delta > within is valid and efficient",
+      "Each A is paired with at most one B as required"
+    ],
+    "weaknesses": [
+      "Excessive docstring length for a simple utility function violates simplicity-first",
+      "Uses legacy typing.List/Dict/Tuple instead of built-in generics (Python 3.9+)",
+      "Unsolicited ValueError validation for missing keys and negative `within` adds speculative error-handling not in the spec",
+      "Dummy `_ = event['key']` pattern for key validation is awkward and unnecessary",
+      "Over-commented: inline explanations restate what the code already clearly shows",
+      "collections.defaultdict import is unnecessary overhead for a simple grouping task"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.102,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\nevents = [{'session_id': 's', 'ts': 1, 'type': 'A'}, {'session_id': 's', 'ts': 3, 'type': 'B'}]\n\n    def correlate_events(\n        events: List[Dict[str, Any]], *, within: int\n    ) -> List[Tuple[Dict[str, Any], Dict[str, Any]]]:\n        \"\"\"\n        Pairs event type 'A' with the first later type 'B' in the same session.\n    \n        A pair is formed if the 'B' event occurs after the 'A' event within a\n        specified time window. Each 'A' event can be paired with at most one 'B'\n        event.\n    \n        Args:\n            events: A list of event dictionaries. Each dictionary is expected to\n                    have 'session_id', 'event_type' (e.g., 'A', 'B'),\n                    and 'timestamp' (int or float) keys.\n            within: The maximum time delta in seconds for a valid correlation.\n                    Must be a non-negative integer.\n    \n        Returns:\n            A list of tuples, where each tuple contains the paired (event_A, event_B)\n            dictionaries. The list is not guaranteed to be in any specific order.\n    \n        Raises:\n            ValueError: If an event in the list is missing a required key\n                        ('session_id', 'event_type', 'timestamp'), or if 'within'\n                        is negative.\n        \"\"\"\n        if within < 0:\n            raise ValueError(\"'within' must be a non-negative integer.\")\n    \n        # Group events by session_id for efficient processing.\n        # This also serves as a validation step for required keys.\n        sessions: Dict[Any, List[Dict[str, Any]]] = collections.defaultdict(list)\n        for event in events:\n            try:\n                session_id = event['session_id']\n                # Access keys to trigger KeyError if they don't exist.\n>               _ = event['event_type']\n                    ^^^^^^^^^^^^^^^^^^^\nE               KeyError: 'event_type'\n\nsolution.py:40: KeyError\n\nThe above exception was the direct cause of the following exception:\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n>       pairs = correlate_events(events, within=5)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nevents = [{'session_id': 's', 'ts': 1, 'type': 'A'}, {'session_id': 's', 'ts': 3, 'type': 'B'}]\n\n    def correlate_events(\n        events: List[Dict[str, Any]], *, within: int\n    ) -> List[Tuple[Dict[str, Any], Dict[str, Any]]]:\n        \"\"\"\n        Pairs event type 'A' with the first later type 'B' in the same session.\n    \n        A pair is formed if the 'B' event occurs after the 'A' event within a\n        specified time window. Each 'A' event can be paired with at most one 'B'\n        event.\n    \n        Args:\n            events: A list of event dictionaries. Each dictionary is expected to\n                    have 'session_id', 'event_type' (e.g., 'A', 'B'),\n                    and 'timestamp' (int or float) keys.\n            within: The maximum time delta in seconds for a valid correlation.\n                    Must be a non-negative integer.\n    \n        Returns:\n            A list of tuples, where each tuple contains the paired (event_A, event_B)\n            dictionaries. The list is not guaranteed to be in any specific order.\n    \n        Raises:\n            ValueError: If an event in the list is missing a required key\n                        ('session_id', 'event_type', 'timestamp'), or if 'within'\n                        is negative.\n        \"\"\"\n        if within < 0:\n            raise ValueError(\"'within' must be a non-negative integer.\")\n    \n        # Group events by session_id for efficient processing.\n        # This also serves as a validation step for required keys.\n        sessions: Dict[Any, List[Dict[str, Any]]] = collections.defaultdict(list)\n        for event in events:\n            try:\n                session_id = event['session_id']\n                # Access keys to trigger KeyError if they don't exist.\n                _ = event['event_type']\n                _ = event['timestamp']\n                sessions[session_id].append(event)\n            except KeyError as e:\n>               raise ValueError(f\"Event missing required key {e}: {event}\") from e\nE               ValueError: Event missing required key 'event_type': {'session_id': 's', 'type': 'A', 'ts': 1}\n\nsolution.py:44: ValueError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - ValueError: ...\n1 failed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 61,
+    "maintainability_index": 79.154,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "oracle_karpathy_generation"
+}

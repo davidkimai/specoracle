@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a well-known double-checked locking pattern, but it violates the Karpathy oracle's core principle of simplicity first. The code is bloated with verbose docstrings that explain obvious things, unnecessary type annotations (Generic[T], TypeVar, Optional), and inline comments that narrate every line rather than clarifying non-obvious decisions. The `assert self._instance is not None` at the end is dead weight \u2014 it can never fire given the logic above it and exists only to appease static analysis tools, which is speculative tooling accommodation. The `typing` imports add complexity without meaningful benefit for a simple utility class. A minimal correct implementation would be ~10 lines without the Generic machinery, TypeVar, or essay-length docstrings. The double-checked locking pattern itself is appropriate, but Python's GIL semantics make even a simple `threading.Lock` with a single check sufficient and more readable.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The implementation is functionally correct and uses a well-known double-checked locking pattern, but it violates the Karpathy oracle's core principle of simplicity first. The code is bloated with verbose docstrings that explain obvious things, unnecessary type annotations (Generic[T], TypeVar, Optional), and inline comments that narrate every line rather than clarifying non-obvious decisions. The `assert self._instance is not None` at the end is dead weight \u2014 it can never fire given the logic above it and exists only to appease static analysis tools, which is speculative tooling accommodation. The `typing` imports add complexity without meaningful benefit for a simple utility class. A minimal correct implementation would be ~10 lines without the Generic machinery, TypeVar, or essay-length docstrings. The double-checked locking pattern itself is appropriate, but Python's GIL semantics make even a simple `threading.Lock` with a single check sufficient and more readable.\",\n  \"strengths\": [\n    \"Functionally correct thread-safe lazy initialization\",\n    \"Double-checked locking reduces lock contention in the hot path\",\n    \"_lock and _instance are clearly named\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings and inline comments narrate obvious logic, violating simplicity-first\",\n    \"Unnecessary Generic[T]/TypeVar machinery for a single-use utility class\",\n    \"Dead `assert self._instance is not None` that can never fire adds noise\",\n    \"Imports Optional, TypeVar, Generic \u2014 all speculative complexity beyond what the task requires\",\n    \"200-line energy in a 50-line problem: the implementation is roughly 3x longer than necessary\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct thread-safe lazy initialization",
+      "Double-checked locking reduces lock contention in the hot path",
+      "_lock and _instance are clearly named"
+    ],
+    "weaknesses": [
+      "Excessive docstrings and inline comments narrate obvious logic, violating simplicity-first",
+      "Unnecessary Generic[T]/TypeVar machinery for a single-use utility class",
+      "Dead `assert self._instance is not None` that can never fire adds noise",
+      "Imports Optional, TypeVar, Generic \u2014 all speculative complexity beyond what the task requires",
+      "200-line energy in a 50-line problem: the implementation is roughly 3x longer than necessary"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.875,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 48,
+    "maintainability_index": 64.502,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "oracle_karpathy_generation"
+}

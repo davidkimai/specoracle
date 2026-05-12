@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and easy to audit locally. It uses a single Lock with explicit locking in every public method, keeps data movement visible, raises clear errors, and avoids speculative abstractions. The guard clause in `__init__` for `bool` is a reasonable defensive touch since `bool` is a subclass of `int`. The snapshot comprehension filtering `count != 0` is slightly speculative since counts can never be zero given the increment-only logic, but it's harmless and documents intent. The `isinstance` check on `name` in `increment` is a minor over-specification not required by the task but not harmful. Overall the architecture is minimal, readable, and directly maps to the requirements without framework-shaped scaffolding.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and easy to audit locally. It uses a single Lock with explicit locking in every public method, keeps data movement visible, raises clear errors, and avoids speculative abstractions. The guard clause in `__init__` for `bool` is a reasonable defensive touch since `bool` is a subclass of `int`. The snapshot comprehension filtering `count != 0` is slightly speculative since counts can never be zero given the increment-only logic, but it's harmless and documents intent. The `isinstance` check on `name` in `increment` is a minor over-specification not required by the task but not harmful. Overall the architecture is minimal, readable, and directly maps to the requirements without framework-shaped scaffolding.\",\n  \"strengths\": [\n    \"Single Lock used consistently across all methods \u2014 no hidden synchronization complexity\",\n    \"Flat control flow with a single guard clause before mutation in increment\",\n    \"Explicit data movement: _total tracked separately for O(1) total() without summing\",\n    \"snapshot() returns a copy, correctly preventing exposure of mutable internal state\",\n    \"Clear, descriptive names throughout\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(name, str) check in increment is not required by the spec and adds noise\",\n    \"isinstance(max_total, bool) guard is defensive but slightly unusual for a counter utility\",\n    \"snapshot filter for count != 0 is dead code since counts only ever increase\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single Lock used consistently across all methods \u2014 no hidden synchronization complexity",
+      "Flat control flow with a single guard clause before mutation in increment",
+      "Explicit data movement: _total tracked separately for O(1) total() without summing",
+      "snapshot() returns a copy, correctly preventing exposure of mutable internal state",
+      "Clear, descriptive names throughout"
+    ],
+    "weaknesses": [
+      "isinstance(name, str) check in increment is not required by the spec and adds noise",
+      "isinstance(max_total, bool) guard is defensive but slightly unusual for a counter utility",
+      "snapshot filter for count != 0 is dead code since counts only ever increase"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.455,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 4,
+    "loc": 28,
+    "maintainability_index": 52.422,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_generation"
+}

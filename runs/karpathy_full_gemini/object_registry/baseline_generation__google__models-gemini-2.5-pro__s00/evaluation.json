@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses standard-library weakref appropriately, keeps the class small, and names things clearly. The main structural issues are: the docstring is over-engineered for a simple utility class (verbose Args/Returns sections add noise without clarity gain), the `isinstance(key, Hashable)` guard is redundant since dict insertion will raise TypeError naturally and the check itself is unreliable (all objects pass `isinstance(x, Hashable)` at runtime due to the abstract nature of the ABC), and the `if weak_ref:` branch in `get` is subtly wrong \u2014 a weakref object is always truthy, so the guard should be `if weak_ref is not None`. The cleanup uses dict comprehension which is idiomatic and flat. Overall the architecture is appropriately simple with no speculative abstractions, but the redundant/incorrect guard and verbose docstrings are minor but real quality issues.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses standard-library weakref appropriately, keeps the class small, and names things clearly. The main structural issues are: the docstring is over-engineered for a simple utility class (verbose Args/Returns sections add noise without clarity gain), the `isinstance(key, Hashable)` guard is redundant since dict insertion will raise TypeError naturally and the check itself is unreliable (all objects pass `isinstance(x, Hashable)` at runtime due to the abstract nature of the ABC), and the `if weak_ref:` branch in `get` is subtly wrong \u2014 a weakref object is always truthy, so the guard should be `if weak_ref is not None`. The cleanup uses dict comprehension which is idiomatic and flat. Overall the architecture is appropriately simple with no speculative abstractions, but the redundant/incorrect guard and verbose docstrings are minor but real quality issues.\",\n  \"strengths\": [\n    \"Minimal class with three focused methods matching the spec exactly\",\n    \"Explicit data movement \u2014 registry is a plain dict of weakrefs, no hidden state\",\n    \"cleanup() uses a clear dict comprehension that is locally auditable\",\n    \"Type annotations are present and accurate\",\n    \"No metaprogramming or speculative extension points\"\n  ],\n  \"weaknesses\": [\n    \"`if weak_ref:` in get() is misleading \u2014 weakref objects are always truthy; should be `if weak_ref is not None`\",\n    \"`isinstance(key, Hashable)` check is unreliable and redundant; dict insertion already raises TypeError for unhashable keys\",\n    \"Docstrings are over-verbose with Args/Returns sections for trivial methods, adding noise rather than clarity\",\n    \"Cleanup rebuilds the entire dict rather than using a simpler in-place deletion loop, which is a minor inefficiency\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Minimal class with three focused methods matching the spec exactly",
+      "Explicit data movement \u2014 registry is a plain dict of weakrefs, no hidden state",
+      "cleanup() uses a clear dict comprehension that is locally auditable",
+      "Type annotations are present and accurate",
+      "No metaprogramming or speculative extension points"
+    ],
+    "weaknesses": [
+      "`if weak_ref:` in get() is misleading \u2014 weakref objects are always truthy; should be `if weak_ref is not None`",
+      "`isinstance(key, Hashable)` check is unreliable and redundant; dict insertion already raises TypeError for unhashable keys",
+      "Docstrings are over-verbose with Args/Returns sections for trivial methods, adding noise rather than clarity",
+      "Cleanup rebuilds the entire dict rather than using a simpler in-place deletion loop, which is a minor inefficiency"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.113,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 52,
+    "maintainability_index": 77.207,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "baseline_generation"
+}

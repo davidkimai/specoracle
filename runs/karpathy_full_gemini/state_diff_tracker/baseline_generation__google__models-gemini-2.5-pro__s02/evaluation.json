@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly maps to the functional requirements and SRL-3 structural spec. Each field-level change is represented as an explicit record with the required 'field', 'before', and 'after' keys. The logic is flat with a single loop, three clearly-commented cases, and no unnecessary abstraction. Sorting is handled inline during iteration rather than as a post-processing step, which is efficient and readable. The docstring is thorough without being excessive. Minor quibbles: the boolean variables `key_in_prev` and `key_in_curr` add a tiny bit of verbosity that could be avoided with direct set membership checks, and the module-level docstring is somewhat redundant with the function docstring, but neither constitutes architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly maps to the functional requirements and SRL-3 structural spec. Each field-level change is represented as an explicit record with the required 'field', 'before', and 'after' keys. The logic is flat with a single loop, three clearly-commented cases, and no unnecessary abstraction. Sorting is handled inline during iteration rather than as a post-processing step, which is efficient and readable. The docstring is thorough without being excessive. Minor quibbles: the boolean variables `key_in_prev` and `key_in_curr` add a tiny bit of verbosity that could be avoided with direct set membership checks, and the module-level docstring is somewhat redundant with the function docstring, but neither constitutes architectural slop.\",\n  \"strengths\": [\n    \"Explicit per-field records with correct 'field', 'before', 'after' keys matching SRL-3\",\n    \"Flat, single-loop structure with no unnecessary abstraction or helper functions\",\n    \"Sorting handled at iteration time via sorted(), clean and efficient\",\n    \"Clear inline comments for each of the three cases (added, removed, changed)\",\n    \"Correct use of None for missing fields in added/removed cases\",\n    \"Type annotations are accurate and complete\"\n  ],\n  \"weaknesses\": [\n    \"Intermediate boolean variables (key_in_prev, key_in_curr) add minor verbosity without clarity gain\",\n    \"Module-level docstring is redundant given the comprehensive function docstring\",\n    \"No handling of edge cases like unhashable keys, though not required by spec\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit per-field records with correct 'field', 'before', 'after' keys matching SRL-3",
+      "Flat, single-loop structure with no unnecessary abstraction or helper functions",
+      "Sorting handled at iteration time via sorted(), clean and efficient",
+      "Clear inline comments for each of the three cases (added, removed, changed)",
+      "Correct use of None for missing fields in added/removed cases",
+      "Type annotations are accurate and complete"
+    ],
+    "weaknesses": [
+      "Intermediate boolean variables (key_in_prev, key_in_curr) add minor verbosity without clarity gain",
+      "Module-level docstring is redundant given the comprehensive function docstring",
+      "No handling of edge cases like unhashable keys, though not required by spec"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.414,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 52,
+    "maintainability_index": 84.303,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "baseline_generation"
+}

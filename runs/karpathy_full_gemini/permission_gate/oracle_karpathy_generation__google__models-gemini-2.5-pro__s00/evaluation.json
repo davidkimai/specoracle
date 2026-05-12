@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core implementation is exactly right \u2014 a single expression `role in matrix and permission in matrix[role]` is the minimal, correct solution. The logic is flat, explicit, and locally auditable. However, the candidate over-documents a trivially simple function: the module docstring, the verbose Google-style docstring with Args/Returns sections, and the inline comment explaining short-circuit evaluation all add noise without value. The Karpathy oracle explicitly favors minimum code; documentation bloat is a form of architectural slop even when the logic itself is clean. The `Dict`/`Set` imports from `typing` instead of using the built-in `dict`/`set` generics (available since Python 3.9) is a minor anachronism but not a serious flaw.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The core implementation is exactly right \u2014 a single expression `role in matrix and permission in matrix[role]` is the minimal, correct solution. The logic is flat, explicit, and locally auditable. However, the candidate over-documents a trivially simple function: the module docstring, the verbose Google-style docstring with Args/Returns sections, and the inline comment explaining short-circuit evaluation all add noise without value. The Karpathy oracle explicitly favors minimum code; documentation bloat is a form of architectural slop even when the logic itself is clean. The `Dict`/`Set` imports from `typing` instead of using the built-in `dict`/`set` generics (available since Python 3.9) is a minor anachronism but not a serious flaw.\",\n  \"strengths\": [\n    \"Core logic is a single, correct, minimal expression\",\n    \"Deny-by-default semantics are correctly implemented via short-circuit evaluation\",\n    \"No unnecessary abstractions, classes, or helper functions\",\n    \"Functionally correct for all specified cases\"\n  ],\n  \"weaknesses\": [\n    \"Excessive documentation for a trivially simple function \u2014 violates 'minimum code' principle\",\n    \"Inline comment explaining short-circuit evaluation is condescending and unnecessary\",\n    \"Uses legacy `typing.Dict`/`typing.Set` instead of built-in `dict`/`set` generics\",\n    \"Module-level docstring adds no value for a single-function utility\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Core logic is a single, correct, minimal expression",
+      "Deny-by-default semantics are correctly implemented via short-circuit evaluation",
+      "No unnecessary abstractions, classes, or helper functions",
+      "Functionally correct for all specified cases"
+    ],
+    "weaknesses": [
+      "Excessive documentation for a trivially simple function \u2014 violates 'minimum code' principle",
+      "Inline comment explaining short-circuit evaluation is condescending and unnecessary",
+      "Uses legacy `typing.Dict`/`typing.Set` instead of built-in `dict`/`set` generics",
+      "Module-level docstring adds no value for a single-function utility"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.138,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 1,
+    "loc": 21,
+    "maintainability_index": 47.128,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "permission_gate",
+  "variant": "oracle_karpathy_generation"
+}

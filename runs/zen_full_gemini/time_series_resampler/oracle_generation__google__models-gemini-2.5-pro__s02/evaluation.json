@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and well-structured. The validation is extracted into a small pure helper, control flow is flat, data movement is explicit (sorted copy, no mutation), and names are self-explanatory. The single-pass iterator approach is efficient and readable. The main deductions are for over-documentation (docstrings are verbose to the point of noise, especially the Args/Returns/Raises blocks that restate the obvious), and the lambda in `sorted` could be replaced with `operator.itemgetter(0)` for marginally more idiomatic Python, though this is minor. The module-level docstring and the extensive inline comments slightly over-explain straightforward logic, which works against the 'sparse enough to audit locally' principle. Overall this is a solid, maintainable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and well-structured. The validation is extracted into a small pure helper, control flow is flat, data movement is explicit (sorted copy, no mutation), and names are self-explanatory. The single-pass iterator approach is efficient and readable. The main deductions are for over-documentation (docstrings are verbose to the point of noise, especially the Args/Returns/Raises blocks that restate the obvious), and the lambda in `sorted` could be replaced with `operator.itemgetter(0)` for marginally more idiomatic Python, though this is minor. The module-level docstring and the extensive inline comments slightly over-explain straightforward logic, which works against the 'sparse enough to audit locally' principle. Overall this is a solid, maintainable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Validation extracted into a focused pure helper with clear error messages\",\n    \"Single-pass iterator algorithm is efficient and easy to follow\",\n    \"Explicit sorted copy avoids hidden mutation of caller's data\",\n    \"Flat control flow with no deep nesting\",\n    \"Type annotations are precise and correct\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are excessively verbose, restating what the type signatures and names already convey\",\n    \"Inline comments over-explain straightforward logic, reducing sparseness\",\n    \"Lambda in sorted() is slightly less idiomatic than operator.itemgetter(0)\",\n    \"Module-level docstring adds little value for a single-function module\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Validation extracted into a focused pure helper with clear error messages",
+      "Single-pass iterator algorithm is efficient and easy to follow",
+      "Explicit sorted copy avoids hidden mutation of caller's data",
+      "Flat control flow with no deep nesting",
+      "Type annotations are precise and correct"
+    ],
+    "weaknesses": [
+      "Docstrings are excessively verbose, restating what the type signatures and names already convey",
+      "Inline comments over-explain straightforward logic, reducing sparseness",
+      "Lambda in sorted() is slightly less idiomatic than operator.itemgetter(0)",
+      "Module-level docstring adds little value for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.964,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 61,
+    "maintainability_index": 72.148,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_generation"
+}

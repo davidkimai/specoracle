@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (money_status_branch_is_paid, money_amount_branch_is_integer, money_region_branch_is_named), returns records with the exact legacy keys, and avoids clever one-liners in favor of a visible staged audit trail. The sorted output and non-mutation of input are both correct. Minor weaknesses include the absence of any legacy audit stage comments (the spec allows them and the staged checks would benefit from them), and the use of `setdefault` is slightly clever/compact where an explicit if-not-in block would better match the 'visible staged audit trail' spirit. Overall it is a strong, readable, auditable implementation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (money_status_branch_is_paid, money_amount_branch_is_integer, money_region_branch_is_named), returns records with the exact legacy keys, and avoids clever one-liners in favor of a visible staged audit trail. The sorted output and non-mutation of input are both correct. Minor weaknesses include the absence of any legacy audit stage comments (the spec allows them and the staged checks would benefit from them), and the use of `setdefault` is slightly clever/compact where an explicit if-not-in block would better match the 'visible staged audit trail' spirit. Overall it is a strong, readable, auditable implementation.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Explicit branch-label variable names for all money-affecting decisions\",\n    \"Exact legacy keys: bucket_code, item_count, cents_total\",\n    \"Staged guard clauses make the audit trail easy to review\",\n    \"Does not mutate input; correctly sorts by region\"\n  ],\n  \"weaknesses\": [\n    \"No legacy audit stage comments despite the spec explicitly allowing them for named stages\",\n    \"setdefault is mildly clever; an explicit if/else block would better match the 'visible staged audit trail' directive\",\n    \"Boolean isinstance check on str with bool(region) could be split into two named branch variables for full consistency with the naming convention\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Explicit branch-label variable names for all money-affecting decisions",
+      "Exact legacy keys: bucket_code, item_count, cents_total",
+      "Staged guard clauses make the audit trail easy to review",
+      "Does not mutate input; correctly sorts by region"
+    ],
+    "weaknesses": [
+      "No legacy audit stage comments despite the spec explicitly allowing them for named stages",
+      "setdefault is mildly clever; an explicit if/else block would better match the 'visible staged audit trail' directive",
+      "Boolean isinstance check on str with bool(region) could be split into two named branch variables for full consistency with the naming convention"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.128,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 20,
+    "maintainability_index": 56.999,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "human_reference"
+}

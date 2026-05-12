@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit data movement and no hidden state. The class does exactly what is required with no speculative abstractions or unused extension points. The docstrings are thorough but slightly verbose for such a simple class. The extra TypeError check for non-integer input goes beyond the spec (which only requires ValueError for non-positive), which is a minor speculative addition but not harmful. The `remaining()` method introduces a named intermediate variable `remaining_attempts` that adds a line without adding clarity\u2014`return max(0, self._max_attempts - self._failure_count)` would be more direct. Overall the structure is simple, auditable, and idiomatic.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit data movement and no hidden state. The class does exactly what is required with no speculative abstractions or unused extension points. The docstrings are thorough but slightly verbose for such a simple class. The extra TypeError check for non-integer input goes beyond the spec (which only requires ValueError for non-positive), which is a minor speculative addition but not harmful. The `remaining()` method introduces a named intermediate variable `remaining_attempts` that adds a line without adding clarity\u2014`return max(0, self._max_attempts - self._failure_count)` would be more direct. Overall the structure is simple, auditable, and idiomatic.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses in __init__\",\n    \"Explicit, well-named state (_failure_count, _max_attempts)\",\n    \"No global state, threads, or speculative abstractions\",\n    \"Each method is small and locally auditable\",\n    \"Correct use of max(0, ...) to clamp remaining() at zero\"\n  ],\n  \"weaknesses\": [\n    \"Extra TypeError check is speculative\u2014not required by the spec\",\n    \"Intermediate variable in remaining() adds noise without clarity\",\n    \"Docstrings are over-documented for such a simple, self-explanatory class\",\n    \"Module-level docstring and class docstring are redundant with each other\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses in __init__",
+      "Explicit, well-named state (_failure_count, _max_attempts)",
+      "No global state, threads, or speculative abstractions",
+      "Each method is small and locally auditable",
+      "Correct use of max(0, ...) to clamp remaining() at zero"
+    ],
+    "weaknesses": [
+      "Extra TypeError check is speculative\u2014not required by the spec",
+      "Intermediate variable in remaining() adds noise without clarity",
+      "Docstrings are over-documented for such a simple, self-explanatory class",
+      "Module-level docstring and class docstring are redundant with each other"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.849,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 43,
+    "maintainability_index": 78.322,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_generation"
+}

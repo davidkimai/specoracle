@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit state transitions through a named `state` attribute, named configuration values (`failure_threshold`, `recovery_timeout`), and correct half-open trial logic that closes on success or reopens on failure. The code is locally auditable with no hidden magic constants. Minor weaknesses include the input validation rejecting zero values which may be overly strict, and the failure counter not being reset when transitioning to half-open (though this is a minor semantic point). The `or` idiom for `now` could silently accept a falsy callable, but in practice this is negligible. Overall the structure closely follows RCS-5 requirements with good Pythonic simplicity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit state transitions through a named `state` attribute, named configuration values (`failure_threshold`, `recovery_timeout`), and correct half-open trial logic that closes on success or reopens on failure. The code is locally auditable with no hidden magic constants. Minor weaknesses include the input validation rejecting zero values which may be overly strict, and the failure counter not being reset when transitioning to half-open (though this is a minor semantic point). The `or` idiom for `now` could silently accept a falsy callable, but in practice this is negligible. Overall the structure closely follows RCS-5 requirements with good Pythonic simplicity.\",\n  \"strengths\": [\n    \"Explicit `state` attribute with clear string values ('closed', 'open', 'half_open')\",\n    \"Named configuration values used throughout, no magic constants\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Flat, readable control flow with no unnecessary abstraction layers\",\n    \"Injectable `now` clock for testability\"\n  ],\n  \"weaknesses\": [\n    \"Failure count not reset when entering half-open state, could cause subtle edge cases\",\n    \"`now or time.monotonic` pattern would silently fail if a falsy callable were passed\",\n    \"Input validation rejects `failure_threshold=0` but the spec doesn't explicitly forbid it\",\n    \"No docstring or inline comments explaining state machine transitions\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit `state` attribute with clear string values ('closed', 'open', 'half_open')",
+      "Named configuration values used throughout, no magic constants",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Flat, readable control flow with no unnecessary abstraction layers",
+      "Injectable `now` clock for testability"
+    ],
+    "weaknesses": [
+      "Failure count not reset when entering half-open state, could cause subtle edge cases",
+      "`now or time.monotonic` pattern would silently fail if a falsy callable were passed",
+      "Input validation rejects `failure_threshold=0` but the spec doesn't explicitly forbid it",
+      "No docstring or inline comments explaining state machine transitions"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.85,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 2,
+    "loc": 28,
+    "maintainability_index": 51.613,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "human_reference"
+}

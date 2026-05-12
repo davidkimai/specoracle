@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, readable, and avoids mutation. The control flow is flat with a clear guard clause, data movement is explicit, and naming is sensible. The main weaknesses are the verbose docstring (which restates the obvious and adds noise without aiding local auditability), the unnecessary `num_enabled_workers` variable (a minor but real redundancy since `len()` inline is equally clear), and the use of `typing.List`/`typing.Dict`/`typing.Any` legacy generics instead of the modern built-in `list[dict]` style already used in the task signature. The module-level docstring is also speculative boilerplate. A cleaner version would use `itertools.cycle` or keep the index approach but trim the prose, drop the legacy typing imports, and let the code speak for itself. Overall it's solid and maintainable but carries modest documentation and import overhead that the Zen would trim.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, readable, and avoids mutation. The control flow is flat with a clear guard clause, data movement is explicit, and naming is sensible. The main weaknesses are the verbose docstring (which restates the obvious and adds noise without aiding local auditability), the unnecessary `num_enabled_workers` variable (a minor but real redundancy since `len()` inline is equally clear), and the use of `typing.List`/`typing.Dict`/`typing.Any` legacy generics instead of the modern built-in `list[dict]` style already used in the task signature. The module-level docstring is also speculative boilerplate. A cleaner version would use `itertools.cycle` or keep the index approach but trim the prose, drop the legacy typing imports, and let the code speak for itself. Overall it's solid and maintainable but carries modest documentation and import overhead that the Zen would trim.\",\n  \"strengths\": [\n    \"Flat control flow with an early guard clause for no enabled workers\",\n    \"Does not mutate inputs; builds new list explicitly\",\n    \"Clear, descriptive variable names (enabled_worker_names, assignments)\",\n    \"Straightforward modulo round-robin logic that is easy to audit locally\",\n    \"Correct use of dict.get with default for optional 'enabled' field\"\n  ],\n  \"weaknesses\": [\n    \"Uses legacy typing.List/Dict/Any instead of built-in generics (list, dict) available since Python 3.9\",\n    \"Verbose docstring restates the spec rather than adding insight; violates sparseness principle\",\n    \"Redundant `num_enabled_workers` variable adds a line without clarity benefit\",\n    \"Module-level docstring is speculative boilerplate not required by the task\",\n    \"Could use itertools.cycle for a more idiomatic, intention-revealing round-robin pattern\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with an early guard clause for no enabled workers",
+      "Does not mutate inputs; builds new list explicitly",
+      "Clear, descriptive variable names (enabled_worker_names, assignments)",
+      "Straightforward modulo round-robin logic that is easy to audit locally",
+      "Correct use of dict.get with default for optional 'enabled' field"
+    ],
+    "weaknesses": [
+      "Uses legacy typing.List/Dict/Any instead of built-in generics (list, dict) available since Python 3.9",
+      "Verbose docstring restates the spec rather than adding insight; violates sparseness principle",
+      "Redundant `num_enabled_workers` variable adds a line without clarity benefit",
+      "Module-level docstring is speculative boilerplate not required by the task",
+      "Could use itertools.cycle for a more idiomatic, intention-revealing round-robin pattern"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.187,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 41,
+    "maintainability_index": 85.247,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

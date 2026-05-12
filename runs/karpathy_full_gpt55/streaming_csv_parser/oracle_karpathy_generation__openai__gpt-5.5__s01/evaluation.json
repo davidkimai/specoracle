@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, correct, and streaming. It uses the stdlib `csv.reader` rather than reinventing splitting logic, handles empty rows by skipping them, and yields dicts lazily without ever materializing the input. The generator pattern is idiomatic and the code is flat with no unnecessary abstractions. The only marginal concern is that `csv.reader` wrapping an arbitrary iterable may buffer internally in CPython, but this is an implementation detail of the stdlib and not a structural flaw; the code itself never converts `lines` to a list. The type annotations are appropriate and add clarity without verbosity.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, correct, and streaming. It uses the stdlib `csv.reader` rather than reinventing splitting logic, handles empty rows by skipping them, and yields dicts lazily without ever materializing the input. The generator pattern is idiomatic and the code is flat with no unnecessary abstractions. The only marginal concern is that `csv.reader` wrapping an arbitrary iterable may buffer internally in CPython, but this is an implementation detail of the stdlib and not a structural flaw; the code itself never converts `lines` to a list. The type annotations are appropriate and add clarity without verbosity.\",\n  \"strengths\": [\n    \"Delegates CSV parsing to stdlib csv.reader, avoiding reimplementation\",\n    \"Fully streaming: no list conversion of input\",\n    \"Minimal code \u2014 under 15 lines including imports and type hints\",\n    \"Flat control flow with a single loop and no nested functions or classes\",\n    \"Correctly skips empty rows before and after the header\"\n  ],\n  \"weaknesses\": [\n    \"Does not handle rows with more cells than headers (extra cells are silently dropped by zip); could be a silent data loss issue depending on requirements\",\n    \"No handling for rows with fewer cells than headers (missing values become absent keys rather than empty strings)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Delegates CSV parsing to stdlib csv.reader, avoiding reimplementation",
+      "Fully streaming: no list conversion of input",
+      "Minimal code \u2014 under 15 lines including imports and type hints",
+      "Flat control flow with a single loop and no nested functions or classes",
+      "Correctly skips empty rows before and after the header"
+    ],
+    "weaknesses": [
+      "Does not handle rows with more cells than headers (extra cells are silently dropped by zip); could be a silent data loss issue depending on requirements",
+      "No handling for rows with fewer cells than headers (missing values become absent keys rather than empty strings)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.898,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 12,
+    "maintainability_index": 68.465,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_karpathy_generation"
+}

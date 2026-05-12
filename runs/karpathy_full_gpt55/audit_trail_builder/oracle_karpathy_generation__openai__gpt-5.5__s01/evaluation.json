@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows RAT-9: it explicitly names derived fields (source_system, actor_id, sequence_number) before inserting them, rejects records missing required fields or carrying None for the critical identity fields, and uses a monotonic sequence number starting at 1. The named constants for field keys add explicitness and reduce magic strings. The code is flat, readable, and locally auditable with no hidden logic. Minor weaknesses include the redundant re-assignment of source_system and actor_id into the copied dict (they were already present from `dict(event)`), and the inclusion of ACTION_FIELD in REQUIRED_FIELDS when the spec only mandates rejection for missing source_system or actor_id \u2014 this is a slight over-constraint relative to the stated requirements, though defensible. The docstring and type annotations are clear and helpful.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows RAT-9: it explicitly names derived fields (source_system, actor_id, sequence_number) before inserting them, rejects records missing required fields or carrying None for the critical identity fields, and uses a monotonic sequence number starting at 1. The named constants for field keys add explicitness and reduce magic strings. The code is flat, readable, and locally auditable with no hidden logic. Minor weaknesses include the redundant re-assignment of source_system and actor_id into the copied dict (they were already present from `dict(event)`), and the inclusion of ACTION_FIELD in REQUIRED_FIELDS when the spec only mandates rejection for missing source_system or actor_id \u2014 this is a slight over-constraint relative to the stated requirements, though defensible. The docstring and type annotations are clear and helpful.\",\n  \"strengths\": [\n    \"Explicit named constants for all field keys \u2014 no magic strings\",\n    \"Derived sequence_number is named before insertion, satisfying RAT-9 explicitness\",\n    \"Rejects None values for source_system and actor_id, not just missing keys\",\n    \"Flat loop structure with no nested helpers or unnecessary abstraction\",\n    \"Shallow copy via dict(event) preserves original event data without mutation\"\n  ],\n  \"weaknesses\": [\n    \"Redundant re-assignment of source_system and actor_id into the copied dict after dict(event) already includes them\",\n    \"Requiring ACTION_FIELD in REQUIRED_FIELDS goes beyond the stated spec (only source_system and actor_id are mandated for rejection)\",\n    \"No validation that sequence_number doesn't already exist in the event (could silently overwrite a caller-supplied value)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit named constants for all field keys \u2014 no magic strings",
+      "Derived sequence_number is named before insertion, satisfying RAT-9 explicitness",
+      "Rejects None values for source_system and actor_id, not just missing keys",
+      "Flat loop structure with no nested helpers or unnecessary abstraction",
+      "Shallow copy via dict(event) preserves original event data without mutation"
+    ],
+    "weaknesses": [
+      "Redundant re-assignment of source_system and actor_id into the copied dict after dict(event) already includes them",
+      "Requiring ACTION_FIELD in REQUIRED_FIELDS goes beyond the stated spec (only source_system and actor_id are mandated for rejection)",
+      "No validation that sequence_number doesn't already exist in the event (could silently overwrite a caller-supplied value)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 3.277,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n>       assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\nE       AssertionError: assert [{'action': '...stem': 'crm'}] == [{'action': '...stem': 'crm'}]\nE         \nE         At index 0 diff: {'source_system': 'crm', 'actor_id': 'u1', 'action': 'create', 'sequence_number': 1} != {'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}\nE         Use -v to get more diff\n\ntest_solution.py:8: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - AssertionError: ...\n1 failed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 80.722,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are named constants and inspectable via a `state` property, satisfying RCS-5's first requirement. Configuration values (`failure_threshold`, `recovery_timeout`) are named attributes, not magic constants. Half-open trials correctly close on success and reopen on failure. The lock discipline is sound with RLock for reentrant access (the `state` property calls `_maybe_transition_to_half_open` which is also called internally). The code is flat, readable, and locally auditable with small focused methods. Minor concerns: the input validation in `__init__` is thorough but slightly verbose for a circuit breaker (not strictly required by the spec); blocking concurrent half-open trials is a reasonable design choice but adds slight complexity; resetting `_failure_count` to `failure_threshold` in `_open()` is a minor oddity (could just leave it as-is or zero it). Overall this is a high-quality, production-grade implementation that closely follows the structural spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are named constants and inspectable via a `state` property, satisfying RCS-5's first requirement. Configuration values (`failure_threshold`, `recovery_timeout`) are named attributes, not magic constants. Half-open trials correctly close on success and reopen on failure. The lock discipline is sound with RLock for reentrant access (the `state` property calls `_maybe_transition_to_half_open` which is also called internally). The code is flat, readable, and locally auditable with small focused methods. Minor concerns: the input validation in `__init__` is thorough but slightly verbose for a circuit breaker (not strictly required by the spec); blocking concurrent half-open trials is a reasonable design choice but adds slight complexity; resetting `_failure_count` to `failure_threshold` in `_open()` is a minor oddity (could just leave it as-is or zero it). Overall this is a high-quality, production-grade implementation that closely follows the structural spec.\",\n  \"strengths\": [\n    \"Explicit named state constants (CLOSED, OPEN, HALF_OPEN) satisfying RCS-5 inspectability requirement\",\n    \"Named configuration attributes with no magic constants\",\n    \"Correct half-open trial semantics: success closes, failure reopens\",\n    \"Thread-safe with RLock and consistent lock discipline\",\n    \"Small, focused private methods with clear single responsibilities\",\n    \"Injectable `now` callable enables deterministic testing\"\n  ],\n  \"weaknesses\": [\n    \"Verbose input validation in __init__ goes beyond what the spec requires and adds noise\",\n    \"Setting `_failure_count = self.failure_threshold` in `_open()` is a minor oddity with no clear benefit\",\n    \"Blocking concurrent half-open trials (raising RuntimeError) is undocumented behavior not mentioned in the spec\",\n    \"The `state` property has a side effect (triggering transition) which is mildly surprising\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit named state constants (CLOSED, OPEN, HALF_OPEN) satisfying RCS-5 inspectability requirement",
+      "Named configuration attributes with no magic constants",
+      "Correct half-open trial semantics: success closes, failure reopens",
+      "Thread-safe with RLock and consistent lock discipline",
+      "Small, focused private methods with clear single responsibilities",
+      "Injectable `now` callable enables deterministic testing"
+    ],
+    "weaknesses": [
+      "Verbose input validation in __init__ goes beyond what the spec requires and adds noise",
+      "Setting `_failure_count = self.failure_threshold` in `_open()` is a minor oddity with no clear benefit",
+      "Blocking concurrent half-open trials (raising RuntimeError) is undocumented behavior not mentioned in the spec",
+      "The `state` property has a side effect (triggering transition) which is mildly surprising"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.848,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.1,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 31,
+    "function_count": 9,
+    "loc": 89,
+    "maintainability_index": 37.065,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

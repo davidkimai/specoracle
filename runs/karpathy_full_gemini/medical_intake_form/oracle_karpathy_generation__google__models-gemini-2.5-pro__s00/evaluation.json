@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the CD-7 structural spec: it performs a full presence check across all required fields before any type/value validation begins, ensuring no partial acceptance occurs. Validation is explicit, flat, and locally auditable \u2014 each field is checked in sequence with clear, named error messages. The two-pass approach (presence first, then type/value) is a reasonable interpretation of 'validate every required field before accepting any field into the output,' though a strict reading might require all checks (including type) to complete before returning, which this code does achieve since any failure raises immediately and the return only happens after all checks pass. The code is readable, well-documented, and avoids unnecessary abstraction or cleverness. Minor weaknesses include the `import typing` that goes unused, and the docstring is slightly verbose for the task size, but neither constitutes architectural slop. The `bool` subclass edge case (where `isinstance(True, int)` is True) is not handled, which is a minor functional gap but not a structural one.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the CD-7 structural spec: it performs a full presence check across all required fields before any type/value validation begins, ensuring no partial acceptance occurs. Validation is explicit, flat, and locally auditable \u2014 each field is checked in sequence with clear, named error messages. The two-pass approach (presence first, then type/value) is a reasonable interpretation of 'validate every required field before accepting any field into the output,' though a strict reading might require all checks (including type) to complete before returning, which this code does achieve since any failure raises immediately and the return only happens after all checks pass. The code is readable, well-documented, and avoids unnecessary abstraction or cleverness. Minor weaknesses include the `import typing` that goes unused, and the docstring is slightly verbose for the task size, but neither constitutes architectural slop. The `bool` subclass edge case (where `isinstance(True, int)` is True) is not handled, which is a minor functional gap but not a structural one.\",\n  \"strengths\": [\n    \"Full presence check for all fields before any type/value validation \u2014 satisfies CD-7 all-or-nothing principle\",\n    \"Every error message explicitly names the failing field\",\n    \"Flat, linear control flow with no nested abstractions or helper indirection\",\n    \"Clean output dict constructed only after all validations pass\",\n    \"Clear, explicit per-field validation blocks that are easy to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"Unused `import typing` import adds minor noise\",\n    \"Does not guard against `bool` values passing the `isinstance(age, int)` check (e.g., `True` would be accepted as age=1)\",\n    \"Docstring is somewhat over-engineered relative to the simplicity of the task\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Full presence check for all fields before any type/value validation \u2014 satisfies CD-7 all-or-nothing principle",
+      "Every error message explicitly names the failing field",
+      "Flat, linear control flow with no nested abstractions or helper indirection",
+      "Clean output dict constructed only after all validations pass",
+      "Clear, explicit per-field validation blocks that are easy to audit locally"
+    ],
+    "weaknesses": [
+      "Unused `import typing` import adds minor noise",
+      "Does not guard against `bool` values passing the `isinstance(age, int)` check (e.g., `True` would be accepted as age=1)",
+      "Docstring is somewhat over-engineered relative to the simplicity of the task"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.396,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 58,
+    "maintainability_index": 77.046,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_karpathy_generation"
+}

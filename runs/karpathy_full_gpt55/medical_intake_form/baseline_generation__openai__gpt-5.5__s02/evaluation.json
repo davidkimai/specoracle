@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: all three fields are validated before any result is returned, every ValueError names the offending field, and partial acceptance is impossible since the clean dict is only constructed after all checks pass. The code is flat, explicit, and locally auditable with no hidden control flow or abstraction layers. The bool-before-int guard for age is a correct and important edge case. The only minor imperfections are that error messages could be slightly more descriptive (e.g., 'age must be a non-negative integer') and the repeated isinstance pattern could arguably be extracted, but given the small scope, the repetition actually aids auditability rather than hurting it.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: all three fields are validated before any result is returned, every ValueError names the offending field, and partial acceptance is impossible since the clean dict is only constructed after all checks pass. The code is flat, explicit, and locally auditable with no hidden control flow or abstraction layers. The bool-before-int guard for age is a correct and important edge case. The only minor imperfections are that error messages could be slightly more descriptive (e.g., 'age must be a non-negative integer') and the repeated isinstance pattern could arguably be extracted, but given the small scope, the repetition actually aids auditability rather than hurting it.\",\n  \"strengths\": [\n    \"All fields fully validated before the clean dict is assembled, satisfying CD-7's no-partial-validation rule\",\n    \"Every ValueError explicitly names the failing field\",\n    \"Bool subclass of int is correctly excluded for age\",\n    \"Defensive copy of symptoms list prevents mutation of returned data\",\n    \"Flat, linear structure with no unnecessary abstraction\"\n  ],\n  \"weaknesses\": [\n    \"Error messages contain only the field name with no human-readable description of why validation failed\",\n    \"No validation that patient_id is non-empty string (edge case not covered by spec but worth noting)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All fields fully validated before the clean dict is assembled, satisfying CD-7's no-partial-validation rule",
+      "Every ValueError explicitly names the failing field",
+      "Bool subclass of int is correctly excluded for age",
+      "Defensive copy of symptoms list prevents mutation of returned data",
+      "Flat, linear structure with no unnecessary abstraction"
+    ],
+    "weaknesses": [
+      "Error messages contain only the field name with no human-readable description of why validation failed",
+      "No validation that patient_id is non-empty string (edge case not covered by spec but worth noting)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.961,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.17s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 35,
+    "maintainability_index": 82.747,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

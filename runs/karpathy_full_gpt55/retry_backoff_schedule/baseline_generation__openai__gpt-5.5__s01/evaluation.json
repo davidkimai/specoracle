@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct with flat control flow and explicit guard clauses. The `_ensure_int` helper is a reasonable extraction, though it adds a layer of indirection for a check that could be argued is speculative (the task spec only mentions ValueError for value ranges, not type errors). The loop logic is straightforward and locally auditable. The conditional `if delay < cap_seconds: delay *= 2` avoids overflow on large inputs, which is a practical concern. Minor issues: the `__all__` export list is mild framework-shaped boilerplate for a simple utility, and the type-checking helper goes slightly beyond the stated requirements (which only mention value validation). A simpler approach could use a list comprehension with `min(base_seconds * (2**i), cap_seconds)` which would be more declarative and eliminate the mutable `delay` variable, making data flow more explicit. Overall, the code is well-structured and easy to audit, with only minor deviations from the ideal minimal architecture.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct with flat control flow and explicit guard clauses. The `_ensure_int` helper is a reasonable extraction, though it adds a layer of indirection for a check that could be argued is speculative (the task spec only mentions ValueError for value ranges, not type errors). The loop logic is straightforward and locally auditable. The conditional `if delay < cap_seconds: delay *= 2` avoids overflow on large inputs, which is a practical concern. Minor issues: the `__all__` export list is mild framework-shaped boilerplate for a simple utility, and the type-checking helper goes slightly beyond the stated requirements (which only mention value validation). A simpler approach could use a list comprehension with `min(base_seconds * (2**i), cap_seconds)` which would be more declarative and eliminate the mutable `delay` variable, making data flow more explicit. Overall, the code is well-structured and easy to audit, with only minor deviations from the ideal minimal architecture.\",\n  \"strengths\": [\n    \"Flat control flow with clear guard clauses at the top\",\n    \"Explicit, descriptive error messages for each invalid input\",\n    \"Loop logic is simple and locally auditable\",\n    \"Avoids potential integer overflow by capping delay before doubling\"\n  ],\n  \"weaknesses\": [\n    \"`__all__` is unnecessary boilerplate for a single-function utility module\",\n    \"`_ensure_int` type-checking helper goes beyond the stated requirements and adds speculative abstraction\",\n    \"Mutable `delay` variable with conditional update is less declarative than a direct formula like `min(base * 2**i, cap)`\",\n    \"Docstring restates the spec verbatim rather than adding implementation insight\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with clear guard clauses at the top",
+      "Explicit, descriptive error messages for each invalid input",
+      "Loop logic is simple and locally auditable",
+      "Avoids potential integer overflow by capping delay before doubling"
+    ],
+    "weaknesses": [
+      "`__all__` is unnecessary boilerplate for a single-function utility module",
+      "`_ensure_int` type-checking helper goes beyond the stated requirements and adds speculative abstraction",
+      "Mutable `delay` variable with conditional update is less declarative than a direct formula like `min(base * 2**i, cap)`",
+      "Docstring restates the spec verbatim rather than adding implementation insight"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.093,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.5,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 30,
+    "maintainability_index": 83.384,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "baseline_generation"
+}

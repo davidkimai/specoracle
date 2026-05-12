@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and handles the type-checking requirements properly, but it diverges from the simplicity-first principle in two notable ways. First, `hmac.compare_digest` natively accepts both `str` and `bytes` directly without requiring manual encoding, so the encode-to-bytes detour for strings is unnecessary complexity that adds lines and introduces a subtle semantic change (two strings that are equal as Python str but differ in some encoding edge case would still compare equal, but the indirection is architecturally wasteful). The simplest correct implementation would pass the inputs directly to `hmac.compare_digest` after the type check. Second, the docstring is over-engineered for a single-purpose wrapper function\u2014the Karpathy oracle favors minimal documentation proportional to complexity. The code is otherwise clean, flat, and readable with no speculative abstractions.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and handles the type-checking requirements properly, but it diverges from the simplicity-first principle in two notable ways. First, `hmac.compare_digest` natively accepts both `str` and `bytes` directly without requiring manual encoding, so the encode-to-bytes detour for strings is unnecessary complexity that adds lines and introduces a subtle semantic change (two strings that are equal as Python str but differ in some encoding edge case would still compare equal, but the indirection is architecturally wasteful). The simplest correct implementation would pass the inputs directly to `hmac.compare_digest` after the type check. Second, the docstring is over-engineered for a single-purpose wrapper function\u2014the Karpathy oracle favors minimal documentation proportional to complexity. The code is otherwise clean, flat, and readable with no speculative abstractions.\",\n  \"strengths\": [\n    \"Correct type-sameness check using `type(left) is not type(right)` (exact type, not subclass)\",\n    \"Raises TypeError for unsupported types beyond str/bytes\",\n    \"No unnecessary abstractions or classes; flat procedural structure\",\n    \"Correct use of hmac.compare_digest for timing-safe comparison\"\n  ],\n  \"weaknesses\": [\n    \"Unnecessarily encodes str inputs to bytes before passing to hmac.compare_digest, which accepts str natively\u2014adds dead complexity\",\n    \"Overly verbose docstring for a trivial wrapper function violates simplicity-first\",\n    \"The module-level docstring is superfluous for a single-function utility\",\n    \"Intermediate variables `left_bytes`/`right_bytes` are needless when direct passthrough suffices\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct type-sameness check using `type(left) is not type(right)` (exact type, not subclass)",
+      "Raises TypeError for unsupported types beyond str/bytes",
+      "No unnecessary abstractions or classes; flat procedural structure",
+      "Correct use of hmac.compare_digest for timing-safe comparison"
+    ],
+    "weaknesses": [
+      "Unnecessarily encodes str inputs to bytes before passing to hmac.compare_digest, which accepts str natively\u2014adds dead complexity",
+      "Overly verbose docstring for a trivial wrapper function violates simplicity-first",
+      "The module-level docstring is superfluous for a single-function utility",
+      "Intermediate variables `left_bytes`/`right_bytes` are needless when direct passthrough suffices"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.158,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 93.303,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "oracle_karpathy_generation"
+}

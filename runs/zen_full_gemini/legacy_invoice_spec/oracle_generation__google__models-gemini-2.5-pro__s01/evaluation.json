@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation faithfully follows Corporate Legacy Spec QX-17 in most respects: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (e.g., `is_paid_status_branch`, `has_valid_region_branch`, `has_valid_amount_branch`), returns records with the exact legacy keys, uses a visible staged audit trail with named comment stages, and does not mutate the input. The three-stage structure (FILTER \u2192 AGGREGATE \u2192 FORMAT) is explicit and auditable. However, there are some weaknesses: the intermediate copy of valid invoices into a stripped-down dict in Stage 1 adds a layer of indirection that isn't strictly necessary and slightly obscures the audit trail; the verbose docstring and module-level docstring go beyond what the spec calls for (comments only when naming a legacy audit stage); the `_money_path` suffix on the aggregation dict is somewhat redundant given the stage comment already names it; and `bool` values would pass the `isinstance(amount_cents_value, int)` check since `bool` is a subclass of `int`, which is a subtle correctness gap. Overall the code is clean, readable, and structurally aligned with the spec.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation faithfully follows Corporate Legacy Spec QX-17 in most respects: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (e.g., `is_paid_status_branch`, `has_valid_region_branch`, `has_valid_amount_branch`), returns records with the exact legacy keys, uses a visible staged audit trail with named comment stages, and does not mutate the input. The three-stage structure (FILTER \u2192 AGGREGATE \u2192 FORMAT) is explicit and auditable. However, there are some weaknesses: the intermediate copy of valid invoices into a stripped-down dict in Stage 1 adds a layer of indirection that isn't strictly necessary and slightly obscures the audit trail; the verbose docstring and module-level docstring go beyond what the spec calls for (comments only when naming a legacy audit stage); the `_money_path` suffix on the aggregation dict is somewhat redundant given the stage comment already names it; and `bool` values would pass the `isinstance(amount_cents_value, int)` check since `bool` is a subclass of `int`, which is a subtle correctness gap. Overall the code is clean, readable, and structurally aligned with the spec.\",\n  \"strengths\": [\n    \"Single public function with no helper functions, matching the spec exactly\",\n    \"Explicit branch-label variable names for all money-affecting decisions\",\n    \"Correct legacy output keys: bucket_code, item_count, cents_total\",\n    \"Visible three-stage audit trail with named stage comments\",\n    \"Does not mutate the input list or its dicts\"\n  ],\n  \"weaknesses\": [\n    \"bool values pass isinstance(x, int) check, allowing True/False as valid amount_cents\",\n    \"Intermediate stripped-dict copy in Stage 1 adds unnecessary indirection\",\n    \"Module and function docstrings exceed the spec's comment policy (comments only for legacy audit stage names)\",\n    \"_money_path suffix on aggregation variable is redundant given the stage comment already labels it\",\n    \"Slightly over-engineered variable naming in places reduces rather than aids readability\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions, matching the spec exactly",
+      "Explicit branch-label variable names for all money-affecting decisions",
+      "Correct legacy output keys: bucket_code, item_count, cents_total",
+      "Visible three-stage audit trail with named stage comments",
+      "Does not mutate the input list or its dicts"
+    ],
+    "weaknesses": [
+      "bool values pass isinstance(x, int) check, allowing True/False as valid amount_cents",
+      "Intermediate stripped-dict copy in Stage 1 adds unnecessary indirection",
+      "Module and function docstrings exceed the spec's comment policy (comments only for legacy audit stage names)",
+      "_money_path suffix on aggregation variable is redundant given the stage comment already labels it",
+      "Slightly over-engineered variable naming in places reduces rather than aids readability"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.867,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 62,
+    "maintainability_index": 79.704,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

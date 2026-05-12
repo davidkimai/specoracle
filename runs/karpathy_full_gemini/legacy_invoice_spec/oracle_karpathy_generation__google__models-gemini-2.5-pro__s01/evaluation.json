@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate follows the QX-17 spec reasonably well: it uses a single public function with no helpers, employs explicit staged audit comments naming each legacy stage, uses the exact legacy output keys, and avoids clever one-liner flattening in favor of a visible staged audit trail. The branch-label variable names (`is_paid_status_branch`, `has_valid_region_branch`, `has_integer_money_branch`) satisfy the 'explicit branch labels in local variable names when a decision affects money' requirement. However, the implementation over-engineers the naming in places\u2014`paid_invoices_with_valid_money_and_region` and `unstructured_summary_for_money_buckets` are verbose to the point of reducing rather than aiding readability, and the intermediate list `paid_invoices_with_valid_money_and_region` is an extra stage that the spec doesn't require (Stage 2 could consume the filter inline). The docstring is extensive but the spec only permits comments that name a legacy audit stage, making the full Google-style docstring arguably non-compliant. The `typing` imports are fine but `Any` is slightly imprecise. Overall the structural intent is correct and auditable, but the verbosity crosses into noise rather than clarity.",
+    "raw_response": "```json\n{\n  \"score\": 7,\n  \"rationale\": \"The candidate follows the QX-17 spec reasonably well: it uses a single public function with no helpers, employs explicit staged audit comments naming each legacy stage, uses the exact legacy output keys, and avoids clever one-liner flattening in favor of a visible staged audit trail. The branch-label variable names (`is_paid_status_branch`, `has_valid_region_branch`, `has_integer_money_branch`) satisfy the 'explicit branch labels in local variable names when a decision affects money' requirement. However, the implementation over-engineers the naming in places\u2014`paid_invoices_with_valid_money_and_region` and `unstructured_summary_for_money_buckets` are verbose to the point of reducing rather than aiding readability, and the intermediate list `paid_invoices_with_valid_money_and_region` is an extra stage that the spec doesn't require (Stage 2 could consume the filter inline). The docstring is extensive but the spec only permits comments that name a legacy audit stage, making the full Google-style docstring arguably non-compliant. The `typing` imports are fine but `Any` is slightly imprecise. Overall the structural intent is correct and auditable, but the verbosity crosses into noise rather than clarity.\",\n  \"strengths\": [\n    \"Single public function with no helper functions, matching spec QX-17\",\n    \"Explicit branch-label variable names for money-affecting decisions\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Visible staged audit trail with comments naming each legacy stage\",\n    \"Does not mutate the input list\"\n  ],\n  \"weaknesses\": [\n    \"Overly verbose intermediate variable names reduce rather than aid readability\",\n    \"Extensive Google-style docstring may violate the 'comments only to name audit stages' rule\",\n    \"Unnecessary intermediate list for filtered invoices adds a stage not required by the spec\",\n    \"Stage 4 lambda shadows the outer `record` variable name used in Stage 3, a minor clarity issue\",\n    \"Using `Any` in type hints is imprecise when `int | str` constraints are known\"\n  ]\n}\n```",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions, matching spec QX-17",
+      "Explicit branch-label variable names for money-affecting decisions",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Visible staged audit trail with comments naming each legacy stage",
+      "Does not mutate the input list"
+    ],
+    "weaknesses": [
+      "Overly verbose intermediate variable names reduce rather than aid readability",
+      "Extensive Google-style docstring may violate the 'comments only to name audit stages' rule",
+      "Unnecessary intermediate list for filtered invoices adds a stage not required by the spec",
+      "Stage 4 lambda shadows the outer `record` variable name used in Stage 3, a minor clarity issue",
+      "Using `Any` in type hints is imprecise when `int | str` constraints are known"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.629,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 55,
+    "maintainability_index": 82.261,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_karpathy_generation"
+}

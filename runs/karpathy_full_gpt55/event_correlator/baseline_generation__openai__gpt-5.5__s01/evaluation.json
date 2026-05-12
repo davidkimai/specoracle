@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and avoids global state or hidden mutation, but it carries significant structural overhead that conflicts with the Zen's preference for simplicity and flatness. The three helper functions (_is_later, _seconds_between, _precedes) are over-engineered for the task: _is_later and _precedes are nearly mirror images of each other and could be collapsed into a single comparison or eliminated entirely with a cleaner loop structure. The generic `object` type annotations for timestamps signal speculative abstraction\u2014the task implies comparable timestamps, and the `getattr`/`callable` dance in `_seconds_between` is defensive complexity that obscures rather than clarifies. The inner loop scanning all events for each A event is O(n\u00b2) when a simple grouping by session_id would be both clearer and more efficient. The 'first later B' requirement is best served by sorting and iterating forward, not by tracking a 'best' candidate across a full scan. The missing input validation (no error raised for non-list input, non-dict events, or non-integer `within`) also violates the 'raise clear errors for invalid inputs' constraint. Overall, the code is auditable but bloated with unnecessary indirection.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and avoids global state or hidden mutation, but it carries significant structural overhead that conflicts with the Zen's preference for simplicity and flatness. The three helper functions (_is_later, _seconds_between, _precedes) are over-engineered for the task: _is_later and _precedes are nearly mirror images of each other and could be collapsed into a single comparison or eliminated entirely with a cleaner loop structure. The generic `object` type annotations for timestamps signal speculative abstraction\u2014the task implies comparable timestamps, and the `getattr`/`callable` dance in `_seconds_between` is defensive complexity that obscures rather than clarifies. The inner loop scanning all events for each A event is O(n\u00b2) when a simple grouping by session_id would be both clearer and more efficient. The 'first later B' requirement is best served by sorting and iterating forward, not by tracking a 'best' candidate across a full scan. The missing input validation (no error raised for non-list input, non-dict events, or non-integer `within`) also violates the 'raise clear errors for invalid inputs' constraint. Overall, the code is auditable but bloated with unnecessary indirection.\",\n  \"strengths\": [\n    \"No hidden mutation or global state; data flow is explicit\",\n    \"Correctly handles tie-breaking by index when timestamps are equal\",\n    \"Uses __all__ and type annotations consistently\",\n    \"Skips events missing required fields gracefully\"\n  ],\n  \"weaknesses\": [\n    \"_is_later and _precedes are near-duplicates; one comparison expression would suffice\",\n    \"Speculative generic `object` typing and getattr duck-typing in _seconds_between adds unnecessary complexity\",\n    \"O(n\u00b2) nested loop when grouping by session_id first would be simpler and faster\",\n    \"No input validation or clear errors for invalid inputs (non-list, non-int within, etc.)\",\n    \"Tracking best_b_* variables across a full scan is harder to read than breaking early after sorting\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "No hidden mutation or global state; data flow is explicit",
+      "Correctly handles tie-breaking by index when timestamps are equal",
+      "Uses __all__ and type annotations consistently",
+      "Skips events missing required fields gracefully"
+    ],
+    "weaknesses": [
+      "_is_later and _precedes are near-duplicates; one comparison expression would suffice",
+      "Speculative generic `object` typing and getattr duck-typing in _seconds_between adds unnecessary complexity",
+      "O(n\u00b2) nested loop when grouping by session_id first would be simpler and faster",
+      "No input validation or clear errors for invalid inputs (non-list, non-int within, etc.)",
+      "Tracking best_b_* variables across a full scan is harder to read than breaking early after sorting"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.201,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n        pairs = correlate_events(events, within=5)\n>       assert pairs == [(events[0], events[1])]\nE       AssertionError: assert [] == [({'session_i...'type': 'B'})]\nE         \nE         Right contains one more item: ({'session_id': 's', 'ts': 1, 'type': 'A'}, {'session_id': 's', 'ts': 3, 'type': 'B'})\nE         Use -v to get more diff\n\ntest_solution.py:7: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - AssertionErr...\n1 failed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 16,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 4,
+    "loc": 61,
+    "maintainability_index": 48.679,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "baseline_generation"
+}

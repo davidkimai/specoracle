@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-structured, and closely follows the Zen of Python principles. The separation into a small pure helper `_resolve_path` and the main `extract_fields` function is appropriate and keeps each function focused. Control flow is flat with guard clauses returning early on failure. Data movement is explicit with no mutation of the input. Type errors are raised clearly. The comprehension-style loop is readable and auditable locally. Minor deductions: the docstrings are verbose (especially the Args/Returns/Raises blocks which add noise without proportional value for such simple functions), the `typing.Dict` import is unnecessary since Python 3.9+ supports `dict[str, str]` natively and the task signature uses it, and the module-level docstring and `__all__` feel slightly framework-shaped for a single-function utility. The `_resolve_path` helper could use a simple `for/else` or be expressed as a one-liner reduce, but the current form is perfectly readable. Overall this is a solid, maintainable implementation with only minor stylistic excess.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-structured, and closely follows the Zen of Python principles. The separation into a small pure helper `_resolve_path` and the main `extract_fields` function is appropriate and keeps each function focused. Control flow is flat with guard clauses returning early on failure. Data movement is explicit with no mutation of the input. Type errors are raised clearly. The comprehension-style loop is readable and auditable locally. Minor deductions: the docstrings are verbose (especially the Args/Returns/Raises blocks which add noise without proportional value for such simple functions), the `typing.Dict` import is unnecessary since Python 3.9+ supports `dict[str, str]` natively and the task signature uses it, and the module-level docstring and `__all__` feel slightly framework-shaped for a single-function utility. The `_resolve_path` helper could use a simple `for/else` or be expressed as a one-liner reduce, but the current form is perfectly readable. Overall this is a solid, maintainable implementation with only minor stylistic excess.\",\n  \"strengths\": [\n    \"Clean separation of concerns between path resolution helper and main function\",\n    \"Flat control flow with early returns instead of deep nesting\",\n    \"Explicit type validation with clear TypeError messages\",\n    \"No mutation of input record\",\n    \"Ordinary standard-library constructs only, no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstrings with Args/Returns/Raises sections add bulk without proportional value for simple functions\",\n    \"Uses legacy `typing.Dict` instead of built-in `dict` type hint (inconsistent with task signature)\",\n    \"`__all__` and module docstring feel speculative/framework-shaped for a single utility function\",\n    \"Comment inside `_resolve_path` else-branch is redundant given the code is self-explanatory\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of concerns between path resolution helper and main function",
+      "Flat control flow with early returns instead of deep nesting",
+      "Explicit type validation with clear TypeError messages",
+      "No mutation of input record",
+      "Ordinary standard-library constructs only, no metaprogramming"
+    ],
+    "weaknesses": [
+      "Verbose docstrings with Args/Returns/Raises sections add bulk without proportional value for simple functions",
+      "Uses legacy `typing.Dict` instead of built-in `dict` type hint (inconsistent with task signature)",
+      "`__all__` and module docstring feel speculative/framework-shaped for a single utility function",
+      "Comment inside `_resolve_path` else-branch is redundant given the code is self-explanatory"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.265,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 2,
+    "loc": 67,
+    "maintainability_index": 83.833,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

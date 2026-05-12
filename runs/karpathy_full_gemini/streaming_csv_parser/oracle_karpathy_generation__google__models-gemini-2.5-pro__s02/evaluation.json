@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and streaming \u2014 it uses `csv.DictReader` which is exactly the right tool, preserves lazy evaluation via a generator expression for filtering, and `yield from` for output. The core logic is minimal and correct. The main weaknesses are over-documentation (the docstring is far longer than the code itself, violating 'simplicity first'), unnecessary imports (`List` is imported but never used), and the type annotation `Dict[str, str]` could use the built-in `dict` in modern Python. The module-level docstring adds no value. Despite these cosmetic issues, the functional architecture is sound and the implementation is about as simple as it can be for this task.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and streaming \u2014 it uses `csv.DictReader` which is exactly the right tool, preserves lazy evaluation via a generator expression for filtering, and `yield from` for output. The core logic is minimal and correct. The main weaknesses are over-documentation (the docstring is far longer than the code itself, violating 'simplicity first'), unnecessary imports (`List` is imported but never used), and the type annotation `Dict[str, str]` could use the built-in `dict` in modern Python. The module-level docstring adds no value. Despite these cosmetic issues, the functional architecture is sound and the implementation is about as simple as it can be for this task.\",\n  \"strengths\": [\n    \"Uses csv.DictReader which is the canonical, minimal solution\",\n    \"Preserves streaming with a generator expression filter \u2014 no list conversion\",\n    \"yield from keeps the iterator chain lazy end-to-end\",\n    \"Correct handling of empty/whitespace-only lines\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately verbose relative to the ~3 lines of actual logic\",\n    \"Unused import: List is imported but never referenced\",\n    \"Module-level docstring adds no information\",\n    \"Minor: uses legacy typing.Dict/Iterable/Iterator instead of built-in generics (Python 3.9+)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses csv.DictReader which is the canonical, minimal solution",
+      "Preserves streaming with a generator expression filter \u2014 no list conversion",
+      "yield from keeps the iterator chain lazy end-to-end",
+      "Correct handling of empty/whitespace-only lines"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately verbose relative to the ~3 lines of actual logic",
+      "Unused import: List is imported but never referenced",
+      "Module-level docstring adds no information",
+      "Minor: uses legacy typing.Dict/Iterable/Iterator instead of built-in generics (Python 3.9+)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.272,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 37,
+    "maintainability_index": 43.066,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_karpathy_generation"
+}

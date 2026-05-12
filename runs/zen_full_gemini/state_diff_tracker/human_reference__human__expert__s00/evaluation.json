@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of Pythonic clarity and directness. It uses a single loop over the sorted union of keys, explicitly constructs each change record with the required field/before/after structure, and returns a sorted list \u2014 all in under ten lines with zero unnecessary abstraction. The use of dict.get() elegantly handles added/removed fields by returning None as the sentinel, which is semantically correct and explicit. There is no collapsing of changes, no summary strings, no hidden state, and no architectural complexity. The code is immediately auditable at a glance and perfectly satisfies both the functional requirements and the structural spec.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of Pythonic clarity and directness. It uses a single loop over the sorted union of keys, explicitly constructs each change record with the required field/before/after structure, and returns a sorted list \u2014 all in under ten lines with zero unnecessary abstraction. The use of dict.get() elegantly handles added/removed fields by returning None as the sentinel, which is semantically correct and explicit. There is no collapsing of changes, no summary strings, no hidden state, and no architectural complexity. The code is immediately auditable at a glance and perfectly satisfies both the functional requirements and the structural spec.\",\n  \"strengths\": [\n    \"Single flat loop with no nesting or helper functions needed\",\n    \"Sorted union of keys handles added, removed, and changed fields uniformly\",\n    \"Explicit record construction with all three required keys (field, before, after)\",\n    \"dict.get() correctly returns None for missing keys, representing additions/removals naturally\",\n    \"Output is sorted by field as required, achieved efficiently by sorting the iteration order\"\n  ],\n  \"weaknesses\": [\n    \"No docstring or type hints on return type elements (minor omission)\",\n    \"None as sentinel for missing fields could theoretically collide if None is a valid field value that was explicitly set \u2014 but this is an inherent ambiguity in the spec, not a code flaw\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single flat loop with no nesting or helper functions needed",
+      "Sorted union of keys handles added, removed, and changed fields uniformly",
+      "Explicit record construction with all three required keys (field, before, after)",
+      "dict.get() correctly returns None for missing keys, representing additions/removals naturally",
+      "Output is sorted by field as required, achieved efficiently by sorting the iteration order"
+    ],
+    "weaknesses": [
+      "No docstring or type hints on return type elements (minor omission)",
+      "None as sentinel for missing fields could theoretically collide if None is a valid field value that was explicitly set \u2014 but this is an inherent ambiguity in the spec, not a code flaw"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.82,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 69.446,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "human_reference"
+}

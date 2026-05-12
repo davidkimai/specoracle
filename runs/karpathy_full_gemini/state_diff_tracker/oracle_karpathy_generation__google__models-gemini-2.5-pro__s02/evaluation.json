@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly maps to the SRL-3 requirements. It uses a sentinel object to correctly distinguish missing keys from None values, iterates over the union of all fields in sorted order, and produces explicit per-field records with the required 'field', 'before', and 'after' keys. The logic is flat, readable, and locally auditable with no unnecessary abstraction layers. The only minor quibble is the use of `typing.Dict` and `typing.List` instead of the modern built-in `dict` and `list` generics (Python 3.9+), and the docstring is slightly verbose, but neither detracts meaningfully from structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly maps to the SRL-3 requirements. It uses a sentinel object to correctly distinguish missing keys from None values, iterates over the union of all fields in sorted order, and produces explicit per-field records with the required 'field', 'before', and 'after' keys. The logic is flat, readable, and locally auditable with no unnecessary abstraction layers. The only minor quibble is the use of `typing.Dict` and `typing.List` instead of the modern built-in `dict` and `list` generics (Python 3.9+), and the docstring is slightly verbose, but neither detracts meaningfully from structural quality.\",\n  \"strengths\": [\n    \"Sentinel pattern correctly handles None values as legitimate field values, avoiding false negatives\",\n    \"Single flat loop with no nested conditionals or helper functions \u2014 maximally readable\",\n    \"Explicit record construction with all three required keys per SRL-3\",\n    \"Sorted output guaranteed by pre-sorting all_fields before iteration\",\n    \"No unnecessary abstractions or over-engineering\"\n  ],\n  \"weaknesses\": [\n    \"Uses legacy `typing.Dict`/`typing.List` instead of built-in `dict`/`list` generics available since Python 3.9\",\n    \"Docstring states 'before is None' for added fields, which is technically an implementation detail that leaks the sentinel abstraction boundary\",\n    \"Minor: `previous.keys() | current.keys()` relies on dict_keys set operations which, while valid, could be made more explicit with `set(previous) | set(current)`\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Sentinel pattern correctly handles None values as legitimate field values, avoiding false negatives",
+      "Single flat loop with no nested conditionals or helper functions \u2014 maximally readable",
+      "Explicit record construction with all three required keys per SRL-3",
+      "Sorted output guaranteed by pre-sorting all_fields before iteration",
+      "No unnecessary abstractions or over-engineering"
+    ],
+    "weaknesses": [
+      "Uses legacy `typing.Dict`/`typing.List` instead of built-in `dict`/`list` generics available since Python 3.9",
+      "Docstring states 'before is None' for added fields, which is technically an implementation detail that leaks the sentinel abstraction boundary",
+      "Minor: `previous.keys() | current.keys()` relies on dict_keys set operations which, while valid, could be made more explicit with `set(previous) | set(current)`"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.3,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 41,
+    "maintainability_index": 85.894,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "oracle_karpathy_generation"
+}

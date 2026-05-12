@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. It correctly separates the validation logic into a small pure helper, keeps the main function flat with a single guard clause, raises a clear and informative error for unspecified paths, and avoids any speculative abstractions or hidden state. The use of `_ECHO_KEYS` as a module-level constant is a minor over-engineering for such a simple check \u2014 it adds a named indirection that doesn't meaningfully aid readability for a two-element set used exactly once \u2014 but it's a very minor issue. The error message is appropriately descriptive, naming conventions are clear, and the overall structure is locally auditable at a glance.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. It correctly separates the validation logic into a small pure helper, keeps the main function flat with a single guard clause, raises a clear and informative error for unspecified paths, and avoids any speculative abstractions or hidden state. The use of `_ECHO_KEYS` as a module-level constant is a minor over-engineering for such a simple check \u2014 it adds a named indirection that doesn't meaningfully aid readability for a two-element set used exactly once \u2014 but it's a very minor issue. The error message is appropriately descriptive, naming conventions are clear, and the overall structure is locally auditable at a glance.\",\n  \"strengths\": [\n    \"Pure helper function isolates validation logic cleanly\",\n    \"Flat control flow with a single guard clause in the entry point\",\n    \"Explicit key-set equality check prevents silent acceptance of extra keys\",\n    \"Clear, informative NotImplementedError message\",\n    \"No speculative abstractions, unused extension points, or framework-shaped code\",\n    \"__all__ makes the public API explicit\"\n  ],\n  \"weaknesses\": [\n    \"_ECHO_KEYS module-level constant is minor over-abstraction for a single-use two-element set\",\n    \"The helper function name `_is_specified_echo_payload` is slightly verbose; `_is_echo_payload` would suffice\",\n    \"Type annotation `payload: object` in the helper slightly conflicts with the `dict` annotation on the public function, creating a minor inconsistency\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Pure helper function isolates validation logic cleanly",
+      "Flat control flow with a single guard clause in the entry point",
+      "Explicit key-set equality check prevents silent acceptance of extra keys",
+      "Clear, informative NotImplementedError message",
+      "No speculative abstractions, unused extension points, or framework-shaped code",
+      "__all__ makes the public API explicit"
+    ],
+    "weaknesses": [
+      "_ECHO_KEYS module-level constant is minor over-abstraction for a single-use two-element set",
+      "The helper function name `_is_specified_echo_payload` is slightly verbose; `_is_echo_payload` would suffice",
+      "Type annotation `payload: object` in the helper slightly conflicts with the `dict` annotation on the public function, creating a minor inconsistency"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.837,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 2,
+    "loc": 15,
+    "maintainability_index": 69.252,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "oracle_generation"
+}

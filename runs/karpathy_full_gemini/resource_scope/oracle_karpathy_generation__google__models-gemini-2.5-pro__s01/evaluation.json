@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core logic is correct and minimal \u2014 a list, append, reversed iteration on exit \u2014 but the implementation is buried under a disproportionate amount of docstring prose, type-annotation ceremony, and a Protocol definition that adds zero runtime value for a simple context manager. The Karpathy oracle demands minimum code; this file is roughly 3-4x longer than necessary due to speculative type infrastructure (_Closable Protocol, TypeVar, fully annotated __exit__ signature) and verbose docstrings that explain obvious behavior. The Protocol in particular is an abstraction for single-use code that was never asked for. A clean implementation would be ~15 lines; this is ~70+. The functional contract is satisfied, but the structural quality violates simplicity-first and no-speculative-flexibility principles significantly.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The core logic is correct and minimal \u2014 a list, append, reversed iteration on exit \u2014 but the implementation is buried under a disproportionate amount of docstring prose, type-annotation ceremony, and a Protocol definition that adds zero runtime value for a simple context manager. The Karpathy oracle demands minimum code; this file is roughly 3-4x longer than necessary due to speculative type infrastructure (_Closable Protocol, TypeVar, fully annotated __exit__ signature) and verbose docstrings that explain obvious behavior. The Protocol in particular is an abstraction for single-use code that was never asked for. A clean implementation would be ~15 lines; this is ~70+. The functional contract is satisfied, but the structural quality violates simplicity-first and no-speculative-flexibility principles significantly.\",\n  \"strengths\": [\n    \"Core logic is correct: acquire appends, __exit__ iterates reversed, exceptions propagate naturally\",\n    \"__enter__ returns self correctly\",\n    \"No unnecessary features beyond what was asked functionally\"\n  ],\n  \"weaknesses\": [\n    \"Protocol + TypeVar abstraction is speculative over-engineering for a single-use context manager\",\n    \"Docstrings are excessively verbose, explaining trivial behavior at length\",\n    \"Full __exit__ type annotations add noise without value in this simple context\",\n    \"File is 3-4x longer than the minimum needed, violating simplicity-first principle\",\n    \"No exception handling per-resource (if one close() raises, subsequent resources are skipped) \u2014 a real robustness gap\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Core logic is correct: acquire appends, __exit__ iterates reversed, exceptions propagate naturally",
+      "__enter__ returns self correctly",
+      "No unnecessary features beyond what was asked functionally"
+    ],
+    "weaknesses": [
+      "Protocol + TypeVar abstraction is speculative over-engineering for a single-use context manager",
+      "Docstrings are excessively verbose, explaining trivial behavior at length",
+      "Full __exit__ type annotations add noise without value in this simple context",
+      "File is 3-4x longer than the minimum needed, violating simplicity-first principle",
+      "No exception handling per-resource (if one close() raises, subsequent resources are skipped) \u2014 a real robustness gap"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.884,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 1.429,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 5,
+    "loc": 66,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "oracle_karpathy_generation"
+}

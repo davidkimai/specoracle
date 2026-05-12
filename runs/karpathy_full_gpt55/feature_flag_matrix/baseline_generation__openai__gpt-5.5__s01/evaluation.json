@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It follows a straightforward three-step resolution process with no unnecessary abstraction, no hidden mutation, and no speculative extension points. The docstring clearly documents behavior, variable names are self-explanatory, and the control flow is easy to audit locally. The only minor critique is that it lacks input validation (e.g., checking that segment overrides and user overrides are actually dicts of bool values), which the operational constraints suggest should raise clear errors rather than silently proceeding. The helper-vs-monolithic tradeoff is reasonable here since the logic is simple enough that a single function remains fully auditable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It follows a straightforward three-step resolution process with no unnecessary abstraction, no hidden mutation, and no speculative extension points. The docstring clearly documents behavior, variable names are self-explanatory, and the control flow is easy to audit locally. The only minor critique is that it lacks input validation (e.g., checking that segment overrides and user overrides are actually dicts of bool values), which the operational constraints suggest should raise clear errors rather than silently proceeding. The helper-vs-monolithic tradeoff is reasonable here since the logic is simple enough that a single function remains fully auditable.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement: starts with a copy of defaults, applies layers in order\",\n    \"No mutation of inputs\",\n    \"Clear, descriptive variable names\",\n    \"No speculative abstractions or unused extension points\",\n    \"Docstring accurately describes resolution order\"\n  ],\n  \"weaknesses\": [\n    \"No input validation: invalid types (e.g., non-dict overrides, non-list segments) are silently mishandled rather than raising clear errors\",\n    \"Could optionally extract a small apply_overrides helper, though the current monolithic form is still readable at this size\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit data movement: starts with a copy of defaults, applies layers in order",
+      "No mutation of inputs",
+      "Clear, descriptive variable names",
+      "No speculative abstractions or unused extension points",
+      "Docstring accurately describes resolution order"
+    ],
+    "weaknesses": [
+      "No input validation: invalid types (e.g., non-dict overrides, non-list segments) are silently mishandled rather than raising clear errors",
+      "Could optionally extract a small apply_overrides helper, though the current monolithic form is still readable at this size"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.945,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 23,
+    "maintainability_index": 97.528,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "baseline_generation"
+}

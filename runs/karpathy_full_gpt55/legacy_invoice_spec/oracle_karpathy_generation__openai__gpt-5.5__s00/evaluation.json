@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-label variable names that make the money-affecting decisions auditable (e.g., `invoice_amount_cents_candidate`, `paid_region_amount_accepted_cents_by_region`), returns records with the exact legacy keys, uses a visible staged approach with two separate accumulator dicts rather than clever flattening, and limits comments to named legacy audit stages. The main weaknesses are the excessively verbose accumulator variable names that, while explicit, border on unreadable noise, and the use of two parallel dicts instead of a single dict-of-tuples or named structure which slightly obscures the relationship between count and total for the same region. The `type(...) is not int` check (vs `isinstance`) is a reasonable explicit choice to exclude booleans. Overall the code is locally auditable, flat, and structurally sound relative to the spec.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-label variable names that make the money-affecting decisions auditable (e.g., `invoice_amount_cents_candidate`, `paid_region_amount_accepted_cents_by_region`), returns records with the exact legacy keys, uses a visible staged approach with two separate accumulator dicts rather than clever flattening, and limits comments to named legacy audit stages. The main weaknesses are the excessively verbose accumulator variable names that, while explicit, border on unreadable noise, and the use of two parallel dicts instead of a single dict-of-tuples or named structure which slightly obscures the relationship between count and total for the same region. The `type(...) is not int` check (vs `isinstance`) is a reasonable explicit choice to exclude booleans. Overall the code is locally auditable, flat, and structurally sound relative to the spec.\",\n  \"strengths\": [\n    \"Single public function with no helpers, exactly as specified\",\n    \"Explicit staged variable names signal money-affecting decisions clearly\",\n    \"Comments are limited to named legacy audit stages only\",\n    \"Visible two-stage pipeline (filter then report) avoids clever flattening\",\n    \"Correct use of `type(...) is not int` to exclude booleans from amount_cents\",\n    \"Does not mutate input; returns exact legacy keys\"\n  ],\n  \"weaknesses\": [\n    \"Two parallel accumulator dicts (`counts_by_region` and `cents_by_region`) could drift out of sync; a single dict mapping region to (count, total) would be safer and still auditable\",\n    \"Variable names like `paid_region_amount_accepted_counts_by_region` are so verbose they impede rather than aid readability\",\n    \"No type annotation on the return value of the function itself (minor omission)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helpers, exactly as specified",
+      "Explicit staged variable names signal money-affecting decisions clearly",
+      "Comments are limited to named legacy audit stages only",
+      "Visible two-stage pipeline (filter then report) avoids clever flattening",
+      "Correct use of `type(...) is not int` to exclude booleans from amount_cents",
+      "Does not mutate input; returns exact legacy keys"
+    ],
+    "weaknesses": [
+      "Two parallel accumulator dicts (`counts_by_region` and `cents_by_region`) could drift out of sync; a single dict mapping region to (count, total) would be safer and still auditable",
+      "Variable names like `paid_region_amount_accepted_counts_by_region` are so verbose they impede rather than aid readability",
+      "No type annotation on the return value of the function itself (minor omission)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.048,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 68.549,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_karpathy_generation"
+}

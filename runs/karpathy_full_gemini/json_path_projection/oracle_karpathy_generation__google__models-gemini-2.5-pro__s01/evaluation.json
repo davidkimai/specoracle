@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound. The core traversal logic is clean, flat, and appropriately minimal \u2014 a simple loop with a try/except block covers all edge cases without over-engineering. The exception handling is explicit and well-commented. The main weakness is the docstring, which is excessively verbose for a ~15-line function; the Karpathy oracle favors minimal documentation over elaborate API docs with Args/Returns/Example sections. The `typing.Dict` and `typing.Any` imports are unnecessary given Python 3.9+ built-in generics, and the type annotation on `default` as `typing.Any` adds noise without value. The inline comments explaining each branch are slightly over-explained but not egregious. Overall, the logic is exactly right-sized \u2014 no speculative abstractions, no helper functions, no classes \u2014 but the surrounding ceremony (docstring, imports) inflates the apparent complexity beyond what the task warrants.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound. The core traversal logic is clean, flat, and appropriately minimal \u2014 a simple loop with a try/except block covers all edge cases without over-engineering. The exception handling is explicit and well-commented. The main weakness is the docstring, which is excessively verbose for a ~15-line function; the Karpathy oracle favors minimal documentation over elaborate API docs with Args/Returns/Example sections. The `typing.Dict` and `typing.Any` imports are unnecessary given Python 3.9+ built-in generics, and the type annotation on `default` as `typing.Any` adds noise without value. The inline comments explaining each branch are slightly over-explained but not egregious. Overall, the logic is exactly right-sized \u2014 no speculative abstractions, no helper functions, no classes \u2014 but the surrounding ceremony (docstring, imports) inflates the apparent complexity beyond what the task warrants.\",\n  \"strengths\": [\n    \"Core traversal logic is minimal and flat \u2014 single loop, single try/except, no helper functions\",\n    \"Correctly handles dict keys, list indexes, and non-traversable types without over-engineering\",\n    \"Does not mutate the input record\",\n    \"Exception types caught are explicit and justified with inline comments\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is far too verbose for a simple utility function \u2014 violates simplicity-first principle\",\n    \"Uses legacy `typing.Dict` and `typing.Any` instead of built-in `dict` and `object`/no annotation\",\n    \"Inline comments over-explain obvious branching logic, adding noise without clarity gain\",\n    \"The `TypeError` raise-and-catch pattern within the same block is slightly awkward; a sentinel or `break` would be cleaner\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Core traversal logic is minimal and flat \u2014 single loop, single try/except, no helper functions",
+      "Correctly handles dict keys, list indexes, and non-traversable types without over-engineering",
+      "Does not mutate the input record",
+      "Exception types caught are explicit and justified with inline comments"
+    ],
+    "weaknesses": [
+      "Docstring is far too verbose for a simple utility function \u2014 violates simplicity-first principle",
+      "Uses legacy `typing.Dict` and `typing.Any` instead of built-in `dict` and `object`/no annotation",
+      "Inline comments over-explain obvious branching logic, adding noise without clarity gain",
+      "The `TypeError` raise-and-catch pattern within the same block is slightly awkward; a sentinel or `break` would be cleaner"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.173,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 57,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_karpathy_generation"
+}

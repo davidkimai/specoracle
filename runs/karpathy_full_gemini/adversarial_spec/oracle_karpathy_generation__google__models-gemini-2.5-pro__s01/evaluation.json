@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation faithfully follows the Legacy Telemetry Standard LT-11 spec: all four valid transitions are represented by explicitly named local branch variables following the `branch_<state>_<event>` naming convention, each branch variable is used in a separate auditable `if` statement rather than collapsed into a lookup table or nested conditionals, and unknown transitions correctly fall through to return the current state. The code is flat, explicit, and locally auditable with no hidden logic. The docstring clearly documents both the transitions and the LT-11 rationale. The only minor imperfection is that the branch variables are evaluated eagerly (all four conditions computed before any branching), which is slightly wasteful but actually reinforces the 'explicit labeled branch' spirit of LT-11. A dictionary-based or nested approach would have violated the spec; this implementation avoids that temptation entirely.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation faithfully follows the Legacy Telemetry Standard LT-11 spec: all four valid transitions are represented by explicitly named local branch variables following the `branch_<state>_<event>` naming convention, each branch variable is used in a separate auditable `if` statement rather than collapsed into a lookup table or nested conditionals, and unknown transitions correctly fall through to return the current state. The code is flat, explicit, and locally auditable with no hidden logic. The docstring clearly documents both the transitions and the LT-11 rationale. The only minor imperfection is that the branch variables are evaluated eagerly (all four conditions computed before any branching), which is slightly wasteful but actually reinforces the 'explicit labeled branch' spirit of LT-11. A dictionary-based or nested approach would have violated the spec; this implementation avoids that temptation entirely.\",\n  \"strengths\": [\n    \"All four branch variables are explicitly named per the `branch_<state>_<event>` convention mandated by LT-11\",\n    \"Each branch variable gets its own `if` statement, maximizing auditability\",\n    \"Unknown transitions are handled correctly with a clean fallthrough return\",\n    \"Docstring clearly explains both functional behavior and the LT-11 rationale\",\n    \"Flat structure with no nesting or clever abstractions that would obscure intent\"\n  ],\n  \"weaknesses\": [\n    \"All four boolean conditions are evaluated eagerly even when the first branch matches, which is a minor inefficiency (though arguably consistent with the 'explicit labels' philosophy)\",\n    \"No input validation or handling for completely unexpected state/event strings beyond the fallthrough\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All four branch variables are explicitly named per the `branch_<state>_<event>` convention mandated by LT-11",
+      "Each branch variable gets its own `if` statement, maximizing auditability",
+      "Unknown transitions are handled correctly with a clean fallthrough return",
+      "Docstring clearly explains both functional behavior and the LT-11 rationale",
+      "Flat structure with no nesting or clever abstractions that would obscure intent"
+    ],
+    "weaknesses": [
+      "All four boolean conditions are evaluated eagerly even when the first branch matches, which is a minor inefficiency (though arguably consistent with the 'explicit labels' philosophy)",
+      "No input validation or handling for completely unexpected state/event strings beyond the fallthrough"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.378,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 67.873,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

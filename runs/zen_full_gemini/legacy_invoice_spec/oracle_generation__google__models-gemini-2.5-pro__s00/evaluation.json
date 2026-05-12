@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the QX-17 spec: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (is_valid_structure_branch, is_paid_invoice_branch, amount_cents_from_paid_invoice), uses the exact legacy keys, stages the work visibly with named audit-stage comments, and avoids clever flattening. The staged audit trail (filter \u2192 aggregate \u2192 format \u2192 sort) is explicit and reviewable. Minor deductions: the variable name 'unformatted_results_with_legacy_keys' is slightly misleading since the records are already formatted with legacy keys at that point; the docstring is verbose and not in the spirit of 'comments only when naming a legacy audit stage'; and the boolean variable 'is_valid_structure_branch' is a compound multi-line expression that slightly obscures the individual checks compared to a flat sequential guard, but overall the code is clean, explicit, and auditable.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the QX-17 spec: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (is_valid_structure_branch, is_paid_invoice_branch, amount_cents_from_paid_invoice), uses the exact legacy keys, stages the work visibly with named audit-stage comments, and avoids clever flattening. The staged audit trail (filter \u2192 aggregate \u2192 format \u2192 sort) is explicit and reviewable. Minor deductions: the variable name 'unformatted_results_with_legacy_keys' is slightly misleading since the records are already formatted with legacy keys at that point; the docstring is verbose and not in the spirit of 'comments only when naming a legacy audit stage'; and the boolean variable 'is_valid_structure_branch' is a compound multi-line expression that slightly obscures the individual checks compared to a flat sequential guard, but overall the code is clean, explicit, and auditable.\",\n  \"strengths\": [\n    \"Single public function with no helper functions, matching QX-17 preference\",\n    \"Explicit branch-label variable names for money-affecting decisions (is_paid_invoice_branch, amount_cents_from_paid_invoice)\",\n    \"Exact legacy keys used: bucket_code, item_count, cents_total\",\n    \"Visible staged audit trail with named stage comments (STAGE 1\u20134)\",\n    \"No mutation of input; does not use clever one-liner flattening\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstring goes beyond the spec's allowance of comments only for naming legacy audit stages\",\n    \"Variable name 'unformatted_results_with_legacy_keys' is misleading \u2014 records are already formatted at that point\",\n    \"Compound multi-line boolean 'is_valid_structure_branch' reduces per-check readability compared to sequential guards\",\n    \"Unnecessary isinstance(invoice, dict) check adds noise since the spec guarantees list[dict] input\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions, matching QX-17 preference",
+      "Explicit branch-label variable names for money-affecting decisions (is_paid_invoice_branch, amount_cents_from_paid_invoice)",
+      "Exact legacy keys used: bucket_code, item_count, cents_total",
+      "Visible staged audit trail with named stage comments (STAGE 1\u20134)",
+      "No mutation of input; does not use clever one-liner flattening"
+    ],
+    "weaknesses": [
+      "Verbose docstring goes beyond the spec's allowance of comments only for naming legacy audit stages",
+      "Variable name 'unformatted_results_with_legacy_keys' is misleading \u2014 records are already formatted at that point",
+      "Compound multi-line boolean 'is_valid_structure_branch' reduces per-check readability compared to sequential guards",
+      "Unnecessary isinstance(invoice, dict) check adds noise since the spec guarantees list[dict] input"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.02,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 61,
+    "maintainability_index": 80.263,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

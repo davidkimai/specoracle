@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core logic is minimal and correct: a simple while-True loop with a read-and-break pattern is exactly the right structure for lazy chunking. The validation correctly rejects non-positive chunk sizes. The main weaknesses are the overly verbose docstring (far exceeding what the simple function warrants) and the `isinstance(chunk_size, int)` type check, which is slightly over-engineered \u2014 the task only asks to reject non-positive sizes, and a simple `if chunk_size <= 0` would suffice while also being more Pythonic (duck-typing friendly). The module-level docstring and `typing` import are minor bloat but not severe. Overall the implementation is structurally sound with minor violations of the 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The core logic is minimal and correct: a simple while-True loop with a read-and-break pattern is exactly the right structure for lazy chunking. The validation correctly rejects non-positive chunk sizes. The main weaknesses are the overly verbose docstring (far exceeding what the simple function warrants) and the `isinstance(chunk_size, int)` type check, which is slightly over-engineered \u2014 the task only asks to reject non-positive sizes, and a simple `if chunk_size <= 0` would suffice while also being more Pythonic (duck-typing friendly). The module-level docstring and `typing` import are minor bloat but not severe. Overall the implementation is structurally sound with minor violations of the 'minimum code' principle.\",\n  \"strengths\": [\n    \"Core loop is minimal and idiomatic: while-True with break on empty chunk\",\n    \"Correctly rejects non-positive chunk_size with ValueError\",\n    \"No unnecessary abstractions or speculative flexibility\",\n    \"Proper use of generator (yield) for lazy evaluation\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is excessively verbose for such a simple function \u2014 violates simplicity-first principle\",\n    \"isinstance check adds unnecessary type enforcement beyond what the task requires; `chunk_size <= 0` alone would suffice\",\n    \"Module-level docstring is minor bloat for a single-function utility\",\n    \"Importing typing for a single annotation is marginal overhead (minor)\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Core loop is minimal and idiomatic: while-True with break on empty chunk",
+      "Correctly rejects non-positive chunk_size with ValueError",
+      "No unnecessary abstractions or speculative flexibility",
+      "Proper use of generator (yield) for lazy evaluation"
+    ],
+    "weaknesses": [
+      "Docstring is excessively verbose for such a simple function \u2014 violates simplicity-first principle",
+      "isinstance check adds unnecessary type enforcement beyond what the task requires; `chunk_size <= 0` alone would suffice",
+      "Module-level docstring is minor bloat for a single-function utility",
+      "Importing typing for a single annotation is marginal overhead (minor)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.29,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 31,
+    "maintainability_index": 80.99,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "oracle_karpathy_generation"
+}

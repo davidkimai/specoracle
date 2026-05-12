@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, but carries several structural issues that reduce its score against the Zen oracle. The regex is recompiled inside the function on every call (should be a module-level constant), the docstring is excessively verbose relative to the simplicity of the task, the comment about O(1) set lookups is noise that clutters local auditability, and the `seen` set is redundant since `sanitized_list` membership could be checked or a dict-based dedup used \u2014 though the seen-set approach is at least explicit. The function is monolithic where a small `is_valid` helper would make the filter predicate locally auditable and testable in isolation. The legacy `List`/`Set` typing from `typing` instead of built-in `list`/`set` (available since Python 3.9) is a minor anachronism. Overall the code works and is not deeply nested, but the verbosity, misplaced constant, and missed helper extraction leave meaningful room for improvement.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, but carries several structural issues that reduce its score against the Zen oracle. The regex is recompiled inside the function on every call (should be a module-level constant), the docstring is excessively verbose relative to the simplicity of the task, the comment about O(1) set lookups is noise that clutters local auditability, and the `seen` set is redundant since `sanitized_list` membership could be checked or a dict-based dedup used \u2014 though the seen-set approach is at least explicit. The function is monolithic where a small `is_valid` helper would make the filter predicate locally auditable and testable in isolation. The legacy `List`/`Set` typing from `typing` instead of built-in `list`/`set` (available since Python 3.9) is a minor anachronism. Overall the code works and is not deeply nested, but the verbosity, misplaced constant, and missed helper extraction leave meaningful room for improvement.\",\n  \"strengths\": [\n    \"Flat control flow with a single loop and guard clause for duplicates\",\n    \"Explicit data movement: no hidden mutation, clear input/output\",\n    \"Correct deduplication while preserving order\",\n    \"Regex anchors ensure full-string validation\"\n  ],\n  \"weaknesses\": [\n    \"Regex compiled inside the function on every call instead of at module level\",\n    \"Overly long docstring and inline comments add noise without aiding auditability\",\n    \"No small `is_valid` helper to isolate and test the validation predicate\",\n    \"Uses deprecated `typing.List`/`typing.Set` instead of built-in `list`/`set`\",\n    \"Comment explaining O(1) set lookup is speculative/unnecessary clutter\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single loop and guard clause for duplicates",
+      "Explicit data movement: no hidden mutation, clear input/output",
+      "Correct deduplication while preserving order",
+      "Regex anchors ensure full-string validation"
+    ],
+    "weaknesses": [
+      "Regex compiled inside the function on every call instead of at module level",
+      "Overly long docstring and inline comments add noise without aiding auditability",
+      "No small `is_valid` helper to isolate and test the validation predicate",
+      "Uses deprecated `typing.List`/`typing.Set` instead of built-in `list`/`set`",
+      "Comment explaining O(1) set lookup is speculative/unnecessary clutter"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.225,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 37,
+    "maintainability_index": 73.221,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and correct. It uses a single lock, a defaultdict for counts, and a cached total to avoid recomputation \u2014 all sensible choices. The three methods are flat, readable, and locally auditable. The docstrings are somewhat verbose for such simple methods (the oracle would prefer leaner or no docstrings for obvious contracts), and the class-level docstring is redundant with the constructor docstring. The `_current_total` cache is a minor but justified optimization that avoids summing the dict on every `total()` call. The `snapshot()` correctly returns a shallow copy of immutable-valued dict. One small concern: `defaultdict` is used internally but `dict()` is returned from snapshot, which is correct. The import of `Dict` from `typing` is slightly dated (Python 3.9+ supports `dict[str, int]` natively) but not a structural flaw. Overall this is a tight, correct, thread-safe implementation with minimal excess.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and correct. It uses a single lock, a defaultdict for counts, and a cached total to avoid recomputation \u2014 all sensible choices. The three methods are flat, readable, and locally auditable. The docstrings are somewhat verbose for such simple methods (the oracle would prefer leaner or no docstrings for obvious contracts), and the class-level docstring is redundant with the constructor docstring. The `_current_total` cache is a minor but justified optimization that avoids summing the dict on every `total()` call. The `snapshot()` correctly returns a shallow copy of immutable-valued dict. One small concern: `defaultdict` is used internally but `dict()` is returned from snapshot, which is correct. The import of `Dict` from `typing` is slightly dated (Python 3.9+ supports `dict[str, int]` natively) but not a structural flaw. Overall this is a tight, correct, thread-safe implementation with minimal excess.\",\n  \"strengths\": [\n    \"Single lock covers all three operations cleanly \u2014 no over-engineering\",\n    \"Cached _current_total avoids O(n) sum on every total() call\",\n    \"snapshot() correctly returns a plain dict copy, not exposing the defaultdict\",\n    \"OverflowError check is atomic with the increment \u2014 no TOCTOU race\",\n    \"No speculative abstractions or unnecessary configurability\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are overly verbose for trivial contracts \u2014 oracle prefers lean or no docs for obvious methods\",\n    \"Class-level docstring largely duplicates constructor docstring\",\n    \"Using `from typing import Dict` is dated; `dict[str, int]` suffices in modern Python\",\n    \"The inline comment in snapshot() over-explains an obvious operation\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single lock covers all three operations cleanly \u2014 no over-engineering",
+      "Cached _current_total avoids O(n) sum on every total() call",
+      "snapshot() correctly returns a plain dict copy, not exposing the defaultdict",
+      "OverflowError check is atomic with the increment \u2014 no TOCTOU race",
+      "No speculative abstractions or unnecessary configurability"
+    ],
+    "weaknesses": [
+      "Docstrings are overly verbose for trivial contracts \u2014 oracle prefers lean or no docs for obvious methods",
+      "Class-level docstring largely duplicates constructor docstring",
+      "Using `from typing import Dict` is dated; `dict[str, int]` suffices in modern Python",
+      "The inline comment in snapshot() over-explains an obvious operation"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.336,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.13s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.6,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 4,
+    "loc": 67,
+    "maintainability_index": 73.071,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_karpathy_generation"
+}

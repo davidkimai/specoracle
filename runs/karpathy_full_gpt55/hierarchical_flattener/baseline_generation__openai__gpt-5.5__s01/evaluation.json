@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, readable, and includes a clear error guard for invalid input. The docstring and example are helpful. However, the use of a nested closure (`visit`) with a captured mutable dict (`flattened`) introduces hidden mutation and implicit state sharing \u2014 exactly what the operational constraints warn against. A cleaner approach would use a pure recursive helper that returns a dict and merges results explicitly, keeping data movement visible. The nested function also prevents the helper from being independently tested or reused. The `str(key)` coercion is a reasonable defensive touch, and the flat control flow inside `visit` is acceptable, but the closure-over-mutable-accumulator pattern is a mild architectural smell that a Zen-aligned implementation would avoid.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct, readable, and includes a clear error guard for invalid input. The docstring and example are helpful. However, the use of a nested closure (`visit`) with a captured mutable dict (`flattened`) introduces hidden mutation and implicit state sharing \u2014 exactly what the operational constraints warn against. A cleaner approach would use a pure recursive helper that returns a dict and merges results explicitly, keeping data movement visible. The nested function also prevents the helper from being independently tested or reused. The `str(key)` coercion is a reasonable defensive touch, and the flat control flow inside `visit` is acceptable, but the closure-over-mutable-accumulator pattern is a mild architectural smell that a Zen-aligned implementation would avoid.\",\n  \"strengths\": [\n    \"Clear TypeError guard for non-dict input\",\n    \"Readable key-path construction with f-string\",\n    \"Docstring with concrete example aids local auditability\",\n    \"Correct leaf treatment of lists and other non-dict values\",\n    \"Sparse, no speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Nested closure mutates outer `flattened` dict \u2014 hidden state, not explicit data movement\",\n    \"Pure recursive helper returning a dict would be more auditable and testable in isolation\",\n    \"`visit` cannot be unit-tested independently due to closure coupling\",\n    \"Slight over-engineering: a simple iterative stack or tail-recursive helper would be equally simple and more explicit\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear TypeError guard for non-dict input",
+      "Readable key-path construction with f-string",
+      "Docstring with concrete example aids local auditability",
+      "Correct leaf treatment of lists and other non-dict values",
+      "Sparse, no speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Nested closure mutates outer `flattened` dict \u2014 hidden state, not explicit data movement",
+      "Pure recursive helper returning a dict would be more auditable and testable in isolation",
+      "`visit` cannot be unit-tested independently due to closure coupling",
+      "Slight over-engineering: a simple iterative stack or tail-recursive helper would be equally simple and more explicit"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.144,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 2,
+    "loc": 23,
+    "maintainability_index": 98.896,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "baseline_generation"
+}

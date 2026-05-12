@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and direct. It uses a single while-True loop with an early return guard clause, explicit data movement via extend, and no hidden state or speculative abstractions. The type annotations are thorough without being overbearing, and the docstring is minimal and accurate. The only minor quibble is that the type annotations with TypeVar and Callable/Awaitable/Iterable imports add a small amount of ceremony that could be simplified with a plain Protocol or even just a comment, but this is a very minor concern and the annotations do add genuine clarity for maintainers. Overall, this is an excellent realization of the Zen-aligned structural spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and direct. It uses a single while-True loop with an early return guard clause, explicit data movement via extend, and no hidden state or speculative abstractions. The type annotations are thorough without being overbearing, and the docstring is minimal and accurate. The only minor quibble is that the type annotations with TypeVar and Callable/Awaitable/Iterable imports add a small amount of ceremony that could be simplified with a plain Protocol or even just a comment, but this is a very minor concern and the annotations do add genuine clarity for maintainers. Overall, this is an excellent realization of the Zen-aligned structural spec.\",\n  \"strengths\": [\n    \"Flat control flow with a single loop and a guard-clause return\",\n    \"Explicit data movement: cursor and collected are both visible and local\",\n    \"No hidden mutation, no global state, no speculative extension points\",\n    \"Accurate and minimal docstring\",\n    \"Standard-library constructs only; no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar-based generic annotations add import ceremony that may be overkill for a simple utility function\",\n    \"Iterable[ItemT] in the return type annotation is slightly over-specified; a simpler annotation would still be auditable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single loop and a guard-clause return",
+      "Explicit data movement: cursor and collected are both visible and local",
+      "No hidden mutation, no global state, no speculative extension points",
+      "Accurate and minimal docstring",
+      "Standard-library constructs only; no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "TypeVar-based generic annotations add import ceremony that may be overkill for a simple utility function",
+      "Iterable[ItemT] in the return type annotation is slightly over-specified; a simpler annotation would still be auditable"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.118,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 23,
+    "maintainability_index": 68.014,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "baseline_generation"
+}

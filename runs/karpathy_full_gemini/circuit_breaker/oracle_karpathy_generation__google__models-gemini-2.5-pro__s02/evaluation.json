@@ -1,0 +1,56 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are encapsulated in dedicated methods, configuration values are named instance attributes, and the half-open trial logic correctly closes on success and reopens on failure per RCS-5. The `state` attribute is directly inspectable. The code is flat and readable with no unnecessary abstraction layers. Minor weaknesses include overly verbose docstrings that add noise without clarity benefit, the custom `CircuitBreakerOpenError` subclass (the spec says RuntimeError, which this satisfies via inheritance but adds an extra public symbol), the TypeVar/generic machinery is unnecessary complexity for this use case, and the validation rejecting zero/negative thresholds is a reasonable guard but not specified. Overall this is a solid, auditable implementation that closely follows the structural spec.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are encapsulated in dedicated methods, configuration values are named instance attributes, and the half-open trial logic correctly closes on success and reopens on failure per RCS-5. The `state` attribute is directly inspectable. The code is flat and readable with no unnecessary abstraction layers. Minor weaknesses include overly verbose docstrings that add noise without clarity benefit, the custom `CircuitBreakerOpenError` subclass (the spec says RuntimeError, which this satisfies via inheritance but adds an extra public symbol), the TypeVar/generic machinery is unnecessary complexity for this use case, and the validation rejecting zero/negative thresholds is a reasonable guard but not specified. Overall this is a solid, auditable implementation that closely follows the structural spec.\",\n  \"strengths\": [\n    \"Explicit state enum with inspectable `state` attribute satisfies RCS-5\",\n    \"Named configuration values `failure_threshold` and `recovery_timeout` stored as instance attributes\",\n    \"Dedicated `_transition_to_*` methods make state changes locally auditable\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Injected `now` callable enables deterministic testing\",\n    \"Re-raises original exception transparently\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar/CallableType generics add unnecessary complexity for a simple wrapper\",\n    \"Custom `CircuitBreakerOpenError` adds an extra public symbol not required by spec\",\n    \"Overly verbose docstrings reduce signal-to-noise ratio\",\n    \"Input validation (rejecting non-positive values) is unspecified behavior that could surprise callers\",\n    \"The `_on_success`/`_on_failure` indirection adds a layer that could be inlined for simpler reading\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit state enum with inspectable `state` attribute satisfies RCS-5",
+      "Named configuration values `failure_threshold` and `recovery_timeout` stored as instance attributes",
+      "Dedicated `_transition_to_*` methods make state changes locally auditable",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Injected `now` callable enables deterministic testing",
+      "Re-raises original exception transparently"
+    ],
+    "weaknesses": [
+      "TypeVar/CallableType generics add unnecessary complexity for a simple wrapper",
+      "Custom `CircuitBreakerOpenError` adds an extra public symbol not required by spec",
+      "Overly verbose docstrings reduce signal-to-noise ratio",
+      "Input validation (rejecting non-positive values) is unspecified behavior that could surprise callers",
+      "The `_on_success`/`_on_failure` indirection adds a layer that could be inlined for simpler reading"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.201,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert <State.OPEN: 'open'> == 'open'\nE        +  where <State.OPEN: 'open'> = <solution.CircuitBreaker object at 0xffff9890ec90>.state\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 3,
+    "cyclomatic_complexity_average": 2.3,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 7,
+    "loc": 135,
+    "maintainability_index": 67.296,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_karpathy_generation"
+}

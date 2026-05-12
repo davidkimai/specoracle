@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean, with explicit data movement, flat-ish control flow, and clear exception handling. However, it violates the 'prefer small pure helpers' constraint by embedding path traversal logic directly in the loop rather than extracting a `resolve_path(record, path, default)` helper. The docstring and comments are verbose to the point of noise \u2014 the inline comments explaining KeyError, IndexError, etc. are redundant with the exception names themselves. The copyright header and module docstring add speculative framework-shaped scaffolding for a utility function. The `TypeError` raise-to-catch pattern within the same try block is a minor anti-pattern; a guard clause or early return in a helper would be cleaner. Overall the code is readable and auditable but misses the 'sparse enough to audit locally' ideal due to over-documentation and the missed helper extraction.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean, with explicit data movement, flat-ish control flow, and clear exception handling. However, it violates the 'prefer small pure helpers' constraint by embedding path traversal logic directly in the loop rather than extracting a `resolve_path(record, path, default)` helper. The docstring and comments are verbose to the point of noise \u2014 the inline comments explaining KeyError, IndexError, etc. are redundant with the exception names themselves. The copyright header and module docstring add speculative framework-shaped scaffolding for a utility function. The `TypeError` raise-to-catch pattern within the same try block is a minor anti-pattern; a guard clause or early return in a helper would be cleaner. Overall the code is readable and auditable but misses the 'sparse enough to audit locally' ideal due to over-documentation and the missed helper extraction.\",\n  \"strengths\": [\n    \"Correct handling of dict keys, list indexes, and missing paths via unified exception catch\",\n    \"No mutation of input record\",\n    \"Explicit mapping of output keys to resolved values\",\n    \"Clear variable names (current_value, parts, part, output_key, path_string)\",\n    \"Covers all relevant exception types with brief rationale\"\n  ],\n  \"weaknesses\": [\n    \"Path traversal logic should be extracted into a small pure helper (e.g., resolve_path) per the 'small pure helpers' constraint\",\n    \"Raise-then-catch TypeError within the same try block is an anti-pattern; a guard clause would be cleaner\",\n    \"Verbose inline comments and docstring exceed what the code needs \u2014 reduces sparseness\",\n    \"Copyright header and module docstring add speculative framework scaffolding inappropriate for a utility function\",\n    \"The `Dict` import from typing is unused (redundant with the built-in `dict` already used)\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct handling of dict keys, list indexes, and missing paths via unified exception catch",
+      "No mutation of input record",
+      "Explicit mapping of output keys to resolved values",
+      "Clear variable names (current_value, parts, part, output_key, path_string)",
+      "Covers all relevant exception types with brief rationale"
+    ],
+    "weaknesses": [
+      "Path traversal logic should be extracted into a small pure helper (e.g., resolve_path) per the 'small pure helpers' constraint",
+      "Raise-then-catch TypeError within the same try block is an anti-pattern; a guard clause would be cleaner",
+      "Verbose inline comments and docstring exceed what the code needs \u2014 reduces sparseness",
+      "Copyright header and module docstring add speculative framework scaffolding inappropriate for a utility function",
+      "The `Dict` import from typing is unused (redundant with the built-in `dict` already used)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.558,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 58,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses reasonable decomposition with named helpers, but it leans on ExitStack as an internal engine when the task is simple enough that a plain list would be flatter, more explicit, and easier to audit locally. ExitStack is a speculative abstraction here\u2014it adds indirection, hides the reversal logic, and introduces a second stateful object that must be lifecycle-managed in parallel with ResourceScope itself. The `_entered`/`_closed` dual-flag state machine adds complexity that a simpler design (just a list, closed by iterating in reverse) would avoid entirely. The helper split between `_get_close_method` and `_close_resource` is reasonable but slightly redundant since `_close_resource` is a one-liner wrapper. Overall the code is readable and not egregiously over-engineered, but the ExitStack delegation is an unnecessary layer of indirection for a task whose core mechanic is 'append to list, reverse-close on exit'.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses reasonable decomposition with named helpers, but it leans on ExitStack as an internal engine when the task is simple enough that a plain list would be flatter, more explicit, and easier to audit locally. ExitStack is a speculative abstraction here\u2014it adds indirection, hides the reversal logic, and introduces a second stateful object that must be lifecycle-managed in parallel with ResourceScope itself. The `_entered`/`_closed` dual-flag state machine adds complexity that a simpler design (just a list, closed by iterating in reverse) would avoid entirely. The helper split between `_get_close_method` and `_close_resource` is reasonable but slightly redundant since `_close_resource` is a one-liner wrapper. Overall the code is readable and not egregiously over-engineered, but the ExitStack delegation is an unnecessary layer of indirection for a task whose core mechanic is 'append to list, reverse-close on exit'.\",\n  \"strengths\": [\n    \"Clear error messages with type names for invalid resources\",\n    \"Explicit guard clauses for closed/re-entered states keep control flow flat\",\n    \"Named helpers make intent readable\",\n    \"acquire() validates the close method before registration, failing fast\"\n  ],\n  \"weaknesses\": [\n    \"ExitStack is a speculative abstraction; a plain list with reversed() is simpler and more auditable\",\n    \"Dual lifecycle objects (_exit_stack + ResourceScope) must stay in sync, adding hidden complexity\",\n    \"_close_resource is a trivial one-liner wrapper that adds indirection without clarity gain\",\n    \"The _entered flag is unnecessary if re-entry is handled by checking _closed and using a simpler design\",\n    \"Suppression behavior on exit is delegated silently to ExitStack rather than being explicit\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear error messages with type names for invalid resources",
+      "Explicit guard clauses for closed/re-entered states keep control flow flat",
+      "Named helpers make intent readable",
+      "acquire() validates the close method before registration, failing fast"
+    ],
+    "weaknesses": [
+      "ExitStack is a speculative abstraction; a plain list with reversed() is simpler and more auditable",
+      "Dual lifecycle objects (_exit_stack + ResourceScope) must stay in sync, adding hidden complexity",
+      "_close_resource is a trivial one-liner wrapper that adds indirection without clarity gain",
+      "The _entered flag is unnecessary if re-entry is handled by checking _closed and using a simpler design",
+      "Suppression behavior on exit is delegated silently to ExitStack rather than being explicit"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.744,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.857,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 6,
+    "loc": 36,
+    "maintainability_index": 63.274,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "oracle_generation"
+}

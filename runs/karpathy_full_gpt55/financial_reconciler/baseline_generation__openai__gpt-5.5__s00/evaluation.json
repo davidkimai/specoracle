@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4's doctrine: debit and credit are accumulated into separate named keys within the account dict, the direction check is a clean guard with no inline arithmetic inside the conditional, and balance is computed in a dedicated final pass over the totals rather than inline during accumulation. The code is flat, explicit, and locally auditable with no clever abstractions obscuring monetary logic. The validation is thorough without being excessive. The only minor structural quibble is that `balance` is initialized to 0 in the account dict and then overwritten in a second pass, which is slightly redundant but not harmful, and the import of `Hashable` for a runtime isinstance check on account is technically unreliable (all objects are instances of Hashable in Python), though this doesn't affect correctness of the core reconciliation logic.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4's doctrine: debit and credit are accumulated into separate named keys within the account dict, the direction check is a clean guard with no inline arithmetic inside the conditional, and balance is computed in a dedicated final pass over the totals rather than inline during accumulation. The code is flat, explicit, and locally auditable with no clever abstractions obscuring monetary logic. The validation is thorough without being excessive. The only minor structural quibble is that `balance` is initialized to 0 in the account dict and then overwritten in a second pass, which is slightly redundant but not harmful, and the import of `Hashable` for a runtime isinstance check on account is technically unreliable (all objects are instances of Hashable in Python), though this doesn't affect correctness of the core reconciliation logic.\",\n  \"strengths\": [\n    \"Debit and credit accumulate into separate named keys, satisfying TR-4's named accumulator requirement\",\n    \"No inline arithmetic inside the direction-deciding conditional\",\n    \"Balance computed in a clean, separate final pass over reconciled values\",\n    \"Flat, readable structure with no unnecessary abstraction layers\",\n    \"Explicit error messages with index context for all validation failures\",\n    \"Boolean exclusion from numeric check is a good defensive touch\"\n  ],\n  \"weaknesses\": [\n    \"Initializing 'balance': 0 in the account dict is redundant since it's always overwritten in the final pass\",\n    \"isinstance(account, Hashable) check is unreliable in Python (unhashable types like lists still pass this check at runtime)\",\n    \"Minor over-engineering in imports (collections.abc.Hashable, numbers.Number) for validation that doesn't fully work as intended\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Debit and credit accumulate into separate named keys, satisfying TR-4's named accumulator requirement",
+      "No inline arithmetic inside the direction-deciding conditional",
+      "Balance computed in a clean, separate final pass over reconciled values",
+      "Flat, readable structure with no unnecessary abstraction layers",
+      "Explicit error messages with index context for all validation failures",
+      "Boolean exclusion from numeric check is a good defensive touch"
+    ],
+    "weaknesses": [
+      "Initializing 'balance': 0 in the account dict is redundant since it's always overwritten in the final pass",
+      "isinstance(account, Hashable) check is unreliable in Python (unhashable types like lists still pass this check at runtime)",
+      "Minor over-engineering in imports (collections.abc.Hashable, numbers.Number) for validation that doesn't fully work as intended"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.37,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 81.966,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

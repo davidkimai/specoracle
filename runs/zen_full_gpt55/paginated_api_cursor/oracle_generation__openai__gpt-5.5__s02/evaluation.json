@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and shows some good instincts\u2014flat loop, explicit data movement, clear naming\u2014but it accumulates speculative abstractions that the task doesn't warrant. The TypeVar/TypeAlias machinery, the `inspect.isawaitable` runtime check extracted into a helper, and the `_validate_page` validator all add complexity that the Zen oracle would collapse: the task simply says 'fetch_page is an async callable returning (items, next_cursor)', so defensive runtime type-checking of the return value is speculative framework-shaped code. The `_fetch_page` helper exists solely to do an `isawaitable` guard that a normal `await` would surface as a clear TypeError anyway. Splitting a six-line loop body across three functions hurts local auditability rather than helping it. The type annotations are also over-engineered (TypeVar on a module-level alias that isn't actually generic at runtime). A simpler, more Pythonic version would be a single async function with a straightforward while-loop, a `callable()` guard if desired, and a direct `await fetch_page(cursor)`.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and shows some good instincts\u2014flat loop, explicit data movement, clear naming\u2014but it accumulates speculative abstractions that the task doesn't warrant. The TypeVar/TypeAlias machinery, the `inspect.isawaitable` runtime check extracted into a helper, and the `_validate_page` validator all add complexity that the Zen oracle would collapse: the task simply says 'fetch_page is an async callable returning (items, next_cursor)', so defensive runtime type-checking of the return value is speculative framework-shaped code. The `_fetch_page` helper exists solely to do an `isawaitable` guard that a normal `await` would surface as a clear TypeError anyway. Splitting a six-line loop body across three functions hurts local auditability rather than helping it. The type annotations are also over-engineered (TypeVar on a module-level alias that isn't actually generic at runtime). A simpler, more Pythonic version would be a single async function with a straightforward while-loop, a `callable()` guard if desired, and a direct `await fetch_page(cursor)`.\",\n  \"strengths\": [\n    \"Control flow in the main loop is flat and easy to follow\",\n    \"Explicit data movement: cursor threading is visible at each step\",\n    \"Raises TypeError for non-callable fetch_page rather than silently failing\",\n    \"Correct functional behavior: collects all pages until next_cursor is None\"\n  ],\n  \"weaknesses\": [\n    \"_fetch_page helper adds indirection for a single await\u2014hurts local auditability\",\n    \"_validate_page is speculative defensive code not implied by the task spec\",\n    \"TypeVar/TypeAlias/Iterable imports are over-engineered for a simple async accumulator\",\n    \"inspect.isawaitable check is redundant; a plain await surfaces the same error more naturally\",\n    \"Three functions where one would be clearer and more auditable\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Control flow in the main loop is flat and easy to follow",
+      "Explicit data movement: cursor threading is visible at each step",
+      "Raises TypeError for non-callable fetch_page rather than silently failing",
+      "Correct functional behavior: collects all pages until next_cursor is None"
+    ],
+    "weaknesses": [
+      "_fetch_page helper adds indirection for a single await\u2014hurts local auditability",
+      "_validate_page is speculative defensive code not implied by the task spec",
+      "TypeVar/TypeAlias/Iterable imports are over-engineered for a simple async accumulator",
+      "inspect.isawaitable check is redundant; a plain await surfaces the same error more naturally",
+      "Three functions where one would be clearer and more auditable"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.28,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.16s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.333,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 3,
+    "loc": 40,
+    "maintainability_index": 52.294,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_generation"
+}

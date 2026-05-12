@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, explicit, and directly wraps hmac.compare_digest with exactly the type-checking logic required. The two-guard approach is clean: first check type parity, then check type validity, then delegate. No unnecessary abstractions, no speculative features, no dead code. The only minor quibble is that the order of checks could be argued either way (checking valid types first vs. same-type first), but the chosen order produces sensible error messages and is logically coherent. The type annotation uses the modern union syntax which is appropriate and readable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, explicit, and directly wraps hmac.compare_digest with exactly the type-checking logic required. The two-guard approach is clean: first check type parity, then check type validity, then delegate. No unnecessary abstractions, no speculative features, no dead code. The only minor quibble is that the order of checks could be argued either way (checking valid types first vs. same-type first), but the chosen order produces sensible error messages and is logically coherent. The type annotation uses the modern union syntax which is appropriate and readable.\",\n  \"strengths\": [\n    \"Minimal code \u2014 exactly what the task requires, nothing more\",\n    \"Explicit type guards with clear, descriptive error messages\",\n    \"Direct delegation to hmac.compare_digest without unnecessary wrapping\",\n    \"Modern type annotations (str | bytes) are clean and idiomatic\",\n    \"Flat structure with no unnecessary nesting or abstraction\"\n  ],\n  \"weaknesses\": [\n    \"Checking type parity before type validity means a (list, dict) pair raises 'same type' error rather than 'must be str or bytes', which is a minor semantic ordering issue\",\n    \"No docstring, though for such a small function this is a very minor concern\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 exactly what the task requires, nothing more",
+      "Explicit type guards with clear, descriptive error messages",
+      "Direct delegation to hmac.compare_digest without unnecessary wrapping",
+      "Modern type annotations (str | bytes) are clean and idiomatic",
+      "Flat structure with no unnecessary nesting or abstraction"
+    ],
+    "weaknesses": [
+      "Checking type parity before type validity means a (list, dict) pair raises 'same type' error rather than 'must be str or bytes', which is a minor semantic ordering issue",
+      "No docstring, though for such a small function this is a very minor concern"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.927,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 7,
+    "maintainability_index": 72.825,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "oracle_karpathy_generation"
+}

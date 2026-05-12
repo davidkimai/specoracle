@@ -1,0 +1,40 @@
+{
+  "code": "import threading\n\n\nclass LazySingleton:\n    def __init__(self, factory):\n        if not callable(factory):\n            raise TypeError(\"factory must be callable\")\n        self._factory = factory\n        self._lock = threading.Lock()\n        self._created = False\n        self._value = None\n\n    def get(self):\n        if not self._created:\n            with self._lock:\n                if not self._created:\n                    self._value = self._factory()\n                    self._created = True\n        return self._value",
+  "effective_temperature": null,
+  "entry_point": "LazySingleton",
+  "hybrid": null,
+  "mode": "oracle_karpathy",
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "raw_response": "import threading\n\n\nclass LazySingleton:\n    def __init__(self, factory):\n        if not callable(factory):\n            raise TypeError(\"factory must be callable\")\n        self._factory = factory\n        self._lock = threading.Lock()\n        self._created = False\n        self._value = None\n\n    def get(self):\n        if not self._created:\n            with self._lock:\n                if not self._created:\n                    self._value = self._factory()\n                    self._created = True\n        return self._value",
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "system_prompt": "You are a secure program synthesis engineer. Generate a correct, reviewable Python\nmodule for the task. Return only Python code. Do not include markdown prose.\n\nTreat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n\n",
+  "task": {
+    "custom_spec_override": null,
+    "day2_prompt": "Add reset_for_test() that restores the uninitialized state so the next get()\ncreates a fresh object. Preserve thread safety.\n",
+    "day2_stressors": [
+      "cross_function_state",
+      "interface_generalization",
+      "backwards_compatibility"
+    ],
+    "day2_test_code": "from solution import LazySingleton\n\n\ndef test_reset_for_test_creates_new_instance():\n    counter = {'n': 0}\n    def factory():\n        counter['n'] += 1\n        return {'n': counter['n']}\n    singleton = LazySingleton(factory)\n    first = singleton.get()\n    singleton.reset_for_test()\n    second = singleton.get()\n    assert first != second\n    assert counter['n'] == 2\n",
+    "entry_point": "LazySingleton",
+    "human_reference": "from __future__ import annotations\n\nfrom threading import Lock\nfrom typing import Callable, Generic, TypeVar\n\nT = TypeVar('T')\n_MISSING = object()\n\n\nclass LazySingleton(Generic[T]):\n    def __init__(self, factory: Callable[[], T]) -> None:\n        self._factory = factory\n        self._value: T | object = _MISSING\n        self._lock = Lock()\n\n    def get(self) -> T:\n        if self._value is _MISSING:\n            with self._lock:\n                if self._value is _MISSING:\n                    self._value = self._factory()\n        return self._value  # type: ignore[return-value]\n",
+    "id": "lazy_singleton",
+    "mock_day2_solution": "from __future__ import annotations\n\nimport threading\n\n_EMPTY = object()\n\n\nclass LazySingleton:\n    def __init__(self, factory):\n        self.factory = factory\n        self.value = _EMPTY\n        self.lock = threading.Lock()\n\n    def get(self):\n        with self.lock:\n            if self.value is _EMPTY:\n                self.value = self.factory()\n            return self.value\n\n    def reset_for_test(self):\n        with self.lock:\n            self.value = _EMPTY\n",
+    "mock_solution": "from __future__ import annotations\n\nimport threading\n\n_EMPTY = object()\n\n\nclass LazySingleton:\n    def __init__(self, factory):\n        self.factory = factory\n        self.value = _EMPTY\n        self.lock = threading.Lock()\n\n    def get(self):\n        with self.lock:\n            if self.value is _EMPTY:\n                self.value = self.factory()\n            return self.value\n",
+    "prompt": "Implement LazySingleton(factory). Method get() returns the same lazily-created\nobject on every call. It must be safe under concurrent calls from multiple\nthreads.\n",
+    "tags": [
+      "object_lifecycle",
+      "threading",
+      "day2-hard"
+    ],
+    "test_code": "from concurrent.futures import ThreadPoolExecutor\n\nfrom solution import LazySingleton\n\n\ndef test_single_instance_under_threads():\n    calls = []\n    singleton = LazySingleton(lambda: calls.append(object()) or calls[-1])\n    with ThreadPoolExecutor(max_workers=4) as pool:\n        values = list(pool.map(lambda _: singleton.get(), range(20)))\n    assert len({id(value) for value in values}) == 1\n    assert len(calls) == 1\n"
+  },
+  "task_id": "lazy_singleton",
+  "user_prompt": "Task id: lazy_singleton\nEntry point: LazySingleton\n\nFunctional requirements:\nImplement LazySingleton(factory). Method get() returns the same lazily-created\nobject on every call. It must be safe under concurrent calls from multiple\nthreads.\n\nSynthesis instructions:\n- Return a complete Python module.\n- Keep imports standard-library only unless the task explicitly permits otherwise.\n- Do not include tests in the generated module.\n- Do not perform network, filesystem, or subprocess operations unless required.\n",
+  "variant": "oracle_karpathy_generation"
+}

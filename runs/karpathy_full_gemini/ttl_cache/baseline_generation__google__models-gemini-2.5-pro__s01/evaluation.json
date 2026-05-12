@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses ordinary standard-library constructs (dict insertion order for LRU, threading.RLock, time.monotonic) without any clever metaprogramming or speculative abstractions. Control flow is flat with clear guard clauses, data movement is explicit, and invalid inputs raise clear errors. The Generic[K, V] typing adds mild framework-shaped overhead but is harmless. The main structural weaknesses are the verbose docstrings (which obscure rather than aid local auditability), the use of RLock where a plain Lock suffices since there's no re-entrant call path, and the slightly redundant class-level docstring repeating the module docstring. The core logic is easy to audit locally: get checks expiry and moves to end, set removes-then-reinserts for LRU ordering, and eviction pops the first key. Overall a solid, maintainable implementation that closely follows the spirit of the informal oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and uses ordinary standard-library constructs (dict insertion order for LRU, threading.RLock, time.monotonic) without any clever metaprogramming or speculative abstractions. Control flow is flat with clear guard clauses, data movement is explicit, and invalid inputs raise clear errors. The Generic[K, V] typing adds mild framework-shaped overhead but is harmless. The main structural weaknesses are the verbose docstrings (which obscure rather than aid local auditability), the use of RLock where a plain Lock suffices since there's no re-entrant call path, and the slightly redundant class-level docstring repeating the module docstring. The core logic is easy to audit locally: get checks expiry and moves to end, set removes-then-reinserts for LRU ordering, and eviction pops the first key. Overall a solid, maintainable implementation that closely follows the spirit of the informal oracle.\",\n  \"strengths\": [\n    \"Uses dict insertion-order for LRU without any auxiliary data structure \u2014 simple and correct\",\n    \"Flat control flow with early returns and guard clauses in get()\",\n    \"Explicit validation with clear ValueError messages for invalid inputs\",\n    \"Injectable `now` callable makes testing straightforward without patching globals\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Overly verbose docstrings add noise and hurt local auditability rather than helping it\",\n    \"RLock used where a plain Lock is sufficient \u2014 no re-entrant call paths exist\",\n    \"Generic[K, V] typing is speculative abstraction not required by the task spec\",\n    \"Module-level and class-level docstrings are redundant with each other\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses dict insertion-order for LRU without any auxiliary data structure \u2014 simple and correct",
+      "Flat control flow with early returns and guard clauses in get()",
+      "Explicit validation with clear ValueError messages for invalid inputs",
+      "Injectable `now` callable makes testing straightforward without patching globals",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Overly verbose docstrings add noise and hurt local auditability rather than helping it",
+      "RLock used where a plain Lock is sufficient \u2014 no re-entrant call paths exist",
+      "Generic[K, V] typing is speculative abstraction not required by the task spec",
+      "Module-level and class-level docstrings are redundant with each other"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.062,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 3,
+    "loc": 98,
+    "maintainability_index": 68.855,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

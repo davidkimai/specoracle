@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and minimal. Each format branch is handled with a simple conditional block, no unnecessary abstractions, no classes, no registries, no dispatch tables \u2014 just flat if-chains that are locally auditable. The docstring is slightly verbose for what is essentially a simple utility function, and the CSV branch adds an unsolicited sorted-key ordering that wasn't specified in the requirements (a minor speculative addition), but these are small deviations. The bool-before-int ordering in the TOML branch is correct and important. The use of json.dumps for TOML string quoting is a clever, minimal reuse. Overall this is close to the minimum viable implementation with good structural discipline.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, direct, and minimal. Each format branch is handled with a simple conditional block, no unnecessary abstractions, no classes, no registries, no dispatch tables \u2014 just flat if-chains that are locally auditable. The docstring is slightly verbose for what is essentially a simple utility function, and the CSV branch adds an unsolicited sorted-key ordering that wasn't specified in the requirements (a minor speculative addition), but these are small deviations. The bool-before-int ordering in the TOML branch is correct and important. The use of json.dumps for TOML string quoting is a clever, minimal reuse. Overall this is close to the minimum viable implementation with good structural discipline.\",\n  \"strengths\": [\n    \"Flat if-chain structure \u2014 no unnecessary abstraction or dispatch indirection\",\n    \"Correct bool-before-int isinstance check in TOML branch\",\n    \"Reuses json.dumps for string quoting in TOML \u2014 minimal and correct\",\n    \"Clear ValueError for unsupported formats\",\n    \"No speculative features or configurability beyond what was asked\"\n  ],\n  \"weaknesses\": [\n    \"CSV branch sorts keys without specification requiring it \u2014 minor unsolicited behavior\",\n    \"Docstring is overly detailed for a simple utility function, adding noise\",\n    \"TOML branch also sorts keys without explicit requirement \u2014 consistent but still speculative\",\n    \"from typing import Dict is unnecessary in modern Python (3.9+) where dict works directly\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat if-chain structure \u2014 no unnecessary abstraction or dispatch indirection",
+      "Correct bool-before-int isinstance check in TOML branch",
+      "Reuses json.dumps for string quoting in TOML \u2014 minimal and correct",
+      "Clear ValueError for unsupported formats",
+      "No speculative features or configurability beyond what was asked"
+    ],
+    "weaknesses": [
+      "CSV branch sorts keys without specification requiring it \u2014 minor unsolicited behavior",
+      "Docstring is overly detailed for a simple utility function, adding noise",
+      "TOML branch also sorts keys without explicit requirement \u2014 consistent but still speculative",
+      "from typing import Dict is unnecessary in modern Python (3.9+) where dict works directly"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.527,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_serializes_supported_formats _______________________\n\n    def test_serializes_supported_formats():\n        assert serialize_record({'b': 2, 'a': 1}, 'json') == '{\"a\": 1, \"b\": 2}'\n>       assert serialize_record({'a': 1, 'b': 2}, 'csv') == 'a,b\\n1,2'\nE       AssertionError: assert 'a,b\\r\\n1,2\\r\\n' == 'a,b\\n1,2'\nE         \nE         - a,b\nE         + a,b\nE         ?    +\nE         - 1,2\nE         + 1,2\nE         ?    ++\n\ntest_solution.py:6: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_serializes_supported_formats - AssertionError: ...\n1 failed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 53,
+    "maintainability_index": 86.227,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "multiformat_serializer",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a clean linear scan with a running pointer, which is the right algorithmic choice. The core logic is simple and readable. However, the docstring is excessively verbose for a function of this size\u2014it restates the spec in exhaustive detail, adding noise without value. The `ValueError` guard for non-positive intervals is a reasonable defensive addition but is speculative (not asked for). The `from __future__ import annotations` import is unnecessary overhead for this simple module. Overall the logic is solid and flat, but the surrounding ceremony (long docstring, extra guard, future import) adds weight that violates the 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and uses a clean linear scan with a running pointer, which is the right algorithmic choice. The core logic is simple and readable. However, the docstring is excessively verbose for a function of this size\u2014it restates the spec in exhaustive detail, adding noise without value. The `ValueError` guard for non-positive intervals is a reasonable defensive addition but is speculative (not asked for). The `from __future__ import annotations` import is unnecessary overhead for this simple module. Overall the logic is solid and flat, but the surrounding ceremony (long docstring, extra guard, future import) adds weight that violates the 'minimum code' principle.\",\n  \"strengths\": [\n    \"Single-pass linear scan with pointer is optimal and simple\",\n    \"No unnecessary abstractions or classes\",\n    \"Correct forward-fill semantics with None for pre-data timestamps\",\n    \"Handles unsorted input by sorting once upfront\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is far too long for a ~15-line function; violates simplicity-first\",\n    \"ValueError guard for interval is speculative feature not requested\",\n    \"`from __future__ import annotations` is unnecessary boilerplate\",\n    \"Variable `num_points` is a minor redundancy; `len(sorted_points)` inline is clearer at this scale\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single-pass linear scan with pointer is optimal and simple",
+      "No unnecessary abstractions or classes",
+      "Correct forward-fill semantics with None for pre-data timestamps",
+      "Handles unsorted input by sorting once upfront"
+    ],
+    "weaknesses": [
+      "Docstring is far too long for a ~15-line function; violates simplicity-first",
+      "ValueError guard for interval is speculative feature not requested",
+      "`from __future__ import annotations` is unnecessary boilerplate",
+      "Variable `num_points` is a minor redundancy; `len(sorted_points)` inline is clearer at this scale"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.378,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 83.117,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_karpathy_generation"
+}

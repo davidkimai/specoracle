@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core logic is correct and minimal \u2014 a simple while-True loop with break, extend, and cursor threading. The functional contract is fully satisfied. However, the implementation is significantly over-documented relative to the Karpathy oracle's 'simplicity first' principle: the module docstring, the elaborate type alias block with four named aliases, and the lengthy Args/Returns docstring all add substantial noise to a ~6-line algorithm. The type aliases in particular are speculative abstraction for a single-use function. A lean implementation would have the function, a one-line docstring at most, and inline type hints directly on the signature. The logic itself is clean and flat with no unnecessary abstractions, which saves it from a lower score.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The core logic is correct and minimal \u2014 a simple while-True loop with break, extend, and cursor threading. The functional contract is fully satisfied. However, the implementation is significantly over-documented relative to the Karpathy oracle's 'simplicity first' principle: the module docstring, the elaborate type alias block with four named aliases, and the lengthy Args/Returns docstring all add substantial noise to a ~6-line algorithm. The type aliases in particular are speculative abstraction for a single-use function. A lean implementation would have the function, a one-line docstring at most, and inline type hints directly on the signature. The logic itself is clean and flat with no unnecessary abstractions, which saves it from a lower score.\",\n  \"strengths\": [\n    \"Core loop is minimal and correct: while-True with break on None cursor\",\n    \"Uses extend rather than += for clarity\",\n    \"Keyword-only start_cursor with default None matches the spec exactly\",\n    \"No speculative features or configurability beyond what was asked\"\n  ],\n  \"weaknesses\": [\n    \"Four type aliases (Cursor, Item, FetchPageResult, FetchPageCallable) are over-engineering for a single-use function\",\n    \"Module-level docstring adds noise not required by the task\",\n    \"Multi-paragraph Args/Returns docstring is disproportionate to the simplicity of the function\",\n    \"Verbose commenting violates 'minimum code' principle from the oracle\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core loop is minimal and correct: while-True with break on None cursor",
+      "Uses extend rather than += for clarity",
+      "Keyword-only start_cursor with default None matches the spec exactly",
+      "No speculative features or configurability beyond what was asked"
+    ],
+    "weaknesses": [
+      "Four type aliases (Cursor, Item, FetchPageResult, FetchPageCallable) are over-engineering for a single-use function",
+      "Module-level docstring adds noise not required by the task",
+      "Multi-paragraph Args/Returns docstring is disproportionate to the simplicity of the function",
+      "Verbose commenting violates 'minimum code' principle from the oracle"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.483,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.16s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 92.322,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_karpathy_generation"
+}

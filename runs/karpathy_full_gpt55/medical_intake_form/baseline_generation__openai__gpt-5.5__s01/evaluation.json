@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: all three required fields are checked for presence before any validation logic runs, each ValueError names the offending field, no partial results are returned, and the output dict is cleanly constructed from only the validated fields. The code is flat, explicit, and locally auditable with no hidden control flow or abstraction layers. The bool-exclusion guard for age is a correct and thoughtful edge case. Minor imperfections include splitting presence checks from type checks into two separate passes (slightly redundant iteration over the payload keys) and the use of `Any` type annotations that add noise without benefit, but neither meaningfully detracts from correctness or structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: all three required fields are checked for presence before any validation logic runs, each ValueError names the offending field, no partial results are returned, and the output dict is cleanly constructed from only the validated fields. The code is flat, explicit, and locally auditable with no hidden control flow or abstraction layers. The bool-exclusion guard for age is a correct and thoughtful edge case. Minor imperfections include splitting presence checks from type checks into two separate passes (slightly redundant iteration over the payload keys) and the use of `Any` type annotations that add noise without benefit, but neither meaningfully detracts from correctness or structural quality.\",\n  \"strengths\": [\n    \"All presence checks are performed before any type/value validation, satisfying the 'validate before accepting' rule\",\n    \"Every ValueError explicitly names the failing field\",\n    \"Bool subclass of int is correctly excluded from valid age values\",\n    \"Output dict contains only the three required fields, copied cleanly\",\n    \"Flat, readable structure with no unnecessary abstraction or loops over field definitions\"\n  ],\n  \"weaknesses\": [\n    \"Presence checks and type checks are in two separate blocks, causing a minor redundancy in reading the payload keys twice\",\n    \"Using `Any` type annotations adds noise without aiding readability or safety\",\n    \"No validation that patient_id is non-empty string, which may be an implicit clinical expectation\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All presence checks are performed before any type/value validation, satisfying the 'validate before accepting' rule",
+      "Every ValueError explicitly names the failing field",
+      "Bool subclass of int is correctly excluded from valid age values",
+      "Output dict contains only the three required fields, copied cleanly",
+      "Flat, readable structure with no unnecessary abstraction or loops over field definitions"
+    ],
+    "weaknesses": [
+      "Presence checks and type checks are in two separate blocks, causing a minor redundancy in reading the payload keys twice",
+      "Using `Any` type annotations adds noise without aiding readability or safety",
+      "No validation that patient_id is non-empty string, which may be an implicit clinical expectation"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.999,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 76.86,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

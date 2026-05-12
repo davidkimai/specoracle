@@ -1,0 +1,56 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-structured, and follows most Zen principles effectively. The separation of parsing/validation into a small pure helper is appropriate, control flow is flat with guard clauses, data movement is explicit, and standard-library constructs are used throughout. The `defaultdict` with a mutable lambda is a minor concern (hidden mutation pattern), but it's a common and readable idiom. The main weaknesses are over-documentation (verbose docstrings with Args/Returns/Raises sections that exceed what a maintainer needs for local auditability), the unused `List`/`Optional`/`Tuple` imports from `typing` (redundant since modern Python type hints are used inline), and the slightly verbose final result-building loop that could be a list comprehension. The `not all((region, product, quantity_str, cents_str))` check is slightly implicit about what 'falsy' means for these fields (e.g., it would reject a product named '0'), but this is a minor edge case. Overall the architecture is sound, readable, and avoids speculative abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-structured, and follows most Zen principles effectively. The separation of parsing/validation into a small pure helper is appropriate, control flow is flat with guard clauses, data movement is explicit, and standard-library constructs are used throughout. The `defaultdict` with a mutable lambda is a minor concern (hidden mutation pattern), but it's a common and readable idiom. The main weaknesses are over-documentation (verbose docstrings with Args/Returns/Raises sections that exceed what a maintainer needs for local auditability), the unused `List`/`Optional`/`Tuple` imports from `typing` (redundant since modern Python type hints are used inline), and the slightly verbose final result-building loop that could be a list comprehension. The `not all((region, product, quantity_str, cents_str))` check is slightly implicit about what 'falsy' means for these fields (e.g., it would reject a product named '0'), but this is a minor edge case. Overall the architecture is sound, readable, and avoids speculative abstractions.\",\n  \"strengths\": [\n    \"Clean separation of validation into a small pure helper function\",\n    \"Flat control flow with early-return guard clauses in the helper\",\n    \"Explicit data movement with no hidden global state\",\n    \"Uses ordinary standard-library constructs (csv, io, defaultdict)\",\n    \"TypeError raised explicitly for non-string input\",\n    \"Sorting logic is simple and readable\"\n  ],\n  \"weaknesses\": [\n    \"Unused typing imports (Dict, List, Optional, Tuple) add noise\",\n    \"Overly verbose docstrings with Args/Returns/Raises sections hurt sparseness\",\n    \"The `not all(...)` truthiness check could silently reject valid zero-string fields like product='0'\",\n    \"Final result-building loop could be a concise list comprehension\",\n    \"Lambda in defaultdict introduces a subtle mutable-default pattern\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of validation into a small pure helper function",
+      "Flat control flow with early-return guard clauses in the helper",
+      "Explicit data movement with no hidden global state",
+      "Uses ordinary standard-library constructs (csv, io, defaultdict)",
+      "TypeError raised explicitly for non-string input",
+      "Sorting logic is simple and readable"
+    ],
+    "weaknesses": [
+      "Unused typing imports (Dict, List, Optional, Tuple) add noise",
+      "Overly verbose docstrings with Args/Returns/Raises sections hurt sparseness",
+      "The `not all(...)` truthiness check could silently reject valid zero-string fields like product='0'",
+      "Final result-building loop could be a concise list comprehension",
+      "Lambda in defaultdict introduces a subtle mutable-default pattern"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.362,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 2,
+    "loc": 76,
+    "maintainability_index": 81.161,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

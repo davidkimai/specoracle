@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the Zen oracle for this task: it is flat, explicit, minimal, and locally auditable in a single glance. The guard clause checks both required conditions before returning, and falls through to a clear NotImplementedError with a descriptive message for all uncovered paths. There are no speculative abstractions, no hidden state, no unnecessary helpers, and no framework-shaped scaffolding. The only marginal critique is that using `payload.get('mode') == 'echo' and 'value' in payload` performs two separate dict lookups where a single explicit key-existence check followed by a value comparison would be equally clear, but this is a trivial concern that does not meaningfully affect readability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-perfect realization of the Zen oracle for this task: it is flat, explicit, minimal, and locally auditable in a single glance. The guard clause checks both required conditions before returning, and falls through to a clear NotImplementedError with a descriptive message for all uncovered paths. There are no speculative abstractions, no hidden state, no unnecessary helpers, and no framework-shaped scaffolding. The only marginal critique is that using `payload.get('mode') == 'echo' and 'value' in payload` performs two separate dict lookups where a single explicit key-existence check followed by a value comparison would be equally clear, but this is a trivial concern that does not meaningfully affect readability or correctness.\",\n  \"strengths\": [\n    \"Flat single-function implementation with no unnecessary indirection\",\n    \"Explicit guard clause covers both required conditions before acting\",\n    \"Clear, descriptive NotImplementedError for all uncovered paths\",\n    \"No speculative abstractions or unused extension points\",\n    \"Minimal imports; only __future__.annotations for type hint compatibility\"\n  ],\n  \"weaknesses\": [\n    \"Minor: two separate dict accesses (get + 'in') could be consolidated with direct key access and a try/except or explicit key check, though the current form is still readable\",\n    \"The from __future__ import annotations is unnecessary for Python 3.10+ and adds a trivial line of noise for such a simple signature\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat single-function implementation with no unnecessary indirection",
+      "Explicit guard clause covers both required conditions before acting",
+      "Clear, descriptive NotImplementedError for all uncovered paths",
+      "No speculative abstractions or unused extension points",
+      "Minimal imports; only __future__.annotations for type hint compatibility"
+    ],
+    "weaknesses": [
+      "Minor: two separate dict accesses (get + 'in') could be consolidated with direct key access and a try/except or explicit key check, though the current form is still readable",
+      "The from __future__ import annotations is unnecessary for Python 3.10+ and adds a trivial line of noise for such a simple signature"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.454,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 5,
+    "maintainability_index": 74.159,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "human_reference"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally clean. It uses standard-library weakref directly, keeps methods small and focused, and makes data movement explicit. The control flow is flat throughout. The main weaknesses are minor over-engineering: the TypeVar T adds type-system complexity without real benefit (Any would suffice or no annotation), the `isinstance(key, Hashable)` check is redundant since dict assignment already raises TypeError for unhashable keys (and the check itself is unreliable due to ABC registration), and the module/class docstrings are verbose beyond what a maintainer needs for local auditability. The cleanup implementation is idiomatic and correct. Overall it's a solid, readable implementation with a few speculative additions that slightly violate the 'sparse enough to audit locally' and 'avoid speculative abstractions' principles.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally clean. It uses standard-library weakref directly, keeps methods small and focused, and makes data movement explicit. The control flow is flat throughout. The main weaknesses are minor over-engineering: the TypeVar T adds type-system complexity without real benefit (Any would suffice or no annotation), the `isinstance(key, Hashable)` check is redundant since dict assignment already raises TypeError for unhashable keys (and the check itself is unreliable due to ABC registration), and the module/class docstrings are verbose beyond what a maintainer needs for local auditability. The cleanup implementation is idiomatic and correct. Overall it's a solid, readable implementation with a few speculative additions that slightly violate the 'sparse enough to audit locally' and 'avoid speculative abstractions' principles.\",\n  \"strengths\": [\n    \"Uses weakref.ref directly \u2014 no unnecessary abstraction layer\",\n    \"Flat control flow in all three methods\",\n    \"cleanup() correctly collects dead keys before deletion to avoid mutation-during-iteration\",\n    \"get() handles both missing key and dead reference uniformly via .get() + dereference\",\n    \"Data movement is explicit; no hidden state or side effects\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(key, Hashable) check is redundant and unreliable \u2014 dict already enforces hashability\",\n    \"TypeVar T adds complexity without meaningful benefit over Any or no annotation\",\n    \"Module and class docstrings are over-verbose for a simple utility, adding noise without aiding local auditability\",\n    \"No handling or mention of the edge case where weakref.ref raises TypeError for non-weak-referenceable objects (e.g., plain ints) \u2014 the comment says 'let it propagate' but this is silently inconsistent with the explicit-errors principle\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses weakref.ref directly \u2014 no unnecessary abstraction layer",
+      "Flat control flow in all three methods",
+      "cleanup() correctly collects dead keys before deletion to avoid mutation-during-iteration",
+      "get() handles both missing key and dead reference uniformly via .get() + dereference",
+      "Data movement is explicit; no hidden state or side effects"
+    ],
+    "weaknesses": [
+      "isinstance(key, Hashable) check is redundant and unreliable \u2014 dict already enforces hashability",
+      "TypeVar T adds complexity without meaningful benefit over Any or no annotation",
+      "Module and class docstrings are over-verbose for a simple utility, adding noise without aiding local auditability",
+      "No handling or mention of the edge case where weakref.ref raises TypeError for non-weak-referenceable objects (e.g., plain ints) \u2014 the comment says 'let it propagate' but this is silently inconsistent with the explicit-errors principle"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.671,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 62,
+    "maintainability_index": 69.247,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "oracle_generation"
+}

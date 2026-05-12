@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit with a single guard clause that precisely encodes the one specified behavior before raising a clear NotImplementedError. It avoids speculative abstractions, uses no metaprogramming, and is trivially auditable. The docstring accurately documents intent. Minor weaknesses: the `isinstance(payload, dict)` check is slightly defensive beyond the typed signature (which already declares `dict`), and the `set(payload.keys()) == {'mode', 'value'}` exact-key check is arguably over-constraining (the spec only says the echo path must work, not that extra keys must be rejected), though it is a reasonable conservative interpretation of 'raise NotImplementedError for uncovered paths'. Overall the code is sparse, honest, and structurally sound.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and explicit with a single guard clause that precisely encodes the one specified behavior before raising a clear NotImplementedError. It avoids speculative abstractions, uses no metaprogramming, and is trivially auditable. The docstring accurately documents intent. Minor weaknesses: the `isinstance(payload, dict)` check is slightly defensive beyond the typed signature (which already declares `dict`), and the `set(payload.keys()) == {'mode', 'value'}` exact-key check is arguably over-constraining (the spec only says the echo path must work, not that extra keys must be rejected), though it is a reasonable conservative interpretation of 'raise NotImplementedError for uncovered paths'. Overall the code is sparse, honest, and structurally sound.\",\n  \"strengths\": [\n    \"Single flat guard clause with no nesting \u2014 easy to audit locally\",\n    \"Raises NotImplementedError with a descriptive message for all unspecified paths\",\n    \"No speculative abstractions, helpers, or extension points\",\n    \"Docstring clearly separates specified from unspecified behavior\",\n    \"Uses only standard constructs; no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(payload, dict) is redundant given the type annotation \u2014 minor noise\",\n    \"Exact key-set check may over-reject payloads with extra keys that the spec doesn't explicitly forbid\",\n    \"No separate helper extraction (though the function is small enough that none is needed, so this is a non-issue)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single flat guard clause with no nesting \u2014 easy to audit locally",
+      "Raises NotImplementedError with a descriptive message for all unspecified paths",
+      "No speculative abstractions, helpers, or extension points",
+      "Docstring clearly separates specified from unspecified behavior",
+      "Uses only standard constructs; no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "isinstance(payload, dict) is redundant given the type annotation \u2014 minor noise",
+      "Exact key-set check may over-reject payloads with extra keys that the spec doesn't explicitly forbid",
+      "No separate helper extraction (though the function is small enough that none is needed, so this is a non-issue)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.234,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "baseline_generation"
+}

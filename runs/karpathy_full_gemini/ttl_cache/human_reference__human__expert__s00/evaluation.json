@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and uses exactly the right standard-library construct (OrderedDict) for LRU ordering without any speculative abstraction. Control flow is flat, data movement is explicit (move_to_end is called explicitly rather than hidden), invalid inputs raise clear errors, and the injectable `now` clock makes the design testable without framework machinery. The only minor quibbles are that `set` calls `move_to_end` redundantly after assignment (assigning to an existing key in an OrderedDict moves it to the end only in Python 3.7+ when using `__setitem__`, but actually it does NOT move it to end on update \u2014 so the explicit call is correct and intentional), and the type annotations import `Callable` from `collections.abc` and use `Any` appropriately without over-engineering. The eviction loop is slightly over-general (a single `if` would suffice since only one item is added at a time), but it's harmless and arguably more defensive. Overall this is a textbook realization of the task with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, direct, and uses exactly the right standard-library construct (OrderedDict) for LRU ordering without any speculative abstraction. Control flow is flat, data movement is explicit (move_to_end is called explicitly rather than hidden), invalid inputs raise clear errors, and the injectable `now` clock makes the design testable without framework machinery. The only minor quibbles are that `set` calls `move_to_end` redundantly after assignment (assigning to an existing key in an OrderedDict moves it to the end only in Python 3.7+ when using `__setitem__`, but actually it does NOT move it to end on update \u2014 so the explicit call is correct and intentional), and the type annotations import `Callable` from `collections.abc` and use `Any` appropriately without over-engineering. The eviction loop is slightly over-general (a single `if` would suffice since only one item is added at a time), but it's harmless and arguably more defensive. Overall this is a textbook realization of the task with no architectural slop.\",\n  \"strengths\": [\n    \"Uses OrderedDict naturally for LRU without reinventing the wheel\",\n    \"Injectable clock (`now`) enables deterministic testing without patching globals\",\n    \"Guard clause at construction raises ValueError clearly for invalid inputs\",\n    \"Explicit move_to_end calls make LRU promotion visible and auditable\",\n    \"Minimal surface area \u2014 no unused extension points or speculative abstractions\",\n    \"Flat control flow throughout both methods\"\n  ],\n  \"weaknesses\": [\n    \"Eviction uses `while` loop instead of a single `if`, since only one item is added per `set` call \u2014 minor over-generality\",\n    \"Redundant `move_to_end` after direct assignment in `set` (assignment to existing key doesn't auto-move in OrderedDict, so it's correct, but a comment would aid clarity)\",\n    \"No docstring or inline explanation of the (value, timestamp) tuple layout, which a maintainer must infer\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses OrderedDict naturally for LRU without reinventing the wheel",
+      "Injectable clock (`now`) enables deterministic testing without patching globals",
+      "Guard clause at construction raises ValueError clearly for invalid inputs",
+      "Explicit move_to_end calls make LRU promotion visible and auditable",
+      "Minimal surface area \u2014 no unused extension points or speculative abstractions",
+      "Flat control flow throughout both methods"
+    ],
+    "weaknesses": [
+      "Eviction uses `while` loop instead of a single `if`, since only one item is added per `set` call \u2014 minor over-generality",
+      "Redundant `move_to_end` after direct assignment in `set` (assignment to existing key doesn't auto-move in OrderedDict, so it's correct, but a comment would aid clarity)",
+      "No docstring or inline explanation of the (value, timestamp) tuple layout, which a maintainer must infer"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.812,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.25,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 28,
+    "maintainability_index": 52.639,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "human_reference"
+}

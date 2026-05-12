@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and correct. It uses a single guard-clause-style `.get()` with a default empty set to handle unknown roles without branching, then performs a straightforward membership test. The logic is locally auditable in two lines. The main deductions are: the docstring is over-commented (the inline comment explaining `.get()` is redundant given the self-evident code), the `Dict`/`Set` imports from `typing` are unnecessary in Python 3.9+ where built-in `dict`/`set` generics work in annotations, and there is no input validation (e.g., raising `TypeError` for non-dict/non-string inputs as the operational constraints suggest). Otherwise the implementation is exemplary in its simplicity and explicitness.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and correct. It uses a single guard-clause-style `.get()` with a default empty set to handle unknown roles without branching, then performs a straightforward membership test. The logic is locally auditable in two lines. The main deductions are: the docstring is over-commented (the inline comment explaining `.get()` is redundant given the self-evident code), the `Dict`/`Set` imports from `typing` are unnecessary in Python 3.9+ where built-in `dict`/`set` generics work in annotations, and there is no input validation (e.g., raising `TypeError` for non-dict/non-string inputs as the operational constraints suggest). Otherwise the implementation is exemplary in its simplicity and explicitness.\",\n  \"strengths\": [\n    \"Flat control flow with no nesting \u2014 single expression per logical step\",\n    \"Deny-by-default handled implicitly via empty-set default, not via conditional branching\",\n    \"Names are clear and self-explanatory\",\n    \"No speculative abstractions or unused extension points\",\n    \"Functionally correct for all specified cases\"\n  ],\n  \"weaknesses\": [\n    \"Uses deprecated `typing.Dict`/`typing.Set` instead of built-in `dict`/`set` generics\",\n    \"Inline comment over-explains obvious code, violating sparse-enough-to-audit principle\",\n    \"No input validation or clear errors for invalid inputs (e.g., non-dict matrix, non-string role/permission)\",\n    \"Docstring is verbose relative to the trivial implementation\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no nesting \u2014 single expression per logical step",
+      "Deny-by-default handled implicitly via empty-set default, not via conditional branching",
+      "Names are clear and self-explanatory",
+      "No speculative abstractions or unused extension points",
+      "Functionally correct for all specified cases"
+    ],
+    "weaknesses": [
+      "Uses deprecated `typing.Dict`/`typing.Set` instead of built-in `dict`/`set` generics",
+      "Inline comment over-explains obvious code, violating sparse-enough-to-audit principle",
+      "No input validation or clear errors for invalid inputs (e.g., non-dict matrix, non-string role/permission)",
+      "Docstring is verbose relative to the trivial implementation"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.038,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 24,
+    "maintainability_index": 49.001,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "permission_gate",
+  "variant": "oracle_generation"
+}

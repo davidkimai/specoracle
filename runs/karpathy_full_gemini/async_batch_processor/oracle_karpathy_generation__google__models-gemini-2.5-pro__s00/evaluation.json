@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean: it validates inputs, uses a semaphore for concurrency control, creates tasks in order, and gathers results preserving batch order. The core logic is straightforward and readable. However, there is mild over-engineering: the TypeVar generics and full type annotations add complexity beyond what the task requires, the docstring is verbose for a simple utility, the `isinstance(x, int)` checks are slightly defensive beyond 'reject non-positive' (floats like 2.0 would be rejected), and the inline comment density is higher than necessary. The `worker` inner function with its own docstring is a minor abstraction overhead for single-use code. Overall the architecture is flat and correct, but the ceremony around types and documentation slightly violates the 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean: it validates inputs, uses a semaphore for concurrency control, creates tasks in order, and gathers results preserving batch order. The core logic is straightforward and readable. However, there is mild over-engineering: the TypeVar generics and full type annotations add complexity beyond what the task requires, the docstring is verbose for a simple utility, the `isinstance(x, int)` checks are slightly defensive beyond 'reject non-positive' (floats like 2.0 would be rejected), and the inline comment density is higher than necessary. The `worker` inner function with its own docstring is a minor abstraction overhead for single-use code. Overall the architecture is flat and correct, but the ceremony around types and documentation slightly violates the 'minimum code' principle.\",\n  \"strengths\": [\n    \"Correct semaphore-based concurrency limiting with asyncio.Semaphore\",\n    \"Results returned in strict batch order via asyncio.gather\",\n    \"Clean batching with itertools.islice\",\n    \"Input validation raises ValueError as required\",\n    \"No speculative features or unnecessary configurability\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar generics and full typing imports add complexity not required by the task\",\n    \"Verbose docstrings (including inner function docstring) violate 'minimum code' principle\",\n    \"isinstance int checks reject valid non-positive floats differently than simple `<= 0` check would, adding subtle behavior not specified\",\n    \"Excessive inline comments narrate obvious code\",\n    \"Worker inner function with docstring is minor over-abstraction for single-use code\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct semaphore-based concurrency limiting with asyncio.Semaphore",
+      "Results returned in strict batch order via asyncio.gather",
+      "Clean batching with itertools.islice",
+      "Input validation raises ValueError as required",
+      "No speculative features or unnecessary configurability"
+    ],
+    "weaknesses": [
+      "TypeVar generics and full typing imports add complexity not required by the task",
+      "Verbose docstrings (including inner function docstring) violate 'minimum code' principle",
+      "isinstance int checks reject valid non-positive floats differently than simple `<= 0` check would, adding subtle behavior not specified",
+      "Excessive inline comments narrate obvious code",
+      "Worker inner function with docstring is minor over-abstraction for single-use code"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.458,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.14s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 52,
+    "maintainability_index": 82.809,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "oracle_karpathy_generation"
+}

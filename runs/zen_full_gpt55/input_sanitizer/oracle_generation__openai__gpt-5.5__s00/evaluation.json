@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It correctly decomposes the problem into small pure helpers, keeps control flow flat using guard clauses, makes data movement explicit with no hidden mutation, and raises clear typed errors for invalid inputs. The helper names are self-explanatory and the main function reads almost like a specification. Minor concerns: the triple-guard pattern in the loop (three consecutive `if ... continue` blocks) is slightly verbose and could be collapsed into a single condition for compactness without sacrificing clarity; the `_has_only_safe_characters` helper could equivalently use `str.isidentifier()` or a regex, but the character-by-character approach is explicit and auditable. The validation helpers add some boilerplate that may be speculative for a simple utility function, but they do satisfy the 'raise clear errors' constraint. Overall this is a solid, maintainable implementation that closely follows the Zen principles.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It correctly decomposes the problem into small pure helpers, keeps control flow flat using guard clauses, makes data movement explicit with no hidden mutation, and raises clear typed errors for invalid inputs. The helper names are self-explanatory and the main function reads almost like a specification. Minor concerns: the triple-guard pattern in the loop (three consecutive `if ... continue` blocks) is slightly verbose and could be collapsed into a single condition for compactness without sacrificing clarity; the `_has_only_safe_characters` helper could equivalently use `str.isidentifier()` or a regex, but the character-by-character approach is explicit and auditable. The validation helpers add some boilerplate that may be speculative for a simple utility function, but they do satisfy the 'raise clear errors' constraint. Overall this is a solid, maintainable implementation that closely follows the Zen principles.\",\n  \"strengths\": [\n    \"Flat control flow using guard clauses avoids nesting\",\n    \"Small, named pure helpers make each concern locally auditable\",\n    \"Explicit data movement: seen set and result list are clearly managed\",\n    \"Clear TypeError messages for invalid inputs\",\n    \"Self-documenting names throughout\"\n  ],\n  \"weaknesses\": [\n    \"Three separate guard clauses in the loop could be merged into one compound condition for conciseness\",\n    \"Input validation helpers add boilerplate that may be over-engineered for a simple utility\",\n    \"_has_only_safe_characters could use str.isidentifier() or re.fullmatch for brevity, though current approach is explicit\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow using guard clauses avoids nesting",
+      "Small, named pure helpers make each concern locally auditable",
+      "Explicit data movement: seen set and result list are clearly managed",
+      "Clear TypeError messages for invalid inputs",
+      "Self-documenting names throughout"
+    ],
+    "weaknesses": [
+      "Three separate guard clauses in the loop could be merged into one compound condition for conciseness",
+      "Input validation helpers add boilerplate that may be over-engineered for a simple utility",
+      "_has_only_safe_characters could use str.isidentifier() or re.fullmatch for brevity, though current approach is explicit"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.813,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 4,
+    "loc": 31,
+    "maintainability_index": 51.446,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_generation"
+}

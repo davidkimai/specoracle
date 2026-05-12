@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp store, which is the natural data structure for this problem. Control flow is flat with a guard clause pattern, data movement is explicit (timestamps appended/popped from the deque), and there is no hidden state or speculative abstraction. The `now` injectable is a clean seam for testing. The only minor quibble is that the `while` loop for eviction could be expressed as a helper (e.g., `_evict_stale`) to make `acquire` read as a pure policy decision, but this is a very minor point and the current inline form is still locally auditable. The error message is clear, names are self-explanatory, and the implementation avoids any framework-shaped or async-specific complexity that isn't needed.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and structurally sound. It uses a deque as a sliding-window timestamp store, which is the natural data structure for this problem. Control flow is flat with a guard clause pattern, data movement is explicit (timestamps appended/popped from the deque), and there is no hidden state or speculative abstraction. The `now` injectable is a clean seam for testing. The only minor quibble is that the `while` loop for eviction could be expressed as a helper (e.g., `_evict_stale`) to make `acquire` read as a pure policy decision, but this is a very minor point and the current inline form is still locally auditable. The error message is clear, names are self-explanatory, and the implementation avoids any framework-shaped or async-specific complexity that isn't needed.\",\n  \"strengths\": [\n    \"Minimal and correct sliding-window implementation using deque\",\n    \"Flat control flow with guard clause before the success path\",\n    \"Explicit data movement: timestamps stored and pruned visibly\",\n    \"Injectable `now` callable cleanly supports deterministic testing\",\n    \"Clear ValueError with descriptive message for invalid input\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Eviction loop could be extracted into a small helper to make `acquire` read as pure policy\",\n    \"The `or` idiom for defaulting `now` is slightly less explicit than an `if` branch, though idiomatic Python\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal and correct sliding-window implementation using deque",
+      "Flat control flow with guard clause before the success path",
+      "Explicit data movement: timestamps stored and pruned visibly",
+      "Injectable `now` callable cleanly supports deterministic testing",
+      "Clear ValueError with descriptive message for invalid input",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Eviction loop could be extracted into a small helper to make `acquire` read as pure policy",
+      "The `or` idiom for defaulting `now` is slightly less explicit than an `if` branch, though idiomatic Python"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.093,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 19,
+    "maintainability_index": 57.473,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "human_reference"
+}

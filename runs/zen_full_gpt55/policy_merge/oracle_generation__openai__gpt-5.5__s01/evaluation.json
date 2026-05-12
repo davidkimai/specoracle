@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and well-structured with good separation of concerns. Input validation is explicit, helpers are small and named clearly, and data movement is transparent with no hidden mutation. The main structural concern is the redundancy between `_copy_value` and `_copy_override_value`: both deep-copy dicts but through different paths (`_merge_dicts({}, value)` vs recursive `_copy_value`), which is a mild speculative split that adds cognitive overhead without clear benefit. A single `deepcopy` call on the entire defaults dict at the start of `_merge_dicts` would be simpler and eliminate the need for two separate copy helpers. The `_copy_override_value` helper is particularly questionable\u2014calling `_merge_dicts({}, value)` to copy a dict is indirect and non-obvious. Despite these minor issues, the code is flat, readable, locally auditable, and avoids clever metaprogramming or framework-shaped abstractions.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, correct, and well-structured with good separation of concerns. Input validation is explicit, helpers are small and named clearly, and data movement is transparent with no hidden mutation. The main structural concern is the redundancy between `_copy_value` and `_copy_override_value`: both deep-copy dicts but through different paths (`_merge_dicts({}, value)` vs recursive `_copy_value`), which is a mild speculative split that adds cognitive overhead without clear benefit. A single `deepcopy` call on the entire defaults dict at the start of `_merge_dicts` would be simpler and eliminate the need for two separate copy helpers. The `_copy_override_value` helper is particularly questionable\u2014calling `_merge_dicts({}, value)` to copy a dict is indirect and non-obvious. Despite these minor issues, the code is flat, readable, locally auditable, and avoids clever metaprogramming or framework-shaped abstractions.\",\n  \"strengths\": [\n    \"Clear input validation with explicit error messages\",\n    \"Small, named helpers with single responsibilities\",\n    \"No mutation of inputs; data movement is explicit\",\n    \"Flat control flow with guard clauses and continue statements\",\n    \"Recursive merge logic is easy to follow\"\n  ],\n  \"weaknesses\": [\n    \"`_copy_override_value` uses `_merge_dicts({}, value)` to copy a dict, which is indirect and non-obvious\",\n    \"Two separate copy helpers (`_copy_value` and `_copy_override_value`) for essentially the same task adds unnecessary complexity\",\n    \"Could simplify by using `deepcopy(defaults)` as the starting result and then applying overrides\",\n    \"Minor: `from __future__ import annotations` is unnecessary for Python 3.10+ and adds noise\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear input validation with explicit error messages",
+      "Small, named helpers with single responsibilities",
+      "No mutation of inputs; data movement is explicit",
+      "Flat control flow with guard clauses and continue statements",
+      "Recursive merge logic is easy to follow"
+    ],
+    "weaknesses": [
+      "`_copy_override_value` uses `_merge_dicts({}, value)` to copy a dict, which is indirect and non-obvious",
+      "Two separate copy helpers (`_copy_value` and `_copy_override_value`) for essentially the same task adds unnecessary complexity",
+      "Could simplify by using `deepcopy(defaults)` as the starting result and then applying overrides",
+      "Minor: `from __future__ import annotations` is unnecessary for Python 3.10+ and adds noise"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.791,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.8,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 5,
+    "loc": 31,
+    "maintainability_index": 55.866,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

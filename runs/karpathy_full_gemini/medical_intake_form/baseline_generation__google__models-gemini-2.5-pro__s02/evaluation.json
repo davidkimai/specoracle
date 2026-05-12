@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. It correctly validates all required fields before accepting any into the output (though technically it populates clean_data during the first loop and then validates values in a second pass \u2014 a minor structural concern since partial data sits in clean_data momentarily before value checks). Error messages consistently name the offending field, satisfying CD-7's naming requirement. The bool-as-int guard is a thoughtful edge case. The two-pass approach (type check then value check) is readable and flat. The docstring is thorough without being excessive. Minor weaknesses: the first loop writes to clean_data before all value-level validations pass, meaning clean_data could hold partially validated data if a later value check fails (though it's never returned in that state, so functionally correct). Silently dropping empty symptom strings after stripping is an undocumented behavior that could surprise callers. The unused `import typing` is a small slop artifact.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. It correctly validates all required fields before accepting any into the output (though technically it populates clean_data during the first loop and then validates values in a second pass \u2014 a minor structural concern since partial data sits in clean_data momentarily before value checks). Error messages consistently name the offending field, satisfying CD-7's naming requirement. The bool-as-int guard is a thoughtful edge case. The two-pass approach (type check then value check) is readable and flat. The docstring is thorough without being excessive. Minor weaknesses: the first loop writes to clean_data before all value-level validations pass, meaning clean_data could hold partially validated data if a later value check fails (though it's never returned in that state, so functionally correct). Silently dropping empty symptom strings after stripping is an undocumented behavior that could surprise callers. The unused `import typing` is a small slop artifact.\",\n  \"strengths\": [\n    \"All required fields are checked for presence and type before any value-level validation begins\",\n    \"Error messages consistently name the failing field\",\n    \"Explicit bool-subclass guard for the age field prevents a common Python footgun\",\n    \"Clean two-phase structure (type checks then value checks) is easy to audit locally\",\n    \"Returns a new dict rather than mutating the input\"\n  ],\n  \"weaknesses\": [\n    \"clean_data is populated during the type-check loop before value validations complete, so it transiently holds partially validated data (not returned, but structurally impure)\",\n    \"Silently discarding empty/whitespace-only symptom strings is undocumented behavior that may violate caller expectations\",\n    \"Unused `import typing` is dead code / minor slop\",\n    \"Iterating required_fields as a plain dict relies on insertion-order stability, which is fine in Python 3.7+ but not made explicit\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "All required fields are checked for presence and type before any value-level validation begins",
+      "Error messages consistently name the failing field",
+      "Explicit bool-subclass guard for the age field prevents a common Python footgun",
+      "Clean two-phase structure (type checks then value checks) is easy to audit locally",
+      "Returns a new dict rather than mutating the input"
+    ],
+    "weaknesses": [
+      "clean_data is populated during the type-check loop before value validations complete, so it transiently holds partially validated data (not returned, but structurally impure)",
+      "Silently discarding empty/whitespace-only symptom strings is undocumented behavior that may violate caller expectations",
+      "Unused `import typing` is dead code / minor slop",
+      "Iterating required_fields as a plain dict relies on insertion-order stability, which is fine in Python 3.7+ but not made explicit"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.392,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 76,
+    "maintainability_index": 79.0,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

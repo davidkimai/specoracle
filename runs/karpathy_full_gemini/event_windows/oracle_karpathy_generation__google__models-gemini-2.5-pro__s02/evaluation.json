@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, following a straightforward accumulate-then-sort pattern. The core logic is clean and readable. However, the docstring is excessively verbose for a function of this size \u2014 it nearly doubles the line count and adds no information beyond what the type hints and task spec already convey. The `isinstance(window_size, int)` check is slightly over-specified (the spec says 'positive', not 'positive integer', and booleans pass this check since `bool` is a subclass of `int`), though this is a minor concern. The use of a list `[count, total]` as the accumulator value instead of a simple tuple or two separate dicts is a minor structural awkwardness. Overall the implementation is close to minimal but the docstring bloat and minor over-engineering of the type check prevent a higher score.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, following a straightforward accumulate-then-sort pattern. The core logic is clean and readable. However, the docstring is excessively verbose for a function of this size \u2014 it nearly doubles the line count and adds no information beyond what the type hints and task spec already convey. The `isinstance(window_size, int)` check is slightly over-specified (the spec says 'positive', not 'positive integer', and booleans pass this check since `bool` is a subclass of `int`), though this is a minor concern. The use of a list `[count, total]` as the accumulator value instead of a simple tuple or two separate dicts is a minor structural awkwardness. Overall the implementation is close to minimal but the docstring bloat and minor over-engineering of the type check prevent a higher score.\",\n  \"strengths\": [\n    \"Single-pass accumulation with a dict is the correct minimal data structure\",\n    \"Flat control flow with early continues for malformed events\",\n    \"Correct floor-division window assignment\",\n    \"Sorted output via sorted() on dict items is idiomatic and concise\",\n    \"No unnecessary abstractions or classes\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is far too verbose for a ~20-line function, violating simplicity-first\",\n    \"isinstance(window_size, int) silently accepts booleans (True/False) as valid window sizes\",\n    \"Using a mutable list [count, total] as accumulator is slightly awkward; defaultdict or direct tuple unpacking would be cleaner\",\n    \"Comment '# Maps window start time to [count, total]' is redundant given the variable name and adjacent code\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single-pass accumulation with a dict is the correct minimal data structure",
+      "Flat control flow with early continues for malformed events",
+      "Correct floor-division window assignment",
+      "Sorted output via sorted() on dict items is idiomatic and concise",
+      "No unnecessary abstractions or classes"
+    ],
+    "weaknesses": [
+      "Docstring is far too verbose for a ~20-line function, violating simplicity-first",
+      "isinstance(window_size, int) silently accepts booleans (True/False) as valid window sizes",
+      "Using a mutable list [count, total] as accumulator is slightly awkward; defaultdict or direct tuple unpacking would be cleaner",
+      "Comment '# Maps window start time to [count, total]' is redundant given the variable name and adjacent code"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.112,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 82.03,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_karpathy_generation"
+}

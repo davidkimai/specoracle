@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses reasonable standard-library constructs, but it has notable structural slop that violates the Zen principles. The `while True` / `next()` / `StopIteration` loop is an anti-pattern when a simple `for row in reader` would be flatter and more readable. There is excessive redundant null-checking: the `None in row` guard, the explicit KeyError catch, and the subsequent `if region is None` check all defend against the same condition, creating noisy layers that obscure the actual logic. The `_parse_int` helper adds almost no value over a bare `int()` call and its `None` guard is already handled by the surrounding checks. The `totals` dict uses a mutable list `[0, 0]` instead of a cleaner named tuple or simple `(quantity, cents)` accumulator pattern, making the indices `[0]` and `[1]` opaque. The `strict=True` on `DictReader` is unusual and the surrounding try/except around construction is misplaced since `DictReader` doesn't parse at construction time. The `from typing import Dict, List, Tuple` import is unnecessary given the modern `list[dict]` annotation already used in the return type. Overall the code works but is over-engineered with redundant guards and an awkward iteration style that a maintainer would need to untangle.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and uses reasonable standard-library constructs, but it has notable structural slop that violates the Zen principles. The `while True` / `next()` / `StopIteration` loop is an anti-pattern when a simple `for row in reader` would be flatter and more readable. There is excessive redundant null-checking: the `None in row` guard, the explicit KeyError catch, and the subsequent `if region is None` check all defend against the same condition, creating noisy layers that obscure the actual logic. The `_parse_int` helper adds almost no value over a bare `int()` call and its `None` guard is already handled by the surrounding checks. The `totals` dict uses a mutable list `[0, 0]` instead of a cleaner named tuple or simple `(quantity, cents)` accumulator pattern, making the indices `[0]` and `[1]` opaque. The `strict=True` on `DictReader` is unusual and the surrounding try/except around construction is misplaced since `DictReader` doesn't parse at construction time. The `from typing import Dict, List, Tuple` import is unnecessary given the modern `list[dict]` annotation already used in the return type. Overall the code works but is over-engineered with redundant guards and an awkward iteration style that a maintainer would need to untangle.\",\n  \"strengths\": [\n    \"Correct grouping, sorting, and output shape\",\n    \"Skips malformed rows without crashing\",\n    \"Uses csv.DictReader and io.StringIO appropriately\",\n    \"Sorted output uses a clean key lambda\"\n  ],\n  \"weaknesses\": [\n    \"while True / next() / StopIteration instead of a simple for-loop\",\n    \"Redundant None-checks at multiple layers for the same fields\",\n    \"_parse_int helper adds no real value over int()\",\n    \"Opaque list indices [0] and [1] for quantity/cents accumulator\",\n    \"Unnecessary legacy typing imports (Dict, List, Tuple) alongside modern annotations\",\n    \"try/except around DictReader construction is misplaced and misleading\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct grouping, sorting, and output shape",
+      "Skips malformed rows without crashing",
+      "Uses csv.DictReader and io.StringIO appropriately",
+      "Sorted output uses a clean key lambda"
+    ],
+    "weaknesses": [
+      "while True / next() / StopIteration instead of a simple for-loop",
+      "Redundant None-checks at multiple layers for the same fields",
+      "_parse_int helper adds no real value over int()",
+      "Opaque list indices [0] and [1] for quantity/cents accumulator",
+      "Unnecessary legacy typing imports (Dict, List, Tuple) alongside modern annotations",
+      "try/except around DictReader construction is misplaced and misleading"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.298,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.5,
+    "cyclomatic_complexity_max": 17,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 2,
+    "loc": 55,
+    "maintainability_index": 44.497,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "baseline_generation"
+}

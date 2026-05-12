@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit with no speculative abstractions or hidden state. It validates the critical input (interval <= 0), sorts points with a clear key, and uses a straightforward two-pointer scan that is easy to audit locally. Variable names are descriptive and the control flow is shallow \u2014 one loop with one inner while that advances a cursor. The docstring accurately describes edge cases like duplicate timestamps. The only minor quibble is that the monolithic function could theoretically extract a tiny helper for 'advance cursor to timestamp', but the current size doesn't warrant it and splitting would add indirection without clarity gain. Overall this is a textbook example of simple, explicit, readable code that matches the Zen oracle well.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit with no speculative abstractions or hidden state. It validates the critical input (interval <= 0), sorts points with a clear key, and uses a straightforward two-pointer scan that is easy to audit locally. Variable names are descriptive and the control flow is shallow \u2014 one loop with one inner while that advances a cursor. The docstring accurately describes edge cases like duplicate timestamps. The only minor quibble is that the monolithic function could theoretically extract a tiny helper for 'advance cursor to timestamp', but the current size doesn't warrant it and splitting would add indirection without clarity gain. Overall this is a textbook example of simple, explicit, readable code that matches the Zen oracle well.\",\n  \"strengths\": [\n    \"Explicit input validation with a clear error message\",\n    \"Flat control flow \u2014 single outer loop, single inner while, no deep nesting\",\n    \"Descriptive variable names (point_index, point_count, current_value) make behavior locally auditable\",\n    \"No hidden mutation or global state; data movement is fully visible\",\n    \"Uses only standard-library constructs (sorted, range)\",\n    \"Docstring covers the duplicate-timestamp edge case explicitly\"\n  ],\n  \"weaknesses\": [\n    \"Sorting the input mutates nothing but discards the original order silently; a comment noting this is intentional would help\",\n    \"No validation that start <= end, which could produce an empty result without explanation\",\n    \"The type annotation `float | None` requires `from __future__ import annotations` only for older Pythons; this is a minor portability note, not a real flaw\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit input validation with a clear error message",
+      "Flat control flow \u2014 single outer loop, single inner while, no deep nesting",
+      "Descriptive variable names (point_index, point_count, current_value) make behavior locally auditable",
+      "No hidden mutation or global state; data movement is fully visible",
+      "Uses only standard-library constructs (sorted, range)",
+      "Docstring covers the duplicate-timestamp edge case explicitly"
+    ],
+    "weaknesses": [
+      "Sorting the input mutates nothing but discards the original order silently; a comment noting this is intentional would help",
+      "No validation that start <= end, which could produce an empty result without explanation",
+      "The type annotation `float | None` requires `from __future__ import annotations` only for older Pythons; this is a minor portability note, not a real flaw"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.977,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 30,
+    "maintainability_index": 86.058,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "baseline_generation"
+}

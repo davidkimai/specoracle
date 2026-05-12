@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a simple while-loop with guard clauses rather than deep nesting, extracts two small pure helpers (_require_value, _positive_int) that each do exactly one thing and are locally auditable, keeps data movement visible through a single `parsed` dict with no hidden mutation, raises clear ValueError messages for every failure mode, and uses only ordinary built-ins. The only minor issues are: the `_positive_int` helper calls `int(value)` twice (a trivial inefficiency), and `value.isdigit()` rejects negative numbers but also rejects valid decimal strings like '0' correctly\u2014though it would also reject something like '10 ' which `int()` would handle, making the check slightly fragile. The `--dry-run` value check in `_require_value` using `startswith('--')` is a reasonable heuristic but could misclassify a path starting with '--', though this is an accepted trade-off in CLI parsing. Overall the code is sparse, readable, and a maintainer can audit every behavior path locally without scrolling.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a simple while-loop with guard clauses rather than deep nesting, extracts two small pure helpers (_require_value, _positive_int) that each do exactly one thing and are locally auditable, keeps data movement visible through a single `parsed` dict with no hidden mutation, raises clear ValueError messages for every failure mode, and uses only ordinary built-ins. The only minor issues are: the `_positive_int` helper calls `int(value)` twice (a trivial inefficiency), and `value.isdigit()` rejects negative numbers but also rejects valid decimal strings like '0' correctly\u2014though it would also reject something like '10 ' which `int()` would handle, making the check slightly fragile. The `--dry-run` value check in `_require_value` using `startswith('--')` is a reasonable heuristic but could misclassify a path starting with '--', though this is an accepted trade-off in CLI parsing. Overall the code is sparse, readable, and a maintainer can audit every behavior path locally without scrolling.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses instead of deep nesting\",\n    \"Two small, single-purpose pure helpers that are easy to audit\",\n    \"Explicit data movement through a single dict with no hidden state\",\n    \"Clear, specific ValueError messages for every invalid input case\",\n    \"No speculative abstractions or framework-shaped code\"\n  ],\n  \"weaknesses\": [\n    \"_positive_int calls int(value) twice; could assign once\",\n    \"isdigit() heuristic rejects leading-minus negatives correctly but is subtly fragile for edge inputs like whitespace-padded strings\",\n    \"startswith('--') heuristic in _require_value could misclassify a legitimate path argument beginning with '--'\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses instead of deep nesting",
+      "Two small, single-purpose pure helpers that are easy to audit",
+      "Explicit data movement through a single dict with no hidden state",
+      "Clear, specific ValueError messages for every invalid input case",
+      "No speculative abstractions or framework-shaped code"
+    ],
+    "weaknesses": [
+      "_positive_int calls int(value) twice; could assign once",
+      "isdigit() heuristic rejects leading-minus negatives correctly but is subtly fragile for edge inputs like whitespace-padded strings",
+      "startswith('--') heuristic in _require_value could misclassify a legitimate path argument beginning with '--'"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.523,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.667,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 3,
+    "loc": 32,
+    "maintainability_index": 48.418,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "human_reference"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple. It uses a defaultdict with a list accumulator, which is slightly indirect compared to a plain dict with tuple or two separate counters, but not egregiously so. The main structural issues are: the docstring is far too verbose for a function this simple (violates 'minimum code' and 'simplicity first'), the isinstance check for window_size rejects booleans correctly but the comment about 'positive integer' in the type check is slightly misleading since booleans are ints in Python yet are rejected by the isinstance+int check (actually booleans pass isinstance(True, int), so True would not raise ValueError \u2014 a minor correctness edge case). The intermediate `result` list followed by an in-place sort could be a single sorted() call. The inline comments are redundant given the code is self-explanatory. Overall the architecture is flat, readable, and avoids over-engineering, but the docstring bloat and minor stylistic redundancy prevent a higher score.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple. It uses a defaultdict with a list accumulator, which is slightly indirect compared to a plain dict with tuple or two separate counters, but not egregiously so. The main structural issues are: the docstring is far too verbose for a function this simple (violates 'minimum code' and 'simplicity first'), the isinstance check for window_size rejects booleans correctly but the comment about 'positive integer' in the type check is slightly misleading since booleans are ints in Python yet are rejected by the isinstance+int check (actually booleans pass isinstance(True, int), so True would not raise ValueError \u2014 a minor correctness edge case). The intermediate `result` list followed by an in-place sort could be a single sorted() call. The inline comments are redundant given the code is self-explanatory. Overall the architecture is flat, readable, and avoids over-engineering, but the docstring bloat and minor stylistic redundancy prevent a higher score.\",\n  \"strengths\": [\n    \"Flat, single-function structure with no unnecessary abstractions\",\n    \"Correct half-open window grouping via floor division\",\n    \"Malformed event filtering is explicit and easy to audit\",\n    \"No speculative features or configurability beyond the spec\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is excessively verbose for such a simple function \u2014 violates 'minimum code' principle\",\n    \"Redundant inline comments restate what the code already clearly expresses\",\n    \"Two-step result construction (list comprehension + sort) could be a single sorted() call\",\n    \"Using a mutable list [count, total] as the defaultdict value is slightly less readable than a simple dict or named tuple; a plain dict accumulator would be cleaner\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-function structure with no unnecessary abstractions",
+      "Correct half-open window grouping via floor division",
+      "Malformed event filtering is explicit and easy to audit",
+      "No speculative features or configurability beyond the spec"
+    ],
+    "weaknesses": [
+      "Docstring is excessively verbose for such a simple function \u2014 violates 'minimum code' principle",
+      "Redundant inline comments restate what the code already clearly expresses",
+      "Two-step result construction (list comprehension + sort) could be a single sorted() call",
+      "Using a mutable list [count, total] as the defaultdict value is slightly less readable than a simple dict or named tuple; a plain dict accumulator would be cleaner"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.864,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 82.346,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_karpathy_generation"
+}

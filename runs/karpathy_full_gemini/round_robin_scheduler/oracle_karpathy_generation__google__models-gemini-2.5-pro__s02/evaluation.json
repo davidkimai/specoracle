@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, correctly filtering enabled workers, raising ValueError when none exist, and assigning jobs via modulo indexing without mutating inputs. However, it violates the 'simplicity first' and 'minimum code' principles from the Karpathy oracle in several ways: the module-level docstring is unnecessary overhead for a single utility function, the function docstring is verbose (Args/Returns/Raises sections add bulk without proportional value for such a simple contract), the import of `typing` with legacy `typing.List`/`typing.Dict`/`typing.Any` annotations instead of the modern built-in `list[dict]` style (as used in the task spec itself) is anachronistic and adds noise, and the intermediate variable `num_enabled_workers` is a minor but unnecessary indirection. A truly minimal implementation would be ~10 lines with inline type hints matching the spec signature, no module docstring, and a terse function docstring or none at all.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, correctly filtering enabled workers, raising ValueError when none exist, and assigning jobs via modulo indexing without mutating inputs. However, it violates the 'simplicity first' and 'minimum code' principles from the Karpathy oracle in several ways: the module-level docstring is unnecessary overhead for a single utility function, the function docstring is verbose (Args/Returns/Raises sections add bulk without proportional value for such a simple contract), the import of `typing` with legacy `typing.List`/`typing.Dict`/`typing.Any` annotations instead of the modern built-in `list[dict]` style (as used in the task spec itself) is anachronistic and adds noise, and the intermediate variable `num_enabled_workers` is a minor but unnecessary indirection. A truly minimal implementation would be ~10 lines with inline type hints matching the spec signature, no module docstring, and a terse function docstring or none at all.\",\n  \"strengths\": [\n    \"Correct round-robin logic using modulo indexing\",\n    \"Properly defaults 'enabled' to True via dict.get\",\n    \"Does not mutate input lists\",\n    \"Raises ValueError with a descriptive message when no enabled workers exist\",\n    \"Clear variable naming\"\n  ],\n  \"weaknesses\": [\n    \"Uses legacy typing.List/typing.Dict/typing.Any instead of built-in list[dict] as shown in the task spec\",\n    \"Verbose module-level docstring adds unnecessary bulk for a single-function module\",\n    \"Overly detailed function docstring (Args/Returns/Raises) for a trivially simple contract\",\n    \"Unnecessary intermediate variable num_enabled_workers (len() call could be inlined)\",\n    \"Import of typing module is speculative overhead given modern Python built-in generics\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct round-robin logic using modulo indexing",
+      "Properly defaults 'enabled' to True via dict.get",
+      "Does not mutate input lists",
+      "Raises ValueError with a descriptive message when no enabled workers exist",
+      "Clear variable naming"
+    ],
+    "weaknesses": [
+      "Uses legacy typing.List/typing.Dict/typing.Any instead of built-in list[dict] as shown in the task spec",
+      "Verbose module-level docstring adds unnecessary bulk for a single-function module",
+      "Overly detailed function docstring (Args/Returns/Raises) for a trivially simple contract",
+      "Unnecessary intermediate variable num_enabled_workers (len() call could be inlined)",
+      "Import of typing module is speculative overhead given modern Python built-in generics"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.995,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 37,
+    "maintainability_index": 87.177,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_karpathy_generation"
+}

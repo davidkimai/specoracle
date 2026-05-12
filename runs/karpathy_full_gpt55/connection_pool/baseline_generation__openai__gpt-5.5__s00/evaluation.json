@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Data movement is visible: the lock scope is minimal and deliberate, connections are closed outside the lock to avoid holding it during potentially slow I/O, and the idle deque stores (timestamp, conn) tuples with no hidden state. Validation is upfront and clear with typed errors. The `_close_connection` static helper is a small pure utility that avoids repeating the `getattr` pattern. Control flow in every method is shallow with no deep nesting. The only minor quibble is that `evict_idle` rebuilds the deque by draining and refilling it, which is slightly more verbose than filtering, but it is still locally auditable and correct. The `__slots__` usage is a reasonable micro-optimization that doesn't obscure anything. Overall this is a textbook realization of the Zen principles: simple, explicit, flat, and easy to audit locally.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Data movement is visible: the lock scope is minimal and deliberate, connections are closed outside the lock to avoid holding it during potentially slow I/O, and the idle deque stores (timestamp, conn) tuples with no hidden state. Validation is upfront and clear with typed errors. The `_close_connection` static helper is a small pure utility that avoids repeating the `getattr` pattern. Control flow in every method is shallow with no deep nesting. The only minor quibble is that `evict_idle` rebuilds the deque by draining and refilling it, which is slightly more verbose than filtering, but it is still locally auditable and correct. The `__slots__` usage is a reasonable micro-optimization that doesn't obscure anything. Overall this is a textbook realization of the Zen principles: simple, explicit, flat, and easy to audit locally.\",\n  \"strengths\": [\n    \"Minimal lock scope: factory call and close() happen outside the lock\",\n    \"Upfront input validation with clear, typed errors\",\n    \"Small, single-purpose static helper for closing connections\",\n    \"Flat control flow with guard clauses instead of nesting\",\n    \"No speculative abstractions or unused extension points\",\n    \"Explicit data movement: (timestamp, conn) tuples make idle-tracking transparent\"\n  ],\n  \"weaknesses\": [\n    \"evict_idle rebuilds the deque by draining it rather than using a list comprehension, slightly more verbose\",\n    \"RLock is used but re-entrant locking is never actually needed here; a plain Lock would be sufficient and more explicit about intent\",\n    \"No docstring or error for release(conn) when conn is None or invalid type\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal lock scope: factory call and close() happen outside the lock",
+      "Upfront input validation with clear, typed errors",
+      "Small, single-purpose static helper for closing connections",
+      "Flat control flow with guard clauses instead of nesting",
+      "No speculative abstractions or unused extension points",
+      "Explicit data movement: (timestamp, conn) tuples make idle-tracking transparent"
+    ],
+    "weaknesses": [
+      "evict_idle rebuilds the deque by draining it rather than using a list comprehension, slightly more verbose",
+      "RLock is used but re-entrant locking is never actually needed here; a plain Lock would be sufficient and more explicit about intent",
+      "No docstring or error for release(conn) when conn is None or invalid type"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.857,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 5,
+    "loc": 65,
+    "maintainability_index": 60.191,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "baseline_generation"
+}

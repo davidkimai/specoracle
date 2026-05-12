@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally simple, correctly appending a record to the sink and returning a distinct copy. The core logic is minimal and readable. However, the docstrings are verbose for such a trivial class \u2014 the Karpathy oracle favors minimum code, and these multi-paragraph docstrings with Args/Returns sections add noise without value for a ~10-line implementation. The `from typing import Dict, List` import is unnecessary in Python 3.9+ where `list[dict]` works natively, and the task signature already uses the modern form. The class docstring is also redundant given the class name is self-explanatory. These are minor but real violations of 'write the minimum code that solves the problem.'",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally simple, correctly appending a record to the sink and returning a distinct copy. The core logic is minimal and readable. However, the docstrings are verbose for such a trivial class \u2014 the Karpathy oracle favors minimum code, and these multi-paragraph docstrings with Args/Returns sections add noise without value for a ~10-line implementation. The `from typing import Dict, List` import is unnecessary in Python 3.9+ where `list[dict]` works natively, and the task signature already uses the modern form. The class docstring is also redundant given the class name is self-explanatory. These are minor but real violations of 'write the minimum code that solves the problem.'\",\n  \"strengths\": [\n    \"Correct monotonic sequence starting at 1\",\n    \"Returned record is a distinct object from the appended one (copy())\",\n    \"No speculative abstractions or unnecessary features\",\n    \"Clean, flat structure with no over-engineering\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstrings violate 'minimum code' principle for trivial logic\",\n    \"Uses deprecated typing.Dict/List instead of built-in list/dict (Python 3.9+)\",\n    \"Class-level docstring is redundant given the self-explanatory class name\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct monotonic sequence starting at 1",
+      "Returned record is a distinct object from the appended one (copy())",
+      "No speculative abstractions or unnecessary features",
+      "Clean, flat structure with no over-engineering"
+    ],
+    "weaknesses": [
+      "Verbose docstrings violate 'minimum code' principle for trivial logic",
+      "Uses deprecated typing.Dict/List instead of built-in list/dict (Python 3.9+)",
+      "Class-level docstring is redundant given the self-explanatory class name"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.86,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________________ test_writes_monotonic_records_without_aliasing ________________\n\n    def test_writes_monotonic_records_without_aliasing():\n        sink = []\n        writer = AuditLogWriter(sink)\n        first = writer.write('alice', 'create')\n        second = writer.write('bob', 'delete')\n>       assert [row['sequence'] for row in sink] == [1, 2]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:9: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n.0 = <list_iterator object at 0xffff8c415c00>\n\n>   assert [row['sequence'] for row in sink] == [1, 2]\n            ^^^^^^^^^^^^^^^\nE   KeyError: 'sequence'\n\ntest_solution.py:9: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_writes_monotonic_records_without_aliasing - Key...\n1 failed in 0.26s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.333,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 2,
+    "loc": 33,
+    "maintainability_index": 89.302,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_log_writer",
+  "variant": "oracle_karpathy_generation"
+}

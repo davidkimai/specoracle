@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable standard-library construct (ExitStack), but it introduces unnecessary indirection and abstraction for a task that is trivially simple. The core logic\u2014track resources in a list, close in reverse on exit\u2014requires only a list and a loop, which would be more explicit, auditable, and self-contained. Using ExitStack here is speculative over-engineering: it adds a hidden dependency, obscures the reversal behavior (which is a key semantic), and the `_close_resource` helper adds no value over a direct `resource.close()` call inline. A maintainer reading this must understand ExitStack's semantics to audit correctness, whereas a plain list with `reversed()` makes the behavior immediately obvious. The Zen favors explicit over implicit and simple over complex; the direct approach would score higher on both counts.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable standard-library construct (ExitStack), but it introduces unnecessary indirection and abstraction for a task that is trivially simple. The core logic\u2014track resources in a list, close in reverse on exit\u2014requires only a list and a loop, which would be more explicit, auditable, and self-contained. Using ExitStack here is speculative over-engineering: it adds a hidden dependency, obscures the reversal behavior (which is a key semantic), and the `_close_resource` helper adds no value over a direct `resource.close()` call inline. A maintainer reading this must understand ExitStack's semantics to audit correctness, whereas a plain list with `reversed()` makes the behavior immediately obvious. The Zen favors explicit over implicit and simple over complex; the direct approach would score higher on both counts.\",\n  \"strengths\": [\n    \"Functionally correct: resources are closed in reverse acquisition order, including on exception\",\n    \"Uses standard library rather than custom machinery\",\n    \"Clean class structure with clear method names\",\n    \"Docstrings are concise and accurate\"\n  ],\n  \"weaknesses\": [\n    \"ExitStack is speculative over-engineering for a task that only needs a list and a reversed loop\",\n    \"_close_resource helper adds no clarity\u2014it's a one-liner wrapper that obscures rather than explains\",\n    \"Reverse-order closing behavior is hidden inside ExitStack internals rather than made explicit\",\n    \"A maintainer must know ExitStack's callback-stack semantics to audit correctness, violating local auditability\",\n    \"Delegating __enter__/__exit__ to ExitStack adds indirection without benefit\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct: resources are closed in reverse acquisition order, including on exception",
+      "Uses standard library rather than custom machinery",
+      "Clean class structure with clear method names",
+      "Docstrings are concise and accurate"
+    ],
+    "weaknesses": [
+      "ExitStack is speculative over-engineering for a task that only needs a list and a reversed loop",
+      "_close_resource helper adds no clarity\u2014it's a one-liner wrapper that obscures rather than explains",
+      "Reverse-order closing behavior is hidden inside ExitStack internals rather than made explicit",
+      "A maintainer must know ExitStack's callback-stack semantics to audit correctness, violating local auditability",
+      "Delegating __enter__/__exit__ to ExitStack adds indirection without benefit"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.043,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.167,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 5,
+    "loc": 16,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "baseline_generation"
+}

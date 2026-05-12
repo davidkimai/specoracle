@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses reasonable standard-library constructs, but it carries several pieces of speculative complexity that violate the Zen's 'simple is better than complex' and 'sparse is better than dense' principles. The custom `_parse_integer` helper manually reimplements what `int()` inside a try/except does more clearly and concisely, adding noise without benefit. The `_EXTRA_FIELDS_KEY` sentinel and `_REQUIRED_FIELDS` module-level constants are minor over-engineering for a single-use function. The BOM stripping on fieldnames is a speculative edge-case abstraction not required by the spec. The `restkey` mechanism to detect extra fields is clever but obscure compared to simply checking field presence. The `try/except csv.Error` around `DictReader` construction is misleading since that constructor never raises. The `totals` dict using `List[int]` of length 2 instead of a named tuple or simple `(quantity, cents)` accumulator makes the data movement less explicit. Overall the code is readable but padded with defensive and speculative logic that a maintainer would need to audit carefully to confirm is necessary.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and uses reasonable standard-library constructs, but it carries several pieces of speculative complexity that violate the Zen's 'simple is better than complex' and 'sparse is better than dense' principles. The custom `_parse_integer` helper manually reimplements what `int()` inside a try/except does more clearly and concisely, adding noise without benefit. The `_EXTRA_FIELDS_KEY` sentinel and `_REQUIRED_FIELDS` module-level constants are minor over-engineering for a single-use function. The BOM stripping on fieldnames is a speculative edge-case abstraction not required by the spec. The `restkey` mechanism to detect extra fields is clever but obscure compared to simply checking field presence. The `try/except csv.Error` around `DictReader` construction is misleading since that constructor never raises. The `totals` dict using `List[int]` of length 2 instead of a named tuple or simple `(quantity, cents)` accumulator makes the data movement less explicit. Overall the code is readable but padded with defensive and speculative logic that a maintainer would need to audit carefully to confirm is necessary.\",\n  \"strengths\": [\n    \"Correct grouping, sorting, and output shape\",\n    \"Guard clauses keep the row-processing loop relatively flat\",\n    \"Explicit field validation before processing rows\",\n    \"Final list comprehension is clear and readable\"\n  ],\n  \"weaknesses\": [\n    \"`_parse_integer` manually reimplements `int()` with a try/except, adding complexity for no gain\",\n    \"BOM stripping on fieldnames is speculative and undocumented in the spec\",\n    \"`_EXTRA_FIELDS_KEY` sentinel and `restkey` trick is obscure; simpler to just check required fields\",\n    \"Module-level constants for a single-use function are unnecessary abstraction\",\n    \"`try/except csv.Error` around `DictReader()` construction is misleading since it never raises there\",\n    \"`List[int]` of length 2 for accumulator is less explicit than a named pair or simple tuple unpacking\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct grouping, sorting, and output shape",
+      "Guard clauses keep the row-processing loop relatively flat",
+      "Explicit field validation before processing rows",
+      "Final list comprehension is clear and readable"
+    ],
+    "weaknesses": [
+      "`_parse_integer` manually reimplements `int()` with a try/except, adding complexity for no gain",
+      "BOM stripping on fieldnames is speculative and undocumented in the spec",
+      "`_EXTRA_FIELDS_KEY` sentinel and `restkey` trick is obscure; simpler to just check required fields",
+      "Module-level constants for a single-use function are unnecessary abstraction",
+      "`try/except csv.Error` around `DictReader()` construction is misleading since it never raises there",
+      "`List[int]` of length 2 for accumulator is less explicit than a named pair or simple tuple unpacking"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.09,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.5,
+    "cyclomatic_complexity_max": 16,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 2,
+    "loc": 60,
+    "maintainability_index": 43.029,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "baseline_generation"
+}

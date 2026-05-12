@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, minimal sliding-window rate limiter that closely follows the Zen of Python principles. It uses a deque for O(1) eviction of expired timestamps, keeps control flow flat with a single guard clause and a while loop, makes data movement explicit (timestamps are mutated in place with no hidden state), raises a clear ValueError for invalid input, and uses ordinary standard-library constructs throughout. The `__slots__` declaration is a minor speculative optimization but harmless. The local variable alias `timestamps = self._timestamps` is a micro-optimization that slightly obscures the attribute access pattern without meaningful benefit. The boundary condition uses `<= cutoff` (strict sliding window: excludes timestamps exactly 1 second old), which is a reasonable and auditable choice. Overall the code is sparse, readable, and easy to audit locally with no framework-shaped abstractions or unused extension points.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, minimal sliding-window rate limiter that closely follows the Zen of Python principles. It uses a deque for O(1) eviction of expired timestamps, keeps control flow flat with a single guard clause and a while loop, makes data movement explicit (timestamps are mutated in place with no hidden state), raises a clear ValueError for invalid input, and uses ordinary standard-library constructs throughout. The `__slots__` declaration is a minor speculative optimization but harmless. The local variable alias `timestamps = self._timestamps` is a micro-optimization that slightly obscures the attribute access pattern without meaningful benefit. The boundary condition uses `<= cutoff` (strict sliding window: excludes timestamps exactly 1 second old), which is a reasonable and auditable choice. Overall the code is sparse, readable, and easy to audit locally with no framework-shaped abstractions or unused extension points.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses and no deep nesting\",\n    \"Explicit data movement; no hidden mutation or global state\",\n    \"Clear ValueError with descriptive message for invalid rate\",\n    \"Uses only standard-library constructs (deque, time.monotonic)\",\n    \"Small, focused class with no speculative abstractions or unused hooks\",\n    \"Docstring and slot declaration are minimal and appropriate\"\n  ],\n  \"weaknesses\": [\n    \"Local alias `timestamps = self._timestamps` is a micro-optimization that adds a layer of indirection without meaningful clarity benefit\",\n    \"`__slots__` is a minor speculative optimization not required by the task\",\n    \"Boundary condition (`<= cutoff`) vs (`< cutoff`) is not documented, leaving the exact window semantics implicit\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses and no deep nesting",
+      "Explicit data movement; no hidden mutation or global state",
+      "Clear ValueError with descriptive message for invalid rate",
+      "Uses only standard-library constructs (deque, time.monotonic)",
+      "Small, focused class with no speculative abstractions or unused hooks",
+      "Docstring and slot declaration are minimal and appropriate"
+    ],
+    "weaknesses": [
+      "Local alias `timestamps = self._timestamps` is a micro-optimization that adds a layer of indirection without meaningful clarity benefit",
+      "`__slots__` is a minor speculative optimization not required by the task",
+      "Boundary condition (`<= cutoff`) vs (`< cutoff`) is not documented, leaving the exact window semantics implicit"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.177,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.16s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 23,
+    "maintainability_index": 55.745,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "baseline_generation"
+}

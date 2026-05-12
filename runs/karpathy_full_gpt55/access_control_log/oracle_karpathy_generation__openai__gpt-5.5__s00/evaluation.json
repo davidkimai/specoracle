@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision first, unconditionally appends a complete log record containing role, permission, and allowed before returning, and defaults to denial when the role is absent from the matrix. There are no early returns, no short-circuit paths that could bypass logging, and no unnecessary complexity. The code is flat, explicit, and locally auditable in a single read-through.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision first, unconditionally appends a complete log record containing role, permission, and allowed before returning, and defaults to denial when the role is absent from the matrix. There are no early returns, no short-circuit paths that could bypass logging, and no unnecessary complexity. The code is flat, explicit, and locally auditable in a single read-through.\",\n  \"strengths\": [\n    \"Single, unconditional log.append guarantees every attempt is recorded regardless of outcome\",\n    \"Deny-by-default is correctly implemented via matrix.get returning None\",\n    \"Log record contains exactly the three required fields: role, permission, allowed\",\n    \"No branching or early returns that could accidentally skip the audit write\",\n    \"Minimal and readable \u2014 follows Zen of Python principles of simplicity and explicitness\"\n  ],\n  \"weaknesses\": [\n    \"No input validation (e.g., non-string role/permission), though not required by the spec\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single, unconditional log.append guarantees every attempt is recorded regardless of outcome",
+      "Deny-by-default is correctly implemented via matrix.get returning None",
+      "Log record contains exactly the three required fields: role, permission, allowed",
+      "No branching or early returns that could accidentally skip the audit write",
+      "Minimal and readable \u2014 follows Zen of Python principles of simplicity and explicitness"
+    ],
+    "weaknesses": [
+      "No input validation (e.g., non-string role/permission), though not required by the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.087,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 1,
+    "loc": 11,
+    "maintainability_index": 72.734,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "oracle_karpathy_generation"
+}

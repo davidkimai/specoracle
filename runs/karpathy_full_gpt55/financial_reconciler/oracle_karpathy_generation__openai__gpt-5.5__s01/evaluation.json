@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation faithfully follows TR-4's core mandates: direction is validated and tagged before any accumulation occurs, debit and credit are maintained in separate named accumulators, and no inline arithmetic appears inside direction-deciding conditionals. The dispatch table `_DIRECTION_APPLIERS` is a clean structural choice that keeps direction logic decoupled from accumulation logic. The helper functions `_apply_debit` and `_apply_credit` are explicit and auditable. Minor weaknesses include slight over-verbosity in the apply helpers (the intermediate `debit_delta`/`credit_delta` variables add noise without semantic value), and `_normalize_direction` is essentially a validated identity function that could be replaced by a set-membership check with a raise, though the explicit branching is defensible for auditability. The use of `setdefault` or `defaultdict` would reduce the None-check boilerplate in the main loop without sacrificing clarity. Overall the code is structurally sound, locally auditable, and well-aligned with the doctrine.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation faithfully follows TR-4's core mandates: direction is validated and tagged before any accumulation occurs, debit and credit are maintained in separate named accumulators, and no inline arithmetic appears inside direction-deciding conditionals. The dispatch table `_DIRECTION_APPLIERS` is a clean structural choice that keeps direction logic decoupled from accumulation logic. The helper functions `_apply_debit` and `_apply_credit` are explicit and auditable. Minor weaknesses include slight over-verbosity in the apply helpers (the intermediate `debit_delta`/`credit_delta` variables add noise without semantic value), and `_normalize_direction` is essentially a validated identity function that could be replaced by a set-membership check with a raise, though the explicit branching is defensible for auditability. The use of `setdefault` or `defaultdict` would reduce the None-check boilerplate in the main loop without sacrificing clarity. Overall the code is structurally sound, locally auditable, and well-aligned with the doctrine.\",\n  \"strengths\": [\n    \"Direction is fully validated and tagged before affecting any totals, satisfying TR-4's primary mandate\",\n    \"Separate named accumulators for debit and credit are explicit and traceable throughout\",\n    \"No inline arithmetic inside conditionals that decide monetary direction\",\n    \"Dispatch table cleanly separates direction routing from accumulation logic\",\n    \"Two-pass structure (accumulate then finalize) is clear and auditable\"\n  ],\n  \"weaknesses\": [\n    \"`debit_delta`/`credit_delta` intermediate variables in apply helpers add verbosity without meaningful semantic distinction\",\n    \"None-check pattern for account initialization is more verbose than `setdefault` or `defaultdict` without added clarity\",\n    \"`_normalize_direction` is essentially a validated identity function; the pattern is correct but slightly ceremonial\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Direction is fully validated and tagged before affecting any totals, satisfying TR-4's primary mandate",
+      "Separate named accumulators for debit and credit are explicit and traceable throughout",
+      "No inline arithmetic inside conditionals that decide monetary direction",
+      "Dispatch table cleanly separates direction routing from accumulation logic",
+      "Two-pass structure (accumulate then finalize) is clear and auditable"
+    ],
+    "weaknesses": [
+      "`debit_delta`/`credit_delta` intermediate variables in apply helpers add verbosity without meaningful semantic distinction",
+      "None-check pattern for account initialization is more verbose than `setdefault` or `defaultdict` without added clarity",
+      "`_normalize_direction` is essentially a validated identity function; the pattern is correct but slightly ceremonial"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.055,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 5,
+    "loc": 50,
+    "maintainability_index": 50.627,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

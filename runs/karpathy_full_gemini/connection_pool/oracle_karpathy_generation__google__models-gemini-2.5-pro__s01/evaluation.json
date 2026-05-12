@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct but violates the Karpathy oracle's core principle of simplicity first. It adds substantial unrequested complexity: a custom exception hierarchy (ConnectionPoolError, ConnectionPoolFullError) that wasn't asked for, a Generic[T_conn] type parameter with TypeVar machinery, a `connection()` context manager that wasn't specified, verbose docstrings on every method, and a validation check on max_size. The code is roughly 3-4x longer than necessary. The core logic itself is sound (LIFO idle pool with timestamps, thread-safe locking, oldest-first eviction), but the surrounding scaffolding is speculative flexibility and over-engineering. A minimal implementation would be ~30-40 lines: a plain class with __init__, acquire, release, and evict_idle, no generics, no extra exceptions, no context manager, no elaborate docstrings. The `release` validation raising ValueError is a reasonable defensive choice, but the rest of the additions are pure architectural slop that the oracle explicitly penalizes.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The implementation is functionally correct but violates the Karpathy oracle's core principle of simplicity first. It adds substantial unrequested complexity: a custom exception hierarchy (ConnectionPoolError, ConnectionPoolFullError) that wasn't asked for, a Generic[T_conn] type parameter with TypeVar machinery, a `connection()` context manager that wasn't specified, verbose docstrings on every method, and a validation check on max_size. The code is roughly 3-4x longer than necessary. The core logic itself is sound (LIFO idle pool with timestamps, thread-safe locking, oldest-first eviction), but the surrounding scaffolding is speculative flexibility and over-engineering. A minimal implementation would be ~30-40 lines: a plain class with __init__, acquire, release, and evict_idle, no generics, no extra exceptions, no context manager, no elaborate docstrings. The `release` validation raising ValueError is a reasonable defensive choice, but the rest of the additions are pure architectural slop that the oracle explicitly penalizes.\",\n  \"strengths\": [\n    \"Core logic is correct: LIFO acquire/release, oldest-first eviction, thread-safe with a single lock\",\n    \"Timestamp tracking for idle connections is properly placed at release time\",\n    \"evict_idle correctly stops early when it finds a non-stale connection\",\n    \"now parameter defaulting to time.time is clean and testable\"\n  ],\n  \"weaknesses\": [\n    \"Unrequested custom exception hierarchy adds dead weight\",\n    \"Generic[T_conn] with TypeVar is speculative flexibility not asked for\",\n    \"Unrequested context manager `connection()` violates 'no features beyond what was asked'\",\n    \"Verbose multi-paragraph docstrings on every method bloat the code significantly\",\n    \"max_size validation with isinstance check is defensive over-engineering\",\n    \"Overall length (~150 lines) is 3-4x what the task requires\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Core logic is correct: LIFO acquire/release, oldest-first eviction, thread-safe with a single lock",
+      "Timestamp tracking for idle connections is properly placed at release time",
+      "evict_idle correctly stops early when it finds a non-stale connection",
+      "now parameter defaulting to time.time is clean and testable"
+    ],
+    "weaknesses": [
+      "Unrequested custom exception hierarchy adds dead weight",
+      "Generic[T_conn] with TypeVar is speculative flexibility not asked for",
+      "Unrequested context manager `connection()` violates 'no features beyond what was asked'",
+      "Verbose multi-paragraph docstrings on every method bloat the code significantly",
+      "max_size validation with isinstance check is defensive over-engineering",
+      "Overall length (~150 lines) is 3-4x what the task requires"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.972,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 3,
+    "cyclomatic_complexity_average": 2.625,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 5,
+    "loc": 144,
+    "maintainability_index": 67.5,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_karpathy_generation"
+}

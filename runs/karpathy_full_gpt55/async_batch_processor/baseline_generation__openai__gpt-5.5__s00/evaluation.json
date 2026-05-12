@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses clear naming with explicit validation, but the worker-pool pattern with a shared mutable index and lock is more complex than necessary. A simpler approach would be to use `asyncio.Semaphore` to bound concurrency while gathering all batch tasks directly, which would eliminate the lock, the `nonlocal` mutation, the `None`-sentinel result list, and the worker loop entirely. The batch-splitting logic is clean and readable. The final flattening loop with a `None` check is a code smell caused by the pre-allocated results list \u2014 a direct gather would return results in order without needing sentinels. The TypeVar annotations add some noise for a function that could be typed more simply. Overall the code is auditable but carries unnecessary architectural weight from the worker-pool abstraction when a semaphore-guarded gather would be both simpler and more idiomatic for async Python.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses clear naming with explicit validation, but the worker-pool pattern with a shared mutable index and lock is more complex than necessary. A simpler approach would be to use `asyncio.Semaphore` to bound concurrency while gathering all batch tasks directly, which would eliminate the lock, the `nonlocal` mutation, the `None`-sentinel result list, and the worker loop entirely. The batch-splitting logic is clean and readable. The final flattening loop with a `None` check is a code smell caused by the pre-allocated results list \u2014 a direct gather would return results in order without needing sentinels. The TypeVar annotations add some noise for a function that could be typed more simply. Overall the code is auditable but carries unnecessary architectural weight from the worker-pool abstraction when a semaphore-guarded gather would be both simpler and more idiomatic for async Python.\",\n  \"strengths\": [\n    \"Clear, explicit validation with descriptive error messages\",\n    \"Batch splitting logic is readable and straightforward\",\n    \"Uses TaskGroup for structured concurrency\",\n    \"Good naming throughout\"\n  ],\n  \"weaknesses\": [\n    \"Worker-pool with shared mutable index and lock is more complex than a semaphore-guarded gather\",\n    \"Pre-allocated results list with None sentinels is a code smell; direct gather preserves order without sentinels\",\n    \"nonlocal mutation of next_batch_index reduces local auditability\",\n    \"TypeVar boilerplate adds noise without meaningful benefit here\",\n    \"Nested worker coroutine with while-loop is harder to reason about than a flat gather\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear, explicit validation with descriptive error messages",
+      "Batch splitting logic is readable and straightforward",
+      "Uses TaskGroup for structured concurrency",
+      "Good naming throughout"
+    ],
+    "weaknesses": [
+      "Worker-pool with shared mutable index and lock is more complex than a semaphore-guarded gather",
+      "Pre-allocated results list with None sentinels is a code smell; direct gather preserves order without sentinels",
+      "nonlocal mutation of next_batch_index reduces local auditability",
+      "TypeVar boilerplate adds noise without meaningful benefit here",
+      "Nested worker coroutine with while-loop is harder to reason about than a flat gather"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.8,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.19s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 48,
+    "maintainability_index": 47.976,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "baseline_generation"
+}

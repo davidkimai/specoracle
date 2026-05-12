@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, but it diverges from the Corporate Legacy Spec QX-17 in several notable ways. The spec calls for explicit branch labels in local variable names when a decision affects money (e.g., naming variables like `paid_amount_cents` or `eligible_region`), but the code uses generic names like `is_valid`, `count`, and `total`. The spec discourages clever flattening in favor of a visible staged audit trail, yet the code collapses the filter and aggregation into a single loop without named audit stages. The spec allows comments only when they name a legacy audit stage, but the code is littered with generic explanatory comments that don't reference any audit stage. The docstring is excessively verbose for a legacy spec that prizes auditability over documentation prose. On the positive side, the function has no helper functions, uses the exact legacy keys, does not mutate input, and the logic is flat and locally auditable in a single pass.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, but it diverges from the Corporate Legacy Spec QX-17 in several notable ways. The spec calls for explicit branch labels in local variable names when a decision affects money (e.g., naming variables like `paid_amount_cents` or `eligible_region`), but the code uses generic names like `is_valid`, `count`, and `total`. The spec discourages clever flattening in favor of a visible staged audit trail, yet the code collapses the filter and aggregation into a single loop without named audit stages. The spec allows comments only when they name a legacy audit stage, but the code is littered with generic explanatory comments that don't reference any audit stage. The docstring is excessively verbose for a legacy spec that prizes auditability over documentation prose. On the positive side, the function has no helper functions, uses the exact legacy keys, does not mutate input, and the logic is flat and locally auditable in a single pass.\",\n  \"strengths\": [\n    \"Single public function with no helper functions, matching the spec's preference\",\n    \"Uses the exact required legacy keys: bucket_code, item_count, cents_total\",\n    \"Does not mutate the input list\",\n    \"Flat, linear structure with no nested functions or classes\",\n    \"Correct handling of missing keys and type validation\"\n  ],\n  \"weaknesses\": [\n    \"Local variable names like `is_valid`, `count`, and `total` lack the explicit branch labels for money decisions required by the spec\",\n    \"Comments are generic explanatory prose rather than named legacy audit stages as the spec requires\",\n    \"No visible staged audit trail separating filter, aggregation, and output transformation phases with named stages\",\n    \"Excessively long docstring violates the spirit of the terse legacy spec\",\n    \"The `is_valid` boolean flag is a mild form of cleverness that obscures the explicit branching the spec prefers\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions, matching the spec's preference",
+      "Uses the exact required legacy keys: bucket_code, item_count, cents_total",
+      "Does not mutate the input list",
+      "Flat, linear structure with no nested functions or classes",
+      "Correct handling of missing keys and type validation"
+    ],
+    "weaknesses": [
+      "Local variable names like `is_valid`, `count`, and `total` lack the explicit branch labels for money decisions required by the spec",
+      "Comments are generic explanatory prose rather than named legacy audit stages as the spec requires",
+      "No visible staged audit trail separating filter, aggregation, and output transformation phases with named stages",
+      "Excessively long docstring violates the spirit of the terse legacy spec",
+      "The `is_valid` boolean flag is a mild form of cleverness that obscures the explicit branching the spec prefers"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.775,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 70,
+    "maintainability_index": 70.398,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a straightforward loop with clear logic, but it violates the simplicity-first principle in several ways: the docstring is excessively verbose (nearly as long as the implementation itself), the inline comments over-explain obvious operations (e.g., explaining what `//` does, restating what `continue` means), the isinstance type-checking adds speculative robustness not requested by the spec, and the function is missing its final `return plan` statement (a functional bug). The core algorithm is clean and the ceiling division via integer arithmetic is idiomatic, but the surrounding ceremony inflates the code beyond what the task demands.",
+    "raw_response": "```json\n{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a straightforward loop with clear logic, but it violates the simplicity-first principle in several ways: the docstring is excessively verbose (nearly as long as the implementation itself), the inline comments over-explain obvious operations (e.g., explaining what `//` does, restating what `continue` means), the isinstance type-checking adds speculative robustness not requested by the spec, and the function is missing its final `return plan` statement (a functional bug). The core algorithm is clean and the ceiling division via integer arithmetic is idiomatic, but the surrounding ceremony inflates the code beyond what the task demands.\",\n  \"strengths\": [\n    \"Core logic is correct and minimal: deficit computation and ceiling-division rounding are clean\",\n    \"Uses sales_velocity.get(sku, 0) idiomatically to handle missing keys\",\n    \"try/except around key access is a reasonable guard for malformed items\",\n    \"Sorting is implied by the missing return but the plan list is built correctly\"\n  ],\n  \"weaknesses\": [\n    \"Missing `return plan` at the end \u2014 the function returns None, which is a functional bug\",\n    \"Docstring is disproportionately long relative to the implementation, violating simplicity-first\",\n    \"Speculative isinstance type-checking was not requested and adds noise\",\n    \"Inline comments over-explain trivial operations, reducing signal-to-noise ratio\",\n    \"The except clause silently swallows TypeError but isinstance checks already handle type issues, creating redundant defense layers\"\n  ]\n}\n```",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core logic is correct and minimal: deficit computation and ceiling-division rounding are clean",
+      "Uses sales_velocity.get(sku, 0) idiomatically to handle missing keys",
+      "try/except around key access is a reasonable guard for malformed items",
+      "Sorting is implied by the missing return but the plan list is built correctly"
+    ],
+    "weaknesses": [
+      "Missing `return plan` at the end \u2014 the function returns None, which is a functional bug",
+      "Docstring is disproportionately long relative to the implementation, violating simplicity-first",
+      "Speculative isinstance type-checking was not requested and adds noise",
+      "Inline comments over-explain trivial operations, reducing signal-to-noise ratio",
+      "The except clause silently swallows TypeError but isinstance checks already handle type issues, creating redundant defense layers"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.912,
+    "exit_code": 2,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "\n==================================== ERRORS ====================================\n______________________ ERROR collecting test_solution.py _______________________\n/usr/local/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule\n    mod = import_path(\n/usr/local/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path\n    importlib.import_module(module_name)\n/usr/local/lib/python3.11/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n<frozen importlib._bootstrap>:1204: in _gcd_import\n    ???\n<frozen importlib._bootstrap>:1176: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:690: in _load_unlocked\n    ???\n/usr/local/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntest_solution.py:1: in <module>\n    from solution import reorder_plan\nE     File \"/work/solution.py\", line 68\nE       # Skip\nE             ^\nE   IndentationError: expected an indented block after 'except' statement on line 67\n=========================== short test summary info ============================\nERROR test_solution.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.29s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 0.0,
+    "cyclomatic_complexity_max": 0,
+    "cyclomatic_complexity_total": 0,
+    "function_count": 0,
+    "loc": 55,
+    "maintainability_index": null,
+    "max_nesting_depth": 0,
+    "syntax_error": "expected an indented block after 'except' statement on line 67 at line 68",
+    "syntax_ok": false
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_karpathy_generation"
+}

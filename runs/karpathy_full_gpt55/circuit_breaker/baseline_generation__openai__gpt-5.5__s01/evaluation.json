@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly realizes all three RCS-5 requirements: state is explicit and inspectable via a named `state` property, threshold and timeout are named configuration attributes, and half-open trials close on success or reopen on failure. The state machine logic is sound and thread-safe. However, the code is considerably more complex than the task warrants \u2014 a generation counter for concurrency safety, extensive input validation with type/value checks, a `__call__ = call` alias, and multiple private helper methods add layers that obscure the core circuit-breaker logic rather than clarifying it. The Zen of Python favors simplicity and flatness; the validation boilerplate (bool-check on int, float conversion try/except) and the generation-based stale-update guard are defensive patterns more appropriate for a library than a straightforward implementation. The `_acquire_permission` raising `RuntimeError('Circuit breaker is half-open')` for a concurrent second half-open attempt is a reasonable design choice but is undocumented and surprising. Overall the structural quality is good but the implementation is over-engineered relative to the informal spec.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation correctly realizes all three RCS-5 requirements: state is explicit and inspectable via a named `state` property, threshold and timeout are named configuration attributes, and half-open trials close on success or reopen on failure. The state machine logic is sound and thread-safe. However, the code is considerably more complex than the task warrants \u2014 a generation counter for concurrency safety, extensive input validation with type/value checks, a `__call__ = call` alias, and multiple private helper methods add layers that obscure the core circuit-breaker logic rather than clarifying it. The Zen of Python favors simplicity and flatness; the validation boilerplate (bool-check on int, float conversion try/except) and the generation-based stale-update guard are defensive patterns more appropriate for a library than a straightforward implementation. The `_acquire_permission` raising `RuntimeError('Circuit breaker is half-open')` for a concurrent second half-open attempt is a reasonable design choice but is undocumented and surprising. Overall the structural quality is good but the implementation is over-engineered relative to the informal spec.\",\n  \"strengths\": [\n    \"State is a named string constant and exposed as an inspectable property, satisfying RCS-5 explicitly\",\n    \"failure_threshold and recovery_timeout are named instance attributes, not magic numbers\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Thread safety via RLock with generation counter prevents stale updates in concurrent scenarios\",\n    \"Clean separation of _acquire_permission, _record_success, _record_failure helpers\"\n  ],\n  \"weaknesses\": [\n    \"Excessive input validation (bool-check, float conversion try/except, callable check on now) adds noise not required by the spec\",\n    \"Generation counter mechanism is over-engineered for the stated task and hurts readability\",\n    \"Raising RuntimeError for a concurrent half-open attempt is undocumented and surprising behavior\",\n    \"__call__ = call alias is unnecessary and adds confusion about the intended API\",\n    \"Extra public properties (failure_count, opened_at) and Optional import add surface area beyond what the spec requires\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "State is a named string constant and exposed as an inspectable property, satisfying RCS-5 explicitly",
+      "failure_threshold and recovery_timeout are named instance attributes, not magic numbers",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Thread safety via RLock with generation counter prevents stale updates in concurrent scenarios",
+      "Clean separation of _acquire_permission, _record_success, _record_failure helpers"
+    ],
+    "weaknesses": [
+      "Excessive input validation (bool-check, float conversion try/except, callable check on now) adds noise not required by the spec",
+      "Generation counter mechanism is over-engineered for the stated task and hurts readability",
+      "Raising RuntimeError for a concurrent half-open attempt is undocumented and surprising behavior",
+      "__call__ = call alias is unnecessary and adds confusion about the intended API",
+      "Extra public properties (failure_count, opened_at) and Optional import add surface area beyond what the spec requires"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.856,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.636,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 40,
+    "function_count": 10,
+    "loc": 98,
+    "maintainability_index": 32.021,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

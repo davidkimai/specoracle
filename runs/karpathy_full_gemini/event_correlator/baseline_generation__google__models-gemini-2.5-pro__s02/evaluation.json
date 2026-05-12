@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It uses a straightforward grouping-then-scanning approach with explicit data movement, flat-ish control flow, and clear variable names. The early-break optimization is sensible and locally auditable. However, the docstring is over-engineered for the task size (verbose Args/Returns/Raises sections add noise without clarity gain), the `from typing import Any` import is unnecessary in Python 3.9+ where `dict` and `list` are directly subscriptable, and the inline comments are somewhat excessive\u2014explaining obvious steps like 'Sort events by timestamp' and 'Calculate time delta' that the code already makes self-evident. The 'small pure helpers' guideline is not followed: extracting a `find_first_b` helper would improve local auditability of the outer loop. The `num_events` variable is a minor speculative micro-optimization that adds a name without meaningful benefit. Overall the architecture is sound and avoids deep nesting, hidden mutation, and metaprogramming, but the verbosity and missed helper-extraction opportunity keep it from being exemplary.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It uses a straightforward grouping-then-scanning approach with explicit data movement, flat-ish control flow, and clear variable names. The early-break optimization is sensible and locally auditable. However, the docstring is over-engineered for the task size (verbose Args/Returns/Raises sections add noise without clarity gain), the `from typing import Any` import is unnecessary in Python 3.9+ where `dict` and `list` are directly subscriptable, and the inline comments are somewhat excessive\u2014explaining obvious steps like 'Sort events by timestamp' and 'Calculate time delta' that the code already makes self-evident. The 'small pure helpers' guideline is not followed: extracting a `find_first_b` helper would improve local auditability of the outer loop. The `num_events` variable is a minor speculative micro-optimization that adds a name without meaningful benefit. Overall the architecture is sound and avoids deep nesting, hidden mutation, and metaprogramming, but the verbosity and missed helper-extraction opportunity keep it from being exemplary.\",\n  \"strengths\": [\n    \"Correct functional behavior including the first-match-only and within-window semantics\",\n    \"Explicit grouping by session before scanning keeps data movement visible\",\n    \"Early break on time_delta > within is a clean, locally auditable optimization\",\n    \"Raises ValueError for negative 'within' with a clear message\",\n    \"Flat inner loop with guard-style break avoids deep nesting\"\n  ],\n  \"weaknesses\": [\n    \"No extraction of a small pure helper (e.g., find_first_b) as the operational constraints suggest\",\n    \"Docstring is disproportionately verbose relative to the function's simplicity\",\n    \"Excessive inline comments explain self-evident code, adding noise rather than clarity\",\n    \"Unnecessary `from typing import Any` import in modern Python\",\n    \"`num_events` variable is a trivial micro-optimization that clutters the namespace\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct functional behavior including the first-match-only and within-window semantics",
+      "Explicit grouping by session before scanning keeps data movement visible",
+      "Early break on time_delta > within is a clean, locally auditable optimization",
+      "Raises ValueError for negative 'within' with a clear message",
+      "Flat inner loop with guard-style break avoids deep nesting"
+    ],
+    "weaknesses": [
+      "No extraction of a small pure helper (e.g., find_first_b) as the operational constraints suggest",
+      "Docstring is disproportionately verbose relative to the function's simplicity",
+      "Excessive inline comments explain self-evident code, adding noise rather than clarity",
+      "Unnecessary `from typing import Any` import in modern Python",
+      "`num_events` variable is a trivial micro-optimization that clutters the namespace"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.399,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n>       pairs = correlate_events(events, within=5)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsolution.py:53: in correlate_events\n    session_events.sort(key=lambda e: e['timestamp'])\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ne = {'session_id': 's', 'ts': 1, 'type': 'A'}\n\n>   session_events.sort(key=lambda e: e['timestamp'])\n                                      ^^^^^^^^^^^^^^\nE   KeyError: 'timestamp'\n\nsolution.py:53: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - KeyError: 't...\n1 failed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 63,
+    "maintainability_index": 72.036,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "baseline_generation"
+}

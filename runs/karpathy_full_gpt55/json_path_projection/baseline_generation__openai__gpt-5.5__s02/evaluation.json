@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and closely follows the Zen of Python. It uses a sentinel `_MISSING` object to distinguish between a resolved `None` value and a failed path lookup, which is explicit and correct. The two helpers `_parse_index` and `_resolve_path` are small, pure, and single-purpose. Control flow in `_resolve_path` is flat with guard clauses rather than deep nesting. Data movement is explicit with no mutation of the input. Names are self-explanatory and the code is locally auditable. The only minor quibble is that `_parse_index` accepts signed integers (e.g., `+3` or `-1`) which may be intentional for list indexing but isn't mentioned in the spec; this is a small speculative extension. Also, the docstring on `extract_fields` is slightly verbose but not harmful. Overall this is a near-ideal realization of the task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, well-decomposed, and closely follows the Zen of Python. It uses a sentinel `_MISSING` object to distinguish between a resolved `None` value and a failed path lookup, which is explicit and correct. The two helpers `_parse_index` and `_resolve_path` are small, pure, and single-purpose. Control flow in `_resolve_path` is flat with guard clauses rather than deep nesting. Data movement is explicit with no mutation of the input. Names are self-explanatory and the code is locally auditable. The only minor quibble is that `_parse_index` accepts signed integers (e.g., `+3` or `-1`) which may be intentional for list indexing but isn't mentioned in the spec; this is a small speculative extension. Also, the docstring on `extract_fields` is slightly verbose but not harmful. Overall this is a near-ideal realization of the task.\",\n  \"strengths\": [\n    \"Clean separation into small, pure helpers with clear responsibilities\",\n    \"Sentinel `_MISSING` correctly distinguishes unresolved paths from legitimate `None` values\",\n    \"Flat control flow using guard clauses in `_resolve_path`\",\n    \"No mutation of input record\",\n    \"Ordinary standard-library constructs only, no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"`_parse_index` accepts signed integers (e.g., `-1`, `+2`) which is a speculative extension not required by the spec\",\n    \"No input validation (e.g., raising on non-dict `record` or non-dict `paths`), which the constraints suggest should be explicit\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into small, pure helpers with clear responsibilities",
+      "Sentinel `_MISSING` correctly distinguishes unresolved paths from legitimate `None` values",
+      "Flat control flow using guard clauses in `_resolve_path`",
+      "No mutation of input record",
+      "Ordinary standard-library constructs only, no metaprogramming"
+    ],
+    "weaknesses": [
+      "`_parse_index` accepts signed integers (e.g., `-1`, `+2`) which is a speculative extension not required by the spec",
+      "No input validation (e.g., raising on non-dict `record` or non-dict `paths`), which the constraints suggest should be explicit"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.919,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 3,
+    "loc": 41,
+    "maintainability_index": 70.805,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "baseline_generation"
+}

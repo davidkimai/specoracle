@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without any unnecessary abstractions or speculative features. It correctly filters enabled workers with a sensible default, raises ValueError when appropriate, uses a simple modulo index for round-robin assignment, and returns the expected shape without mutating inputs. The docstring is brief and appropriate. The only minor quibble is that `worker_count` is a trivially derived value that could be inlined as `len(enabled_workers)` directly in the modulo expression, but extracting it to a named variable is a reasonable readability choice and not architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without any unnecessary abstractions or speculative features. It correctly filters enabled workers with a sensible default, raises ValueError when appropriate, uses a simple modulo index for round-robin assignment, and returns the expected shape without mutating inputs. The docstring is brief and appropriate. The only minor quibble is that `worker_count` is a trivially derived value that could be inlined as `len(enabled_workers)` directly in the modulo expression, but extracting it to a named variable is a reasonable readability choice and not architectural slop.\",\n  \"strengths\": [\n    \"Minimal code with no unnecessary abstractions or extra features\",\n    \"Correct use of worker.get('enabled', True) to handle optional field with proper default\",\n    \"Does not mutate inputs \u2014 builds a fresh list of assignments\",\n    \"Clear, testable contract with explicit ValueError for the no-enabled-workers case\",\n    \"Readable loop with straightforward modulo round-robin logic\"\n  ],\n  \"weaknesses\": [\n    \"Minor: extracting `worker_count` as a separate variable adds a trivial line that could be inlined without harming readability\",\n    \"Docstring is present but adds negligible value given the self-explanatory function name and signature\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no unnecessary abstractions or extra features",
+      "Correct use of worker.get('enabled', True) to handle optional field with proper default",
+      "Does not mutate inputs \u2014 builds a fresh list of assignments",
+      "Clear, testable contract with explicit ValueError for the no-enabled-workers case",
+      "Readable loop with straightforward modulo round-robin logic"
+    ],
+    "weaknesses": [
+      "Minor: extracting `worker_count` as a separate variable adds a trivial line that could be inlined without harming readability",
+      "Docstring is present but adds negligible value given the self-explanatory function name and signature"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.789,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 11,
+    "maintainability_index": 68.33,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_karpathy_generation"
+}

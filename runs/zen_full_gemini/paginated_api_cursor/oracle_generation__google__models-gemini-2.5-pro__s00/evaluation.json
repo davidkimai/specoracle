@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core loop is correct and readable, but the implementation is bloated with speculative abstractions and defensive checks that violate the Zen's 'simple is better than complex' and 'sparse is better than dense' principles. The elaborate TypeVar generics and FetchPageCallable type alias add visual noise without runtime value. The asyncio.iscoroutinefunction guard is speculative \u2014 it rejects valid async callables that aren't coroutine functions (e.g., objects with __call__ returning a coroutine), and the task spec doesn't ask for this validation. The try/except around the unpack is similarly speculative and masks real errors. The isinstance(items, Iterable) check after extend is redundant since extend already raises TypeError on non-iterables. The docstring is disproportionately long for a ~10-line function. A clean implementation would be a simple while-True loop with extend and a None-break, with no defensive scaffolding beyond what the task requires.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The core loop is correct and readable, but the implementation is bloated with speculative abstractions and defensive checks that violate the Zen's 'simple is better than complex' and 'sparse is better than dense' principles. The elaborate TypeVar generics and FetchPageCallable type alias add visual noise without runtime value. The asyncio.iscoroutinefunction guard is speculative \u2014 it rejects valid async callables that aren't coroutine functions (e.g., objects with __call__ returning a coroutine), and the task spec doesn't ask for this validation. The try/except around the unpack is similarly speculative and masks real errors. The isinstance(items, Iterable) check after extend is redundant since extend already raises TypeError on non-iterables. The docstring is disproportionately long for a ~10-line function. A clean implementation would be a simple while-True loop with extend and a None-break, with no defensive scaffolding beyond what the task requires.\",\n  \"strengths\": [\n    \"Core pagination logic (while-True, extend, break on None cursor) is correct and flat\",\n    \"Keyword-only start_cursor parameter is appropriate\",\n    \"Variable names (all_items, current_cursor, next_cursor) are clear and self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"asyncio.iscoroutinefunction check rejects valid async callables and is not required by the spec\",\n    \"TypeVar generics and FetchPageCallable alias are speculative over-engineering for a simple function\",\n    \"try/except around tuple unpack obscures real errors and adds unnecessary indirection\",\n    \"isinstance(items, Iterable) check is redundant since extend already raises TypeError\",\n    \"Docstring is disproportionately verbose relative to the function's simplicity\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Core pagination logic (while-True, extend, break on None cursor) is correct and flat",
+      "Keyword-only start_cursor parameter is appropriate",
+      "Variable names (all_items, current_cursor, next_cursor) are clear and self-explanatory"
+    ],
+    "weaknesses": [
+      "asyncio.iscoroutinefunction check rejects valid async callables and is not required by the spec",
+      "TypeVar generics and FetchPageCallable alias are speculative over-engineering for a simple function",
+      "try/except around tuple unpack obscures real errors and adds unnecessary indirection",
+      "isinstance(items, Iterable) check is redundant since extend already raises TypeError",
+      "Docstring is disproportionately verbose relative to the function's simplicity"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.428,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.21s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 67,
+    "maintainability_index": 88.396,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_generation"
+}

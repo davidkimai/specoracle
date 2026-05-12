@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: validation is upfront and explicit, batching uses itertools.islice cleanly, the semaphore correctly limits concurrency, gather preserves order, and the flatten is a simple comprehension. The main structural complaint is the verbose docstring (longer than the implementation itself) which violates simplicity-first and adds noise without adding contract clarity beyond what the type hints already express. The TypeVar generics and the explicit type annotations on `tasks` are mildly over-engineered for a single-use async utility but are not harmful. The `worker` closure is a clean, minimal indirection. Overall the architecture is flat, readable, and locally auditable with no speculative abstractions.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: validation is upfront and explicit, batching uses itertools.islice cleanly, the semaphore correctly limits concurrency, gather preserves order, and the flatten is a simple comprehension. The main structural complaint is the verbose docstring (longer than the implementation itself) which violates simplicity-first and adds noise without adding contract clarity beyond what the type hints already express. The TypeVar generics and the explicit type annotations on `tasks` are mildly over-engineered for a single-use async utility but are not harmful. The `worker` closure is a clean, minimal indirection. Overall the architecture is flat, readable, and locally auditable with no speculative abstractions.\",\n  \"strengths\": [\n    \"Validation is explicit and early with clear error messages\",\n    \"Semaphore correctly scopes concurrency to handler calls, not task creation\",\n    \"asyncio.gather preserves order, making the flatten straightforward\",\n    \"itertools.islice batching is idiomatic and avoids materializing the full list upfront\",\n    \"No unnecessary abstractions or classes introduced\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately long relative to the implementation, violating simplicity-first\",\n    \"TypeVar generics add type-system complexity that is speculative for a single-use function\",\n    \"Explicit `List[asyncio.Task[List[R]]]` annotation on tasks is verbose and adds little clarity\",\n    \"All tasks are created before any can run; a chunked-gather approach would be simpler and more memory-efficient for large inputs\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Validation is explicit and early with clear error messages",
+      "Semaphore correctly scopes concurrency to handler calls, not task creation",
+      "asyncio.gather preserves order, making the flatten straightforward",
+      "itertools.islice batching is idiomatic and avoids materializing the full list upfront",
+      "No unnecessary abstractions or classes introduced"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately long relative to the implementation, violating simplicity-first",
+      "TypeVar generics add type-system complexity that is speculative for a single-use function",
+      "Explicit `List[asyncio.Task[List[R]]]` annotation on tasks is verbose and adds little clarity",
+      "All tasks are created before any can run; a chunked-gather approach would be simpler and more memory-efficient for large inputs"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.404,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.26s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 2,
+    "loc": 52,
+    "maintainability_index": 86.056,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "oracle_karpathy_generation"
+}

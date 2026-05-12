@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably well-structured, with good use of guard clauses to keep the main loop flat and a sensible extraction of the ceiling calculation into a helper. The naming is clear and the data flow is explicit with no hidden mutation. However, the docstrings are verbose to the point of noise\u2014they restate what the code already says plainly, violating the Zen principle that documentation should add value beyond the obvious. The `_is_item_well_formed` helper is a reasonable extraction but iterating over a dict of type checks is slightly over-engineered compared to a direct sequence of `isinstance` checks that would be more locally auditable. The `math.ceil` comment ('returns a float') is outdated since Python 3's `math.ceil` returns an int, indicating a minor inaccuracy. The `velocity` type guard (`not isinstance(velocity, int)`) adds a defensive check not strictly required by the spec, which is a small speculative abstraction. Overall the code is clean and maintainable but carries modest documentation and defensive-check bloat that a Zen-aligned implementation would trim.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably well-structured, with good use of guard clauses to keep the main loop flat and a sensible extraction of the ceiling calculation into a helper. The naming is clear and the data flow is explicit with no hidden mutation. However, the docstrings are verbose to the point of noise\u2014they restate what the code already says plainly, violating the Zen principle that documentation should add value beyond the obvious. The `_is_item_well_formed` helper is a reasonable extraction but iterating over a dict of type checks is slightly over-engineered compared to a direct sequence of `isinstance` checks that would be more locally auditable. The `math.ceil` comment ('returns a float') is outdated since Python 3's `math.ceil` returns an int, indicating a minor inaccuracy. The `velocity` type guard (`not isinstance(velocity, int)`) adds a defensive check not strictly required by the spec, which is a small speculative abstraction. Overall the code is clean and maintainable but carries modest documentation and defensive-check bloat that a Zen-aligned implementation would trim.\",\n  \"strengths\": [\n    \"Guard clauses keep the main loop flat and readable\",\n    \"Helper function for ceiling calculation isolates arithmetic clearly\",\n    \"Explicit variable unpacking from item dict improves local auditability\",\n    \"No hidden mutation or global state; data movement is transparent\",\n    \"Sorting is applied at the end as a single explicit step\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are excessively verbose, restating what the code already expresses clearly\",\n    \"Iterating over a type-check dict in `_is_item_well_formed` is more abstract than a direct sequence of checks\",\n    \"Comment claiming `math.ceil` returns float is incorrect in Python 3, showing a subtle inaccuracy\",\n    \"Defensive `isinstance(velocity, int)` check is speculative and not required by the spec\",\n    \"Minor: `List`, `Dict`, `Any` from `typing` are unnecessary in Python 3.9+ where built-in generics suffice\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses keep the main loop flat and readable",
+      "Helper function for ceiling calculation isolates arithmetic clearly",
+      "Explicit variable unpacking from item dict improves local auditability",
+      "No hidden mutation or global state; data movement is transparent",
+      "Sorting is applied at the end as a single explicit step"
+    ],
+    "weaknesses": [
+      "Docstrings are excessively verbose, restating what the code already expresses clearly",
+      "Iterating over a type-check dict in `_is_item_well_formed` is more abstract than a direct sequence of checks",
+      "Comment claiming `math.ceil` returns float is incorrect in Python 3, showing a subtle inaccuracy",
+      "Defensive `isinstance(velocity, int)` check is speculative and not required by the spec",
+      "Minor: `List`, `Dict`, `Any` from `typing` are unnecessary in Python 3.9+ where built-in generics suffice"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.061,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.333,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 83,
+    "maintainability_index": 74.524,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_generation"
+}

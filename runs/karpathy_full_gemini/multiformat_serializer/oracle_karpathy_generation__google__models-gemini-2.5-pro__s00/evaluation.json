@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses the right standard library tools (json, csv, io) without external dependencies. The if/elif/else dispatch is the appropriate flat structure for three fixed formats. The bool-before-int ordering in TOML is correct. The main structural issue is the enormous comment block at the top \u2014 roughly half the file is a compliance statement that violates the 'minimum code' principle and adds noise rather than signal. The docstring is also over-specified for a simple utility function. The actual implementation code itself is clean, readable, and appropriately sized (~30 lines of logic), but the surrounding ceremony inflates the file significantly. The use of json.dumps for TOML string escaping is a clever, minimal reuse. The strip() on CSV output is a reasonable approach, though it could silently mangle values containing leading/trailing whitespace in edge cases.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and uses the right standard library tools (json, csv, io) without external dependencies. The if/elif/else dispatch is the appropriate flat structure for three fixed formats. The bool-before-int ordering in TOML is correct. The main structural issue is the enormous comment block at the top \u2014 roughly half the file is a compliance statement that violates the 'minimum code' principle and adds noise rather than signal. The docstring is also over-specified for a simple utility function. The actual implementation code itself is clean, readable, and appropriately sized (~30 lines of logic), but the surrounding ceremony inflates the file significantly. The use of json.dumps for TOML string escaping is a clever, minimal reuse. The strip() on CSV output is a reasonable approach, though it could silently mangle values containing leading/trailing whitespace in edge cases.\",\n  \"strengths\": [\n    \"Correct bool-before-int isinstance ordering prevents bool being treated as int in TOML\",\n    \"Reuses json.dumps for TOML string escaping \u2014 minimal, correct, no reimplementation\",\n    \"Flat if/elif/else dispatch \u2014 no unnecessary abstraction layers or registries\",\n    \"Uses standard library only (json, csv, io) \u2014 no speculative dependencies\",\n    \"Raises ValueError for unsupported formats \u2014 explicit contract\"\n  ],\n  \"weaknesses\": [\n    \"Massive compliance comment block (~40 lines) violates 'minimum code' principle \u2014 this is architectural noise\",\n    \"Overly verbose docstring for a simple function adds bulk without value\",\n    \"strip() on CSV output could silently corrupt values with leading/trailing whitespace\",\n    \"Empty-record CSV edge case returns '' which may be inconsistent with a caller expecting header-only output\",\n    \"typing import (Dict, Any) is unnecessary boilerplate when plain dict/str annotations suffice in modern Python\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct bool-before-int isinstance ordering prevents bool being treated as int in TOML",
+      "Reuses json.dumps for TOML string escaping \u2014 minimal, correct, no reimplementation",
+      "Flat if/elif/else dispatch \u2014 no unnecessary abstraction layers or registries",
+      "Uses standard library only (json, csv, io) \u2014 no speculative dependencies",
+      "Raises ValueError for unsupported formats \u2014 explicit contract"
+    ],
+    "weaknesses": [
+      "Massive compliance comment block (~40 lines) violates 'minimum code' principle \u2014 this is architectural noise",
+      "Overly verbose docstring for a simple function adds bulk without value",
+      "strip() on CSV output could silently corrupt values with leading/trailing whitespace",
+      "Empty-record CSV edge case returns '' which may be inconsistent with a caller expecting header-only output",
+      "typing import (Dict, Any) is unnecessary boilerplate when plain dict/str annotations suffice in modern Python"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.447,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_serializes_supported_formats _______________________\n\n    def test_serializes_supported_formats():\n        assert serialize_record({'b': 2, 'a': 1}, 'json') == '{\"a\": 1, \"b\": 2}'\n>       assert serialize_record({'a': 1, 'b': 2}, 'csv') == 'a,b\\n1,2'\nE       AssertionError: assert 'a,b\\r\\n1,2' == 'a,b\\n1,2'\nE         \nE         - a,b\nE         + a,b\nE         ?    +\nE           1,2\n\ntest_solution.py:6: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_serializes_supported_formats - AssertionError: ...\n1 failed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 77,
+    "maintainability_index": 75.735,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "multiformat_serializer",
+  "variant": "oracle_karpathy_generation"
+}

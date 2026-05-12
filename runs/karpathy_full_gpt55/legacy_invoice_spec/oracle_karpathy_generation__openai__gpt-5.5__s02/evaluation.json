@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-labeled local variable names for every money-affecting decision (e.g., `paid_branch_status_is_paid`, `paid_branch_amount_is_integer`), returns records with the exact legacy keys, stages the logic visibly across three named audit stages with appropriate comments, avoids clever one-liners in favor of a readable audit trail, and does not mutate the input. The only minor quibbles are that `invoice_branch_is_mapping` is a slightly awkward name for a non-money guard (the spec says branch labels are required 'when a decision affects money', so this pre-filter is borderline over-labeled), and the intermediate `buckets_by_region` dict-of-dicts adds a small layer of indirection that could have been two parallel dicts, though the chosen approach is arguably cleaner and still fully auditable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-labeled local variable names for every money-affecting decision (e.g., `paid_branch_status_is_paid`, `paid_branch_amount_is_integer`), returns records with the exact legacy keys, stages the logic visibly across three named audit stages with appropriate comments, avoids clever one-liners in favor of a readable audit trail, and does not mutate the input. The only minor quibbles are that `invoice_branch_is_mapping` is a slightly awkward name for a non-money guard (the spec says branch labels are required 'when a decision affects money', so this pre-filter is borderline over-labeled), and the intermediate `buckets_by_region` dict-of-dicts adds a small layer of indirection that could have been two parallel dicts, though the chosen approach is arguably cleaner and still fully auditable.\",\n  \"strengths\": [\n    \"Single public function, zero helper functions\",\n    \"Explicit branch-labeled variable names on every money-relevant predicate\",\n    \"Three clearly commented legacy audit stages\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Visible staged accumulation loop makes line-by-line review straightforward\",\n    \"Input not mutated; uses .get() safely\",\n    \"type(amount_cents) is int correctly rejects booleans\"\n  ],\n  \"weaknesses\": [\n    \"invoice_branch_is_mapping label is slightly over-engineered for a non-money guard\",\n    \"Intermediate dict-of-dicts for buckets adds one small layer of indirection vs. two flat dicts\",\n    \"paid_branch_bucket variable name is redundant since the region context already implies the branch\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function, zero helper functions",
+      "Explicit branch-labeled variable names on every money-relevant predicate",
+      "Three clearly commented legacy audit stages",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Visible staged accumulation loop makes line-by-line review straightforward",
+      "Input not mutated; uses .get() safely",
+      "type(amount_cents) is int correctly rejects booleans"
+    ],
+    "weaknesses": [
+      "invoice_branch_is_mapping label is slightly over-engineered for a non-money guard",
+      "Intermediate dict-of-dicts for buckets adds one small layer of indirection vs. two flat dicts",
+      "paid_branch_bucket variable name is redundant since the region context already implies the branch"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.92,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 67.354,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_karpathy_generation"
+}

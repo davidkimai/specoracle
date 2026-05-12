@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean, with flat control flow, guard clauses for skipping bad rows, and explicit data movement. The main structural weaknesses are the overly verbose docstring (longer than the function body), the unnecessary `Any` in the type annotations when all values are known types, the monolithic structure that could benefit from a small `parse_row` helper to isolate the validation logic, and the two-pass approach (build dict, then convert to list) that is fine but the final list comprehension plus separate sort could be a single sorted() call. The `csv.Error` catch wrapping the entire loop rather than individual rows is a reasonable trade-off but slightly coarse. Overall the code is readable, auditable, and avoids clever metaprogramming, but the docstring bloat and missed opportunity for a small pure helper keep it from being exemplary.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean, with flat control flow, guard clauses for skipping bad rows, and explicit data movement. The main structural weaknesses are the overly verbose docstring (longer than the function body), the unnecessary `Any` in the type annotations when all values are known types, the monolithic structure that could benefit from a small `parse_row` helper to isolate the validation logic, and the two-pass approach (build dict, then convert to list) that is fine but the final list comprehension plus separate sort could be a single sorted() call. The `csv.Error` catch wrapping the entire loop rather than individual rows is a reasonable trade-off but slightly coarse. Overall the code is readable, auditable, and avoids clever metaprogramming, but the docstring bloat and missed opportunity for a small pure helper keep it from being exemplary.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses and early continues instead of deep nesting\",\n    \"Explicit data movement: no hidden mutation or global state\",\n    \"Standard-library only (csv, io, collections-free but still clear)\",\n    \"Header presence check before iterating rows avoids wasted work\",\n    \"Names are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately long relative to the function body, adding noise without aiding auditability\",\n    \"No small pure helper (e.g., parse_row) to isolate and test row validation independently\",\n    \"Using `Any` in Dict[str, Any] is imprecise when all values are known (str or int)\",\n    \"Separate list comprehension + sort could be collapsed into a single sorted() call for conciseness\",\n    \"csv.Error catch wraps the entire loop, so a late-row parse error silently discards already-accumulated aggregates\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses and early continues instead of deep nesting",
+      "Explicit data movement: no hidden mutation or global state",
+      "Standard-library only (csv, io, collections-free but still clear)",
+      "Header presence check before iterating rows avoids wasted work",
+      "Names are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately long relative to the function body, adding noise without aiding auditability",
+      "No small pure helper (e.g., parse_row) to isolate and test row validation independently",
+      "Using `Any` in Dict[str, Any] is imprecise when all values are known (str or int)",
+      "Separate list comprehension + sort could be collapsed into a single sorted() call for conciseness",
+      "csv.Error catch wraps the entire loop, so a late-row parse error silently discards already-accumulated aggregates"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.208,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 82.364,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, explicit, and flat realization of the diff_versions specification. It correctly handles all three cases (added, removed, changed fields), sorts by field name, and produces explicit per-field records with the required keys. The logic is locally auditable with no hidden complexity, no unnecessary abstractions, and no collapsing of changes into summaries. The use of boolean flags `in_previous` and `in_current` is slightly more verbose than needed (direct membership checks inline would be equally readable), but this is a minor stylistic point. The docstring is accurate and helpful. The only marginal weakness is that `None` is used as a sentinel for missing fields, which could theoretically conflict with actual `None` values stored in the dicts, but this is a common and acceptable convention for shallow diffs and is not addressed by the spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, explicit, and flat realization of the diff_versions specification. It correctly handles all three cases (added, removed, changed fields), sorts by field name, and produces explicit per-field records with the required keys. The logic is locally auditable with no hidden complexity, no unnecessary abstractions, and no collapsing of changes into summaries. The use of boolean flags `in_previous` and `in_current` is slightly more verbose than needed (direct membership checks inline would be equally readable), but this is a minor stylistic point. The docstring is accurate and helpful. The only marginal weakness is that `None` is used as a sentinel for missing fields, which could theoretically conflict with actual `None` values stored in the dicts, but this is a common and acceptable convention for shallow diffs and is not addressed by the spec.\",\n  \"strengths\": [\n    \"Explicit per-field records with correct field/before/after keys\",\n    \"Handles added, removed, and changed fields correctly\",\n    \"Sorted output matches specification\",\n    \"Flat, readable control flow with no unnecessary abstractions\",\n    \"Good docstring explaining sentinel convention\"\n  ],\n  \"weaknesses\": [\n    \"Using None as sentinel for missing fields can collide with actual None values in the dicts\",\n    \"Boolean flag variables (in_previous, in_current) add minor verbosity vs. inline checks\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit per-field records with correct field/before/after keys",
+      "Handles added, removed, and changed fields correctly",
+      "Sorted output matches specification",
+      "Flat, readable control flow with no unnecessary abstractions",
+      "Good docstring explaining sentinel convention"
+    ],
+    "weaknesses": [
+      "Using None as sentinel for missing fields can collide with actual None values in the dicts",
+      "Boolean flag variables (in_previous, in_current) add minor verbosity vs. inline checks"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.247,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 81.877,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "baseline_generation"
+}

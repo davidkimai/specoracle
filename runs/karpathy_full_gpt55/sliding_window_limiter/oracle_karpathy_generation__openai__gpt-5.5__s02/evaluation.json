@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation maintains two parallel data structures (_events and _retained) plus a _max_seen tracker to accomplish what a single sorted list per key would handle trivially. The core logic is over-engineered: snapshot() should simply return the same window-filtered list that allow() already maintains, yet the code duplicates state across three dicts. The type-checking with `type(x) is not int` is overly strict (rejects subclasses, booleans edge case aside) and adds noise. The conditional pruning in allow() only fires when timestamp advances, meaning stale entries can linger in _events indefinitely and the window calculation for _events is redundant with _retained. A minimal correct implementation needs one dict of sorted timestamps per key, prune on each allow() call, and snapshot() returns a copy \u2014 roughly 15 lines versus 45. The complexity here is speculative and unjustified by the requirements.",
+    "raw_response": "```json\n{\n  \"score\": 2,\n  \"rationale\": \"The implementation maintains two parallel data structures (_events and _retained) plus a _max_seen tracker to accomplish what a single sorted list per key would handle trivially. The core logic is over-engineered: snapshot() should simply return the same window-filtered list that allow() already maintains, yet the code duplicates state across three dicts. The type-checking with `type(x) is not int` is overly strict (rejects subclasses, booleans edge case aside) and adds noise. The conditional pruning in allow() only fires when timestamp advances, meaning stale entries can linger in _events indefinitely and the window calculation for _events is redundant with _retained. A minimal correct implementation needs one dict of sorted timestamps per key, prune on each allow() call, and snapshot() returns a copy \u2014 roughly 15 lines versus 45. The complexity here is speculative and unjustified by the requirements.\",\n  \"strengths\": [\n    \"Uses bisect for O(log n) lookups, which is appropriate\",\n    \"Correctly implements the half-open window (timestamp - window_seconds, timestamp]\",\n    \"Raises ValueError for non-positive inputs as required\"\n  ],\n  \"weaknesses\": [\n    \"Maintains three separate dicts (_events, _retained, _max_seen) where one would suffice\",\n    \"Redundant state: _events and _retained serve overlapping purposes with no clear justification\",\n    \"Pruning of _events only happens when timestamp advances, leaving stale data indefinitely\",\n    \"Type check `type(x) is not int` is unnecessarily strict and inconsistent with duck-typing norms\",\n    \"Far more code than needed \u2014 violates simplicity-first principle; ~45 lines where ~15 would do\",\n    \"No clear separation of concerns; allow() mixes pruning, counting, and dual-list maintenance\"\n  ]\n}\n```",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Uses bisect for O(log n) lookups, which is appropriate",
+      "Correctly implements the half-open window (timestamp - window_seconds, timestamp]",
+      "Raises ValueError for non-positive inputs as required"
+    ],
+    "weaknesses": [
+      "Maintains three separate dicts (_events, _retained, _max_seen) where one would suffice",
+      "Redundant state: _events and _retained serve overlapping purposes with no clear justification",
+      "Pruning of _events only happens when timestamp advances, leaving stale data indefinitely",
+      "Type check `type(x) is not int` is unnecessarily strict and inconsistent with duck-typing norms",
+      "Far more code than needed \u2014 violates simplicity-first principle; ~45 lines where ~15 would do",
+      "No clear separation of concerns; allow() mixes pruning, counting, and dual-list maintenance"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.31,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.25,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 3,
+    "loc": 34,
+    "maintainability_index": 47.408,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_karpathy_generation"
+}

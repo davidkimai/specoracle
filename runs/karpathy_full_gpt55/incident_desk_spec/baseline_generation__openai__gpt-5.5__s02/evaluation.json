@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It preserves ticket order, uses explicit string status_code, avoids classes, and handles the default rule fallback properly. However, it misses the spec's explicit guidance to use a local lookup table (named with _table suffix) for the severity-to-priority-bump mapping, instead using an if/elif chain. The branch reasons are implicit in the condition structure rather than named explicitly. The `isinstance` guard is a minor addition not required by the spec but harmless. Overall solid but the missing _table convention and the if/elif instead of a named severity_bump_table are notable deviations from the structural oracle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It preserves ticket order, uses explicit string status_code, avoids classes, and handles the default rule fallback properly. However, it misses the spec's explicit guidance to use a local lookup table (named with _table suffix) for the severity-to-priority-bump mapping, instead using an if/elif chain. The branch reasons are implicit in the condition structure rather than named explicitly. The `isinstance` guard is a minor addition not required by the spec but harmless. Overall solid but the missing _table convention and the if/elif instead of a named severity_bump_table are notable deviations from the structural oracle.\",\n  \"strengths\": [\n    \"Preserves input order correctly\",\n    \"Uses explicit 'routed' string for status_code, never a boolean\",\n    \"No classes introduced for single-pass routing\",\n    \"Clean fallback to rules['default'] for unknown services\",\n    \"Explicit key presence checks before processing\"\n  ],\n  \"weaknesses\": [\n    \"Severity-to-priority mapping uses if/elif instead of a named _table lookup as the spec prefers\",\n    \"No severity_bump_table or similar named local lookup table as directed by the oracle\",\n    \"isinstance(ticket, dict) guard adds implicit logic not called for by the spec\",\n    \"Docstring explains logic that should be self-evident from code structure per Zen principles\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Preserves input order correctly",
+      "Uses explicit 'routed' string for status_code, never a boolean",
+      "No classes introduced for single-pass routing",
+      "Clean fallback to rules['default'] for unknown services",
+      "Explicit key presence checks before processing"
+    ],
+    "weaknesses": [
+      "Severity-to-priority mapping uses if/elif instead of a named _table lookup as the spec prefers",
+      "No severity_bump_table or similar named local lookup table as directed by the oracle",
+      "isinstance(ticket, dict) guard adds implicit logic not called for by the spec",
+      "Docstring explains logic that should be self-evident from code structure per Zen principles"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.874,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 79.807,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "baseline_generation"
+}

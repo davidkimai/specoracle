@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. Validation is handled upfront with clear guard clauses and descriptive error messages. The loop is straightforward with no deep nesting, and data movement is fully explicit \u2014 no hidden state or mutation. The early-exit optimization (`if delay < cap_seconds: delay *= 2`) avoids unnecessary overflow on large attempt counts while keeping the logic readable. Variable names (`schedule`, `delay`, `attempts`, `base_seconds`, `cap_seconds`) are self-explanatory. The only minor quibble is that the conditional `delay *= 2` guard, while practically useful, adds a tiny bit of complexity that could alternatively be handled by always doubling and capping at read time \u2014 but this is a negligible tradeoff and the chosen approach is perfectly auditable locally.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. Validation is handled upfront with clear guard clauses and descriptive error messages. The loop is straightforward with no deep nesting, and data movement is fully explicit \u2014 no hidden state or mutation. The early-exit optimization (`if delay < cap_seconds: delay *= 2`) avoids unnecessary overflow on large attempt counts while keeping the logic readable. Variable names (`schedule`, `delay`, `attempts`, `base_seconds`, `cap_seconds`) are self-explanatory. The only minor quibble is that the conditional `delay *= 2` guard, while practically useful, adds a tiny bit of complexity that could alternatively be handled by always doubling and capping at read time \u2014 but this is a negligible tradeoff and the chosen approach is perfectly auditable locally.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses at the top\",\n    \"Clear, descriptive error messages for each invalid input\",\n    \"Explicit data movement \u2014 schedule built and returned without side effects\",\n    \"Self-documenting variable names throughout\",\n    \"No speculative abstractions or unused extension points\",\n    \"Handles edge cases (attempts=0, cap enforcement) correctly and simply\"\n  ],\n  \"weaknesses\": [\n    \"The `if delay < cap_seconds` guard inside the loop adds a minor branch that could be replaced by always doubling and using `min` on the next iteration, slightly simplifying the logic\",\n    \"No helper function extraction (though the function is small enough that this is not a real issue)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses at the top",
+      "Clear, descriptive error messages for each invalid input",
+      "Explicit data movement \u2014 schedule built and returned without side effects",
+      "Self-documenting variable names throughout",
+      "No speculative abstractions or unused extension points",
+      "Handles edge cases (attempts=0, cap enforcement) correctly and simply"
+    ],
+    "weaknesses": [
+      "The `if delay < cap_seconds` guard inside the loop adds a minor branch that could be replaced by always doubling and using `min` on the next iteration, slightly simplifying the logic",
+      "No helper function extraction (though the function is small enough that this is not a real issue)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 3.478,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 19,
+    "maintainability_index": 86.767,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "oracle_generation"
+}

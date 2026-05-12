@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4 doctrine: monetary deltas are tagged by direction before affecting totals, debit and credit are maintained in separate named accumulators, and no inline arithmetic appears inside the directional conditional. The code is flat, explicit, and locally auditable. The two-pass approach (accumulate then finalize) is clean and separates concerns well. Minor deductions: the verbose docstring and copyright header add noise without structural benefit, and the use of `defaultdict` with a lambda is slightly more complex than a plain dict with explicit initialization, though it's a reasonable tradeoff. Overall, this is a high-quality, doctrine-compliant implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4 doctrine: monetary deltas are tagged by direction before affecting totals, debit and credit are maintained in separate named accumulators, and no inline arithmetic appears inside the directional conditional. The code is flat, explicit, and locally auditable. The two-pass approach (accumulate then finalize) is clean and separates concerns well. Minor deductions: the verbose docstring and copyright header add noise without structural benefit, and the use of `defaultdict` with a lambda is slightly more complex than a plain dict with explicit initialization, though it's a reasonable tradeoff. Overall, this is a high-quality, doctrine-compliant implementation.\",\n  \"strengths\": [\n    \"Separate named accumulators for debit and credit satisfy TR-4 explicitly\",\n    \"No inline arithmetic inside the directional conditional\",\n    \"Clean two-pass structure: accumulation then balance finalization\",\n    \"Explicit ValueError raised for unknown directions\",\n    \"Readable variable names (debit_total, credit_total, balance) in finalization step\"\n  ],\n  \"weaknesses\": [\n    \"Verbose copyright header and docstring add noise without structural value\",\n    \"defaultdict with lambda is slightly more indirection than a simple explicit dict initialization\",\n    \"Type annotations use deprecated typing.Dict/List instead of built-in dict/list (minor style issue)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators for debit and credit satisfy TR-4 explicitly",
+      "No inline arithmetic inside the directional conditional",
+      "Clean two-pass structure: accumulation then balance finalization",
+      "Explicit ValueError raised for unknown directions",
+      "Readable variable names (debit_total, credit_total, balance) in finalization step"
+    ],
+    "weaknesses": [
+      "Verbose copyright header and docstring add noise without structural value",
+      "defaultdict with lambda is slightly more indirection than a simple explicit dict initialization",
+      "Type annotations use deprecated typing.Dict/List instead of built-in dict/list (minor style issue)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.097,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 67,
+    "maintainability_index": 73.802,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

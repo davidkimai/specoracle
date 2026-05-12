@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses a deque correctly for the sliding window, keeps helpers small and pure, raises clear errors, and avoids speculative abstractions. The control flow in `allow` is flat and locally auditable. The main weaknesses are minor over-engineering: the `_require_int` / `_require_positive_int` / `_require_key` helper chain adds indirection that isn't justified by the task's simplicity (the spec only asks for ValueError on non-positive constructor args, not TypeError guards on every input), and the `_latest_timestamp` dict is a second parallel data structure that adds complexity\u2014the same monotonicity check could be derived from the deque itself (checking if events is non-empty and events[-1] > timestamp). These are small but real violations of 'simple is better than complex' and 'sparse enough to audit locally.'",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses a deque correctly for the sliding window, keeps helpers small and pure, raises clear errors, and avoids speculative abstractions. The control flow in `allow` is flat and locally auditable. The main weaknesses are minor over-engineering: the `_require_int` / `_require_positive_int` / `_require_key` helper chain adds indirection that isn't justified by the task's simplicity (the spec only asks for ValueError on non-positive constructor args, not TypeError guards on every input), and the `_latest_timestamp` dict is a second parallel data structure that adds complexity\u2014the same monotonicity check could be derived from the deque itself (checking if events is non-empty and events[-1] > timestamp). These are small but real violations of 'simple is better than complex' and 'sparse enough to audit locally.'\",\n  \"strengths\": [\n    \"Deque used correctly for O(1) expiry from the front\",\n    \"_drop_expired is a small, pure, well-named helper\",\n    \"Explicit ValueError for non-positive constructor arguments\",\n    \"snapshot returns a plain list copy, making data movement explicit\",\n    \"No speculative abstractions or unused extension points\",\n    \"Flat control flow in allow() with guard-clause style\"\n  ],\n  \"weaknesses\": [\n    \"TypeError guards on key/timestamp inputs go beyond the spec and add unnecessary indirection\",\n    \"Parallel _latest_timestamp dict is redundant; monotonicity could be checked from the deque tail\",\n    \"_require_int / _require_positive_int / _require_key helper chain is over-engineered for a two-method class\",\n    \"Raising ValueError for non-monotonic timestamps is an undocumented behavior not required by the spec\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Deque used correctly for O(1) expiry from the front",
+      "_drop_expired is a small, pure, well-named helper",
+      "Explicit ValueError for non-positive constructor arguments",
+      "snapshot returns a plain list copy, making data movement explicit",
+      "No speculative abstractions or unused extension points",
+      "Flat control flow in allow() with guard-clause style"
+    ],
+    "weaknesses": [
+      "TypeError guards on key/timestamp inputs go beyond the spec and add unnecessary indirection",
+      "Parallel _latest_timestamp dict is redundant; monotonicity could be checked from the deque tail",
+      "_require_int / _require_positive_int / _require_key helper chain is over-engineered for a two-method class",
+      "Raising ValueError for non-monotonic timestamps is an undocumented behavior not required by the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.586,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.625,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 7,
+    "loc": 47,
+    "maintainability_index": 45.661,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_generation"
+}

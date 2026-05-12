@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of minimal, correct, and readable thread-safe code. It uses a single lock consistently across all three methods, maintains a cached `_total` to avoid recomputing sums, raises the correct exception types with clear messages, and returns a defensive copy in `snapshot()` to prevent mutable internal state exposure. There are no unnecessary abstractions, no speculative features, no dead code, and the entire implementation fits in ~20 lines. Every design choice is the most conservative correct one: a plain `threading.Lock` (not RLock, not a more complex primitive), a simple dict, and a straightforward integer accumulator.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of minimal, correct, and readable thread-safe code. It uses a single lock consistently across all three methods, maintains a cached `_total` to avoid recomputing sums, raises the correct exception types with clear messages, and returns a defensive copy in `snapshot()` to prevent mutable internal state exposure. There are no unnecessary abstractions, no speculative features, no dead code, and the entire implementation fits in ~20 lines. Every design choice is the most conservative correct one: a plain `threading.Lock` (not RLock, not a more complex primitive), a simple dict, and a straightforward integer accumulator.\",\n  \"strengths\": [\n    \"Minimal code with no extraneous abstractions or features\",\n    \"Single lock used consistently, preventing race conditions across all methods\",\n    \"Cached `_total` avoids O(n) sum on every `total()` call without over-engineering\",\n    \"`snapshot()` returns a defensive copy, correctly preventing mutable state exposure\",\n    \"Correct exception types (ValueError, OverflowError) with clear messages\",\n    \"Atomic check-and-update in `increment` under the lock prevents TOCTOU races\"\n  ],\n  \"weaknesses\": [\n    \"No explicit handling of non-string `name` types, though not required by spec\",\n    \"`snapshot()` includes zero-value entries if somehow inserted, but the logic prevents that naturally\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no extraneous abstractions or features",
+      "Single lock used consistently, preventing race conditions across all methods",
+      "Cached `_total` avoids O(n) sum on every `total()` call without over-engineering",
+      "`snapshot()` returns a defensive copy, correctly preventing mutable state exposure",
+      "Correct exception types (ValueError, OverflowError) with clear messages",
+      "Atomic check-and-update in `increment` under the lock prevents TOCTOU races"
+    ],
+    "weaknesses": [
+      "No explicit handling of non-string `name` types, though not required by spec",
+      "`snapshot()` includes zero-value entries if somehow inserted, but the logic prevents that naturally"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.073,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.6,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 4,
+    "loc": 23,
+    "maintainability_index": 57.065,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_karpathy_generation"
+}

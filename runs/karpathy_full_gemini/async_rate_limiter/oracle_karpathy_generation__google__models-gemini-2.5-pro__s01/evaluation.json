@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable sliding-window approach, but it diverges from the Karpathy oracle in several ways. The docstrings are verbose and speculative (explaining 'primarily for deterministic testing', describing the window formula in prose), adding noise without value. The `isinstance(rate, int)` check is overly strict and not asked for \u2014 the spec says 'non-positive rates', not 'non-integer rates', so rejecting `rate=1.0` is a speculative feature. The `acquire()` contract says it returns `bool` but the spec says 'at most rate successful acquisitions per one-second window' \u2014 the blocking-wait behavior (sleeping inside the lock) is a design choice not clearly required and could deadlock concurrent callers since the lock is held during `asyncio.sleep`. The duplicate pruning loop after sleep is a code smell that could be collapsed. The type annotations use `Optional` and `Callable` from `typing` rather than the modern `X | None` syntax shown in the spec. Overall the code is readable and mostly minimal, but the lock-held sleep is a latent concurrency bug, the isinstance guard is overreach, and the docstring verbosity violates simplicity-first.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable sliding-window approach, but it diverges from the Karpathy oracle in several ways. The docstrings are verbose and speculative (explaining 'primarily for deterministic testing', describing the window formula in prose), adding noise without value. The `isinstance(rate, int)` check is overly strict and not asked for \u2014 the spec says 'non-positive rates', not 'non-integer rates', so rejecting `rate=1.0` is a speculative feature. The `acquire()` contract says it returns `bool` but the spec says 'at most rate successful acquisitions per one-second window' \u2014 the blocking-wait behavior (sleeping inside the lock) is a design choice not clearly required and could deadlock concurrent callers since the lock is held during `asyncio.sleep`. The duplicate pruning loop after sleep is a code smell that could be collapsed. The type annotations use `Optional` and `Callable` from `typing` rather than the modern `X | None` syntax shown in the spec. Overall the code is readable and mostly minimal, but the lock-held sleep is a latent concurrency bug, the isinstance guard is overreach, and the docstring verbosity violates simplicity-first.\",\n  \"strengths\": [\n    \"Sliding-window algorithm is correct for the single-caller case\",\n    \"Uses collections.deque efficiently for timestamp management\",\n    \"Validates non-positive rates as required\",\n    \"Optional `now` callable correctly defaults to time.monotonic\"\n  ],\n  \"weaknesses\": [\n    \"Holds asyncio.Lock during asyncio.sleep, which blocks all concurrent acquire() callers \u2014 latent deadlock/starvation bug\",\n    \"isinstance(rate, int) check rejects valid float rates like 1.0, which is speculative overreach beyond the spec\",\n    \"Verbose docstrings violate simplicity-first; implementation-detail comments are excessive\",\n    \"Duplicate pruning loop after sleep could be a single helper or collapsed\",\n    \"Uses legacy typing.Optional/Callable instead of modern X | None syntax shown in the spec signature\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Sliding-window algorithm is correct for the single-caller case",
+      "Uses collections.deque efficiently for timestamp management",
+      "Validates non-positive rates as required",
+      "Optional `now` callable correctly defaults to time.monotonic"
+    ],
+    "weaknesses": [
+      "Holds asyncio.Lock during asyncio.sleep, which blocks all concurrent acquire() callers \u2014 latent deadlock/starvation bug",
+      "isinstance(rate, int) check rejects valid float rates like 1.0, which is speculative overreach beyond the spec",
+      "Verbose docstrings violate simplicity-first; implementation-detail comments are excessive",
+      "Duplicate pruning loop after sleep could be a single helper or collapsed",
+      "Uses legacy typing.Optional/Callable instead of modern X | None syntax shown in the spec signature"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.017,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F.                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________ test_allows_only_rate_per_window _______________________\n\n    def test_allows_only_rate_per_window():\n        clock = {'t': 0.0}\n    \n        async def _run():\n            limiter = AsyncRateLimiter(2, now=lambda: clock['t'])\n            assert await limiter.acquire() is True\n            assert await limiter.acquire() is True\n            assert await limiter.acquire() is False\n            clock['t'] = 1.1\n            assert await limiter.acquire() is True\n    \n>       asyncio.run(_run())\n\ntest_solution.py:17: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n/usr/local/lib/python3.11/asyncio/runners.py:190: in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n/usr/local/lib/python3.11/asyncio/runners.py:118: in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n/usr/local/lib/python3.11/asyncio/base_events.py:654: in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    async def _run():\n        limiter = AsyncRateLimiter(2, now=lambda: clock['t'])\n        assert await limiter.acquire() is True\n        assert await limiter.acquire() is True\n>       assert await limiter.acquire() is False\nE       assert True is False\n\ntest_solution.py:13: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_allows_only_rate_per_window - assert True is False\n1 failed, 1 passed in 1.25s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 2,
+    "loc": 66,
+    "maintainability_index": 66.27,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_karpathy_generation"
+}

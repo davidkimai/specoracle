@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, using a closure over a result dict with a recursive inner function \u2014 a clean, readable pattern. The core logic is minimal and direct. However, there is mild over-engineering: the module-level docstring is unnecessary for a single-function module, the inner function has its own docstring (excessive for a private helper), unused imports (`Any` from typing is used but `Dict` is redundant given the modern `dict[str, object]` annotation already used in the signature), and the type annotations on the inner function add noise without value. The example in the docstring is a genuine asset. Overall the structure is flat and auditable, but the verbosity around documentation and typing slightly violates 'minimum code that solves the problem.'",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, using a closure over a result dict with a recursive inner function \u2014 a clean, readable pattern. The core logic is minimal and direct. However, there is mild over-engineering: the module-level docstring is unnecessary for a single-function module, the inner function has its own docstring (excessive for a private helper), unused imports (`Any` from typing is used but `Dict` is redundant given the modern `dict[str, object]` annotation already used in the signature), and the type annotations on the inner function add noise without value. The example in the docstring is a genuine asset. Overall the structure is flat and auditable, but the verbosity around documentation and typing slightly violates 'minimum code that solves the problem.'\",\n  \"strengths\": [\n    \"Correct handling of lists as leaf values and empty dicts as leaf nodes\",\n    \"Closure pattern avoids passing result dict as argument \u2014 clean and readable\",\n    \"Docstring includes a concrete, correct example that serves as an implicit test\",\n    \"No speculative features or configurability beyond the stated requirements\"\n  ],\n  \"weaknesses\": [\n    \"Redundant import: `Dict` from typing is unused given modern `dict[str, object]` syntax already used in the signature\",\n    \"Inner function docstring is excessive for a private one-use helper\",\n    \"Module-level docstring adds no value for a single-function utility module\",\n    \"Type annotations on `_traverse` parameters add noise without meaningful benefit in this context\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct handling of lists as leaf values and empty dicts as leaf nodes",
+      "Closure pattern avoids passing result dict as argument \u2014 clean and readable",
+      "Docstring includes a concrete, correct example that serves as an implicit test",
+      "No speculative features or configurability beyond the stated requirements"
+    ],
+    "weaknesses": [
+      "Redundant import: `Dict` from typing is unused given modern `dict[str, object]` syntax already used in the signature",
+      "Inner function docstring is excessive for a private one-use helper",
+      "Module-level docstring adds no value for a single-function utility module",
+      "Type annotations on `_traverse` parameters add noise without meaningful benefit in this context"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.043,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 2,
+    "loc": 30,
+    "maintainability_index": 85.46,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "oracle_karpathy_generation"
+}

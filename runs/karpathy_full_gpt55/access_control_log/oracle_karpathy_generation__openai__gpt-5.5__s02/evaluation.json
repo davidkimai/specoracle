@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It initializes `allowed` to `False` (deny-by-default), computes the decision without any early return, unconditionally appends a complete log record containing all three required fields (`role`, `permission`, `allowed`) before the single `return` statement, and returns the boolean result. The code is flat, explicit, locally auditable in under ten lines, and contains no architectural slop whatsoever.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It initializes `allowed` to `False` (deny-by-default), computes the decision without any early return, unconditionally appends a complete log record containing all three required fields (`role`, `permission`, `allowed`) before the single `return` statement, and returns the boolean result. The code is flat, explicit, locally auditable in under ten lines, and contains no architectural slop whatsoever.\",\n  \"strengths\": [\n    \"Single return point guarantees the log write is never bypassed\",\n    \"Deny-by-default via `allowed = False` initialization\",\n    \"Log record contains exactly the required fields: role, permission, allowed\",\n    \"Flat, linear control flow with no nested conditionals or helper abstractions\",\n    \"Type annotations are precise and consistent with the task signature\"\n  ],\n  \"weaknesses\": [\n    \"Minor: the intermediate `permissions` variable adds one extra line but is harmless and arguably improves readability\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single return point guarantees the log write is never bypassed",
+      "Deny-by-default via `allowed = False` initialization",
+      "Log record contains exactly the required fields: role, permission, allowed",
+      "Flat, linear control flow with no nested conditionals or helper abstractions",
+      "Type annotations are precise and consistent with the task signature"
+    ],
+    "weaknesses": [
+      "Minor: the intermediate `permissions` variable adds one extra line but is harmless and arguably improves readability"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.203,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 19,
+    "maintainability_index": 68.758,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "oracle_karpathy_generation"
+}

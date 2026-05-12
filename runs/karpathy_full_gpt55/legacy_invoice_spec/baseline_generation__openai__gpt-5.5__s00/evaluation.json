@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and follows most of the Zen-of-Python and legacy-spec guidance well: single public function with no helpers, explicit key names in the output, no input mutation, and a clear staged loop. The guard `type(amount_cents) is int` correctly rejects booleans. However, the spec calls for 'explicit branch labels in local variable names when a decision affects money' \u2014 the filtering condition is a single compound boolean with no named intermediate variables (e.g., `is_paid`, `has_valid_region`, `has_valid_amount`) that would create a visible audit trail for the money-affecting decision. The spec also asks to 'reject clever flattening when a visible staged audit trail makes review easier,' and the final list comprehension, while readable, slightly obscures the three-field assembly that could be more explicit as a staged append. No legacy audit-stage comments are present, though the spec only says they are 'allowed,' not required. Overall a solid, readable implementation that misses the explicit branch-label and staged-audit-trail guidance that distinguishes the legacy spec from generic clean code.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, correct, and follows most of the Zen-of-Python and legacy-spec guidance well: single public function with no helpers, explicit key names in the output, no input mutation, and a clear staged loop. The guard `type(amount_cents) is int` correctly rejects booleans. However, the spec calls for 'explicit branch labels in local variable names when a decision affects money' \u2014 the filtering condition is a single compound boolean with no named intermediate variables (e.g., `is_paid`, `has_valid_region`, `has_valid_amount`) that would create a visible audit trail for the money-affecting decision. The spec also asks to 'reject clever flattening when a visible staged audit trail makes review easier,' and the final list comprehension, while readable, slightly obscures the three-field assembly that could be more explicit as a staged append. No legacy audit-stage comments are present, though the spec only says they are 'allowed,' not required. Overall a solid, readable implementation that misses the explicit branch-label and staged-audit-trail guidance that distinguishes the legacy spec from generic clean code.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Correct use of `type(amount_cents) is int` to exclude booleans\",\n    \"Does not mutate the input\",\n    \"Output uses exact legacy keys: bucket_code, item_count, cents_total\",\n    \"Sorted output by region as required\",\n    \"Flat, readable loop structure\"\n  ],\n  \"weaknesses\": [\n    \"No explicit branch-label local variables (e.g., is_paid, has_valid_region) for the money-affecting filter decision\",\n    \"Compound boolean condition bundles all guards without naming the audit stages\",\n    \"List comprehension at the end slightly obscures the staged record assembly the spec prefers\",\n    \"No legacy audit-stage comments, even though they are permitted and would improve reviewability per the spec\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Correct use of `type(amount_cents) is int` to exclude booleans",
+      "Does not mutate the input",
+      "Output uses exact legacy keys: bucket_code, item_count, cents_total",
+      "Sorted output by region as required",
+      "Flat, readable loop structure"
+    ],
+    "weaknesses": [
+      "No explicit branch-label local variables (e.g., is_paid, has_valid_region) for the money-affecting filter decision",
+      "Compound boolean condition bundles all guards without naming the audit stages",
+      "List comprehension at the end slightly obscures the staged record assembly the spec prefers",
+      "No legacy audit-stage comments, even though they are permitted and would improve reviewability per the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.221,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.15s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 26,
+    "maintainability_index": 57.57,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the decision first, unconditionally appends a complete audit record (role, permission, allowed) before returning, and only then returns the boolean \u2014 guaranteeing no short-circuit path can bypass the log. The code is flat (no nesting beyond a single expression and a single append), explicit (deny-by-default via `matrix.get(role, set())`), and fully readable at a glance. The docstring is accurate and informative without being verbose, and the `__all__` export is a clean finishing touch.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the decision first, unconditionally appends a complete audit record (role, permission, allowed) before returning, and only then returns the boolean \u2014 guaranteeing no short-circuit path can bypass the log. The code is flat (no nesting beyond a single expression and a single append), explicit (deny-by-default via `matrix.get(role, set())`), and fully readable at a glance. The docstring is accurate and informative without being verbose, and the `__all__` export is a clean finishing touch.\",\n  \"strengths\": [\n    \"Log write is unconditional and always precedes the return, satisfying ZT-2 strictly\",\n    \"Deny-by-default is implemented simply with `matrix.get(role, set())`\",\n    \"Single responsibility: one function, one decision, one log entry\",\n    \"No branching or early returns that could accidentally skip logging\",\n    \"Audit record contains exactly the required fields (role, permission, allowed)\",\n    \"Clean, flat structure with zero architectural slop\"\n  ],\n  \"weaknesses\": [\n    \"No weaknesses of note; the implementation is minimal and correct\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Log write is unconditional and always precedes the return, satisfying ZT-2 strictly",
+      "Deny-by-default is implemented simply with `matrix.get(role, set())`",
+      "Single responsibility: one function, one decision, one log entry",
+      "No branching or early returns that could accidentally skip logging",
+      "Audit record contains exactly the required fields (role, permission, allowed)",
+      "Clean, flat structure with zero architectural slop"
+    ],
+    "weaknesses": [
+      "No weaknesses of note; the implementation is minimal and correct"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.159,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 30,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "baseline_generation"
+}

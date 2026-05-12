@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with a clear guard clause at the top, explicit data movement through a plain dict accumulator, and a straightforward sorted output. It uses ordinary standard-library constructs (dict.setdefault, sorted) without any metaprogramming or speculative abstractions. The main mild weakness is that mutating dicts stored in `windows` via `setdefault` and then returning those same dict objects means the caller receives references to internal mutable state rather than fresh output dicts, which is a subtle hidden-mutation concern. A small helper to extract valid events would also improve local auditability and separation of concerns, but the current monolithic loop is short enough that it remains easy to audit. Overall the code is well-structured and closely follows the Zen principles.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with a clear guard clause at the top, explicit data movement through a plain dict accumulator, and a straightforward sorted output. It uses ordinary standard-library constructs (dict.setdefault, sorted) without any metaprogramming or speculative abstractions. The main mild weakness is that mutating dicts stored in `windows` via `setdefault` and then returning those same dict objects means the caller receives references to internal mutable state rather than fresh output dicts, which is a subtle hidden-mutation concern. A small helper to extract valid events would also improve local auditability and separation of concerns, but the current monolithic loop is short enough that it remains easy to audit. Overall the code is well-structured and closely follows the Zen principles.\",\n  \"strengths\": [\n    \"Immediate ValueError guard clause is explicit and clear\",\n    \"Flat control flow with a single loop and early continue for malformed events\",\n    \"Uses plain dict accumulation with setdefault \u2014 no clever abstractions\",\n    \"Sorted output construction is concise and readable\",\n    \"Variable names (start, summary, windows) are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Returns references to internal mutable dicts rather than fresh output copies, exposing internal state to callers\",\n    \"Combining event validation and window accumulation in one loop slightly reduces local auditability; a small `is_valid_event` helper would improve separation\",\n    \"isinstance check doesn't guard against bool subclass of int (True/False would pass as valid timestamps/values)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Immediate ValueError guard clause is explicit and clear",
+      "Flat control flow with a single loop and early continue for malformed events",
+      "Uses plain dict accumulation with setdefault \u2014 no clever abstractions",
+      "Sorted output construction is concise and readable",
+      "Variable names (start, summary, windows) are self-explanatory"
+    ],
+    "weaknesses": [
+      "Returns references to internal mutable dicts rather than fresh output copies, exposing internal state to callers",
+      "Combining event validation and window accumulation in one loop slightly reduces local auditability; a small `is_valid_event` helper would improve separation",
+      "isinstance check doesn't guard against bool subclass of int (True/False would pass as valid timestamps/values)"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.565,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 58.61,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "human_reference"
+}

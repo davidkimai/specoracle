@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a simple while-loop with an index rather than clever iterator tricks, extracts two small pure helpers (_require_value and _positive_int) that each do exactly one thing and are trivially auditable, keeps the main function's control flow shallow with guard clauses and early raises, makes all data movement visible through the explicit `parsed` dict, and uses ordinary standard-library constructs throughout. The only minor quibbles are that `_positive_int` calls `int(value)` twice (a trivial inefficiency), and the `else` branch inside the `elif` block for `--format` could be a guard clause to shave one level of nesting, but neither rises to a real structural problem. Overall this is a textbook realization of the Zen principles for this task size.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a simple while-loop with an index rather than clever iterator tricks, extracts two small pure helpers (_require_value and _positive_int) that each do exactly one thing and are trivially auditable, keeps the main function's control flow shallow with guard clauses and early raises, makes all data movement visible through the explicit `parsed` dict, and uses ordinary standard-library constructs throughout. The only minor quibbles are that `_positive_int` calls `int(value)` twice (a trivial inefficiency), and the `else` branch inside the `elif` block for `--format` could be a guard clause to shave one level of nesting, but neither rises to a real structural problem. Overall this is a textbook realization of the Zen principles for this task size.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers (_require_value, _positive_int) keep the main function readable\",\n    \"Control flow is flat; no deep nesting in the main loop\",\n    \"Explicit defaults dict makes the data model immediately visible\",\n    \"Clear, specific ValueError messages for every failure mode\",\n    \"No speculative abstractions or framework-shaped code\"\n  ],\n  \"weaknesses\": [\n    \"_positive_int calls int(value) twice; a local variable would be cleaner\",\n    \"The --format validation sits inside an else branch rather than a guard clause, adding one unnecessary nesting level\",\n    \"startswith('--') heuristic in _require_value could misclassify a legitimate path that starts with '--', though this is a common and acceptable trade-off\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers (_require_value, _positive_int) keep the main function readable",
+      "Control flow is flat; no deep nesting in the main loop",
+      "Explicit defaults dict makes the data model immediately visible",
+      "Clear, specific ValueError messages for every failure mode",
+      "No speculative abstractions or framework-shaped code"
+    ],
+    "weaknesses": [
+      "_positive_int calls int(value) twice; a local variable would be cleaner",
+      "The --format validation sits inside an else branch rather than a guard clause, adding one unnecessary nesting level",
+      "startswith('--') heuristic in _require_value could misclassify a legitimate path that starts with '--', though this is a common and acceptable trade-off"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.691,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.667,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 3,
+    "loc": 32,
+    "maintainability_index": 48.418,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "human_reference"
+}

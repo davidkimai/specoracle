@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are handled through a proper Enum with named values, configuration parameters are stored as named attributes, and the half-open trial logic correctly closes on success and reopens on failure. The thread-safety design is thoughtful\u2014releasing the lock during function execution avoids blocking. The `state` property returns an inspectable string. Minor concerns: the `call` signature accepts `*args/**kwargs` which wasn't in the spec (though harmless), the validation logic uses isinstance checks that are slightly over-engineered for the task, and the docstrings are verbose (un-Pythonic in the 'simple is better' sense). The lock-release-then-execute pattern introduces a subtle race where two threads could both transition OPEN\u2192HALF_OPEN simultaneously, meaning two concurrent half-open trials could run\u2014this is a real correctness issue against the spec's 'one half-open trial' requirement. Overall the code is readable, flat, and locally auditable with explicit named states and thresholds, but the concurrency gap and minor over-engineering prevent a top score.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are handled through a proper Enum with named values, configuration parameters are stored as named attributes, and the half-open trial logic correctly closes on success and reopens on failure. The thread-safety design is thoughtful\u2014releasing the lock during function execution avoids blocking. The `state` property returns an inspectable string. Minor concerns: the `call` signature accepts `*args/**kwargs` which wasn't in the spec (though harmless), the validation logic uses isinstance checks that are slightly over-engineered for the task, and the docstrings are verbose (un-Pythonic in the 'simple is better' sense). The lock-release-then-execute pattern introduces a subtle race where two threads could both transition OPEN\u2192HALF_OPEN simultaneously, meaning two concurrent half-open trials could run\u2014this is a real correctness issue against the spec's 'one half-open trial' requirement. Overall the code is readable, flat, and locally auditable with explicit named states and thresholds, but the concurrency gap and minor over-engineering prevent a top score.\",\n  \"strengths\": [\n    \"Explicit _State enum makes state transitions inspectable and named\",\n    \"failure_threshold and recovery_timeout stored as named instance attributes, not magic constants\",\n    \"Half-open success closes, half-open failure reopens with timer reset\u2014correct semantics\",\n    \"now= injection point cleanly supports testing\",\n    \"Flat, readable structure with no deep nesting or clever abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Race condition: lock is released before func() executes, allowing multiple threads to simultaneously enter HALF_OPEN and run concurrent trials, violating the 'one trial' requirement\",\n    \"Over-engineered isinstance validation for a simple circuit breaker\",\n    \"Verbose docstrings and type annotations add noise without aiding local auditability\",\n    \"Unnecessary TypeVar T and Optional/Any imports for a task of this scope\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit _State enum makes state transitions inspectable and named",
+      "failure_threshold and recovery_timeout stored as named instance attributes, not magic constants",
+      "Half-open success closes, half-open failure reopens with timer reset\u2014correct semantics",
+      "now= injection point cleanly supports testing",
+      "Flat, readable structure with no deep nesting or clever abstractions"
+    ],
+    "weaknesses": [
+      "Race condition: lock is released before func() executes, allowing multiple threads to simultaneously enter HALF_OPEN and run concurrent trials, violating the 'one trial' requirement",
+      "Over-engineered isinstance validation for a simple circuit breaker",
+      "Verbose docstrings and type annotations add noise without aiding local auditability",
+      "Unnecessary TypeVar T and Optional/Any imports for a task of this scope"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.872,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert 'OPEN' == 'open'\nE         \nE         - open\nE         + OPEN\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 3.143,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 22,
+    "function_count": 5,
+    "loc": 121,
+    "maintainability_index": 68.578,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

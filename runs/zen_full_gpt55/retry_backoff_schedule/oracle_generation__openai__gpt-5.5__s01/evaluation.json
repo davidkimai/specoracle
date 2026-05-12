@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is generally clean and readable with good guard clauses extracted into small helpers, flat control flow in the main function, and explicit data movement. However, the delay-update logic inside the loop is unnecessarily convoluted \u2014 the condition `delay >= cap_seconds or delay > cap_seconds // 2` is a fragile attempt to avoid integer overflow or double-capping, but it obscures intent and introduces a subtle edge case (e.g., when cap_seconds is odd). The idiomatic and simpler approach is just `delay = min(delay * 2, cap_seconds)` after appending, which is self-evidently correct. The type-checking helpers (_require_integer, _require_non_negative, _require_positive) add some boilerplate that may be speculative abstraction for this task's scope, but they are at least locally auditable and not harmful. The bool-exclusion guard is a reasonable defensive touch. Overall the structure is sound but the core loop logic violates 'simple is better than complex' and 'readability counts'.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is generally clean and readable with good guard clauses extracted into small helpers, flat control flow in the main function, and explicit data movement. However, the delay-update logic inside the loop is unnecessarily convoluted \u2014 the condition `delay >= cap_seconds or delay > cap_seconds // 2` is a fragile attempt to avoid integer overflow or double-capping, but it obscures intent and introduces a subtle edge case (e.g., when cap_seconds is odd). The idiomatic and simpler approach is just `delay = min(delay * 2, cap_seconds)` after appending, which is self-evidently correct. The type-checking helpers (_require_integer, _require_non_negative, _require_positive) add some boilerplate that may be speculative abstraction for this task's scope, but they are at least locally auditable and not harmful. The bool-exclusion guard is a reasonable defensive touch. Overall the structure is sound but the core loop logic violates 'simple is better than complex' and 'readability counts'.\",\n  \"strengths\": [\n    \"Guard clauses extracted into small, named helpers keep the main function flat and readable\",\n    \"Explicit bool exclusion prevents silent misuse of True/False as integers\",\n    \"Data flow is explicit \u2014 no hidden mutation or global state\",\n    \"Clear, descriptive error messages for invalid inputs\"\n  ],\n  \"weaknesses\": [\n    \"The delay-update condition is unnecessarily complex; `delay = min(delay * 2, cap_seconds)` is simpler and equally correct\",\n    \"Three nearly-identical validation helpers may be speculative abstraction for a single-function module\",\n    \"The convoluted cap logic could introduce subtle bugs for odd cap_seconds values\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses extracted into small, named helpers keep the main function flat and readable",
+      "Explicit bool exclusion prevents silent misuse of True/False as integers",
+      "Data flow is explicit \u2014 no hidden mutation or global state",
+      "Clear, descriptive error messages for invalid inputs"
+    ],
+    "weaknesses": [
+      "The delay-update condition is unnecessarily complex; `delay = min(delay * 2, cap_seconds)` is simpler and equally correct",
+      "Three nearly-identical validation helpers may be speculative abstraction for a single-function module",
+      "The convoluted cap logic could introduce subtle bugs for odd cap_seconds values"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.157,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.75,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 33,
+    "maintainability_index": 52.294,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "oracle_generation"
+}

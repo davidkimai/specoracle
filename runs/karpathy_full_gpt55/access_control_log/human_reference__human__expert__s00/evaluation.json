@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision in a single, readable expression, unconditionally appends the full audit record (role, permission, allowed) to the log before returning, and defaults to denial via the empty-set fallback. There is no branching, no early return, no abstraction overhead, and no way for the log write to be bypassed. The code is flat, explicit, locally auditable in five lines, and perfectly matches both the functional requirements and the structural oracle.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision in a single, readable expression, unconditionally appends the full audit record (role, permission, allowed) to the log before returning, and defaults to denial via the empty-set fallback. There is no branching, no early return, no abstraction overhead, and no way for the log write to be bypassed. The code is flat, explicit, locally auditable in five lines, and perfectly matches both the functional requirements and the structural oracle.\",\n  \"strengths\": [\n    \"Single unconditional log.append guarantees every attempt is recorded before return\",\n    \"Deny-by-default implemented cleanly with matrix.get(role, set())\",\n    \"Log record contains exactly the required fields: role, permission, allowed\",\n    \"No unnecessary abstraction, branching, or helper functions\",\n    \"Fully explicit and locally auditable at a glance\"\n  ],\n  \"weaknesses\": [\n    \"No input validation (e.g., non-string role/permission), though not required by the spec\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single unconditional log.append guarantees every attempt is recorded before return",
+      "Deny-by-default implemented cleanly with matrix.get(role, set())",
+      "Log record contains exactly the required fields: role, permission, allowed",
+      "No unnecessary abstraction, branching, or helper functions",
+      "Fully explicit and locally auditable at a glance"
+    ],
+    "weaknesses": [
+      "No input validation (e.g., non-string role/permission), though not required by the spec"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.525,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 5,
+    "maintainability_index": 78.15,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "human_reference"
+}

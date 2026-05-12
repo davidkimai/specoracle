@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and minimal \u2014 a straightforward iterative parser with no unnecessary abstractions, classes, or external dependencies. It handles all specified cases (required flag, defaults, validation, boolean flag, unknown flags, missing values) with a single while loop and explicit conditionals. The logic is locally auditable: each branch is self-contained and the control flow is easy to follow. The only minor quibble is the `value == ''` check for `--input` which is slightly redundant (an empty string passed as a CLI argument is an edge case that may or may not be worth guarding), and the `isascii()` check before `isdecimal()` is technically redundant since `isdecimal()` already handles ASCII-only decimal digits correctly. These are trivial nits that don't meaningfully affect correctness or clarity. Overall this is a tight, goal-driven implementation that exemplifies the simplicity-first principle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and minimal \u2014 a straightforward iterative parser with no unnecessary abstractions, classes, or external dependencies. It handles all specified cases (required flag, defaults, validation, boolean flag, unknown flags, missing values) with a single while loop and explicit conditionals. The logic is locally auditable: each branch is self-contained and the control flow is easy to follow. The only minor quibble is the `value == ''` check for `--input` which is slightly redundant (an empty string passed as a CLI argument is an edge case that may or may not be worth guarding), and the `isascii()` check before `isdecimal()` is technically redundant since `isdecimal()` already handles ASCII-only decimal digits correctly. These are trivial nits that don't meaningfully affect correctness or clarity. Overall this is a tight, goal-driven implementation that exemplifies the simplicity-first principle.\",\n  \"strengths\": [\n    \"Flat, single-function implementation with no unnecessary abstractions or classes\",\n    \"Explicit handling of every specified case with clear, readable conditionals\",\n    \"Correct use of index-based iteration to consume flag-value pairs naturally\",\n    \"Proper separation of unknown flags vs unknown positional arguments\",\n    \"Minimal code footprint \u2014 close to the theoretical minimum for this task\"\n  ],\n  \"weaknesses\": [\n    \"Redundant `isascii()` check before `isdecimal()` \u2014 `isdecimal()` alone suffices\",\n    \"Empty-string check for `--input` is an undocumented edge case not in the spec\",\n    \"Missing value detection uses `startswith('--')` heuristic which could reject valid paths starting with '--'\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-function implementation with no unnecessary abstractions or classes",
+      "Explicit handling of every specified case with clear, readable conditionals",
+      "Correct use of index-based iteration to consume flag-value pairs naturally",
+      "Proper separation of unknown flags vs unknown positional arguments",
+      "Minimal code footprint \u2014 close to the theoretical minimum for this task"
+    ],
+    "weaknesses": [
+      "Redundant `isascii()` check before `isdecimal()` \u2014 `isdecimal()` alone suffices",
+      "Empty-string check for `--input` is an undocumented edge case not in the spec",
+      "Missing value detection uses `startswith('--')` heuristic which could reject valid paths starting with '--'"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.48,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 15.0,
+    "cyclomatic_complexity_max": 15,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 1,
+    "loc": 43,
+    "maintainability_index": 46.142,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_karpathy_generation"
+}

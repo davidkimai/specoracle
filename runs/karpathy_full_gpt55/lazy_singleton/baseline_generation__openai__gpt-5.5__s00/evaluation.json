@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly expressive of the task. It uses a sentinel object for uninitialized state, a plain threading.Lock for thread safety, __slots__ for explicit attribute declaration, and a callable check with a clear TypeError for invalid input. The double-checked locking pattern is intentionally avoided in favor of always acquiring the lock, which is simpler and correct for this use case (the factory is called at most once, so lock contention is negligible after initialization). The Generic[T] typing adds value without adding complexity. The only minor concern is that the simple lock-always approach foregoes the double-checked locking optimization, but given the Zen preference for simplicity over cleverness, this is actually the right call. The code is locally auditable, flat, and free of speculative abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly expressive of the task. It uses a sentinel object for uninitialized state, a plain threading.Lock for thread safety, __slots__ for explicit attribute declaration, and a callable check with a clear TypeError for invalid input. The double-checked locking pattern is intentionally avoided in favor of always acquiring the lock, which is simpler and correct for this use case (the factory is called at most once, so lock contention is negligible after initialization). The Generic[T] typing adds value without adding complexity. The only minor concern is that the simple lock-always approach foregoes the double-checked locking optimization, but given the Zen preference for simplicity over cleverness, this is actually the right call. The code is locally auditable, flat, and free of speculative abstractions.\",\n  \"strengths\": [\n    \"Minimal and flat control flow with no unnecessary nesting\",\n    \"Explicit sentinel _UNSET makes uninitialized state clear and avoids None ambiguity\",\n    \"callable() guard with TypeError gives clear error for invalid input\",\n    \"__slots__ makes data layout explicit and prevents accidental attribute addition\",\n    \"Standard library only (threading.Lock), no clever metaprogramming\",\n    \"Docstring is concise and accurate\"\n  ],\n  \"weaknesses\": [\n    \"Always acquires the lock on every get() call; a double-checked locking pattern (check _value before acquiring lock) would reduce contention after initialization, though this is a minor performance concern not a correctness issue\",\n    \"The type: ignore comment is a small wart, though unavoidable given the sentinel typing\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal and flat control flow with no unnecessary nesting",
+      "Explicit sentinel _UNSET makes uninitialized state clear and avoids None ambiguity",
+      "callable() guard with TypeError gives clear error for invalid input",
+      "__slots__ makes data layout explicit and prevents accidental attribute addition",
+      "Standard library only (threading.Lock), no clever metaprogramming",
+      "Docstring is concise and accurate"
+    ],
+    "weaknesses": [
+      "Always acquires the lock on every get() call; a double-checked locking pattern (check _value before acquiring lock) would reduce contention after initialization, though this is a minor performance concern not a correctness issue",
+      "The type: ignore comment is a small wart, though unavoidable given the sentinel typing"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.926,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 21,
+    "maintainability_index": 90.855,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "baseline_generation"
+}

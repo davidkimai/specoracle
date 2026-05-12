@@ -1,0 +1,56 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean: validation is explicit, data flow is clear, the semaphore approach is idiomatic, and `asyncio.gather` preserves order. The nested `process_one_batch` helper is a reasonable extraction. However, the module-level type alias `Handler` and the two `TypeVar` declarations add speculative abstraction that a maintainer doesn't need\u2014the function signature is self-explanatory without them. The docstrings are verbose to the point of noise, repeating what the code already says clearly. The `isinstance(batch_size, int)` guard is slightly over-engineered for a typed interface (the spec says 'reject non-positive', not 'reject non-int'), and the comment density is higher than the code complexity warrants. Overall it's a solid, auditable implementation with minor structural bloat.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean: validation is explicit, data flow is clear, the semaphore approach is idiomatic, and `asyncio.gather` preserves order. The nested `process_one_batch` helper is a reasonable extraction. However, the module-level type alias `Handler` and the two `TypeVar` declarations add speculative abstraction that a maintainer doesn't need\u2014the function signature is self-explanatory without them. The docstrings are verbose to the point of noise, repeating what the code already says clearly. The `isinstance(batch_size, int)` guard is slightly over-engineered for a typed interface (the spec says 'reject non-positive', not 'reject non-int'), and the comment density is higher than the code complexity warrants. Overall it's a solid, auditable implementation with minor structural bloat.\",\n  \"strengths\": [\n    \"Explicit validation with clear ValueError messages\",\n    \"Semaphore correctly limits concurrency without blocking the event loop\",\n    \"asyncio.gather preserves batch order naturally\",\n    \"Lazy iteration with islice avoids loading all items into memory\",\n    \"Flat control flow with a simple while-break loop\",\n    \"process_one_batch helper cleanly isolates semaphore acquisition\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar and Handler alias are speculative abstractions unused at runtime\",\n    \"Docstrings are excessively verbose, restating what the code already shows\",\n    \"isinstance(int) check goes beyond the spec's 'non-positive' rejection requirement\",\n    \"Comment density exceeds code complexity, reducing signal-to-noise ratio\",\n    \"All tasks are created before any run, which could spike memory for very large iterables\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Explicit validation with clear ValueError messages",
+      "Semaphore correctly limits concurrency without blocking the event loop",
+      "asyncio.gather preserves batch order naturally",
+      "Lazy iteration with islice avoids loading all items into memory",
+      "Flat control flow with a simple while-break loop",
+      "process_one_batch helper cleanly isolates semaphore acquisition"
+    ],
+    "weaknesses": [
+      "TypeVar and Handler alias are speculative abstractions unused at runtime",
+      "Docstrings are excessively verbose, restating what the code already shows",
+      "isinstance(int) check goes beyond the spec's 'non-positive' rejection requirement",
+      "Comment density exceeds code complexity, reducing signal-to-noise ratio",
+      "All tasks are created before any run, which could spike memory for very large iterables"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.505,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.30s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 74,
+    "maintainability_index": 75.423,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "baseline_generation"
+}

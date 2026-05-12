@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses standard-library constructs (asyncio.Lock, collections.deque, time.monotonic), names are self-explanatory, and the helper `_prune_old_timestamps` is a well-extracted pure operation. The lock-release-then-sleep pattern correctly avoids holding the lock during waits. However, there are a few structural concerns: the `isinstance(rate, int)` check is overly strict and rejects valid numeric types like numpy integers or booleans (bool passes but semantically shouldn't), and the docstring bulk adds noise without proportional clarity gain for such a small class. The `while True` loop with re-evaluation after sleep is correct but slightly more complex than needed \u2014 a simpler design might use `asyncio.Condition` to avoid busy-looping on contention. The type annotations with `Optional` and `Callable` from `typing` rather than the modern `X | None` syntax is a minor anachronism. Overall the code is auditable, flat, and avoids speculative abstractions, landing solidly in the above-average range.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses standard-library constructs (asyncio.Lock, collections.deque, time.monotonic), names are self-explanatory, and the helper `_prune_old_timestamps` is a well-extracted pure operation. The lock-release-then-sleep pattern correctly avoids holding the lock during waits. However, there are a few structural concerns: the `isinstance(rate, int)` check is overly strict and rejects valid numeric types like numpy integers or booleans (bool passes but semantically shouldn't), and the docstring bulk adds noise without proportional clarity gain for such a small class. The `while True` loop with re-evaluation after sleep is correct but slightly more complex than needed \u2014 a simpler design might use `asyncio.Condition` to avoid busy-looping on contention. The type annotations with `Optional` and `Callable` from `typing` rather than the modern `X | None` syntax is a minor anachronism. Overall the code is auditable, flat, and avoids speculative abstractions, landing solidly in the above-average range.\",\n  \"strengths\": [\n    \"Lock is released before sleeping, allowing other tasks to proceed without deadlock\",\n    \"Small, focused helper `_prune_old_timestamps` keeps `acquire` readable\",\n    \"Explicit ValueError with clear message for invalid rate\",\n    \"Standard-library only, no clever metaprogramming\",\n    \"Data flow is explicit: timestamps deque is the sole mutable state\"\n  ],\n  \"weaknesses\": [\n    \"`isinstance(rate, int)` rejects valid numeric types and accepts `True`/`False` (bool subclasses int)\",\n    \"Verbose docstrings add bulk without proportional value for a small utility class\",\n    \"Busy-loop pattern (while True + sleep + re-lock) could be replaced with asyncio.Condition for cleaner signaling semantics\",\n    \"Uses legacy `Optional[...]` / `Callable[...]` typing syntax instead of modern `X | None`\",\n    \"Class-level type annotations in the body are redundant given `__init__` assignments and add visual noise\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Lock is released before sleeping, allowing other tasks to proceed without deadlock",
+      "Small, focused helper `_prune_old_timestamps` keeps `acquire` readable",
+      "Explicit ValueError with clear message for invalid rate",
+      "Standard-library only, no clever metaprogramming",
+      "Data flow is explicit: timestamps deque is the sole mutable state"
+    ],
+    "weaknesses": [
+      "`isinstance(rate, int)` rejects valid numeric types and accepts `True`/`False` (bool subclasses int)",
+      "Verbose docstrings add bulk without proportional value for a small utility class",
+      "Busy-loop pattern (while True + sleep + re-lock) could be replaced with asyncio.Condition for cleaner signaling semantics",
+      "Uses legacy `Optional[...]` / `Callable[...]` typing syntax instead of modern `X | None`",
+      "Class-level type annotations in the body are redundant given `__init__` assignments and add visual noise"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 10.057,
+    "exit_code": 124,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "",
+    "timed_out": true
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 3,
+    "loc": 61,
+    "maintainability_index": 76.656,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_generation"
+}

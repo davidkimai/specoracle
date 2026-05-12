@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "This implementation is the canonical minimal solution: it delegates directly to the standard library's `heapq.merge`, which is exactly designed for this task \u2014 lazy, sorted merging of sorted iterables using a priority queue internally. There is zero speculative abstraction, no unnecessary wrapping, no hand-rolled heap logic, and the type annotations match the spec precisely. It is the simplest correct architecture possible, satisfying every Karpathy guideline: think before coding (stdlib is the right tool), simplicity first (two lines including the import), surgical (nothing extra touched), and goal-driven (the contract is clear and testable).",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"This implementation is the canonical minimal solution: it delegates directly to the standard library's `heapq.merge`, which is exactly designed for this task \u2014 lazy, sorted merging of sorted iterables using a priority queue internally. There is zero speculative abstraction, no unnecessary wrapping, no hand-rolled heap logic, and the type annotations match the spec precisely. It is the simplest correct architecture possible, satisfying every Karpathy guideline: think before coding (stdlib is the right tool), simplicity first (two lines including the import), surgical (nothing extra touched), and goal-driven (the contract is clear and testable).\",\n  \"strengths\": [\n    \"Uses heapq.merge, the exact stdlib primitive built for this problem\",\n    \"Lazy evaluation preserved \u2014 heapq.merge returns an iterator\",\n    \"Minimal code: no unnecessary wrapping or abstraction\",\n    \"Correct type annotations matching the spec\",\n    \"Zero speculative features or configurability\"\n  ],\n  \"weaknesses\": [\n    \"No explicit handling of non-sorted input (but spec says inputs are sorted, so this is correct)\",\n    \"No docstring, though the function name and spec are self-documenting enough\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Uses heapq.merge, the exact stdlib primitive built for this problem",
+      "Lazy evaluation preserved \u2014 heapq.merge returns an iterator",
+      "Minimal code: no unnecessary wrapping or abstraction",
+      "Correct type annotations matching the spec",
+      "Zero speculative features or configurability"
+    ],
+    "weaknesses": [
+      "No explicit handling of non-sorted input (but spec says inputs are sorted, so this is correct)",
+      "No docstring, though the function name and spec are self-documenting enough"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.093,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 4,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "priority_queue_merger",
+  "variant": "oracle_karpathy_generation"
+}

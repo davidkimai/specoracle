@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, uses clear names, avoids mutation, raises explicit errors, and decomposes into small helpers. The main structural concern is the proliferation of three separate copy/merge helpers (_copy_default_value, _copy_override_dict, _merge_dicts) where a single recursive merge function could handle all cases more flatly. Specifically, _copy_override_dict duplicates logic that _merge_dicts already handles when the default is absent (empty dict as default), and _copy_default_value is only needed because the initial copy of defaults happens separately from the merge pass. A simpler architecture would be one recursive helper that merges two dicts (treating a missing key as an empty dict), eliminating the separate copy helpers entirely. The current approach is readable and auditable but carries mild speculative decomposition.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, uses clear names, avoids mutation, raises explicit errors, and decomposes into small helpers. The main structural concern is the proliferation of three separate copy/merge helpers (_copy_default_value, _copy_override_dict, _merge_dicts) where a single recursive merge function could handle all cases more flatly. Specifically, _copy_override_dict duplicates logic that _merge_dicts already handles when the default is absent (empty dict as default), and _copy_default_value is only needed because the initial copy of defaults happens separately from the merge pass. A simpler architecture would be one recursive helper that merges two dicts (treating a missing key as an empty dict), eliminating the separate copy helpers entirely. The current approach is readable and auditable but carries mild speculative decomposition.\",\n  \"strengths\": [\n    \"Clear, descriptive helper names that make intent obvious\",\n    \"Explicit input validation with a clean guard helper\",\n    \"No mutation of inputs; all paths produce fresh dicts\",\n    \"Flat control flow within each function using guard clauses and continue\",\n    \"Standard library only, no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"_copy_override_dict duplicates logic already present in _merge_dicts (could pass empty dict as default instead)\",\n    \"_copy_default_value is only needed due to the two-phase copy+merge approach; a unified recursive merge would eliminate it\",\n    \"Three helpers for what is essentially one recursive operation adds unnecessary surface area to audit\",\n    \"The separation of 'copy defaults first, then apply overrides' is a less obvious mental model than a single unified merge pass\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear, descriptive helper names that make intent obvious",
+      "Explicit input validation with a clean guard helper",
+      "No mutation of inputs; all paths produce fresh dicts",
+      "Flat control flow within each function using guard clauses and continue",
+      "Standard library only, no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "_copy_override_dict duplicates logic already present in _merge_dicts (could pass empty dict as default instead)",
+      "_copy_default_value is only needed due to the two-phase copy+merge approach; a unified recursive merge would eliminate it",
+      "Three helpers for what is essentially one recursive operation adds unnecessary surface area to audit",
+      "The separation of 'copy defaults first, then apply overrides' is a less obvious mental model than a single unified merge pass"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.605,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.4,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 5,
+    "loc": 37,
+    "maintainability_index": 52.601,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

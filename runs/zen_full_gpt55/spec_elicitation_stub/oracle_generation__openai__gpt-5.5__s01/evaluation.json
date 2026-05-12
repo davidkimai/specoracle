@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. Extracting the payload-shape check into a small pure predicate `_is_echo_payload` keeps `handle_underspecified` to a single guard clause plus a raise, which is maximally readable and locally auditable. The exact-key-set check (`set(payload) != _ECHO_KEYS`) correctly rejects payloads with extra keys, honoring the 'only specified path' constraint without over-engineering. The error message is informative. The module-level constant `_ECHO_KEYS` is a minor speculative abstraction for a two-element set that is only used once, but it does improve readability of the predicate. No hidden state, no metaprogramming, no unused extension points.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. Extracting the payload-shape check into a small pure predicate `_is_echo_payload` keeps `handle_underspecified` to a single guard clause plus a raise, which is maximally readable and locally auditable. The exact-key-set check (`set(payload) != _ECHO_KEYS`) correctly rejects payloads with extra keys, honoring the 'only specified path' constraint without over-engineering. The error message is informative. The module-level constant `_ECHO_KEYS` is a minor speculative abstraction for a two-element set that is only used once, but it does improve readability of the predicate. No hidden state, no metaprogramming, no unused extension points.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause in the entry point\",\n    \"Pure helper predicate isolates the shape-matching logic cleanly\",\n    \"Exact key-set check prevents silent acceptance of over-specified payloads\",\n    \"Clear, descriptive NotImplementedError message\",\n    \"No speculative abstractions or framework-shaped code\"\n  ],\n  \"weaknesses\": [\n    \"`_ECHO_KEYS` constant adds a tiny layer of indirection for a set used only once; inlining it would be equally clear\",\n    \"The `isinstance(payload, dict)` guard in the helper slightly widens the contract beyond the typed signature, which is fine but mildly redundant given the type annotation\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause in the entry point",
+      "Pure helper predicate isolates the shape-matching logic cleanly",
+      "Exact key-set check prevents silent acceptance of over-specified payloads",
+      "Clear, descriptive NotImplementedError message",
+      "No speculative abstractions or framework-shaped code"
+    ],
+    "weaknesses": [
+      "`_ECHO_KEYS` constant adds a tiny layer of indirection for a set used only once; inlining it would be equally clear",
+      "The `isinstance(payload, dict)` guard in the helper slightly widens the contract beyond the typed signature, which is fine but mildly redundant given the type annotation"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.97,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 2,
+    "loc": 13,
+    "maintainability_index": 67.081,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "oracle_generation"
+}

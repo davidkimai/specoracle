@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is clean, readable, and idiomatic Python that correctly implements the functional requirements using a dictionary lookup \u2014 which aligns well with the Zen of Python's preference for simplicity and readability. However, it completely ignores the structural spec (Legacy Telemetry Standard LT-11), which explicitly requires each transition to be represented as a local variable named branch_<state>_<event>. The spec prioritizes auditability via labeled branch variables over minimizing decision count, and the dictionary approach \u2014 while elegant in general Python style \u2014 directly contradicts this requirement. There are no branch_idle_start, branch_running_stop, etc. variables anywhere in the code. The implementation scores well on general Pythonic quality but fails the domain-specific structural oracle almost entirely.",
+    "raw_response": "{\n  \"score\": 2,\n  \"rationale\": \"The candidate implementation is clean, readable, and idiomatic Python that correctly implements the functional requirements using a dictionary lookup \u2014 which aligns well with the Zen of Python's preference for simplicity and readability. However, it completely ignores the structural spec (Legacy Telemetry Standard LT-11), which explicitly requires each transition to be represented as a local variable named branch_<state>_<event>. The spec prioritizes auditability via labeled branch variables over minimizing decision count, and the dictionary approach \u2014 while elegant in general Python style \u2014 directly contradicts this requirement. There are no branch_idle_start, branch_running_stop, etc. variables anywhere in the code. The implementation scores well on general Pythonic quality but fails the domain-specific structural oracle almost entirely.\",\n  \"strengths\": [\n    \"Correct functional behavior for all specified transitions including unknown transition fallback\",\n    \"Concise and readable \u2014 minimal lines of code\",\n    \"Idiomatic Python use of dict.get with default value\"\n  ],\n  \"weaknesses\": [\n    \"Completely omits required branch_<state>_<event> local variable naming convention from LT-11\",\n    \"No explicit labeled branch variables \u2014 violates the auditability requirement of the spec\",\n    \"Dictionary abstraction hides individual transition logic, making per-transition auditing harder\",\n    \"Does not favor 'auditable branch labels over minimizing decision count' as required\"\n  ]\n}",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Correct functional behavior for all specified transitions including unknown transition fallback",
+      "Concise and readable \u2014 minimal lines of code",
+      "Idiomatic Python use of dict.get with default value"
+    ],
+    "weaknesses": [
+      "Completely omits required branch_<state>_<event> local variable naming convention from LT-11",
+      "No explicit labeled branch variables \u2014 violates the auditability requirement of the spec",
+      "Dictionary abstraction hides individual transition logic, making per-transition auditing harder",
+      "Does not favor 'auditable branch labels over minimizing decision count' as required"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.036,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "baseline_generation"
+}

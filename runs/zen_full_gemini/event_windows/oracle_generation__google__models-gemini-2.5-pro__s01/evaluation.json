@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably well-structured with good separation of concerns via small helpers. The validation helper and formatting helper are appropriately extracted and named. However, the code carries some excess weight: the module-level docstring is unnecessary, the per-function docstrings with Args/Returns sections are over-engineered for functions this simple (violating 'sparse enough to audit locally'), the `_format_summaries` helper redundantly re-keys data that's already in the right shape (the defaultdict values could just be accumulated differently), and the `isinstance(window_size, int)` guard is slightly speculative since the type annotation already signals intent. The `defaultdict` with a mutable-dict lambda is a mild hidden-mutation pattern that a simpler `dict` with explicit initialization or a `Counter`-style approach would make more explicit. Overall it's clean and readable but slightly over-documented and has one unnecessary indirection in `_format_summaries`.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably well-structured with good separation of concerns via small helpers. The validation helper and formatting helper are appropriately extracted and named. However, the code carries some excess weight: the module-level docstring is unnecessary, the per-function docstrings with Args/Returns sections are over-engineered for functions this simple (violating 'sparse enough to audit locally'), the `_format_summaries` helper redundantly re-keys data that's already in the right shape (the defaultdict values could just be accumulated differently), and the `isinstance(window_size, int)` guard is slightly speculative since the type annotation already signals intent. The `defaultdict` with a mutable-dict lambda is a mild hidden-mutation pattern that a simpler `dict` with explicit initialization or a `Counter`-style approach would make more explicit. Overall it's clean and readable but slightly over-documented and has one unnecessary indirection in `_format_summaries`.\",\n  \"strengths\": [\n    \"Clear guard clause for window_size validation at the top\",\n    \"Small, named helpers with single responsibilities\",\n    \"_is_valid_event is explicit and easy to audit\",\n    \"Flat control flow with a simple continue-on-invalid pattern\",\n    \"Sorted output is explicit and correct\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstrings with Args/Returns for trivial helpers add noise without clarity benefit\",\n    \"_format_summaries redundantly re-keys data already in the correct shape\",\n    \"defaultdict with mutable-dict lambda is a subtle hidden-mutation pattern\",\n    \"Module-level docstring is speculative boilerplate\",\n    \"isinstance(window_size, int) check is slightly defensive given typed signature\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear guard clause for window_size validation at the top",
+      "Small, named helpers with single responsibilities",
+      "_is_valid_event is explicit and easy to audit",
+      "Flat control flow with a simple continue-on-invalid pattern",
+      "Sorted output is explicit and correct"
+    ],
+    "weaknesses": [
+      "Verbose docstrings with Args/Returns for trivial helpers add noise without clarity benefit",
+      "_format_summaries redundantly re-keys data already in the correct shape",
+      "defaultdict with mutable-dict lambda is a subtle hidden-mutation pattern",
+      "Module-level docstring is speculative boilerplate",
+      "isinstance(window_size, int) check is slightly defensive given typed signature"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.989,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 71,
+    "maintainability_index": 78.629,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: it avoids mutation, uses recursion naturally, keeps control flow flat with guard clauses, and uses clear names. The logic is locally auditable in one pass. The main weaknesses are cosmetic but non-trivial: the TypeVar `D` is defined but never used (speculative abstraction), the module-level docstring and the function docstring are verbose to the point of noise, and the inline comments over-explain obvious code rather than clarifying non-obvious decisions. The absence of input validation (e.g., raising on non-dict inputs) is a mild gap given the operational constraints. Overall it is a clean, idiomatic solution that slightly overshoots on ceremony.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: it avoids mutation, uses recursion naturally, keeps control flow flat with guard clauses, and uses clear names. The logic is locally auditable in one pass. The main weaknesses are cosmetic but non-trivial: the TypeVar `D` is defined but never used (speculative abstraction), the module-level docstring and the function docstring are verbose to the point of noise, and the inline comments over-explain obvious code rather than clarifying non-obvious decisions. The absence of input validation (e.g., raising on non-dict inputs) is a mild gap given the operational constraints. Overall it is a clean, idiomatic solution that slightly overshoots on ceremony.\",\n  \"strengths\": [\n    \"Non-mutating: starts from a shallow copy of defaults and never touches inputs\",\n    \"Recursive merge is expressed naturally via self-call, matching the problem structure\",\n    \"Three-branch if/elif/else maps directly to the three specified behaviors\",\n    \"Uses standard-library constructs only; no clever metaprogramming\",\n    \"Clear, descriptive variable names (merged, override_value, key)\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar D is imported and defined but never used \u2014 dead speculative abstraction\",\n    \"Docstring and inline comments are excessively verbose, reducing signal-to-noise\",\n    \"No input validation: passing non-dict arguments silently misbehaves instead of raising a clear error\",\n    \"Module-level docstring adds no information beyond the function docstring\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Non-mutating: starts from a shallow copy of defaults and never touches inputs",
+      "Recursive merge is expressed naturally via self-call, matching the problem structure",
+      "Three-branch if/elif/else maps directly to the three specified behaviors",
+      "Uses standard-library constructs only; no clever metaprogramming",
+      "Clear, descriptive variable names (merged, override_value, key)"
+    ],
+    "weaknesses": [
+      "TypeVar D is imported and defined but never used \u2014 dead speculative abstraction",
+      "Docstring and inline comments are excessively verbose, reducing signal-to-noise",
+      "No input validation: passing non-dict arguments silently misbehaves instead of raising a clear error",
+      "Module-level docstring adds no information beyond the function docstring"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.341,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 66.701,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

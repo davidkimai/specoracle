@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate faithfully implements the LT-11 mandate for explicit, named branch label variables (branch_<state>_<event>) and covers all four required transitions plus the unknown-transition fallback. The docstring and inline comments are thorough and directly reference the standard. The main structural weakness from a Zen-of-Python perspective is using four independent `if` statements instead of `elif` chains: because the branch variables are mutually exclusive by construction, this is logically safe but wastes evaluations and obscures the mutual-exclusivity intent that `elif` would make explicit. A dict-based lookup would be simpler but would violate the LT-11 auditability requirement, so the verbose branch-variable approach is actually correct here. The separation of condition evaluation from condition application is a reasonable audit-friendly pattern, though it adds a layer of indirection that slightly hurts readability. Overall the implementation is a solid, honest realization of the informal spec with minor structural imperfections.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The candidate faithfully implements the LT-11 mandate for explicit, named branch label variables (branch_<state>_<event>) and covers all four required transitions plus the unknown-transition fallback. The docstring and inline comments are thorough and directly reference the standard. The main structural weakness from a Zen-of-Python perspective is using four independent `if` statements instead of `elif` chains: because the branch variables are mutually exclusive by construction, this is logically safe but wastes evaluations and obscures the mutual-exclusivity intent that `elif` would make explicit. A dict-based lookup would be simpler but would violate the LT-11 auditability requirement, so the verbose branch-variable approach is actually correct here. The separation of condition evaluation from condition application is a reasonable audit-friendly pattern, though it adds a layer of indirection that slightly hurts readability. Overall the implementation is a solid, honest realization of the informal spec with minor structural imperfections.\",\n  \"strengths\": [\n    \"All four branch_<state>_<event> variables are explicitly named per LT-11\",\n    \"All required transitions are correctly implemented\",\n    \"Unknown transitions correctly return the current state\",\n    \"Docstring and comments clearly reference LT-11 and explain the design rationale\",\n    \"Separation of condition evaluation from application aids auditability\"\n  ],\n  \"weaknesses\": [\n    \"Four independent `if` statements instead of `elif` obscures mutual exclusivity and wastes evaluations\",\n    \"Intermediate `next_state = state` assignment adds slight redundancy given the branch structure\",\n    \"Verbose but could benefit from grouping branches by state with a comment block separator for even clearer audit trails\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "All four branch_<state>_<event> variables are explicitly named per LT-11",
+      "All required transitions are correctly implemented",
+      "Unknown transitions correctly return the current state",
+      "Docstring and comments clearly reference LT-11 and explain the design rationale",
+      "Separation of condition evaluation from application aids auditability"
+    ],
+    "weaknesses": [
+      "Four independent `if` statements instead of `elif` obscures mutual exclusivity and wastes evaluations",
+      "Intermediate `next_state = state` assignment adds slight redundancy given the branch structure",
+      "Verbose but could benefit from grouping branches by state with a comment block separator for even clearer audit trails"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.072,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 64.183,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: all three required fields are validated before any are committed to the output dict (the clean_data dict is only returned after all validations pass), every error message explicitly names the offending field, and partial validation is not permitted. The code is flat, explicit, and locally auditable with no hidden control flow or abstraction layers. The bool-before-int guard is a correct and well-commented Python idiom. Minor deductions: the incremental population of clean_data as each field passes (rather than constructing it at the end) technically means partial data exists in the local dict during validation, though it is never returned early, so CD-7's spirit is preserved. The docstring and module-level boilerplate are slightly verbose but not harmful.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: all three required fields are validated before any are committed to the output dict (the clean_data dict is only returned after all validations pass), every error message explicitly names the offending field, and partial validation is not permitted. The code is flat, explicit, and locally auditable with no hidden control flow or abstraction layers. The bool-before-int guard is a correct and well-commented Python idiom. Minor deductions: the incremental population of clean_data as each field passes (rather than constructing it at the end) technically means partial data exists in the local dict during validation, though it is never returned early, so CD-7's spirit is preserved. The docstring and module-level boilerplate are slightly verbose but not harmful.\",\n  \"strengths\": [\n    \"All fields fully validated before the clean dict is returned \u2014 no early partial returns\",\n    \"Every ValueError message explicitly names the failing field, satisfying CD-7 naming requirement\",\n    \"Bool-before-int guard correctly handles Python's bool/int subtype relationship\",\n    \"Flat, sequential structure with no unnecessary abstraction or indirection\",\n    \"Strips whitespace from string fields and validates non-emptiness, adding robustness\",\n    \"Type annotations are present and accurate\"\n  ],\n  \"weaknesses\": [\n    \"clean_data is populated incrementally during validation rather than constructed atomically at the end, which is a minor structural inconsistency with 'validate everything first, then build output'\",\n    \"Symptom-level validation raises on the first bad item rather than collecting all errors, which may be limiting in a clinical context\",\n    \"Module docstring and __all__ declaration add minor boilerplate overhead for a single-function module\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All fields fully validated before the clean dict is returned \u2014 no early partial returns",
+      "Every ValueError message explicitly names the failing field, satisfying CD-7 naming requirement",
+      "Bool-before-int guard correctly handles Python's bool/int subtype relationship",
+      "Flat, sequential structure with no unnecessary abstraction or indirection",
+      "Strips whitespace from string fields and validates non-emptiness, adding robustness",
+      "Type annotations are present and accurate"
+    ],
+    "weaknesses": [
+      "clean_data is populated incrementally during validation rather than constructed atomically at the end, which is a minor structural inconsistency with 'validate everything first, then build output'",
+      "Symptom-level validation raises on the first bad item rather than collecting all errors, which may be limiting in a clinical context",
+      "Module docstring and __all__ declaration add minor boilerplate overhead for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.823,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 77.283,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

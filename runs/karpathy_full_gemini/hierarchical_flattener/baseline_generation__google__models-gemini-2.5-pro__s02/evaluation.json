@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with a clear type check and good docstrings. However, it uses a nested closure with mutation of an outer `flat_dict` rather than a pure helper that returns a value, which violates the 'make data movement explicit; avoid hidden mutation' constraint. The recursive helper could instead be a standalone pure function returning a dict, making data flow explicit and the code easier to audit locally. The nested function also adds a layer of indirection that a flat, iterative approach or a top-level helper would avoid. The docstring is thorough but somewhat over-engineered for the task size. Overall it's clean and not egregiously sloppy, but the hidden-mutation pattern and nested closure are mild architectural missteps against the stated oracle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with a clear type check and good docstrings. However, it uses a nested closure with mutation of an outer `flat_dict` rather than a pure helper that returns a value, which violates the 'make data movement explicit; avoid hidden mutation' constraint. The recursive helper could instead be a standalone pure function returning a dict, making data flow explicit and the code easier to audit locally. The nested function also adds a layer of indirection that a flat, iterative approach or a top-level helper would avoid. The docstring is thorough but somewhat over-engineered for the task size. Overall it's clean and not egregiously sloppy, but the hidden-mutation pattern and nested closure are mild architectural missteps against the stated oracle.\",\n  \"strengths\": [\n    \"Clear TypeError raised for non-dict input with informative message\",\n    \"Non-string keys are explicitly converted to strings\",\n    \"Handles empty nested dicts gracefully without producing spurious keys\",\n    \"Readable variable names (path_prefix, current_obj, flat_dict)\",\n    \"Docstring clearly explains edge cases like empty dicts and lists as leaves\"\n  ],\n  \"weaknesses\": [\n    \"Nested closure mutates outer flat_dict instead of returning values, hiding data movement\",\n    \"Helper is not a small pure function; it relies on closure side-effects rather than explicit return values\",\n    \"Could be implemented as a simple iterative stack or a standalone recursive helper returning a dict, which would be flatter and more auditable\",\n    \"Docstring length is disproportionate to the implementation complexity, adding speculative verbosity\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear TypeError raised for non-dict input with informative message",
+      "Non-string keys are explicitly converted to strings",
+      "Handles empty nested dicts gracefully without producing spurious keys",
+      "Readable variable names (path_prefix, current_obj, flat_dict)",
+      "Docstring clearly explains edge cases like empty dicts and lists as leaves"
+    ],
+    "weaknesses": [
+      "Nested closure mutates outer flat_dict instead of returning values, hiding data movement",
+      "Helper is not a small pure function; it relies on closure side-effects rather than explicit return values",
+      "Could be implemented as a simple iterative stack or a standalone recursive helper returning a dict, which would be flatter and more auditable",
+      "Docstring length is disproportionate to the implementation complexity, adding speculative verbosity"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.457,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 2,
+    "function_count": 2,
+    "loc": 41,
+    "maintainability_index": 79.378,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "baseline_generation"
+}

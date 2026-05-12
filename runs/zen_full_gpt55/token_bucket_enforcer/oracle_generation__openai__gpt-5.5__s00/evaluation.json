@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured with good separation of validation helpers from core logic. Control flow is flat, data movement is explicit, and names are self-explanatory. The small pure helper functions for validation are appropriate and auditable. However, there is some over-engineering: `_validate_time` is called on every `_refill` invocation (including the redundant call in `available_tokens` which triggers a side-effectful refill on a property read \u2014 a surprising hidden mutation), `_validate_now_callable` is a trivial one-liner that adds little value, and the `capacity`/`refill_rate` properties are speculative extensions not required by the task. The `available_tokens` property performing a side-effectful `_refill()` violates the principle of least surprise for a property accessor. The strict `type(value) is not int` check for capacity and cost rejects valid integer subclasses without clear justification. Overall the code is solid but carries modest speculative abstractions and a few structural quirks that a Zen-minded reviewer would trim.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and well-structured with good separation of validation helpers from core logic. Control flow is flat, data movement is explicit, and names are self-explanatory. The small pure helper functions for validation are appropriate and auditable. However, there is some over-engineering: `_validate_time` is called on every `_refill` invocation (including the redundant call in `available_tokens` which triggers a side-effectful refill on a property read \u2014 a surprising hidden mutation), `_validate_now_callable` is a trivial one-liner that adds little value, and the `capacity`/`refill_rate` properties are speculative extensions not required by the task. The `available_tokens` property performing a side-effectful `_refill()` violates the principle of least surprise for a property accessor. The strict `type(value) is not int` check for capacity and cost rejects valid integer subclasses without clear justification. Overall the code is solid but carries modest speculative abstractions and a few structural quirks that a Zen-minded reviewer would trim.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses in allow() and _refill()\",\n    \"Explicit validation helpers with clear error messages\",\n    \"No hidden global state; all state lives in the instance\",\n    \"Readable names throughout; behavior is locally auditable\",\n    \"_refill() is a focused, single-responsibility method\"\n  ],\n  \"weaknesses\": [\n    \"available_tokens property has hidden side-effectful mutation (calls _refill), violating property semantics\",\n    \"capacity and refill_rate properties are speculative, unused extension points not required by the task\",\n    \"_validate_now_callable is a trivial one-liner that adds indirection without value\",\n    \"Strict type(value) is not int check rejects valid integer subclasses (e.g., numpy.int64) without justification\",\n    \"_validate_time called on every _refill adds overhead and complexity for a case (non-finite time) that is extremely unlikely in practice\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses in allow() and _refill()",
+      "Explicit validation helpers with clear error messages",
+      "No hidden global state; all state lives in the instance",
+      "Readable names throughout; behavior is locally auditable",
+      "_refill() is a focused, single-responsibility method"
+    ],
+    "weaknesses": [
+      "available_tokens property has hidden side-effectful mutation (calls _refill), violating property semantics",
+      "capacity and refill_rate properties are speculative, unused extension points not required by the task",
+      "_validate_now_callable is a trivial one-liner that adds indirection without value",
+      "Strict type(value) is not int check rejects valid integer subclasses (e.g., numpy.int64) without justification",
+      "_validate_time called on every _refill adds overhead and complexity for a case (non-finite time) that is extremely unlikely in practice"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.334,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.583,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 31,
+    "function_count": 11,
+    "loc": 70,
+    "maintainability_index": 38.879,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "oracle_generation"
+}

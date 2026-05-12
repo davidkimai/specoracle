@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, using a straightforward index-based loop with explicit flag dispatch. The logic is flat, readable, and locally auditable with no unnecessary abstractions or speculative flexibility. However, the docstring is over-engineered for a single utility function (repeating the type signature and return shape already visible in the code), the module-level docstring adds no value, the `known_flags_with_values` set is defined but never used for dispatch (only for membership in `all_known_flags`), and the boolean flag handling has a redundant `if arg == '--dry-run'` check inside a branch that can only be reached when `arg` is already `'--dry-run'`. The `raise ValueError() / except ValueError` pattern for limit validation is a minor smell compared to a direct conditional. These are small but real structural inefficiencies that a Karpathy-style review would flag as unnecessary noise.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, using a straightforward index-based loop with explicit flag dispatch. The logic is flat, readable, and locally auditable with no unnecessary abstractions or speculative flexibility. However, the docstring is over-engineered for a single utility function (repeating the type signature and return shape already visible in the code), the module-level docstring adds no value, the `known_flags_with_values` set is defined but never used for dispatch (only for membership in `all_known_flags`), and the boolean flag handling has a redundant `if arg == '--dry-run'` check inside a branch that can only be reached when `arg` is already `'--dry-run'`. The `raise ValueError() / except ValueError` pattern for limit validation is a minor smell compared to a direct conditional. These are small but real structural inefficiencies that a Karpathy-style review would flag as unnecessary noise.\",\n  \"strengths\": [\n    \"Flat, linear control flow with no unnecessary abstractions or classes\",\n    \"Explicit validation at each step with clear error messages\",\n    \"Correct use of `from None` to suppress exception chaining\",\n    \"Minimal state: simple dict initialized with defaults, checked at end\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstring restates the type signature and return shape already in the code\",\n    \"Module-level docstring adds zero information\",\n    \"Redundant inner `if arg == '--dry-run'` check inside a branch only reachable for that flag\",\n    \"`known_flags_with_values` set is constructed but never used for dispatch logic\",\n    \"Raise-then-catch pattern for limit validation is unnecessarily convoluted vs. a direct `if not value.lstrip('-').isdigit()` or similar check\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat, linear control flow with no unnecessary abstractions or classes",
+      "Explicit validation at each step with clear error messages",
+      "Correct use of `from None` to suppress exception chaining",
+      "Minimal state: simple dict initialized with defaults, checked at end"
+    ],
+    "weaknesses": [
+      "Verbose docstring restates the type signature and return shape already in the code",
+      "Module-level docstring adds zero information",
+      "Redundant inner `if arg == '--dry-run'` check inside a branch only reachable for that flag",
+      "`known_flags_with_values` set is constructed but never used for dispatch logic",
+      "Raise-then-catch pattern for limit validation is unnecessarily convoluted vs. a direct `if not value.lstrip('-').isdigit()` or similar check"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.932,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 15.0,
+    "cyclomatic_complexity_max": 15,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 1,
+    "loc": 79,
+    "maintainability_index": 74.715,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_karpathy_generation"
+}

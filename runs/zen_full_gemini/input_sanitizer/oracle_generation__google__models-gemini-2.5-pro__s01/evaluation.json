@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a small pure helper, pre-compiles the regex, keeps control flow flat, and makes data movement explicit with no hidden mutation. The TypeError raises are appropriate for invalid inputs. Minor issues: the `seen` set is redundant since `allowed` is already a set and deduplication could be handled more simply by checking `field not in seen` before the allowed/valid checks (though the current approach is fine). The `_is_valid_field_format` helper's `isinstance(field, str)` guard is slightly speculative since the TypeError in the main function doesn't catch non-string elements explicitly\u2014it would silently return False instead of raising. The verbose Google-style docstrings add bulk without proportional value for a small utility. The `List`/`Set` imports from `typing` are unnecessary in modern Python (3.9+) where built-in generics suffice. Overall the architecture is sound and locally auditable, with only minor speculative additions (the isinstance check in the helper, the overly detailed docstrings) that slightly violate the 'sparse enough to audit locally' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a small pure helper, pre-compiles the regex, keeps control flow flat, and makes data movement explicit with no hidden mutation. The TypeError raises are appropriate for invalid inputs. Minor issues: the `seen` set is redundant since `allowed` is already a set and deduplication could be handled more simply by checking `field not in seen` before the allowed/valid checks (though the current approach is fine). The `_is_valid_field_format` helper's `isinstance(field, str)` guard is slightly speculative since the TypeError in the main function doesn't catch non-string elements explicitly\u2014it would silently return False instead of raising. The verbose Google-style docstrings add bulk without proportional value for a small utility. The `List`/`Set` imports from `typing` are unnecessary in modern Python (3.9+) where built-in generics suffice. Overall the architecture is sound and locally auditable, with only minor speculative additions (the isinstance check in the helper, the overly detailed docstrings) that slightly violate the 'sparse enough to audit locally' principle.\",\n  \"strengths\": [\n    \"Pre-compiled regex is a good performance and clarity choice\",\n    \"Small pure helper `_is_valid_field_format` separates concerns cleanly\",\n    \"Explicit TypeError raises for invalid container types\",\n    \"Flat control flow with a simple loop and guard clauses\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"Non-string elements in `fields` silently return False from helper instead of raising TypeError as the docstring implies\",\n    \"Legacy `typing.List`/`typing.Set` imports instead of built-in `list`/`set` generics\",\n    \"Verbose docstrings add noise without proportional value for a small utility\",\n    \"`seen` set is slightly redundant machinery\u2014could be simplified\",\n    \"Minor speculative abstraction: `isinstance(field, str)` in helper is defensive without a corresponding contract in the main function\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Pre-compiled regex is a good performance and clarity choice",
+      "Small pure helper `_is_valid_field_format` separates concerns cleanly",
+      "Explicit TypeError raises for invalid container types",
+      "Flat control flow with a simple loop and guard clauses",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "Non-string elements in `fields` silently return False from helper instead of raising TypeError as the docstring implies",
+      "Legacy `typing.List`/`typing.Set` imports instead of built-in `list`/`set` generics",
+      "Verbose docstrings add noise without proportional value for a small utility",
+      "`seen` set is slightly redundant machinery\u2014could be simplified",
+      "Minor speculative abstraction: `isinstance(field, str)` in helper is defensive without a corresponding contract in the main function"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.061,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.5,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 50,
+    "maintainability_index": 78.044,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_generation"
+}

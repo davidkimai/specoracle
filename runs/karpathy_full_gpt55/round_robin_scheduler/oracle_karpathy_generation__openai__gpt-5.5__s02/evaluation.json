@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the Karpathy oracle: it is minimal, flat, explicit, and directly maps the problem statement to code without any unnecessary abstraction, indirection, or speculative features. The enabled-worker filter is a single comprehension, the ValueError is raised immediately with a clear message, and the result is produced in one list comprehension using modular indexing \u2014 the canonical round-robin idiom. No mutation of inputs occurs, the contract is fully satisfied, and there is nothing to remove without breaking correctness.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a near-perfect realization of the Karpathy oracle: it is minimal, flat, explicit, and directly maps the problem statement to code without any unnecessary abstraction, indirection, or speculative features. The enabled-worker filter is a single comprehension, the ValueError is raised immediately with a clear message, and the result is produced in one list comprehension using modular indexing \u2014 the canonical round-robin idiom. No mutation of inputs occurs, the contract is fully satisfied, and there is nothing to remove without breaking correctness.\",\n  \"strengths\": [\n    \"Minimal line count \u2014 solves the problem in ~6 lines with no extraneous scaffolding\",\n    \"Explicit default handling via `worker.get('enabled', True)` matches the spec precisely\",\n    \"Single-pass list comprehension for output is readable and avoids mutable accumulation\",\n    \"No classes, no helper functions, no abstractions beyond what the task requires\",\n    \"Does not mutate inputs \u2014 reads only\"\n  ],\n  \"weaknesses\": [\n    \"Minor: the variable name `index` is slightly verbose; `i` would be idiomatic in a tight comprehension, though this is negligible\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal line count \u2014 solves the problem in ~6 lines with no extraneous scaffolding",
+      "Explicit default handling via `worker.get('enabled', True)` matches the spec precisely",
+      "Single-pass list comprehension for output is readable and avoids mutable accumulation",
+      "No classes, no helper functions, no abstractions beyond what the task requires",
+      "Does not mutate inputs \u2014 reads only"
+    ],
+    "weaknesses": [
+      "Minor: the variable name `index` is slightly verbose; `i` would be idiomatic in a tight comprehension, though this is negligible"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.566,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 74.897,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_karpathy_generation"
+}

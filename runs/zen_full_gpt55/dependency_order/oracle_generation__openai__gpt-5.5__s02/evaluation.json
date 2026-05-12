@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and closely follows the Zen of Python principles. Each helper has a single clear responsibility: `_require_task_name` and `_require_dependency_list` handle input validation explicitly, `_build_prerequisite_map` normalizes the input into a canonical internal representation (including implicit dependency-only nodes), and `plan_batches` implements the topological sort with a straightforward Kahn's algorithm loop. Control flow is flat, data movement is explicit (no hidden mutation, the copy `{task: set(prerequisites) ...}` makes the working state clear), and the cycle error is informative. The only minor quibble is that `_require_task_name` and `_require_dependency_list` are somewhat boilerplate-heavy for what they do, and the two-step validation in `_build_prerequisite_map` could arguably be inlined without losing clarity, but this is a minor structural preference rather than a flaw. The overall architecture is easy to audit locally, avoids speculative abstractions, and uses only standard library constructs.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, well-decomposed, and closely follows the Zen of Python principles. Each helper has a single clear responsibility: `_require_task_name` and `_require_dependency_list` handle input validation explicitly, `_build_prerequisite_map` normalizes the input into a canonical internal representation (including implicit dependency-only nodes), and `plan_batches` implements the topological sort with a straightforward Kahn's algorithm loop. Control flow is flat, data movement is explicit (no hidden mutation, the copy `{task: set(prerequisites) ...}` makes the working state clear), and the cycle error is informative. The only minor quibble is that `_require_task_name` and `_require_dependency_list` are somewhat boilerplate-heavy for what they do, and the two-step validation in `_build_prerequisite_map` could arguably be inlined without losing clarity, but this is a minor structural preference rather than a flaw. The overall architecture is easy to audit locally, avoids speculative abstractions, and uses only standard library constructs.\",\n  \"strengths\": [\n    \"Clear separation of concerns: validation, graph construction, and scheduling are distinct steps\",\n    \"Explicit handling of tasks that only appear as dependencies via `setdefault`\",\n    \"Flat control flow in the main loop with a guard clause for cycle detection\",\n    \"No mutation of the input; working state is a fresh copy\",\n    \"Informative cycle error message listing involved tasks\",\n    \"Alphabetical sorting of each batch is correctly applied\"\n  ],\n  \"weaknesses\": [\n    \"`_require_task_name` and `_require_dependency_list` are thin wrappers that add indirection without much payoff; inline guards would be equally readable\",\n    \"The `_cycle_error` helper is a minor over-extraction for a one-liner ValueError construction\",\n    \"Type annotations on helpers use `object` which is correct but slightly unusual compared to `Any` or just omitting for such simple guards\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clear separation of concerns: validation, graph construction, and scheduling are distinct steps",
+      "Explicit handling of tasks that only appear as dependencies via `setdefault`",
+      "Flat control flow in the main loop with a guard clause for cycle detection",
+      "No mutation of the input; working state is a fresh copy",
+      "Informative cycle error message listing involved tasks",
+      "Alphabetical sorting of each batch is correctly applied"
+    ],
+    "weaknesses": [
+      "`_require_task_name` and `_require_dependency_list` are thin wrappers that add indirection without much payoff; inline guards would be equally readable",
+      "The `_cycle_error` helper is a minor over-extraction for a one-liner ValueError construction",
+      "Type annotations on helpers use `object` which is correct but slightly unusual compared to `Any` or just omitting for such simple guards"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 3.013,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.4,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 5,
+    "loc": 45,
+    "maintainability_index": 51.222,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

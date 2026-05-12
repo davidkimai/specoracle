@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with clear variable names and explicit data movement. However, it carries some unnecessary complexity: the `indexed_points` construction threads an `index` through the sort to break ties by insertion order, which is a speculative abstraction\u2014the docstring says 'latest in the input list is used' for duplicate timestamps, but the sort by `(timestamp, index)` actually picks the *earliest* index (smallest index = first appearance), contradicting the docstring. This is both a subtle bug and an over-engineered tie-breaking mechanism. A simpler approach would be to pre-process points into a dict (last-write-wins for duplicates) and then binary-search or scan. The while-loop with a mutable `point_index` and `current_value` is a reasonable linear scan but the nested while inside a while adds a layer of nesting that a guard-clause or iterator approach could flatten. The docstring is verbose for what is a small utility. The `start > end` early return is good. Overall: correct structure, minor architectural slop in the duplicate-handling logic and the index-threading trick.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with clear variable names and explicit data movement. However, it carries some unnecessary complexity: the `indexed_points` construction threads an `index` through the sort to break ties by insertion order, which is a speculative abstraction\u2014the docstring says 'latest in the input list is used' for duplicate timestamps, but the sort by `(timestamp, index)` actually picks the *earliest* index (smallest index = first appearance), contradicting the docstring. This is both a subtle bug and an over-engineered tie-breaking mechanism. A simpler approach would be to pre-process points into a dict (last-write-wins for duplicates) and then binary-search or scan. The while-loop with a mutable `point_index` and `current_value` is a reasonable linear scan but the nested while inside a while adds a layer of nesting that a guard-clause or iterator approach could flatten. The docstring is verbose for what is a small utility. The `start > end` early return is good. Overall: correct structure, minor architectural slop in the duplicate-handling logic and the index-threading trick.\",\n  \"strengths\": [\n    \"Clear, descriptive variable names throughout\",\n    \"Explicit validation with a clear ValueError for non-positive interval\",\n    \"Data movement is explicit with no hidden mutation or global state\",\n    \"Linear scan with forward-fill is the right algorithmic choice for this problem\",\n    \"Early return for empty range is clean\"\n  ],\n  \"weaknesses\": [\n    \"Threading `index` through the sort to handle duplicates is over-engineered and actually implements first-write-wins, contradicting the docstring's claim of last-write-wins\",\n    \"Nested while loops add unnecessary depth; a pre-built lookup dict or bisect approach would be flatter and simpler\",\n    \"Verbose docstring for a small utility function adds noise without proportional clarity gain\",\n    \"Sorting all points when a dict-based dedup plus sorted-keys scan would be simpler and more explicit about intent\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear, descriptive variable names throughout",
+      "Explicit validation with a clear ValueError for non-positive interval",
+      "Data movement is explicit with no hidden mutation or global state",
+      "Linear scan with forward-fill is the right algorithmic choice for this problem",
+      "Early return for empty range is clean"
+    ],
+    "weaknesses": [
+      "Threading `index` through the sort to handle duplicates is over-engineered and actually implements first-write-wins, contradicting the docstring's claim of last-write-wins",
+      "Nested while loops add unnecessary depth; a pre-built lookup dict or bisect approach would be flatter and simpler",
+      "Verbose docstring for a small utility function adds noise without proportional clarity gain",
+      "Sorting all points when a dict-based dedup plus sorted-keys scan would be simpler and more explicit about intent"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.079,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 82.247,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "baseline_generation"
+}

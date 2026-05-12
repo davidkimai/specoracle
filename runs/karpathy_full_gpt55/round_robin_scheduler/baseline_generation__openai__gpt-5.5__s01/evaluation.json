@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It extracts enabled worker names in a single comprehension, guards immediately with a clear ValueError, and produces results in one final comprehension using modular indexing\u2014no hidden state, no mutation, no speculative abstractions. The variable `worker_count` is a minor but reasonable extraction that avoids repeating `len(enabled_worker_names)` inside the comprehension. The docstring is thorough without being excessive. The only marginal critique is that `itertools.cycle` or a small named helper (e.g., `_enabled_names`) could make the round-robin intent slightly more self-documenting, but the current approach is already maximally readable and auditable for a maintainer. Overall this is a near-ideal realization of the Zen oracle for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It extracts enabled worker names in a single comprehension, guards immediately with a clear ValueError, and produces results in one final comprehension using modular indexing\u2014no hidden state, no mutation, no speculative abstractions. The variable `worker_count` is a minor but reasonable extraction that avoids repeating `len(enabled_worker_names)` inside the comprehension. The docstring is thorough without being excessive. The only marginal critique is that `itertools.cycle` or a small named helper (e.g., `_enabled_names`) could make the round-robin intent slightly more self-documenting, but the current approach is already maximally readable and auditable for a maintainer. Overall this is a near-ideal realization of the Zen oracle for this task.\",\n  \"strengths\": [\n    \"Flat control flow with a single early guard clause\",\n    \"No mutation of inputs; all data movement is explicit\",\n    \"Modular index arithmetic is simple and correct\",\n    \"Clear, descriptive variable names (`enabled_worker_names`, `worker_count`)\",\n    \"Minimal surface area\u2014no unused extension points or framework-shaped code\"\n  ],\n  \"weaknesses\": [\n    \"Storing `worker_count` as a separate variable is a trivial redundancy; `len(enabled_worker_names)` inline would be equally clear\",\n    \"Could use `itertools.cycle` to make round-robin semantics more explicit, though current approach is perfectly readable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single early guard clause",
+      "No mutation of inputs; all data movement is explicit",
+      "Modular index arithmetic is simple and correct",
+      "Clear, descriptive variable names (`enabled_worker_names`, `worker_count`)",
+      "Minimal surface area\u2014no unused extension points or framework-shaped code"
+    ],
+    "weaknesses": [
+      "Storing `worker_count` as a separate variable is a trivial redundancy; `len(enabled_worker_names)` inline would be equally clear",
+      "Could use `itertools.cycle` to make round-robin semantics more explicit, though current approach is perfectly readable"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.375,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 26,
+    "maintainability_index": 97.754,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

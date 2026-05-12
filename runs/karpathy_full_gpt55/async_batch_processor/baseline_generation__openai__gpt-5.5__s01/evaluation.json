@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and handles edge cases (empty input, error propagation, cancellation), but it carries notable architectural slop that conflicts with the Zen oracle. The worker-pool pattern with a shared mutable `next_index` and `asyncio.Lock` is unnecessarily complex when `asyncio.Semaphore` with straightforward indexed coroutines would be both simpler and more explicit. The type-checking guards (`isinstance(batch_size, Integral)` / `bool` exclusion) are speculative over-engineering for a function that simply documents `int` parameters \u2014 a plain `if batch_size <= 0` check suffices and is more readable. The `results_by_batch: list[Sequence[R] | None]` sentinel pattern with a `None` check at the end is a hidden-mutation smell; a direct `results[i] = await handler(batch)` inside indexed coroutines gathered through a semaphore would make data movement explicit. The heavy import block (TypeVar, Integral, numbers, typing aliases) adds noise without payoff. The cancellation cleanup block is reasonable but adds nesting. Overall, the code solves the problem but chooses a more complex architecture than the task warrants.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and handles edge cases (empty input, error propagation, cancellation), but it carries notable architectural slop that conflicts with the Zen oracle. The worker-pool pattern with a shared mutable `next_index` and `asyncio.Lock` is unnecessarily complex when `asyncio.Semaphore` with straightforward indexed coroutines would be both simpler and more explicit. The type-checking guards (`isinstance(batch_size, Integral)` / `bool` exclusion) are speculative over-engineering for a function that simply documents `int` parameters \u2014 a plain `if batch_size <= 0` check suffices and is more readable. The `results_by_batch: list[Sequence[R] | None]` sentinel pattern with a `None` check at the end is a hidden-mutation smell; a direct `results[i] = await handler(batch)` inside indexed coroutines gathered through a semaphore would make data movement explicit. The heavy import block (TypeVar, Integral, numbers, typing aliases) adds noise without payoff. The cancellation cleanup block is reasonable but adds nesting. Overall, the code solves the problem but chooses a more complex architecture than the task warrants.\",\n  \"strengths\": [\n    \"Correct batch ordering preserved via index-keyed result storage\",\n    \"Proper cancellation and cleanup on exception\",\n    \"Explicit ValueError/TypeError distinction for invalid inputs\",\n    \"Handles empty input cleanly with early return\"\n  ],\n  \"weaknesses\": [\n    \"Worker-pool + Lock pattern is more complex than a Semaphore + indexed-gather approach\",\n    \"isinstance(x, Integral)/bool type guards are speculative over-engineering for plain int parameters\",\n    \"Sentinel None in results_by_batch is implicit; direct indexed assignment would be clearer\",\n    \"Heavy import block (TypeVar, Integral, numbers, multiple typing aliases) adds noise without benefit\",\n    \"Shared mutable nonlocal next_index is hidden state that makes control flow harder to audit locally\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct batch ordering preserved via index-keyed result storage",
+      "Proper cancellation and cleanup on exception",
+      "Explicit ValueError/TypeError distinction for invalid inputs",
+      "Handles empty input cleanly with early return"
+    ],
+    "weaknesses": [
+      "Worker-pool + Lock pattern is more complex than a Semaphore + indexed-gather approach",
+      "isinstance(x, Integral)/bool type guards are speculative over-engineering for plain int parameters",
+      "Sentinel None in results_by_batch is implicit; direct indexed assignment would be clearer",
+      "Heavy import block (TypeVar, Integral, numbers, multiple typing aliases) adds noise without benefit",
+      "Shared mutable nonlocal next_index is hidden state that makes control flow harder to audit locally"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.933,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.30s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 16.0,
+    "cyclomatic_complexity_max": 16,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 2,
+    "loc": 57,
+    "maintainability_index": 44.302,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "baseline_generation"
+}

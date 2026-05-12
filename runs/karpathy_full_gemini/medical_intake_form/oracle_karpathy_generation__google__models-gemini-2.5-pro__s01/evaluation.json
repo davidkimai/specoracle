@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the CD-7 standard: it performs a complete presence check for all required fields before any type/value validation, error messages explicitly name the failing field, and the clean output dict is only constructed after all validations pass. The code is flat, explicit, and locally auditable with no hidden control flow or unnecessary abstractions. The bool-before-int guard for age is a subtle but correct detail. Minor deductions: the two-phase validation (presence then type/value) means a missing field won't surface a type error, which is correct, but the iteration order over a set for the presence check is non-deterministic, which could produce inconsistent error messages across runs. Additionally, stripping patient_id in the output is a mild semantic addition not explicitly required, and the docstring/comment verbosity slightly exceeds Pythonic norms without adding clarity.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the CD-7 standard: it performs a complete presence check for all required fields before any type/value validation, error messages explicitly name the failing field, and the clean output dict is only constructed after all validations pass. The code is flat, explicit, and locally auditable with no hidden control flow or unnecessary abstractions. The bool-before-int guard for age is a subtle but correct detail. Minor deductions: the two-phase validation (presence then type/value) means a missing field won't surface a type error, which is correct, but the iteration order over a set for the presence check is non-deterministic, which could produce inconsistent error messages across runs. Additionally, stripping patient_id in the output is a mild semantic addition not explicitly required, and the docstring/comment verbosity slightly exceeds Pythonic norms without adding clarity.\",\n  \"strengths\": [\n    \"Full presence check for all required fields completed before any type/value validation begins, satisfying CD-7's 'validate every required field before accepting' rule\",\n    \"Every ValueError message explicitly names the offending field\",\n    \"Correct bool-before-int guard prevents booleans from passing as valid ages\",\n    \"Clean output dict is only returned after all validations pass \u2014 no partial acceptance\",\n    \"Flat, linear structure with no unnecessary abstractions or helper classes\"\n  ],\n  \"weaknesses\": [\n    \"Iterating over a set for the presence check yields non-deterministic error ordering, which could cause inconsistent error messages in tests or logs\",\n    \"Stripping patient_id in the output is an undocumented semantic transformation not required by the spec\",\n    \"Comment verbosity is slightly excessive for the code's simplicity, bordering on noise rather than signal\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Full presence check for all required fields completed before any type/value validation begins, satisfying CD-7's 'validate every required field before accepting' rule",
+      "Every ValueError message explicitly names the offending field",
+      "Correct bool-before-int guard prevents booleans from passing as valid ages",
+      "Clean output dict is only returned after all validations pass \u2014 no partial acceptance",
+      "Flat, linear structure with no unnecessary abstractions or helper classes"
+    ],
+    "weaknesses": [
+      "Iterating over a set for the presence check yields non-deterministic error ordering, which could cause inconsistent error messages in tests or logs",
+      "Stripping patient_id in the output is an undocumented semantic transformation not required by the spec",
+      "Comment verbosity is slightly excessive for the code's simplicity, bordering on noise rather than signal"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.504,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 11.0,
+    "cyclomatic_complexity_max": 11,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 1,
+    "loc": 57,
+    "maintainability_index": 77.075,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally reasonable: it uses small helpers (_worker, _generate_batches), keeps control flow flat with guard clauses for validation, makes data movement explicit, and uses standard-library constructs (asyncio.Semaphore, asyncio.gather, itertools.islice). The separation of concerns is clean and auditable. However, there are notable weaknesses: the isinstance checks for int are overly strict (rejecting bool subclasses is fine, but the pattern is slightly defensive beyond what the spec requires), the docstrings are verbose to the point of noise (the Zen favors sparse code), the TypeVar generics add speculative abstraction that doesn't aid local auditability, and creating all tasks upfront before the semaphore can throttle them means all coroutines are scheduled immediately\u2014the semaphore only limits concurrent execution, not task creation, which is a subtle but real architectural concern. The _worker helper is minimal and correct, and _generate_batches is a clean pure helper. Overall a solid, readable implementation with minor over-engineering in documentation and type machinery.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally reasonable: it uses small helpers (_worker, _generate_batches), keeps control flow flat with guard clauses for validation, makes data movement explicit, and uses standard-library constructs (asyncio.Semaphore, asyncio.gather, itertools.islice). The separation of concerns is clean and auditable. However, there are notable weaknesses: the isinstance checks for int are overly strict (rejecting bool subclasses is fine, but the pattern is slightly defensive beyond what the spec requires), the docstrings are verbose to the point of noise (the Zen favors sparse code), the TypeVar generics add speculative abstraction that doesn't aid local auditability, and creating all tasks upfront before the semaphore can throttle them means all coroutines are scheduled immediately\u2014the semaphore only limits concurrent execution, not task creation, which is a subtle but real architectural concern. The _worker helper is minimal and correct, and _generate_batches is a clean pure helper. Overall a solid, readable implementation with minor over-engineering in documentation and type machinery.\",\n  \"strengths\": [\n    \"Clean separation into small pure helpers (_worker, _generate_batches)\",\n    \"Guard clauses at the top of process_in_batches keep the happy path flat\",\n    \"Uses standard asyncio.Semaphore and asyncio.gather correctly for ordering\",\n    \"itertools.islice batching is memory-efficient and idiomatic\",\n    \"Explicit flattening step is readable and auditable\"\n  ],\n  \"weaknesses\": [\n    \"All tasks are created upfront before any run, so task queue can grow unboundedly for large inputs\u2014semaphore limits concurrency but not task creation\",\n    \"TypeVar generics (T, R) add speculative abstraction with no runtime benefit\",\n    \"Docstrings are excessively verbose, violating the 'sparse enough to audit locally' principle\",\n    \"isinstance(batch_size, int) check rejects bool but doesn't add meaningful safety beyond a simple > 0 check\",\n    \"Module-level comment and imports section is noisier than necessary\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into small pure helpers (_worker, _generate_batches)",
+      "Guard clauses at the top of process_in_batches keep the happy path flat",
+      "Uses standard asyncio.Semaphore and asyncio.gather correctly for ordering",
+      "itertools.islice batching is memory-efficient and idiomatic",
+      "Explicit flattening step is readable and auditable"
+    ],
+    "weaknesses": [
+      "All tasks are created upfront before any run, so task queue can grow unboundedly for large inputs\u2014semaphore limits concurrency but not task creation",
+      "TypeVar generics (T, R) add speculative abstraction with no runtime benefit",
+      "Docstrings are excessively verbose, violating the 'sparse enough to audit locally' principle",
+      "isinstance(batch_size, int) check rejects bool but doesn't add meaningful safety beyond a simple > 0 check",
+      "Module-level comment and imports section is noisier than necessary"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.649,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.17s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.333,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 93,
+    "maintainability_index": 76.088,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "baseline_generation"
+}

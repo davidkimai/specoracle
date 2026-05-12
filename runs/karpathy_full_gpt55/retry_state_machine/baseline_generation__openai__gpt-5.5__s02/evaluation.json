@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit with well-named attributes and methods that map directly to the stated requirements. Control flow is minimal and readable, data mutation is visible, and there are no speculative abstractions or framework-shaped patterns. The only minor issues are the extra `isinstance` type guard (the spec only requires a `ValueError` for non-positive values, not a `TypeError` for non-integers, making this a speculative addition), the intermediate variable `remaining_attempts` in `remaining()` which adds a line without clarity benefit (a simple `max(0, self._max_attempts - self._failure_count)` would be more idiomatic and sparse), and the docstring on the class is slightly redundant given the method docstrings. The `__all__` export is a reasonable touch but arguably speculative for a single-class module. Overall the code is easy to audit locally and follows the spirit of the Zen well.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and explicit with well-named attributes and methods that map directly to the stated requirements. Control flow is minimal and readable, data mutation is visible, and there are no speculative abstractions or framework-shaped patterns. The only minor issues are the extra `isinstance` type guard (the spec only requires a `ValueError` for non-positive values, not a `TypeError` for non-integers, making this a speculative addition), the intermediate variable `remaining_attempts` in `remaining()` which adds a line without clarity benefit (a simple `max(0, self._max_attempts - self._failure_count)` would be more idiomatic and sparse), and the docstring on the class is slightly redundant given the method docstrings. The `__all__` export is a reasonable touch but arguably speculative for a single-class module. Overall the code is easy to audit locally and follows the spirit of the Zen well.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses in __init__\",\n    \"Explicit, well-named private attributes with no hidden state\",\n    \"Each method is small, single-purpose, and locally auditable\",\n    \"No metaprogramming, no unused extension points, no global state\",\n    \"Clear ValueError raised for invalid input as specified\"\n  ],\n  \"weaknesses\": [\n    \"Extra TypeError guard for non-integer input is speculative \u2014 spec only requires ValueError for non-positive values\",\n    \"Intermediate variable `remaining_attempts` in remaining() adds noise; max(0, ...) is more idiomatic and concise\",\n    \"`__all__` is a minor speculative addition for a single-class module with no package context\",\n    \"Class-level docstring is redundant given the method-level docstrings\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses in __init__",
+      "Explicit, well-named private attributes with no hidden state",
+      "Each method is small, single-purpose, and locally auditable",
+      "No metaprogramming, no unused extension points, no global state",
+      "Clear ValueError raised for invalid input as specified"
+    ],
+    "weaknesses": [
+      "Extra TypeError guard for non-integer input is speculative \u2014 spec only requires ValueError for non-positive values",
+      "Intermediate variable `remaining_attempts` in remaining() adds noise; max(0, ...) is more idiomatic and concise",
+      "`__all__` is a minor speculative addition for a single-class module with no package context",
+      "Class-level docstring is redundant given the method-level docstrings"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.961,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 5,
+    "loc": 23,
+    "maintainability_index": 55.389,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "baseline_generation"
+}

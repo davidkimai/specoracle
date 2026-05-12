@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: all three required fields are validated before any output is produced, every ValueError names the offending field, partial validation is impossible since the function only returns after all checks pass, and the output dict is explicitly constructed with only the validated fields. The code is flat, readable, and locally auditable with no hidden control flow. The bool-exclusion guard for age is a thoughtful edge case. Minor deductions: the per-element symptom loop could raise mid-iteration rather than after full list validation, but this is a negligible concern since the spec only requires naming the field (not collecting all errors), and the overall structure remains sound.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: all three required fields are validated before any output is produced, every ValueError names the offending field, partial validation is impossible since the function only returns after all checks pass, and the output dict is explicitly constructed with only the validated fields. The code is flat, readable, and locally auditable with no hidden control flow. The bool-exclusion guard for age is a thoughtful edge case. Minor deductions: the per-element symptom loop could raise mid-iteration rather than after full list validation, but this is a negligible concern since the spec only requires naming the field (not collecting all errors), and the overall structure remains sound.\",\n  \"strengths\": [\n    \"All fields validated before any are accepted into output, satisfying CD-7's no-partial-validation rule\",\n    \"Every ValueError explicitly names the failing field\",\n    \"Bool subtype exclusion for age prevents silent misclassification\",\n    \"Output dict is explicitly constructed, stripping extraneous payload keys\",\n    \"Flat, linear control flow with no nested helpers or abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Symptom list validation raises mid-iteration rather than after full list scan, though this is acceptable given single-field error semantics\",\n    \"No validation that patient_id is non-empty string, which could be a clinical concern\",\n    \"Docstring restates code rather than adding domain context\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All fields validated before any are accepted into output, satisfying CD-7's no-partial-validation rule",
+      "Every ValueError explicitly names the failing field",
+      "Bool subtype exclusion for age prevents silent misclassification",
+      "Output dict is explicitly constructed, stripping extraneous payload keys",
+      "Flat, linear control flow with no nested helpers or abstractions"
+    ],
+    "weaknesses": [
+      "Symptom list validation raises mid-iteration rather than after full list scan, though this is acceptable given single-field error semantics",
+      "No validation that patient_id is non-empty string, which could be a clinical concern",
+      "Docstring restates code rather than adding domain context"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.982,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 86.308,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

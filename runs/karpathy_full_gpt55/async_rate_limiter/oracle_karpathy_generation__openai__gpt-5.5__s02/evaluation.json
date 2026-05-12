@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, correct, and structurally clean. It uses a sliding-window approach with a deque, which is the simplest correct data structure for this problem. The lock prevents race conditions in async contexts, the `now` injectable is handled cleanly, and the ValueError guard is explicit. No speculative abstractions, no unnecessary imports beyond what's needed, and the logic is locally auditable in a single glance. The only minor quibble is that `cutoff = current - 1.0` uses a strict less-than-or-equal comparison for expiry (`<= cutoff`), which means timestamps exactly at the boundary are evicted \u2014 this is a reasonable conservative interpretation of 'per one-second window' but could be debated. Overall this is a textbook example of the minimum viable correct implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, correct, and structurally clean. It uses a sliding-window approach with a deque, which is the simplest correct data structure for this problem. The lock prevents race conditions in async contexts, the `now` injectable is handled cleanly, and the ValueError guard is explicit. No speculative abstractions, no unnecessary imports beyond what's needed, and the logic is locally auditable in a single glance. The only minor quibble is that `cutoff = current - 1.0` uses a strict less-than-or-equal comparison for expiry (`<= cutoff`), which means timestamps exactly at the boundary are evicted \u2014 this is a reasonable conservative interpretation of 'per one-second window' but could be debated. Overall this is a textbook example of the minimum viable correct implementation.\",\n  \"strengths\": [\n    \"Minimal code \u2014 no unnecessary abstractions or speculative features\",\n    \"Sliding window with deque is the simplest correct approach\",\n    \"asyncio.Lock correctly handles concurrent async callers\",\n    \"Injectable `now` callable cleanly supports deterministic testing\",\n    \"Explicit ValueError with a clear message for invalid rate\"\n  ],\n  \"weaknesses\": [\n    \"Boundary condition on cutoff (`<= cutoff` vs `< cutoff`) is subtly ambiguous and not documented\",\n    \"Type annotation uses `Callable[[], float]` but `now` could return an int in some test scenarios \u2014 minor\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 no unnecessary abstractions or speculative features",
+      "Sliding window with deque is the simplest correct approach",
+      "asyncio.Lock correctly handles concurrent async callers",
+      "Injectable `now` callable cleanly supports deterministic testing",
+      "Explicit ValueError with a clear message for invalid rate"
+    ],
+    "weaknesses": [
+      "Boundary condition on cutoff (`<= cutoff` vs `< cutoff`) is subtly ambiguous and not documented",
+      "Type annotation uses `Callable[[], float]` but `now` could return an int in some test scenarios \u2014 minor"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.344,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.31s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 22,
+    "maintainability_index": 56.57,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_karpathy_generation"
+}

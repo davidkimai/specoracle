@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and largely follows the Zen of Python principles: control flow is flat using a while loop with guard clauses, data movement is explicit with no hidden mutation, errors are clear and specific, and ordinary constructs are used throughout. The main structural weaknesses are the repeated pattern of duplicate-check \u2192 missing-value-check \u2192 validate \u2192 assign that could be extracted into small pure helpers (reducing repetition without adding abstraction), and the `seen` set is somewhat redundant given the result dict already tracks state (checking `result['input'] is not None` would suffice for duplicates). The `isinstance` checks on argv elements add defensive noise that goes beyond the task spec. The `isdigit()` + `int()` + `<= 0` triple for limit validation is slightly awkward when `int(value) > 0` with a try/except or a combined check would be cleaner. Overall it's a solid, readable, auditable implementation that errs slightly on the verbose/defensive side.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and largely follows the Zen of Python principles: control flow is flat using a while loop with guard clauses, data movement is explicit with no hidden mutation, errors are clear and specific, and ordinary constructs are used throughout. The main structural weaknesses are the repeated pattern of duplicate-check \u2192 missing-value-check \u2192 validate \u2192 assign that could be extracted into small pure helpers (reducing repetition without adding abstraction), and the `seen` set is somewhat redundant given the result dict already tracks state (checking `result['input'] is not None` would suffice for duplicates). The `isinstance` checks on argv elements add defensive noise that goes beyond the task spec. The `isdigit()` + `int()` + `<= 0` triple for limit validation is slightly awkward when `int(value) > 0` with a try/except or a combined check would be cleaner. Overall it's a solid, readable, auditable implementation that errs slightly on the verbose/defensive side.\",\n  \"strengths\": [\n    \"Flat control flow with clear elif chain \u2014 easy to audit each flag's handling locally\",\n    \"Explicit error messages naming the offending flag\",\n    \"No hidden mutation or global state; result dict is built and returned cleanly\",\n    \"Handles edge cases: duplicate flags, missing values, unknown flags, empty input path\",\n    \"Uses ordinary standard-library constructs with no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"Repeated duplicate-check + missing-value-check pattern across three flags could be extracted into a small helper to reduce copy-paste\",\n    \"The `seen` set is redundant; the result dict already encodes presence (None vs value) for most flags\",\n    \"Defensive isinstance checks on argv elements go beyond the task spec and add noise\",\n    \"isdigit() fails for '0' edge case correctly but the combination isdigit()+int()+<=0 is slightly roundabout; a try/except int conversion would be more idiomatic\",\n    \"Checking argv[i+1].startswith('--') to detect missing values is a heuristic that could reject legitimate paths starting with '--'\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with clear elif chain \u2014 easy to audit each flag's handling locally",
+      "Explicit error messages naming the offending flag",
+      "No hidden mutation or global state; result dict is built and returned cleanly",
+      "Handles edge cases: duplicate flags, missing values, unknown flags, empty input path",
+      "Uses ordinary standard-library constructs with no metaprogramming"
+    ],
+    "weaknesses": [
+      "Repeated duplicate-check + missing-value-check pattern across three flags could be extracted into a small helper to reduce copy-paste",
+      "The `seen` set is redundant; the result dict already encodes presence (None vs value) for most flags",
+      "Defensive isinstance checks on argv elements go beyond the task spec and add noise",
+      "isdigit() fails for '0' edge case correctly but the combination isdigit()+int()+<=0 is slightly roundabout; a try/except int conversion would be more idiomatic",
+      "Checking argv[i+1].startswith('--') to detect missing values is a heuristic that could reject legitimate paths starting with '--'"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.015,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.13s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 27.0,
+    "cyclomatic_complexity_max": 27,
+    "cyclomatic_complexity_total": 27,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 37.744,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,43 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': 'req_011CayEUXaGYVdK1icPNgtNG'}",
+    "rationale": "judge failed",
+    "raw_response": "",
+    "score": null,
+    "skipped": false,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.248,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n>       pairs = correlate_events(events, within=5)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsolution.py:141: in correlate_events\n    grouped_sessions = _group_and_sort_events(events)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsolution.py:53: in _group_and_sort_events\n    _validate_event(event)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nevent = {'session_id': 's', 'ts': 1, 'type': 'A'}\n\n    def _validate_event(event: Event) -> None:\n        \"\"\"\n        Checks if an event dictionary has the required structure and types.\n    \n        Raises:\n            TypeError: If `event` is not a dictionary or if key values have\n                       incorrect types.\n            ValueError: If `event` is missing required keys.\n        \"\"\"\n        if not isinstance(event, dict):\n            raise TypeError(f\"Event must be a dictionary, but got {type(event).__name__}.\")\n    \n        required_keys = {\"session_id\", \"timestamp\", \"event_type\"}\n        missing_keys = required_keys - set(event.keys())\n        if missing_keys:\n>           raise ValueError(\n                f\"Event is missing required keys: {', '.join(sorted(missing_keys))}.\"\n            )\nE           ValueError: Event is missing required keys: event_type, timestamp.\n\nsolution.py:23: ValueError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - ValueError: ...\n1 failed in 0.18s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.75,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 4,
+    "loc": 120,
+    "maintainability_index": 72.396,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "oracle_generation"
+}

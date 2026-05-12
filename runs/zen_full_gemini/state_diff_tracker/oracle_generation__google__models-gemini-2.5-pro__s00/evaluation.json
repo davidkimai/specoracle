@@ -1,0 +1,43 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': 'req_011CayEqKY3xyErikPdTpviW'}",
+    "rationale": "judge failed",
+    "raw_response": "",
+    "score": null,
+    "skipped": false,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.24,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________________________ test_field_level_diffs_sorted _________________________\n\n    def test_field_level_diffs_sorted():\n>       assert diff_versions({'a': 1, 'b': 2}, {'a': 1, 'b': 3, 'c': 4}) == [\n            {'field': 'b', 'before': 2, 'after': 3},\n            {'field': 'c', 'before': None, 'after': 4},\n        ]\nE       AssertionError: assert [{'after': 3,...'field': 'c'}] == [{'after': 3,...'field': 'c'}]\nE         \nE         At index 1 diff: {'field': 'c', 'before': <MISSING>, 'after': 4} != {'field': 'c', 'before': None, 'after': 4}\nE         Use -v to get more diff\n\ntest_solution.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_field_level_diffs_sorted - AssertionError: asse...\n1 failed in 0.15s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 2,
+    "loc": 51,
+    "maintainability_index": 83.721,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "oracle_generation"
+}

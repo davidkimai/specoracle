@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the CD-7 standard: all required fields are checked for presence before any type/value validation begins, errors explicitly name the failing field, and the clean output dict is only constructed after all validations pass. The code is flat, readable, and locally auditable with no unnecessary abstraction. The only minor structural issue is that the 'all fields present' check and the per-field type/value checks are interleaved in a way that could theoretically raise on a missing field after another field's type check has already run (e.g., if patient_id is present but invalid, it raises before checking age/symptoms presence), which is a subtle partial-validation concern. However, the initial loop over required_fields does guarantee all fields exist before any type validation proceeds, so CD-7 compliance is actually maintained. A very minor weakness is that bool values (which are int subclasses in Python) would pass the age isinstance check, but this is a common edge case not explicitly addressed in the spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the CD-7 standard: all required fields are checked for presence before any type/value validation begins, errors explicitly name the failing field, and the clean output dict is only constructed after all validations pass. The code is flat, readable, and locally auditable with no unnecessary abstraction. The only minor structural issue is that the 'all fields present' check and the per-field type/value checks are interleaved in a way that could theoretically raise on a missing field after another field's type check has already run (e.g., if patient_id is present but invalid, it raises before checking age/symptoms presence), which is a subtle partial-validation concern. However, the initial loop over required_fields does guarantee all fields exist before any type validation proceeds, so CD-7 compliance is actually maintained. A very minor weakness is that bool values (which are int subclasses in Python) would pass the age isinstance check, but this is a common edge case not explicitly addressed in the spec.\",\n  \"strengths\": [\n    \"Presence of all required fields is verified in a single loop before any type/value validation begins, satisfying the 'validate before accepting' CD-7 requirement\",\n    \"Every error message explicitly names the offending field\",\n    \"Output dict is constructed only after all validations pass \u2014 no partial results possible\",\n    \"Flat, linear control flow with no unnecessary abstraction or indirection\",\n    \"Clean separation of presence checks, type checks, and value constraint checks\"\n  ],\n  \"weaknesses\": [\n    \"bool is a subclass of int in Python, so age=True would pass validation \u2014 not guarded against\",\n    \"symptoms list elements are validated with all(), which short-circuits and doesn't identify which element failed\",\n    \"Docstring and inline comments are verbose relative to the simplicity of the logic, adding noise without structural benefit\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Presence of all required fields is verified in a single loop before any type/value validation begins, satisfying the 'validate before accepting' CD-7 requirement",
+      "Every error message explicitly names the offending field",
+      "Output dict is constructed only after all validations pass \u2014 no partial results possible",
+      "Flat, linear control flow with no unnecessary abstraction or indirection",
+      "Clean separation of presence checks, type checks, and value constraint checks"
+    ],
+    "weaknesses": [
+      "bool is a subclass of int in Python, so age=True would pass validation \u2014 not guarded against",
+      "symptoms list elements are validated with all(), which short-circuits and doesn't identify which element failed",
+      "Docstring and inline comments are verbose relative to the simplicity of the logic, adding noise without structural benefit"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.788,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 54,
+    "maintainability_index": 78.359,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_generation"
+}

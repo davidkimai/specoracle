@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and minimal \u2014 exactly what the task demands. It uses a single loop with early-continue guards, no unnecessary abstractions, no helper functions, and no speculative features. The ceiling-division idiom is idiomatic and correct. The type checks using `type(x) is not int` are conservative and explicit, avoiding silent coercions from booleans or floats. The final sort is a one-liner. The only minor quibble is that `type(x) is not int` rejects booleans (since `bool` is a subclass of `int` but `type(True) is not int`), which is actually a defensible conservative choice given the spec says 'malformed items'. Overall this is a tight, auditable, goal-driven implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and minimal \u2014 exactly what the task demands. It uses a single loop with early-continue guards, no unnecessary abstractions, no helper functions, and no speculative features. The ceiling-division idiom is idiomatic and correct. The type checks using `type(x) is not int` are conservative and explicit, avoiding silent coercions from booleans or floats. The final sort is a one-liner. The only minor quibble is that `type(x) is not int` rejects booleans (since `bool` is a subclass of `int` but `type(True) is not int`), which is actually a defensible conservative choice given the spec says 'malformed items'. Overall this is a tight, auditable, goal-driven implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Flat single-loop structure with early-continue guards \u2014 no nesting beyond what's necessary\",\n    \"No helper functions or abstractions for single-use logic\",\n    \"Correct ceiling-division arithmetic without importing math\",\n    \"Explicit type checks prevent silent coercion from booleans or floats\",\n    \"Minimal code footprint that directly maps to the spec\"\n  ],\n  \"weaknesses\": [\n    \"Rejecting bool values via `type(x) is not int` may be surprising since bool is a subclass of int \u2014 worth a comment if intentional\",\n    \"The `not isinstance(item, dict)` guard is slightly redundant given the subsequent KeyError catch, though it's harmless and arguably clearer\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat single-loop structure with early-continue guards \u2014 no nesting beyond what's necessary",
+      "No helper functions or abstractions for single-use logic",
+      "Correct ceiling-division arithmetic without importing math",
+      "Explicit type checks prevent silent coercion from booleans or floats",
+      "Minimal code footprint that directly maps to the spec"
+    ],
+    "weaknesses": [
+      "Rejecting bool values via `type(x) is not int` may be surprising since bool is a subclass of int \u2014 worth a comment if intentional",
+      "The `not isinstance(item, dict)` guard is slightly redundant given the subsequent KeyError catch, though it's harmless and arguably clearer"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.1,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 29,
+    "maintainability_index": 51.135,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_karpathy_generation"
+}

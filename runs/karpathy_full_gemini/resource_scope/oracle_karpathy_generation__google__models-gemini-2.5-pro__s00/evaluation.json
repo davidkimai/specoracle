@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is heavily over-engineered for a simple context manager task. The core logic is correct but buried under unnecessary complexity: a Protocol class for a single-use constraint, Generic[T] typing for what is essentially a list of closeable objects, an `_is_exiting` guard flag that adds state complexity without being required by the spec, verbose docstrings on every method, and exception chaining logic (capturing first cleanup exception and re-raising) that goes beyond the stated requirements. The task asks for a minimal context manager that closes resources in reverse order including during exceptions \u2014 that's roughly 10-15 lines. This implementation is ~100 lines with speculative robustness features. The Karpathy oracle explicitly penalizes abstractions for single-use code, speculative flexibility, and writing 200 lines when 50 would do.",
+    "raw_response": "{\n  \"score\": 3,\n  \"rationale\": \"The implementation is heavily over-engineered for a simple context manager task. The core logic is correct but buried under unnecessary complexity: a Protocol class for a single-use constraint, Generic[T] typing for what is essentially a list of closeable objects, an `_is_exiting` guard flag that adds state complexity without being required by the spec, verbose docstrings on every method, and exception chaining logic (capturing first cleanup exception and re-raising) that goes beyond the stated requirements. The task asks for a minimal context manager that closes resources in reverse order including during exceptions \u2014 that's roughly 10-15 lines. This implementation is ~100 lines with speculative robustness features. The Karpathy oracle explicitly penalizes abstractions for single-use code, speculative flexibility, and writing 200 lines when 50 would do.\",\n  \"strengths\": [\n    \"Core functional behavior is correct: acquire records resources, exit closes in reverse order\",\n    \"Handles exceptions during context body (returns False to propagate)\",\n    \"Type annotations are present and consistent\"\n  ],\n  \"weaknesses\": [\n    \"Protocol class `_Closable` is unnecessary abstraction for a single-use constraint\",\n    \"Generic[T] typing adds complexity with no practical benefit for this task\",\n    \"`_is_exiting` guard flag is speculative defensive programming not asked for\",\n    \"Exception aggregation during cleanup (first_cleanup_exception) is beyond spec requirements\",\n    \"Excessive docstrings and comments inflate the code far beyond the minimum needed\",\n    \"Should be ~10-15 lines; implementation is ~100 lines \u2014 violates simplicity-first principle\"\n  ]\n}",
+    "score": 3,
+    "skipped": false,
+    "strengths": [
+      "Core functional behavior is correct: acquire records resources, exit closes in reverse order",
+      "Handles exceptions during context body (returns False to propagate)",
+      "Type annotations are present and consistent"
+    ],
+    "weaknesses": [
+      "Protocol class `_Closable` is unnecessary abstraction for a single-use constraint",
+      "Generic[T] typing adds complexity with no practical benefit for this task",
+      "`_is_exiting` guard flag is speculative defensive programming not asked for",
+      "Exception aggregation during cleanup (first_cleanup_exception) is beyond spec requirements",
+      "Excessive docstrings and comments inflate the code far beyond the minimum needed",
+      "Should be ~10-15 lines; implementation is ~100 lines \u2014 violates simplicity-first principle"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.218,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.16s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 2.143,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 5,
+    "loc": 68,
+    "maintainability_index": 84.715,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "oracle_karpathy_generation"
+}

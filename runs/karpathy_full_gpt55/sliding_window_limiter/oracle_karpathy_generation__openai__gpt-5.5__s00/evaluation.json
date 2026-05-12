@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without speculative abstractions. It correctly uses bisect for efficient window management and insort for maintaining sorted order. The main structural concern is the isinstance type-checking guards, which go beyond what the spec requires (the spec only says 'must be positive, otherwise raise ValueError') \u2014 this adds untested complexity and violates the 'minimum code' principle. The use of bisect_right for both expiry and count is correct but slightly subtle: since timestamps can repeat, bisect_right(events, timestamp) correctly counts all events <= timestamp. The snapshot method is clean and correct. Overall the code is readable, flat, and locally auditable with no unnecessary layers.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without speculative abstractions. It correctly uses bisect for efficient window management and insort for maintaining sorted order. The main structural concern is the isinstance type-checking guards, which go beyond what the spec requires (the spec only says 'must be positive, otherwise raise ValueError') \u2014 this adds untested complexity and violates the 'minimum code' principle. The use of bisect_right for both expiry and count is correct but slightly subtle: since timestamps can repeat, bisect_right(events, timestamp) correctly counts all events <= timestamp. The snapshot method is clean and correct. Overall the code is readable, flat, and locally auditable with no unnecessary layers.\",\n  \"strengths\": [\n    \"Minimal code with no speculative abstractions or unused features\",\n    \"Correct use of bisect for O(log n) window boundary detection\",\n    \"In-place pruning of expired events keeps memory bounded\",\n    \"snapshot returns a defensive copy, preventing external mutation\",\n    \"Clear, flat structure with no unnecessary class hierarchy\"\n  ],\n  \"weaknesses\": [\n    \"isinstance type checks are not required by the spec and add untested surface area beyond 'positive' validation\",\n    \"bisect_right(events, timestamp) for count is slightly non-obvious when out-of-order timestamps could exist; a comment would help auditability\",\n    \"setdefault creates an empty list for every new key even on allow() calls that may return False, slightly over-allocating\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative abstractions or unused features",
+      "Correct use of bisect for O(log n) window boundary detection",
+      "In-place pruning of expired events keeps memory bounded",
+      "snapshot returns a defensive copy, preventing external mutation",
+      "Clear, flat structure with no unnecessary class hierarchy"
+    ],
+    "weaknesses": [
+      "isinstance type checks are not required by the spec and add untested surface area beyond 'positive' validation",
+      "bisect_right(events, timestamp) for count is slightly non-obvious when out-of-order timestamps could exist; a comment would help auditability",
+      "setdefault creates an empty list for every new key even on allow() calls that may return False, slightly over-allocating"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 3.336,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.25,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 26,
+    "maintainability_index": 55.771,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_karpathy_generation"
+}

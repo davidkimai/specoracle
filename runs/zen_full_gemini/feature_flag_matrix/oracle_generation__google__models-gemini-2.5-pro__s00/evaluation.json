@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, with explicit data movement, no hidden mutation, and clear error raising for invalid inputs. The decomposition into two small helpers (`_apply_segment_overrides`, `_apply_user_overrides`) is reasonable, though it introduces mild over-engineering: both helpers mutate in place (requiring the caller to manage a mutable working copy) rather than returning values, which obscures data flow slightly and contradicts the 'make data movement explicit' constraint. The docstrings are verbose to the point of noise\u2014the Zen favors sparse, auditable code, and the lengthy Args/Raises/Returns blocks on three functions add bulk without proportional clarity. The `import typing` is unused. The `isinstance(segment_overrides, dict)` guard in `_apply_segment_overrides` silently swallows malformed segment data rather than raising, which is inconsistent with the explicit error-raising philosophy applied to `segments` and `overrides`. Overall the architecture is clean and maintainable but slightly over-documented and inconsistently validated.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, with explicit data movement, no hidden mutation, and clear error raising for invalid inputs. The decomposition into two small helpers (`_apply_segment_overrides`, `_apply_user_overrides`) is reasonable, though it introduces mild over-engineering: both helpers mutate in place (requiring the caller to manage a mutable working copy) rather than returning values, which obscures data flow slightly and contradicts the 'make data movement explicit' constraint. The docstrings are verbose to the point of noise\u2014the Zen favors sparse, auditable code, and the lengthy Args/Raises/Returns blocks on three functions add bulk without proportional clarity. The `import typing` is unused. The `isinstance(segment_overrides, dict)` guard in `_apply_segment_overrides` silently swallows malformed segment data rather than raising, which is inconsistent with the explicit error-raising philosophy applied to `segments` and `overrides`. Overall the architecture is clean and maintainable but slightly over-documented and inconsistently validated.\",\n  \"strengths\": [\n    \"No mutation of input dictionaries; starts from a clean copy\",\n    \"Raises TypeError for invalid user['segments'] and user['overrides'] types\",\n    \"Control flow is flat and easy to follow in resolve_flags\",\n    \"Helper decomposition keeps resolve_flags readable at a glance\",\n    \"Ignores unknown segments correctly via dict.get\"\n  ],\n  \"weaknesses\": [\n    \"Helpers mutate in place rather than returning values, making data flow less explicit\",\n    \"Unused `import typing` is dead code\",\n    \"Overly verbose docstrings inflate the file without aiding local auditability\",\n    \"Silent isinstance guard on segment values is inconsistent with the explicit error philosophy\",\n    \"Two helpers for two one-liner operations is mild over-decomposition; a single flat function would be equally readable\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "No mutation of input dictionaries; starts from a clean copy",
+      "Raises TypeError for invalid user['segments'] and user['overrides'] types",
+      "Control flow is flat and easy to follow in resolve_flags",
+      "Helper decomposition keeps resolve_flags readable at a glance",
+      "Ignores unknown segments correctly via dict.get"
+    ],
+    "weaknesses": [
+      "Helpers mutate in place rather than returning values, making data flow less explicit",
+      "Unused `import typing` is dead code",
+      "Overly verbose docstrings inflate the file without aiding local auditability",
+      "Silent isinstance guard on segment values is inconsistent with the explicit error philosophy",
+      "Two helpers for two one-liner operations is mild over-decomposition; a single flat function would be equally readable"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.534,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 3,
+    "loc": 77,
+    "maintainability_index": 79.241,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. It uses guard clauses for validation, keeps the lock scope minimal, separates refill logic into a small helper, and avoids speculative abstractions. The naming is clear and the data flow is easy to follow locally. Minor issues: the `_read_now` helper adds a layer of indirection that could simply be inlined (it's called in only two places and the validation it adds is marginal), the `isinstance(x, bool)` guard pattern is repeated twice rather than extracted into a tiny helper, and the docstring on the class is slightly over-explanatory for code this readable. The `float(cost)` cast in `allow` is unnecessary since `cost` is already validated as an int and comparison with a float works fine. Overall the architecture is sound and auditable with no hidden mutation or framework-shaped scaffolding.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. It uses guard clauses for validation, keeps the lock scope minimal, separates refill logic into a small helper, and avoids speculative abstractions. The naming is clear and the data flow is easy to follow locally. Minor issues: the `_read_now` helper adds a layer of indirection that could simply be inlined (it's called in only two places and the validation it adds is marginal), the `isinstance(x, bool)` guard pattern is repeated twice rather than extracted into a tiny helper, and the docstring on the class is slightly over-explanatory for code this readable. The `float(cost)` cast in `allow` is unnecessary since `cost` is already validated as an int and comparison with a float works fine. Overall the architecture is sound and auditable with no hidden mutation or framework-shaped scaffolding.\",\n  \"strengths\": [\n    \"Clear, flat control flow with guard clauses for all invalid inputs\",\n    \"Lock scope is tight and explicit around the mutable state\",\n    \"Refill logic is cleanly separated into `_refill_locked`\",\n    \"No speculative abstractions or unused extension points\",\n    \"Thread safety handled simply with a standard threading.Lock\"\n  ],\n  \"weaknesses\": [\n    \"`_read_now` is a thin wrapper called in only two places; inlining would reduce indirection without losing clarity\",\n    \"Repeated `isinstance(x, bool) or not isinstance(x, int)` pattern could be a tiny shared helper to avoid duplication\",\n    \"Redundant `float(cost)` cast in `allow` since int-to-float comparison already works\",\n    \"Class docstring restates what the code already makes obvious, adding noise rather than insight\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear, flat control flow with guard clauses for all invalid inputs",
+      "Lock scope is tight and explicit around the mutable state",
+      "Refill logic is cleanly separated into `_refill_locked`",
+      "No speculative abstractions or unused extension points",
+      "Thread safety handled simply with a standard threading.Lock"
+    ],
+    "weaknesses": [
+      "`_read_now` is a thin wrapper called in only two places; inlining would reduce indirection without losing clarity",
+      "Repeated `isinstance(x, bool) or not isinstance(x, int)` pattern could be a tiny shared helper to avoid duplication",
+      "Redundant `float(cost)` cast in `allow` since int-to-float comparison already works",
+      "Class docstring restates what the code already makes obvious, adding noise rather than insight"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.203,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 25,
+    "function_count": 4,
+    "loc": 63,
+    "maintainability_index": 57.626,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a clean single-pass algorithm after sorting, which is the right approach. The core logic is simple and readable. However, it carries some unnecessary weight: the verbose Google-style docstring with Args/Returns/Raises sections is over-engineered for a single utility function (the Karpathy oracle favors minimal documentation), the explicit `Optional[float]` typing import and `List`/`Tuple` from `typing` instead of built-in generics (available since Python 3.9) adds boilerplate, the `start > end` early-return guard and the `not points` early-return guard add complexity that the main loop handles naturally (an empty range produces an empty list; an empty points list just never updates `last_known_value`), and the module-level docstring is unnecessary. The algorithm itself is well-chosen and the code is locally auditable, but the surrounding scaffolding violates the 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and uses a clean single-pass algorithm after sorting, which is the right approach. The core logic is simple and readable. However, it carries some unnecessary weight: the verbose Google-style docstring with Args/Returns/Raises sections is over-engineered for a single utility function (the Karpathy oracle favors minimal documentation), the explicit `Optional[float]` typing import and `List`/`Tuple` from `typing` instead of built-in generics (available since Python 3.9) adds boilerplate, the `start > end` early-return guard and the `not points` early-return guard add complexity that the main loop handles naturally (an empty range produces an empty list; an empty points list just never updates `last_known_value`), and the module-level docstring is unnecessary. The algorithm itself is well-chosen and the code is locally auditable, but the surrounding scaffolding violates the 'minimum code' principle.\",\n  \"strengths\": [\n    \"Correct single-pass O(n log n) algorithm with sorted points and a pointer\",\n    \"Forward-fill logic is clear and easy to audit\",\n    \"Handles the None/no-prior-value case naturally via initialized variable\",\n    \"Explicit variable names aid readability\"\n  ],\n  \"weaknesses\": [\n    \"Over-documented: verbose Args/Returns/Raises docstring is speculative overhead for a simple utility\",\n    \"Uses legacy `typing.List`, `typing.Tuple`, `typing.Optional` instead of built-in `list`, `tuple`, `float | None`\",\n    \"Redundant early-return guards (`start > end`, `not points`) that the main loop already handles correctly\",\n    \"Module-level docstring adds no value for a single-function module\",\n    \"Raises `ValueError` for non-positive interval \u2014 a reasonable addition but not asked for, violating 'no features beyond what was asked'\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct single-pass O(n log n) algorithm with sorted points and a pointer",
+      "Forward-fill logic is clear and easy to audit",
+      "Handles the None/no-prior-value case naturally via initialized variable",
+      "Explicit variable names aid readability"
+    ],
+    "weaknesses": [
+      "Over-documented: verbose Args/Returns/Raises docstring is speculative overhead for a simple utility",
+      "Uses legacy `typing.List`, `typing.Tuple`, `typing.Optional` instead of built-in `list`, `tuple`, `float | None`",
+      "Redundant early-return guards (`start > end`, `not points`) that the main loop already handles correctly",
+      "Module-level docstring adds no value for a single-function module",
+      "Raises `ValueError` for non-positive interval \u2014 a reasonable addition but not asked for, violating 'no features beyond what was asked'"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.985,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 47,
+    "maintainability_index": 84.222,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_karpathy_generation"
+}

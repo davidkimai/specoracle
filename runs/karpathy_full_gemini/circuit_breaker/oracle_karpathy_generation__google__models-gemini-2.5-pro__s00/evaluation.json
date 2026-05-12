@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are explicit and inspectable via a proper enum, configuration values are named attributes, and half-open trials correctly close on success or reopen on failure per RCS-5. The code is flat and locally auditable with no hidden magic. Minor weaknesses include overly defensive input validation (not required by the spec and adds noise), verbose docstrings that border on over-documentation, and the TypeVar import adds complexity for minimal benefit in a simple callable wrapper. The private helper methods `_open_circuit` and `_close_circuit` are a reasonable abstraction that aids auditability without being over-engineered.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are explicit and inspectable via a proper enum, configuration values are named attributes, and half-open trials correctly close on success or reopen on failure per RCS-5. The code is flat and locally auditable with no hidden magic. Minor weaknesses include overly defensive input validation (not required by the spec and adds noise), verbose docstrings that border on over-documentation, and the TypeVar import adds complexity for minimal benefit in a simple callable wrapper. The private helper methods `_open_circuit` and `_close_circuit` are a reasonable abstraction that aids auditability without being over-engineered.\",\n  \"strengths\": [\n    \"State transitions use an explicit enum and are inspectable via `self.state`\",\n    \"Named configuration attributes `failure_threshold` and `recovery_timeout` satisfy RCS-5 explicitly\",\n    \"Half-open logic correctly closes on success and reopens on failure\",\n    \"Injected `now` callable enables deterministic testing without monkey-patching\",\n    \"Flat control flow in `call()` is easy to audit locally\",\n    \"Private helpers `_open_circuit` and `_close_circuit` centralize transition logic cleanly\"\n  ],\n  \"weaknesses\": [\n    \"Input validation with isinstance checks is not required by the spec and adds unnecessary noise\",\n    \"Excessive docstrings and inline comments reduce signal-to-noise ratio (un-Pythonic verbosity)\",\n    \"TypeVar import is unnecessary overhead for a simple nullary callable pattern\",\n    \"Resetting failure_count on success in CLOSED state is implicit behavior not called out in spec, though reasonable\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "State transitions use an explicit enum and are inspectable via `self.state`",
+      "Named configuration attributes `failure_threshold` and `recovery_timeout` satisfy RCS-5 explicitly",
+      "Half-open logic correctly closes on success and reopens on failure",
+      "Injected `now` callable enables deterministic testing without monkey-patching",
+      "Flat control flow in `call()` is easy to audit locally",
+      "Private helpers `_open_circuit` and `_close_circuit` centralize transition logic cleanly"
+    ],
+    "weaknesses": [
+      "Input validation with isinstance checks is not required by the spec and adds unnecessary noise",
+      "Excessive docstrings and inline comments reduce signal-to-noise ratio (un-Pythonic verbosity)",
+      "TypeVar import is unnecessary overhead for a simple nullary callable pattern",
+      "Resetting failure_count on success in CLOSED state is implicit behavior not called out in spec, though reasonable"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 4.179,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert <State.OPEN: 'open'> == 'open'\nE        +  where <State.OPEN: 'open'> = <solution.CircuitBreaker object at 0xffff8b6a5490>.state\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 22,
+    "function_count": 4,
+    "loc": 111,
+    "maintainability_index": 65.636,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_karpathy_generation"
+}

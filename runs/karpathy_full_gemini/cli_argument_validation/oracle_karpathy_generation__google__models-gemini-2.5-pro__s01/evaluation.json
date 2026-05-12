@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, using a straightforward index-based loop with explicit flag dispatch. The logic is flat, readable, and locally auditable with no unnecessary abstractions or speculative flexibility. However, there is minor bloat: the `from typing import Any` import and the `dict[str, Any]` annotation add noise for a trivially typed dict, the docstring is verbose beyond what the task warrants, the module-level comment block is unnecessary overhead, the `boolean_flags` set is used only for a single element making it an over-engineered indirection, and the `if arg == '--dry-run':` check inside the `elif arg in boolean_flags:` branch is redundant since the set has only one member. The `argv[i + 1].startswith('--')` heuristic for detecting missing values is a reasonable conservative choice but could misfire on paths beginning with `--`. Overall it is clean and close to minimal but carries a few small structural inefficiencies that a strict Karpathy-style pass would trim.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, using a straightforward index-based loop with explicit flag dispatch. The logic is flat, readable, and locally auditable with no unnecessary abstractions or speculative flexibility. However, there is minor bloat: the `from typing import Any` import and the `dict[str, Any]` annotation add noise for a trivially typed dict, the docstring is verbose beyond what the task warrants, the module-level comment block is unnecessary overhead, the `boolean_flags` set is used only for a single element making it an over-engineered indirection, and the `if arg == '--dry-run':` check inside the `elif arg in boolean_flags:` branch is redundant since the set has only one member. The `argv[i + 1].startswith('--')` heuristic for detecting missing values is a reasonable conservative choice but could misfire on paths beginning with `--`. Overall it is clean and close to minimal but carries a few small structural inefficiencies that a strict Karpathy-style pass would trim.\",\n  \"strengths\": [\n    \"Flat, linear control flow with no unnecessary classes or abstractions\",\n    \"Explicit validation for each flag type with clear error messages\",\n    \"Correct handling of all required, optional, and boolean flags\",\n    \"No use of argparse or other heavy dependencies \u2014 minimum viable approach\"\n  ],\n  \"weaknesses\": [\n    \"`boolean_flags` set abstraction is unnecessary for a single flag; direct string comparison would be simpler\",\n    \"Redundant `if arg == '--dry-run':` check inside the `elif arg in boolean_flags:` branch\",\n    \"`from typing import Any` and `dict[str, Any]` annotation add noise for a trivially typed structure\",\n    \"Verbose module-level docstring and comment block exceed what the task warrants\",\n    \"`argv[i + 1].startswith('--')` heuristic can incorrectly reject valid paths starting with `--`\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat, linear control flow with no unnecessary classes or abstractions",
+      "Explicit validation for each flag type with clear error messages",
+      "Correct handling of all required, optional, and boolean flags",
+      "No use of argparse or other heavy dependencies \u2014 minimum viable approach"
+    ],
+    "weaknesses": [
+      "`boolean_flags` set abstraction is unnecessary for a single flag; direct string comparison would be simpler",
+      "Redundant `if arg == '--dry-run':` check inside the `elif arg in boolean_flags:` branch",
+      "`from typing import Any` and `dict[str, Any]` annotation add noise for a trivially typed structure",
+      "Verbose module-level docstring and comment block exceed what the task warrants",
+      "`argv[i + 1].startswith('--')` heuristic can incorrectly reject valid paths starting with `--`"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.969,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 71,
+    "maintainability_index": 76.089,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly satisfies all functional requirements: it assigns monotonic sequence numbers starting at 1, explicitly rejects events missing source_system or actor_id, and builds records with named fields. The code is flat, readable, and avoids silent invention of values. The main structural weakness is that the entire record construction is crammed into a single long line inside append(), which slightly reduces auditability \u2014 the RAT-9 spec calls for derived fields to be named explicitly before insertion. Extracting the record dict into a named variable before appending would better align with the 'explicit naming before insertion' principle. The use of event.get('action') (returning None silently) is acceptable since action is not listed as required, but could be more explicit. Overall a clean, correct implementation with minor style deviations from the oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation correctly satisfies all functional requirements: it assigns monotonic sequence numbers starting at 1, explicitly rejects events missing source_system or actor_id, and builds records with named fields. The code is flat, readable, and avoids silent invention of values. The main structural weakness is that the entire record construction is crammed into a single long line inside append(), which slightly reduces auditability \u2014 the RAT-9 spec calls for derived fields to be named explicitly before insertion. Extracting the record dict into a named variable before appending would better align with the 'explicit naming before insertion' principle. The use of event.get('action') (returning None silently) is acceptable since action is not listed as required, but could be more explicit. Overall a clean, correct implementation with minor style deviations from the oracle.\",\n  \"strengths\": [\n    \"Correctly rejects events missing source_system or actor_id with a clear ValueError\",\n    \"Monotonic sequence numbers start at 1 using enumerate(start=1)\",\n    \"No silent invention of actor or source values\",\n    \"Flat loop structure with no unnecessary nesting or abstraction\",\n    \"Explicit field names in the output record\"\n  ],\n  \"weaknesses\": [\n    \"Record dict is constructed inline inside append() rather than assigned to a named variable first, reducing auditability per RAT-9's 'name before insert' principle\",\n    \"Long single line for record construction hurts readability\",\n    \"action field silently defaults to None without any indication this is intentional\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Correctly rejects events missing source_system or actor_id with a clear ValueError",
+      "Monotonic sequence numbers start at 1 using enumerate(start=1)",
+      "No silent invention of actor or source values",
+      "Flat loop structure with no unnecessary nesting or abstraction",
+      "Explicit field names in the output record"
+    ],
+    "weaknesses": [
+      "Record dict is constructed inline inside append() rather than assigned to a named variable first, reducing auditability per RAT-9's 'name before insert' principle",
+      "Long single line for record construction hurts readability",
+      "action field silently defaults to None without any indication this is intentional"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.448,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 69.841,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "human_reference"
+}

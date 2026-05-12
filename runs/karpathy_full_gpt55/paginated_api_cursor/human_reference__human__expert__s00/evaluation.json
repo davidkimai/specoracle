@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen of Python oracle for this task. It is flat, explicit, minimal, and locally auditable in a single glance. The control flow uses a clean while-True loop with an early return guard, data movement is explicit via extend, there is no hidden mutation or global state, and the type annotations are precise without being speculative. The only minor quibble is that the while-True/break-at-end pattern could alternatively be written as a do-while idiom using a sentinel, but the current form is idiomatic Python and perfectly readable. No speculative abstractions, no framework-shaped code, no unused extension points.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen of Python oracle for this task. It is flat, explicit, minimal, and locally auditable in a single glance. The control flow uses a clean while-True loop with an early return guard, data movement is explicit via extend, there is no hidden mutation or global state, and the type annotations are precise without being speculative. The only minor quibble is that the while-True/break-at-end pattern could alternatively be written as a do-while idiom using a sentinel, but the current form is idiomatic Python and perfectly readable. No speculative abstractions, no framework-shaped code, no unused extension points.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard-clause return instead of nested conditionals\",\n    \"Explicit data movement: collected.extend(items) makes accumulation visible\",\n    \"Minimal surface area \u2014 no helper classes, no unnecessary abstractions\",\n    \"Type annotations are informative without being over-engineered\",\n    \"Correctly threads cursor state through each iteration without hidden mutation\"\n  ],\n  \"weaknesses\": [\n    \"No input validation (e.g., checking fetch_page is callable), though the task spec doesn't strictly require it\",\n    \"while True with a mid-loop return is slightly less self-documenting than a named sentinel pattern, though it is idiomatic Python\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard-clause return instead of nested conditionals",
+      "Explicit data movement: collected.extend(items) makes accumulation visible",
+      "Minimal surface area \u2014 no helper classes, no unnecessary abstractions",
+      "Type annotations are informative without being over-engineered",
+      "Correctly threads cursor state through each iteration without hidden mutation"
+    ],
+    "weaknesses": [
+      "No input validation (e.g., checking fetch_page is callable), though the task spec doesn't strictly require it",
+      "while True with a mid-loop return is slightly less self-documenting than a named sentinel pattern, though it is idiomatic Python"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.424,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.14s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 71.314,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "human_reference"
+}

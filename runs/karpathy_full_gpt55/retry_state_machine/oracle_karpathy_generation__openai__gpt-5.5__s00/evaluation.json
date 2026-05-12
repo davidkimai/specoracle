@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, direct, and correct. It uses two instance variables, four short methods, and no unnecessary abstractions. The guard in `__init__` is slightly over-engineered\u2014the spec only says 'must be positive, otherwise raise ValueError', so checking `isinstance(max_attempts, int)` and excluding `bool` goes beyond what was asked\u2014but this is a conservative, defensible choice rather than speculative flexibility. All four methods have clear, testable contracts, state is entirely local, and there is no global state, threading, or time dependency. The `max(0, ...)` in `remaining()` is a small but sensible defensive touch that keeps the return value sane after excess failures.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, direct, and correct. It uses two instance variables, four short methods, and no unnecessary abstractions. The guard in `__init__` is slightly over-engineered\u2014the spec only says 'must be positive, otherwise raise ValueError', so checking `isinstance(max_attempts, int)` and excluding `bool` goes beyond what was asked\u2014but this is a conservative, defensible choice rather than speculative flexibility. All four methods have clear, testable contracts, state is entirely local, and there is no global state, threading, or time dependency. The `max(0, ...)` in `remaining()` is a small but sensible defensive touch that keeps the return value sane after excess failures.\",\n  \"strengths\": [\n    \"Minimum viable code: no extra methods, no inheritance, no abstractions\",\n    \"All state is instance-local; no global or class-level mutable state\",\n    \"Each method is a single, readable expression or assignment\",\n    \"Correct handling of the boundary: allow() is False exactly when failures == max_attempts\",\n    \"remaining() safely clamps to zero for over-failure scenarios\"\n  ],\n  \"weaknesses\": [\n    \"isinstance/bool guard in __init__ is slightly beyond the stated spec ('positive integer' could simply mean > 0 numeric check)\",\n    \"Error message string is a minor extra artifact not required by the spec\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimum viable code: no extra methods, no inheritance, no abstractions",
+      "All state is instance-local; no global or class-level mutable state",
+      "Each method is a single, readable expression or assignment",
+      "Correct handling of the boundary: allow() is False exactly when failures == max_attempts",
+      "remaining() safely clamps to zero for over-failure scenarios"
+    ],
+    "weaknesses": [
+      "isinstance/bool guard in __init__ is slightly beyond the stated spec ('positive integer' could simply mean > 0 numeric check)",
+      "Error message string is a minor extra artifact not required by the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.126,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.667,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 5,
+    "loc": 14,
+    "maintainability_index": 60.656,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_karpathy_generation"
+}

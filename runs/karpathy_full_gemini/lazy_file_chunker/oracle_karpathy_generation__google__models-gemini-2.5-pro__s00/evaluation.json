@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally clean: it uses a simple while-True/break loop, yields lazily, validates the chunk_size, and avoids unnecessary abstractions. The core logic is minimal and readable. The main weaknesses are minor over-engineering: the isinstance check goes beyond what was asked (the spec says 'reject non-positive chunk sizes', not 'reject non-integers'), and the docstring is verbose for a simple utility function. The inline comment explaining what an empty bytes object means is slightly patronizing and adds noise. These are small issues that don't compromise correctness or architecture, but they represent minor violations of the 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally clean: it uses a simple while-True/break loop, yields lazily, validates the chunk_size, and avoids unnecessary abstractions. The core logic is minimal and readable. The main weaknesses are minor over-engineering: the isinstance check goes beyond what was asked (the spec says 'reject non-positive chunk sizes', not 'reject non-integers'), and the docstring is verbose for a simple utility function. The inline comment explaining what an empty bytes object means is slightly patronizing and adds noise. These are small issues that don't compromise correctness or architecture, but they represent minor violations of the 'minimum code' principle.\",\n  \"strengths\": [\n    \"Core loop is minimal and idiomatic (while True / break on empty read)\",\n    \"Lazy evaluation preserved \u2014 no buffering or full-file reads\",\n    \"Correct ValueError raised for non-positive chunk sizes\",\n    \"Type hints are appropriate and non-intrusive\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(chunk_size, int) check is speculative \u2014 spec only requires rejecting non-positive values, not non-integers\",\n    \"Docstring is excessively verbose for a simple 10-line utility\",\n    \"Inline comment explaining empty bytes is unnecessary noise\",\n    \"Module-level docstring adds no value for a single-function module\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Core loop is minimal and idiomatic (while True / break on empty read)",
+      "Lazy evaluation preserved \u2014 no buffering or full-file reads",
+      "Correct ValueError raised for non-positive chunk sizes",
+      "Type hints are appropriate and non-intrusive"
+    ],
+    "weaknesses": [
+      "isinstance(chunk_size, int) check is speculative \u2014 spec only requires rejecting non-positive values, not non-integers",
+      "Docstring is excessively verbose for a simple 10-line utility",
+      "Inline comment explaining empty bytes is unnecessary noise",
+      "Module-level docstring adds no value for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.819,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 28,
+    "maintainability_index": 69.918,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "oracle_karpathy_generation"
+}

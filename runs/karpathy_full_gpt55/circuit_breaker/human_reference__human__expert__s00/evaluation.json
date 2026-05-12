@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly maps to the RCS-5 requirements. State is inspectable via a named `state` attribute with clear string literals ('closed', 'open', 'half_open'). Configuration values are named instance attributes. Half-open trials correctly reopen on failure and close on success. The logic is flat with no unnecessary abstraction layers, and the `now` injection makes it testable. Minor quibbles: the input validation rejecting zero/negative values is a reasonable guard but not specified; the failure counter isn't reset on transition to half_open (which is correct behavior but could be more explicit); and the half-open failure path increments `failures` before reopening, which is slightly redundant since `failures` is reset on close anyway. Overall this is a tight, readable, locally auditable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly maps to the RCS-5 requirements. State is inspectable via a named `state` attribute with clear string literals ('closed', 'open', 'half_open'). Configuration values are named instance attributes. Half-open trials correctly reopen on failure and close on success. The logic is flat with no unnecessary abstraction layers, and the `now` injection makes it testable. Minor quibbles: the input validation rejecting zero/negative values is a reasonable guard but not specified; the failure counter isn't reset on transition to half_open (which is correct behavior but could be more explicit); and the half-open failure path increments `failures` before reopening, which is slightly redundant since `failures` is reset on close anyway. Overall this is a tight, readable, locally auditable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"State is explicit and inspectable as a named string attribute\",\n    \"Named configuration attributes (failure_threshold, recovery_timeout) with no magic constants\",\n    \"Half-open transitions correctly close on success and reopen on failure\",\n    \"Flat, single-method control flow with no unnecessary abstraction\",\n    \"Testable via injected `now` callable\"\n  ],\n  \"weaknesses\": [\n    \"Failure counter is incremented even in half-open failure path, which is slightly redundant since it gets reset on close\",\n    \"Input validation (rejecting <=0 values) is undocumented behavior not in the spec\",\n    \"String literals for state are not constants/enum, risking typo bugs in larger codebases\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "State is explicit and inspectable as a named string attribute",
+      "Named configuration attributes (failure_threshold, recovery_timeout) with no magic constants",
+      "Half-open transitions correctly close on success and reopen on failure",
+      "Flat, single-method control flow with no unnecessary abstraction",
+      "Testable via injected `now` callable"
+    ],
+    "weaknesses": [
+      "Failure counter is incremented even in half-open failure path, which is slightly redundant since it gets reset on close",
+      "Input validation (rejecting <=0 values) is undocumented behavior not in the spec",
+      "String literals for state are not constants/enum, risking typo bugs in larger codebases"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.148,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 2,
+    "loc": 28,
+    "maintainability_index": 51.613,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "human_reference"
+}

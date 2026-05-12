@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a single flat loop with a guard clause pattern (if/else), explicit data movement into a new dict, and clear error handling. The variable names are descriptive without being verbose. The main structural critique is that the docstring is disproportionately long relative to the simplicity of the function \u2014 the Zen favors sparse code, and a 20-line docstring on a 15-line function is speculative documentation overhead. A minor point: the helper-extraction suggestion from the constraints could have motivated pulling the per-field coercion into a small helper, but the current monolithic form is simple enough that this is not a real flaw. The error message includes the field name as required. No hidden mutation, no metaprogramming, no unused extension points.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a single flat loop with a guard clause pattern (if/else), explicit data movement into a new dict, and clear error handling. The variable names are descriptive without being verbose. The main structural critique is that the docstring is disproportionately long relative to the simplicity of the function \u2014 the Zen favors sparse code, and a 20-line docstring on a 15-line function is speculative documentation overhead. A minor point: the helper-extraction suggestion from the constraints could have motivated pulling the per-field coercion into a small helper, but the current monolithic form is simple enough that this is not a real flaw. The error message includes the field name as required. No hidden mutation, no metaprogramming, no unused extension points.\",\n  \"strengths\": [\n    \"Flat control flow with a single loop and clear if/else branch\",\n    \"Explicit construction of a new dict \u2014 no hidden mutation\",\n    \"Catches both ValueError and TypeError for robust casting failure detection\",\n    \"Re-raises with field name included, satisfying the spec precisely\",\n    \"Ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately verbose for such a simple function, adding noise rather than clarity\",\n    \"Could extract a small coerce_field helper to separate the try/except logic, improving local auditability of each concern\",\n    \"Module-level docstring adds minimal value for a single-function module\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single loop and clear if/else branch",
+      "Explicit construction of a new dict \u2014 no hidden mutation",
+      "Catches both ValueError and TypeError for robust casting failure detection",
+      "Re-raises with field name included, satisfying the spec precisely",
+      "Ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately verbose for such a simple function, adding noise rather than clarity",
+      "Could extract a small coerce_field helper to separate the try/except logic, improving local auditability of each concern",
+      "Module-level docstring adds minimal value for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.949,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 80.059,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "schema_coercer",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7 requirements: all fields are validated before any are accepted into the output, errors explicitly name the failing field, and the function returns only after all validations pass. The code is flat, readable, and locally auditable with no hidden control flow or abstraction layers. The bool-exclusion guard for `age` is a thoughtful edge case. The deterministic alphabetical ordering for missing-field errors is a reasonable design choice. Minor weaknesses include slightly verbose docstring/comments that border on over-explanation, and the `sorted(list(...))` pattern is mildly redundant (`sorted(missing_fields)` suffices), but these are cosmetic issues that don't affect correctness or structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7 requirements: all fields are validated before any are accepted into the output, errors explicitly name the failing field, and the function returns only after all validations pass. The code is flat, readable, and locally auditable with no hidden control flow or abstraction layers. The bool-exclusion guard for `age` is a thoughtful edge case. The deterministic alphabetical ordering for missing-field errors is a reasonable design choice. Minor weaknesses include slightly verbose docstring/comments that border on over-explanation, and the `sorted(list(...))` pattern is mildly redundant (`sorted(missing_fields)` suffices), but these are cosmetic issues that don't affect correctness or structural quality.\",\n  \"strengths\": [\n    \"All required fields validated before any are accepted into output, strictly honoring CD-7\",\n    \"Every ValueError message explicitly names the offending field\",\n    \"Explicit bool exclusion from int validation prevents a subtle Python gotcha\",\n    \"Flat, sequential structure with no unnecessary abstraction or indirection\",\n    \"Clean return dict contains only validated required fields\",\n    \"Deterministic error reporting for missing fields via alphabetical sort\"\n  ],\n  \"weaknesses\": [\n    \"Minor: `sorted(list(missing_fields))` is redundant; `sorted(missing_fields)` suffices\",\n    \"Docstring and inline comments are somewhat over-explanatory for the code's simplicity\",\n    \"Does not validate that `patient_id` is non-empty, which may be an implicit clinical requirement\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All required fields validated before any are accepted into output, strictly honoring CD-7",
+      "Every ValueError message explicitly names the offending field",
+      "Explicit bool exclusion from int validation prevents a subtle Python gotcha",
+      "Flat, sequential structure with no unnecessary abstraction or indirection",
+      "Clean return dict contains only validated required fields",
+      "Deterministic error reporting for missing fields via alphabetical sort"
+    ],
+    "weaknesses": [
+      "Minor: `sorted(list(missing_fields))` is redundant; `sorted(missing_fields)` suffices",
+      "Docstring and inline comments are somewhat over-explanatory for the code's simplicity",
+      "Does not validate that `patient_id` is non-empty, which may be an implicit clinical requirement"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.798,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 57,
+    "maintainability_index": 78.132,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_generation"
+}

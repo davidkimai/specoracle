@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and avoids mutation, uses clear names, and keeps the core assignment logic clean with a readable list comprehension. However, it over-engineers the validation layer significantly: the task spec says workers have 'name' and optional 'enabled' fields with no mention of strict type-checking on inputs, yet the candidate adds five helper functions and extensive isinstance guards for list types, dict types, name types, enabled types, and job string types. This speculative defensive programming violates 'avoid speculative abstractions' and 'keep code sparse enough that a maintainer can audit behavior locally.' The helpers themselves are thin wrappers that add indirection without meaningful reuse. A simpler implementation would extract enabled names inline or with one small helper and raise ValueError for no enabled workers, matching the stated requirements without the framework-shaped validation scaffolding.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and avoids mutation, uses clear names, and keeps the core assignment logic clean with a readable list comprehension. However, it over-engineers the validation layer significantly: the task spec says workers have 'name' and optional 'enabled' fields with no mention of strict type-checking on inputs, yet the candidate adds five helper functions and extensive isinstance guards for list types, dict types, name types, enabled types, and job string types. This speculative defensive programming violates 'avoid speculative abstractions' and 'keep code sparse enough that a maintainer can audit behavior locally.' The helpers themselves are thin wrappers that add indirection without meaningful reuse. A simpler implementation would extract enabled names inline or with one small helper and raise ValueError for no enabled workers, matching the stated requirements without the framework-shaped validation scaffolding.\",\n  \"strengths\": [\n    \"Core assignment logic is clean and readable (enumerate + modulo index)\",\n    \"No input mutation; returns fresh dicts\",\n    \"Clear error message for the required ValueError case\",\n    \"Flat control flow within each individual helper\",\n    \"Descriptive function and variable names\"\n  ],\n  \"weaknesses\": [\n    \"Five helper functions for what is essentially a ~10-line task; speculative abstraction\",\n    \"Type-checking inputs (list, dict, str, bool) is not required by the spec and adds noise\",\n    \"_require_list and _require_worker are trivially thin wrappers that obscure rather than clarify\",\n    \"Validating jobs after computing enabled names means errors surface in inconsistent order\",\n    \"Overall structure feels framework-shaped rather than task-shaped\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core assignment logic is clean and readable (enumerate + modulo index)",
+      "No input mutation; returns fresh dicts",
+      "Clear error message for the required ValueError case",
+      "Flat control flow within each individual helper",
+      "Descriptive function and variable names"
+    ],
+    "weaknesses": [
+      "Five helper functions for what is essentially a ~10-line task; speculative abstraction",
+      "Type-checking inputs (list, dict, str, bool) is not required by the spec and adds noise",
+      "_require_list and _require_worker are trivially thin wrappers that obscure rather than clarify",
+      "Validating jobs after computing enabled names means errors surface in inconsistent order",
+      "Overall structure feels framework-shaped rather than task-shaped"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.979,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.571,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 7,
+    "loc": 47,
+    "maintainability_index": 49.346,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

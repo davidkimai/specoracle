@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. Delegating to ExitStack is a reasonable standard-library choice that avoids reimplementing reverse-order teardown. Names are clear, errors are explicit, and there is no speculative abstraction. However, ExitStack is itself a context manager designed for composing multiple context managers; using it purely as a reverse-order callback list is slightly indirect when a plain list with a reversed loop would be more transparent and locally auditable. The `_closed` guard on `__enter__` adds a reuse-prevention feature not required by the spec, and the standalone `close()` method is an unused extension point the spec never asked for\u2014both are mild speculative additions. The `__exit__` return value propagates ExitStack's suppression logic, which is fine but subtly non-obvious. Overall the code is solid and maintainable but carries a few small pieces of framework-shaped thinking that a stricter reading of the oracle would trim.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. Delegating to ExitStack is a reasonable standard-library choice that avoids reimplementing reverse-order teardown. Names are clear, errors are explicit, and there is no speculative abstraction. However, ExitStack is itself a context manager designed for composing multiple context managers; using it purely as a reverse-order callback list is slightly indirect when a plain list with a reversed loop would be more transparent and locally auditable. The `_closed` guard on `__enter__` adds a reuse-prevention feature not required by the spec, and the standalone `close()` method is an unused extension point the spec never asked for\u2014both are mild speculative additions. The `__exit__` return value propagates ExitStack's suppression logic, which is fine but subtly non-obvious. Overall the code is solid and maintainable but carries a few small pieces of framework-shaped thinking that a stricter reading of the oracle would trim.\",\n  \"strengths\": [\n    \"Delegates reverse-order teardown to ExitStack, avoiding manual index arithmetic\",\n    \"Explicit TypeError for resources missing a callable close() method\",\n    \"Clear, self-explanatory names throughout\",\n    \"No hidden mutation or global state\",\n    \"Flat control flow with guard clauses\"\n  ],\n  \"weaknesses\": [\n    \"ExitStack adds indirection; a plain list + reversed loop would be more locally auditable\",\n    \"Standalone close() method is an unrequested extension point\",\n    \"_closed guard on __enter__ prevents reuse but the spec doesn't require it, adding speculative behavior\",\n    \"ExitStack suppression semantics in __exit__ are subtly non-obvious for readers unfamiliar with it\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Delegates reverse-order teardown to ExitStack, avoiding manual index arithmetic",
+      "Explicit TypeError for resources missing a callable close() method",
+      "Clear, self-explanatory names throughout",
+      "No hidden mutation or global state",
+      "Flat control flow with guard clauses"
+    ],
+    "weaknesses": [
+      "ExitStack adds indirection; a plain list + reversed loop would be more locally auditable",
+      "Standalone close() method is an unrequested extension point",
+      "_closed guard on __enter__ prevents reuse but the spec doesn't require it, adding speculative behavior",
+      "ExitStack suppression semantics in __exit__ are subtly non-obvious for readers unfamiliar with it"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.937,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 5,
+    "loc": 34,
+    "maintainability_index": 64.646,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "oracle_generation"
+}

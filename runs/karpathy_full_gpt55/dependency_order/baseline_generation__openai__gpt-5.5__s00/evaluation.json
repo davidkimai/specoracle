@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses Kahn's algorithm in a straightforward way with explicit data movement, no hidden mutation, and clear variable names. The logic is flat and locally auditable \u2014 each step (collect all tasks, build in-degree map, build dependents map, process batches) is easy to follow. The docstring is helpful without being excessive. Minor weaknesses: the function is slightly monolithic and could benefit from small pure helpers (e.g., `collect_all_tasks`, `build_dependents`), and the `ready` variable is reused in a slightly confusing way (first assigned as a sorted list, then reassigned inside the loop). The cycle detection via `len(processed) != len(all_tasks)` is idiomatic and clear. Overall, this is a well-structured, maintainable implementation that closely follows the spirit of the Zen of Python.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses Kahn's algorithm in a straightforward way with explicit data movement, no hidden mutation, and clear variable names. The logic is flat and locally auditable \u2014 each step (collect all tasks, build in-degree map, build dependents map, process batches) is easy to follow. The docstring is helpful without being excessive. Minor weaknesses: the function is slightly monolithic and could benefit from small pure helpers (e.g., `collect_all_tasks`, `build_dependents`), and the `ready` variable is reused in a slightly confusing way (first assigned as a sorted list, then reassigned inside the loop). The cycle detection via `len(processed) != len(all_tasks)` is idiomatic and clear. Overall, this is a well-structured, maintainable implementation that closely follows the spirit of the Zen of Python.\",\n  \"strengths\": [\n    \"Explicit data movement: all intermediate structures (remaining_prerequisites, dependents) are clearly constructed and named\",\n    \"Flat control flow with no deep nesting\",\n    \"Cycle detection is simple and correct\",\n    \"Handles tasks that only appear as dependencies correctly\",\n    \"Does not mutate the input\"\n  ],\n  \"weaknesses\": [\n    \"Slightly monolithic \u2014 small pure helpers for building the graph structures would improve auditability\",\n    \"Reuse of `ready` variable name across different scopes (initial assignment vs. loop reassignment) is mildly confusing\",\n    \"The `set(prerequisites)` in the dependents-building loop is redundant since `remaining_prerequisites` already deduplicates\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit data movement: all intermediate structures (remaining_prerequisites, dependents) are clearly constructed and named",
+      "Flat control flow with no deep nesting",
+      "Cycle detection is simple and correct",
+      "Handles tasks that only appear as dependencies correctly",
+      "Does not mutate the input"
+    ],
+    "weaknesses": [
+      "Slightly monolithic \u2014 small pure helpers for building the graph structures would improve auditability",
+      "Reuse of `ready` variable name across different scopes (initial assignment vs. loop reassignment) is mildly confusing",
+      "The `set(prerequisites)` in the dependents-building loop is redundant since `remaining_prerequisites` already deduplicates"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.94,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 43,
+    "maintainability_index": 83.446,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

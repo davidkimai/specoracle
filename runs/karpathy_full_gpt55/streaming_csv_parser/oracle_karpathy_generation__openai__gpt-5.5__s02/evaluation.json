@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, correct, and streaming. It uses the stdlib csv module appropriately rather than reinventing splitting logic, filters empty lines inline without materializing the iterable, extracts the header with a clean try/except StopIteration guard, and yields dicts via zip without any speculative abstraction. The only minor quibble is that the generator expression `(line for line in lines if line.strip())` could be written as `filter(str.strip, lines)` for marginally less noise, and the docstring is a small addition beyond what was strictly asked, but neither is a meaningful flaw. Overall this is a textbook example of the simplest correct architecture for the task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, correct, and streaming. It uses the stdlib csv module appropriately rather than reinventing splitting logic, filters empty lines inline without materializing the iterable, extracts the header with a clean try/except StopIteration guard, and yields dicts via zip without any speculative abstraction. The only minor quibble is that the generator expression `(line for line in lines if line.strip())` could be written as `filter(str.strip, lines)` for marginally less noise, and the docstring is a small addition beyond what was strictly asked, but neither is a meaningful flaw. Overall this is a textbook example of the simplest correct architecture for the task.\",\n  \"strengths\": [\n    \"Fully streaming: no list conversion of the input iterable\",\n    \"Delegates CSV parsing to stdlib csv.reader, avoiding fragile manual splitting\",\n    \"Minimal code with no speculative features or unnecessary abstractions\",\n    \"Correct empty-line filtering without materializing the input\",\n    \"Clean StopIteration guard for empty input\"\n  ],\n  \"weaknesses\": [\n    \"Generator expression `(line for line in lines if line.strip())` is slightly verbose compared to `filter(str.strip, lines)`\",\n    \"Docstring is a minor addition beyond the strict minimum, though harmless\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Fully streaming: no list conversion of the input iterable",
+      "Delegates CSV parsing to stdlib csv.reader, avoiding fragile manual splitting",
+      "Minimal code with no speculative features or unnecessary abstractions",
+      "Correct empty-line filtering without materializing the input",
+      "Clean StopIteration guard for empty input"
+    ],
+    "weaknesses": [
+      "Generator expression `(line for line in lines if line.strip())` is slightly verbose compared to `filter(str.strip, lines)`",
+      "Docstring is a minor addition beyond the strict minimum, though harmless"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.046,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 11,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_karpathy_generation"
+}

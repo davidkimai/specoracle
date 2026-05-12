@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses a small pure helper for type validation, keeps control flow flat with guard clauses, makes data movement explicit, and raises a clear ValueError for invalid input. The helper `_is_int_field` is genuinely reusable and not speculative. The main function is easy to audit locally. Minor weaknesses: the docstring is verbose for a straightforward function, and the `windows` dict stores mutable dicts that are directly mutated in-place (though this is a common and acceptable pattern). The type annotation `list[dict]` on the return could be more specific, but this is a minor nit. Overall, the code closely follows the Zen of Python principles with simplicity, explicitness, and flatness.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses a small pure helper for type validation, keeps control flow flat with guard clauses, makes data movement explicit, and raises a clear ValueError for invalid input. The helper `_is_int_field` is genuinely reusable and not speculative. The main function is easy to audit locally. Minor weaknesses: the docstring is verbose for a straightforward function, and the `windows` dict stores mutable dicts that are directly mutated in-place (though this is a common and acceptable pattern). The type annotation `list[dict]` on the return could be more specific, but this is a minor nit. Overall, the code closely follows the Zen of Python principles with simplicity, explicitness, and flatness.\",\n  \"strengths\": [\n    \"Small, focused helper `_is_int_field` avoids repetition and is easy to test independently\",\n    \"Guard clauses keep the loop body flat and readable\",\n    \"Explicit ValueError with a clear message for invalid window_size\",\n    \"Boolean exclusion from int check is a correct and explicit edge-case handling\",\n    \"Sorted output is produced cleanly without extra complexity\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is overly verbose for a function this straightforward\",\n    \"In-place mutation of dicts inside `windows` is slightly implicit; a named accumulator tuple or defaultdict could make data flow more explicit\",\n    \"The `_is_int_field` check on `window_size` adds a type strictness not mentioned in the spec (floats like 5.0 would be rejected), which may be over-constraining\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, focused helper `_is_int_field` avoids repetition and is easy to test independently",
+      "Guard clauses keep the loop body flat and readable",
+      "Explicit ValueError with a clear message for invalid window_size",
+      "Boolean exclusion from int check is a correct and explicit edge-case handling",
+      "Sorted output is produced cleanly without extra complexity"
+    ],
+    "weaknesses": [
+      "Docstring is overly verbose for a function this straightforward",
+      "In-place mutation of dicts inside `windows` is slightly implicit; a named accumulator tuple or defaultdict could make data flow more explicit",
+      "The `_is_int_field` check on `window_size` adds a type strictness not mentioned in the spec (floats like 5.0 would be rejected), which may be over-constraining"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.491,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 2,
+    "loc": 34,
+    "maintainability_index": 81.854,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "baseline_generation"
+}

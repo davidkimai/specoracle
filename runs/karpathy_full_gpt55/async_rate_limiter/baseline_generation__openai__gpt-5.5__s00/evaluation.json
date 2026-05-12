@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and locally auditable. It uses a sliding-window deque approach with an asyncio.Lock for safe concurrent access, explicit data flow, and no hidden state. The constructor validates inputs clearly with appropriate error types, the `now` injection is simple and explicit, and `acquire` is a single flat async method with a guard clause pattern (evict stale entries, check limit, append). The use of `__slots__` is a minor speculative optimization but not harmful. The only minor quibble is the `isinstance(rate, int)` check raising `TypeError` which wasn't required by the spec (only `ValueError` for non-positive rates was specified), adding a small amount of unrequested behavior, and the intermediate `timestamps` alias inside `acquire` is a trivial unnecessary local binding. Overall the code is sparse, readable, and architecturally sound.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and locally auditable. It uses a sliding-window deque approach with an asyncio.Lock for safe concurrent access, explicit data flow, and no hidden state. The constructor validates inputs clearly with appropriate error types, the `now` injection is simple and explicit, and `acquire` is a single flat async method with a guard clause pattern (evict stale entries, check limit, append). The use of `__slots__` is a minor speculative optimization but not harmful. The only minor quibble is the `isinstance(rate, int)` check raising `TypeError` which wasn't required by the spec (only `ValueError` for non-positive rates was specified), adding a small amount of unrequested behavior, and the intermediate `timestamps` alias inside `acquire` is a trivial unnecessary local binding. Overall the code is sparse, readable, and architecturally sound.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement; no hidden mutation or global state\",\n    \"Clear error raising for invalid inputs\",\n    \"Minimal, standard-library-only constructs (deque, asyncio.Lock)\",\n    \"Deterministic-test support via injected `now` callable\",\n    \"Sliding-window eviction is simple and correct\"\n  ],\n  \"weaknesses\": [\n    \"Raises TypeError for non-int rate, which was not required by the spec\",\n    \"Unnecessary local alias `timestamps = self._timestamps` inside acquire adds no clarity\",\n    \"__slots__ is a micro-optimization that adds speculative complexity for a simple class\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit data movement; no hidden mutation or global state",
+      "Clear error raising for invalid inputs",
+      "Minimal, standard-library-only constructs (deque, asyncio.Lock)",
+      "Deterministic-test support via injected `now` callable",
+      "Sliding-window eviction is simple and correct"
+    ],
+    "weaknesses": [
+      "Raises TypeError for non-int rate, which was not required by the spec",
+      "Unnecessary local alias `timestamps = self._timestamps` inside acquire adds no clarity",
+      "__slots__ is a micro-optimization that adds speculative complexity for a simple class"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.176,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.333,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 2,
+    "loc": 32,
+    "maintainability_index": 76.133,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "baseline_generation"
+}

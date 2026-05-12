@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and correctly solves the problem with minimal abstraction. The main loop is flat and readable, each guard clause is explicit, and the arithmetic for rounding up to the nearest case_pack multiple is correct. The helper `_is_int` is a small but justified extraction since it's used four times and encapsulates a non-trivial check (excluding bools from int). The only mild concern is that `_is_int` is a module-level helper for what is essentially a single-function module \u2014 a conservative Karpathy reading might inline it or use a local lambda \u2014 but its reuse across four call sites makes it defensible. The sorted return is clean. No speculative features, no over-engineering, no unnecessary abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, direct, and correctly solves the problem with minimal abstraction. The main loop is flat and readable, each guard clause is explicit, and the arithmetic for rounding up to the nearest case_pack multiple is correct. The helper `_is_int` is a small but justified extraction since it's used four times and encapsulates a non-trivial check (excluding bools from int). The only mild concern is that `_is_int` is a module-level helper for what is essentially a single-function module \u2014 a conservative Karpathy reading might inline it or use a local lambda \u2014 but its reuse across four call sites makes it defensible. The sorted return is clean. No speculative features, no over-engineering, no unnecessary abstractions.\",\n  \"strengths\": [\n    \"Flat, linear control flow with early-continue guards \u2014 no nesting\",\n    \"Explicit type checks including the bool-exclusion edge case\",\n    \"Correct ceiling-division arithmetic for case_pack rounding\",\n    \"No unnecessary abstractions or configurability beyond the spec\",\n    \"Clear, testable contract with minimal surface area\"\n  ],\n  \"weaknesses\": [\n    \"`_is_int` as a module-level helper is a minor abstraction for a single-file function; could be inlined or defined as a local closure to reduce scope\",\n    \"Type annotation `object` on `_is_int` parameter is slightly unusual; `Any` or no annotation would be more idiomatic\",\n    \"No handling of the case where `sales_velocity` values might be booleans (consistent with `_is_int` but not explicitly called out in spec)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat, linear control flow with early-continue guards \u2014 no nesting",
+      "Explicit type checks including the bool-exclusion edge case",
+      "Correct ceiling-division arithmetic for case_pack rounding",
+      "No unnecessary abstractions or configurability beyond the spec",
+      "Clear, testable contract with minimal surface area"
+    ],
+    "weaknesses": [
+      "`_is_int` as a module-level helper is a minor abstraction for a single-file function; could be inlined or defined as a local closure to reduce scope",
+      "Type annotation `object` on `_is_int` parameter is slightly unusual; `Any` or no annotation would be more idiomatic",
+      "No handling of the case where `sales_velocity` values might be booleans (consistent with `_is_int` but not explicitly called out in spec)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.4,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.5,
+    "cyclomatic_complexity_max": 11,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 2,
+    "loc": 26,
+    "maintainability_index": 50.112,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_karpathy_generation"
+}

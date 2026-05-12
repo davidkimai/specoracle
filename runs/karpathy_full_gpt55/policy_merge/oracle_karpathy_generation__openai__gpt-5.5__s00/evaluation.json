@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. The recursive approach is natural for this problem, and the logic is explicit and readable. The main structural concern is the introduction of `_copy_dicts` as a helper \u2014 it's a single-use abstraction that adds indirection without much payoff, especially since the task only requires not mutating inputs (shallow copy of non-dict values would suffice, and deep-copying arbitrary nested dicts is speculative). The docstring on `merge_policy` is fine but the helper has no docstring, creating asymmetry. The helper name `_copy_dicts` is slightly misleading since it deep-copies all nested dicts, not just dicts. A simpler approach would inline the dict-copy logic or use `copy.deepcopy` explicitly. Overall the code is clean, flat, and correct, but the helper abstraction is a mild violation of the 'no abstractions for single-use code' guideline.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. The recursive approach is natural for this problem, and the logic is explicit and readable. The main structural concern is the introduction of `_copy_dicts` as a helper \u2014 it's a single-use abstraction that adds indirection without much payoff, especially since the task only requires not mutating inputs (shallow copy of non-dict values would suffice, and deep-copying arbitrary nested dicts is speculative). The docstring on `merge_policy` is fine but the helper has no docstring, creating asymmetry. The helper name `_copy_dicts` is slightly misleading since it deep-copies all nested dicts, not just dicts. A simpler approach would inline the dict-copy logic or use `copy.deepcopy` explicitly. Overall the code is clean, flat, and correct, but the helper abstraction is a mild violation of the 'no abstractions for single-use code' guideline.\",\n  \"strengths\": [\n    \"Correct recursive merge logic with clear branching for None removal, dict-dict merge, and override cases\",\n    \"Does not mutate either input\",\n    \"Readable and flat structure with no unnecessary nesting\",\n    \"Explicit handling of each case in the override loop\"\n  ],\n  \"weaknesses\": [\n    \"`_copy_dicts` is a single-use helper abstraction that could be inlined or replaced with `copy.deepcopy`\",\n    \"Deep-copying non-dict leaf values is unnecessary since immutable scalars don't need copying\",\n    \"Slightly misleading helper name \u2014 it copies all nested structures, not just dicts\",\n    \"Minor speculative flexibility: deep-copying defaults upfront even for keys that will be overridden\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct recursive merge logic with clear branching for None removal, dict-dict merge, and override cases",
+      "Does not mutate either input",
+      "Readable and flat structure with no unnecessary nesting",
+      "Explicit handling of each case in the override loop"
+    ],
+    "weaknesses": [
+      "`_copy_dicts` is a single-use helper abstraction that could be inlined or replaced with `copy.deepcopy`",
+      "Deep-copying non-dict leaf values is unnecessary since immutable scalars don't need copying",
+      "Slightly misleading helper name \u2014 it copies all nested structures, not just dicts",
+      "Minor speculative flexibility: deep-copying defaults upfront even for keys that will be overridden"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.047,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.5,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 20,
+    "maintainability_index": 92.317,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and follows RCS-5 requirements well: state is explicit and inspectable, configuration values are named, and half-open transitions are properly handled. The code is readable and well-structured. However, it suffers from over-engineering relative to the Zen of Python: excessive private helper methods (_transition_to_open, _transition_to_half_open, _transition_to_closed, _reset_failures, _is_recovery_timeout_elapsed, _handle_failure, _handle_success) fragment simple logic that could live directly in call() and __init__, making local auditability harder rather than easier. The verbose copyright header and docstrings add noise. The use of @final and Final[] type annotations, while not wrong, adds complexity beyond what the task warrants. The input validation in __init__ is a reasonable addition but not required by the spec. Overall the structure is sound but over-abstracted for a ~50-line problem.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and follows RCS-5 requirements well: state is explicit and inspectable, configuration values are named, and half-open transitions are properly handled. The code is readable and well-structured. However, it suffers from over-engineering relative to the Zen of Python: excessive private helper methods (_transition_to_open, _transition_to_half_open, _transition_to_closed, _reset_failures, _is_recovery_timeout_elapsed, _handle_failure, _handle_success) fragment simple logic that could live directly in call() and __init__, making local auditability harder rather than easier. The verbose copyright header and docstrings add noise. The use of @final and Final[] type annotations, while not wrong, adds complexity beyond what the task warrants. The input validation in __init__ is a reasonable addition but not required by the spec. Overall the structure is sound but over-abstracted for a ~50-line problem.\",\n  \"strengths\": [\n    \"State constants are explicit class-level Final attributes, satisfying RCS-5 inspectability\",\n    \"Named configuration attributes _failure_threshold and _recovery_timeout are clear\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Injected now= callable enables deterministic testing\",\n    \"State transitions are logically correct and cover all edge cases\"\n  ],\n  \"weaknesses\": [\n    \"Excessive decomposition into 7 private helper methods fragments simple logic that would be clearer inline\",\n    \"Over-engineered for the task size: @final, Final[], TypeVar, and extensive type annotations add unnecessary complexity\",\n    \"Verbose copyright header and docstrings obscure the actual logic\",\n    \"Input validation adds code not required by the spec, violating YAGNI\",\n    \"_reset_failures() is a one-liner method that adds indirection without clarity benefit\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "State constants are explicit class-level Final attributes, satisfying RCS-5 inspectability",
+      "Named configuration attributes _failure_threshold and _recovery_timeout are clear",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Injected now= callable enables deterministic testing",
+      "State transitions are logically correct and cover all edge cases"
+    ],
+    "weaknesses": [
+      "Excessive decomposition into 7 private helper methods fragments simple logic that would be clearer inline",
+      "Over-engineered for the task size: @final, Final[], TypeVar, and extensive type annotations add unnecessary complexity",
+      "Verbose copyright header and docstrings obscure the actual logic",
+      "Input validation adds code not required by the spec, violating YAGNI",
+      "_reset_failures() is a one-liner method that adds indirection without clarity benefit"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.482,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 25,
+    "function_count": 9,
+    "loc": 136,
+    "maintainability_index": 66.063,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_karpathy_generation"
+}

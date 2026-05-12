@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. The helper `_is_allowed_identifier` is a small pure function with a clear name, and the main function has flat control flow with explicit data movement via `seen` and `sanitized`. The logic is locally auditable and uses ordinary constructs. Minor weaknesses include using manual character range comparisons instead of the simpler `str.isalnum()` or `re.match` / `field.replace('_','').isalnum()` approach, and mixing old-style `List`/`Set` type hints from `typing` with modern lowercase `set`/`list` in the function body \u2014 a small inconsistency. There's also no input validation (e.g., raising on non-string elements), though the spec doesn't explicitly require it. The deduplication logic adds `seen` only on success, which is correct but slightly asymmetric \u2014 a guard clause style could make it marginally cleaner. Overall, this is a solid, maintainable implementation that closely follows the spirit of the Zen oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. The helper `_is_allowed_identifier` is a small pure function with a clear name, and the main function has flat control flow with explicit data movement via `seen` and `sanitized`. The logic is locally auditable and uses ordinary constructs. Minor weaknesses include using manual character range comparisons instead of the simpler `str.isalnum()` or `re.match` / `field.replace('_','').isalnum()` approach, and mixing old-style `List`/`Set` type hints from `typing` with modern lowercase `set`/`list` in the function body \u2014 a small inconsistency. There's also no input validation (e.g., raising on non-string elements), though the spec doesn't explicitly require it. The deduplication logic adds `seen` only on success, which is correct but slightly asymmetric \u2014 a guard clause style could make it marginally cleaner. Overall, this is a solid, maintainable implementation that closely follows the spirit of the Zen oracle.\",\n  \"strengths\": [\n    \"Small, pure helper with a descriptive name\",\n    \"Flat control flow with clear guard clauses\",\n    \"Explicit data movement; no hidden mutation\",\n    \"Correct deduplication preserving order\",\n    \"Easy to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"Manual character range comparisons instead of simpler `str.isalnum()` + underscore check\",\n    \"Inconsistent type hint style: `typing.List`/`Set` in signature vs. built-in `list`/`set` in body\",\n    \"No input validation for non-string elements in `fields`\",\n    \"Empty string passes `_is_allowed_identifier` vacuously (all() on empty is True)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helper with a descriptive name",
+      "Flat control flow with clear guard clauses",
+      "Explicit data movement; no hidden mutation",
+      "Correct deduplication preserving order",
+      "Easy to audit locally"
+    ],
+    "weaknesses": [
+      "Manual character range comparisons instead of simpler `str.isalnum()` + underscore check",
+      "Inconsistent type hint style: `typing.List`/`Set` in signature vs. built-in `list`/`set` in body",
+      "No input validation for non-string elements in `fields`",
+      "Empty string passes `_is_allowed_identifier` vacuously (all() on empty is True)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.022,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 20,
+    "maintainability_index": 57.438,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "baseline_generation"
+}

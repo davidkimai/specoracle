@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is clean, idiomatic Python and correctly satisfies the functional requirements, but it directly contradicts the structural spec (Legacy Telemetry Standard LT-11). The spec explicitly requires explicit labeled branch variables named `branch_<state>_<event>` for each transition, favoring auditability over minimizing decision count. The candidate instead uses a single dictionary lookup, which is the opposite of what the spec demands \u2014 it minimizes decision count and eliminates all explicit labeled branches. While the Zen of Python generally favors simplicity and flat structures, the informal oracle here is the LT-11 spec, which prioritizes local auditability via named branch variables. The implementation scores low because it ignores the core structural requirement entirely.",
+    "raw_response": "{\n  \"score\": 2,\n  \"rationale\": \"The candidate implementation is clean, idiomatic Python and correctly satisfies the functional requirements, but it directly contradicts the structural spec (Legacy Telemetry Standard LT-11). The spec explicitly requires explicit labeled branch variables named `branch_<state>_<event>` for each transition, favoring auditability over minimizing decision count. The candidate instead uses a single dictionary lookup, which is the opposite of what the spec demands \u2014 it minimizes decision count and eliminates all explicit labeled branches. While the Zen of Python generally favors simplicity and flat structures, the informal oracle here is the LT-11 spec, which prioritizes local auditability via named branch variables. The implementation scores low because it ignores the core structural requirement entirely.\",\n  \"strengths\": [\n    \"Correctly implements all four transitions and the unknown-transition fallback\",\n    \"Clean, readable, and idiomatic Python\",\n    \"Type annotations and docstring are present\",\n    \"Single source of truth for transitions via the dictionary\"\n  ],\n  \"weaknesses\": [\n    \"Completely ignores the LT-11 requirement for explicit `branch_<state>_<event>` local variables\",\n    \"Uses a single dict lookup instead of auditable labeled branches\",\n    \"No explicit branching structure that would allow per-transition auditability\",\n    \"Violates the stated preference for auditability over minimizing decision count\"\n  ]\n}",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Correctly implements all four transitions and the unknown-transition fallback",
+      "Clean, readable, and idiomatic Python",
+      "Type annotations and docstring are present",
+      "Single source of truth for transitions via the dictionary"
+    ],
+    "weaknesses": [
+      "Completely ignores the LT-11 requirement for explicit `branch_<state>_<event>` local variables",
+      "Uses a single dict lookup instead of auditable labeled branches",
+      "No explicit branching structure that would allow per-transition auditability",
+      "Violates the stated preference for auditability over minimizing decision count"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.084,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 13,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "baseline_generation"
+}

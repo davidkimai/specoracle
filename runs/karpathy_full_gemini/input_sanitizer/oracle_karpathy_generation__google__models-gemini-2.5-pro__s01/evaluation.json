@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, but carries unnecessary weight. The module-level docstring adds no value for a single-function utility. The function docstring is verbose beyond what the task warrants \u2014 a one-liner would suffice. The `seen` set is a valid deduplication mechanism but adds a second data structure; a simpler approach would use an ordered dict or just check `if field not in sanitized` (acceptable for small lists) or keep the seen set but without the ceremony. The regex `r'\\w+'` is subtly wrong: `\\w` in Python's `re` matches Unicode word characters by default (e.g., accented letters), not strictly ASCII letters, digits, and underscores \u2014 the spec says 'only letters, digits, and underscores' which could be interpreted as ASCII-only, making `r'^[a-zA-Z0-9_]+$'` or `re.fullmatch(r'[A-Za-z0-9_]+', field)` more precise and explicit. The inline comment is helpful but the multi-line block comment is over-engineered for this logic. Overall the structure is flat and readable, but the docstring verbosity and the Unicode ambiguity in the regex are meaningful deductions against the simplicity-first oracle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, but carries unnecessary weight. The module-level docstring adds no value for a single-function utility. The function docstring is verbose beyond what the task warrants \u2014 a one-liner would suffice. The `seen` set is a valid deduplication mechanism but adds a second data structure; a simpler approach would use an ordered dict or just check `if field not in sanitized` (acceptable for small lists) or keep the seen set but without the ceremony. The regex `r'\\\\w+'` is subtly wrong: `\\\\w` in Python's `re` matches Unicode word characters by default (e.g., accented letters), not strictly ASCII letters, digits, and underscores \u2014 the spec says 'only letters, digits, and underscores' which could be interpreted as ASCII-only, making `r'^[a-zA-Z0-9_]+$'` or `re.fullmatch(r'[A-Za-z0-9_]+', field)` more precise and explicit. The inline comment is helpful but the multi-line block comment is over-engineered for this logic. Overall the structure is flat and readable, but the docstring verbosity and the Unicode ambiguity in the regex are meaningful deductions against the simplicity-first oracle.\",\n  \"strengths\": [\n    \"Flat, single-loop structure with no unnecessary abstractions\",\n    \"Correct deduplication preserving first-occurrence order\",\n    \"Uses re.fullmatch which avoids partial-match bugs\",\n    \"No speculative features or configurability added\"\n  ],\n  \"weaknesses\": [\n    \"Module and function docstrings are excessively verbose for a minimal utility\",\n    \"\\\\w matches Unicode word characters, not strictly ASCII letters/digits/underscores as specified\",\n    \"The `seen` set adds a second data structure; could be simplified or at least the pattern is slightly ceremonious\",\n    \"Inline comment block is over-explained relative to the simplicity-first guideline\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-loop structure with no unnecessary abstractions",
+      "Correct deduplication preserving first-occurrence order",
+      "Uses re.fullmatch which avoids partial-match bugs",
+      "No speculative features or configurability added"
+    ],
+    "weaknesses": [
+      "Module and function docstrings are excessively verbose for a minimal utility",
+      "\\w matches Unicode word characters, not strictly ASCII letters/digits/underscores as specified",
+      "The `seen` set adds a second data structure; could be simplified or at least the pattern is slightly ceremonious",
+      "Inline comment block is over-explained relative to the simplicity-first guideline"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.543,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 28,
+    "maintainability_index": 80.879,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_karpathy_generation"
+}

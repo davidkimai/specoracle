@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and flat \u2014 a single loop over the sorted union of keys, a sentinel for missing values, and a straightforward record construction. It directly satisfies every requirement: changed, added, and removed fields each produce an explicit record with field/before/after keys, sorted by field name. The sentinel pattern (_MISSING) is a well-known Pythonic idiom that correctly distinguishes 'absent' from None values, which is more correct than using None as a sentinel. The code is locally auditable in one pass with no hidden control flow, no unnecessary abstractions, and no architectural slop. The only minor quibble is that collapsing the missing-check and inequality-check into a single compound condition is slightly less explicit than two separate branches, but it remains readable and correct.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and flat \u2014 a single loop over the sorted union of keys, a sentinel for missing values, and a straightforward record construction. It directly satisfies every requirement: changed, added, and removed fields each produce an explicit record with field/before/after keys, sorted by field name. The sentinel pattern (_MISSING) is a well-known Pythonic idiom that correctly distinguishes 'absent' from None values, which is more correct than using None as a sentinel. The code is locally auditable in one pass with no hidden control flow, no unnecessary abstractions, and no architectural slop. The only minor quibble is that collapsing the missing-check and inequality-check into a single compound condition is slightly less explicit than two separate branches, but it remains readable and correct.\",\n  \"strengths\": [\n    \"Single flat loop with no nested functions or classes\",\n    \"Sentinel object correctly distinguishes absent fields from None-valued fields\",\n    \"Sorting happens at iteration time, not as a post-processing step\",\n    \"Record keys match the spec exactly (field, before, after)\",\n    \"Handles added, removed, and changed fields uniformly\"\n  ],\n  \"weaknesses\": [\n    \"Compound condition mixes two distinct concerns (missing vs. changed) in one if-expression, slightly reducing explicitness\",\n    \"No type annotations on the sentinel or internal variables, minor readability gap\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single flat loop with no nested functions or classes",
+      "Sentinel object correctly distinguishes absent fields from None-valued fields",
+      "Sorting happens at iteration time, not as a post-processing step",
+      "Record keys match the spec exactly (field, before, after)",
+      "Handles added, removed, and changed fields uniformly"
+    ],
+    "weaknesses": [
+      "Compound condition mixes two distinct concerns (missing vs. changed) in one if-expression, slightly reducing explicitness",
+      "No type annotations on the sentinel or internal variables, minor readability gap"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.46,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 63.962,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured with small pure helpers, flat control flow, explicit data movement, and clear error handling. The decomposition into `_is_integer` and `_valid_event_fields` is appropriate and keeps the main function auditable. The guard clauses are explicit and the accumulation logic is straightforward. Minor weaknesses include the `TypeError` for non-list events (not required by spec and arguably speculative), the `_is_integer` check on `window_size` being slightly over-strict (rejecting booleans is correct but the spec says 'positive' without type constraint), and the mutable dict accumulation pattern could be marginally simplified using `collections.defaultdict` or a two-pass approach, though the current approach is perfectly readable. Overall this is a solid, maintainable implementation that closely follows the Zen principles.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured with small pure helpers, flat control flow, explicit data movement, and clear error handling. The decomposition into `_is_integer` and `_valid_event_fields` is appropriate and keeps the main function auditable. The guard clauses are explicit and the accumulation logic is straightforward. Minor weaknesses include the `TypeError` for non-list events (not required by spec and arguably speculative), the `_is_integer` check on `window_size` being slightly over-strict (rejecting booleans is correct but the spec says 'positive' without type constraint), and the mutable dict accumulation pattern could be marginally simplified using `collections.defaultdict` or a two-pass approach, though the current approach is perfectly readable. Overall this is a solid, maintainable implementation that closely follows the Zen principles.\",\n  \"strengths\": [\n    \"Small, focused helpers with clear single responsibilities\",\n    \"Flat control flow with guard clauses instead of deep nesting\",\n    \"Explicit data movement with no hidden mutation or global state\",\n    \"Clear ValueError with descriptive message for invalid window_size\",\n    \"Readable accumulation logic that is easy to audit locally\",\n    \"Correct handling of malformed events via None sentinel from helper\"\n  ],\n  \"weaknesses\": [\n    \"Raising TypeError for non-list events is speculative \u2014 the spec only mentions ValueError for window_size\",\n    \"The `_is_integer` type check on window_size rejects booleans (True/False), which may be overly strict beyond spec\",\n    \"Initializing the summary dict inline with a conditional check is slightly verbose; defaultdict or setdefault would be more idiomatic\",\n    \"The `summaries` dict values are mutable dicts that get returned directly, allowing callers to mutate internal state\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, focused helpers with clear single responsibilities",
+      "Flat control flow with guard clauses instead of deep nesting",
+      "Explicit data movement with no hidden mutation or global state",
+      "Clear ValueError with descriptive message for invalid window_size",
+      "Readable accumulation logic that is easy to audit locally",
+      "Correct handling of malformed events via None sentinel from helper"
+    ],
+    "weaknesses": [
+      "Raising TypeError for non-list events is speculative \u2014 the spec only mentions ValueError for window_size",
+      "The `_is_integer` type check on window_size rejects booleans (True/False), which may be overly strict beyond spec",
+      "Initializing the summary dict inline with a conditional check is slightly verbose; defaultdict or setdefault would be more idiomatic",
+      "The `summaries` dict values are mutable dicts that get returned directly, allowing callers to mutate internal state"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.255,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.333,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 27,
+    "maintainability_index": 50.536,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: it uses a plain dict of weakrefs, the three required methods are minimal and clear, and there are no speculative abstractions. The main deductions come from over-engineering relative to the task: the TypeVar T adds complexity without real benefit (the return type of get() cannot be statically verified anyway), the verbose docstrings exceed what a minimal implementation needs, and the import of Optional/TypeVar/Dict from typing is more ceremony than the task warrants. The core logic itself\u2014register stores a weakref, get dereferences it returning None on miss or dead ref, cleanup dict-comprehends out dead entries\u2014is exactly the right shape and could not be meaningfully simplified further.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: it uses a plain dict of weakrefs, the three required methods are minimal and clear, and there are no speculative abstractions. The main deductions come from over-engineering relative to the task: the TypeVar T adds complexity without real benefit (the return type of get() cannot be statically verified anyway), the verbose docstrings exceed what a minimal implementation needs, and the import of Optional/TypeVar/Dict from typing is more ceremony than the task warrants. The core logic itself\u2014register stores a weakref, get dereferences it returning None on miss or dead ref, cleanup dict-comprehends out dead entries\u2014is exactly the right shape and could not be meaningfully simplified further.\",\n  \"strengths\": [\n    \"Core logic is minimal and correct: three methods, each doing exactly one thing\",\n    \"cleanup() uses a clean dict comprehension rather than mutating during iteration\",\n    \"get() correctly handles both missing keys and dead references with a single None return path\",\n    \"No extra methods, base classes, callbacks, or speculative features\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar T is unnecessary ceremony; weakref.ref is not truly generic in a way that helps callers here\",\n    \"Docstrings are disproportionately verbose for a ~15-line implementation\",\n    \"Importing Optional, TypeVar, Dict, Hashable from typing adds noise beyond what the task requires\",\n    \"Class-level docstring is redundant with the task description and adds no auditable value\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Core logic is minimal and correct: three methods, each doing exactly one thing",
+      "cleanup() uses a clean dict comprehension rather than mutating during iteration",
+      "get() correctly handles both missing keys and dead references with a single None return path",
+      "No extra methods, base classes, callbacks, or speculative features"
+    ],
+    "weaknesses": [
+      "TypeVar T is unnecessary ceremony; weakref.ref is not truly generic in a way that helps callers here",
+      "Docstrings are disproportionately verbose for a ~15-line implementation",
+      "Importing Optional, TypeVar, Dict, Hashable from typing adds noise beyond what the task requires",
+      "Class-level docstring is redundant with the task description and adds no auditable value"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.7,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.13s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 47,
+    "maintainability_index": 73.633,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "oracle_karpathy_generation"
+}

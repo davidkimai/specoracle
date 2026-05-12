@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a simple loop with guard clauses to handle deduplication, allowlist filtering, and character validation in sequence, making each condition easy to audit locally. The data movement is explicit (seen set + clean list), there's no hidden mutation or global state, and the names are self-explanatory. The character validation using `field.replace('_', '').isalnum()` is a reasonable standard-library approach, though a small pure helper like `is_valid_field(field)` could improve local readability and testability. The absence of input type validation (e.g., raising on non-list/non-set inputs) is a minor gap given the operational constraint to raise clear errors for invalid inputs. Overall, the architecture is appropriately minimal with no speculative abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a simple loop with guard clauses to handle deduplication, allowlist filtering, and character validation in sequence, making each condition easy to audit locally. The data movement is explicit (seen set + clean list), there's no hidden mutation or global state, and the names are self-explanatory. The character validation using `field.replace('_', '').isalnum()` is a reasonable standard-library approach, though a small pure helper like `is_valid_field(field)` could improve local readability and testability. The absence of input type validation (e.g., raising on non-list/non-set inputs) is a minor gap given the operational constraint to raise clear errors for invalid inputs. Overall, the architecture is appropriately minimal with no speculative abstractions.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses avoids nesting\",\n    \"Explicit data movement with seen set and clean list\",\n    \"No hidden mutation or global state\",\n    \"Simple standard-library constructs only\",\n    \"Names clearly communicate intent\"\n  ],\n  \"weaknesses\": [\n    \"Character validation logic could be extracted into a small named helper for auditability\",\n    \"No input validation or error raising for invalid argument types\",\n    \"The replace+isalnum trick is slightly opaque compared to a regex or explicit helper\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses avoids nesting",
+      "Explicit data movement with seen set and clean list",
+      "No hidden mutation or global state",
+      "Simple standard-library constructs only",
+      "Names clearly communicate intent"
+    ],
+    "weaknesses": [
+      "Character validation logic could be extracted into a small named helper for auditability",
+      "No input validation or error raising for invalid argument types",
+      "The replace+isalnum trick is slightly opaque compared to a regex or explicit helper"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.401,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 63.598,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "human_reference"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Each method is small and locally auditable, control flow is straightforward with guard clauses at the top, data movement is visible (explicit lock acquisition, explicit copy in snapshot), and naming is clear. The use of __slots__, a plain Lock, and standard dict operations are all ordinary stdlib constructs with no speculative abstractions. The only minor quibbles are the extra isinstance/bool type-checks on max_total and name which go slightly beyond the stated requirements (the spec only asks for ValueError on non-positive max_total and OverflowError on overflow), adding a small amount of unrequested defensive code, and the snapshot includes zero-value entries only if they were somehow set to zero externally, but since increment only adds positive values this is fine in practice. These are very minor issues that don't meaningfully detract from the overall structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Each method is small and locally auditable, control flow is straightforward with guard clauses at the top, data movement is visible (explicit lock acquisition, explicit copy in snapshot), and naming is clear. The use of __slots__, a plain Lock, and standard dict operations are all ordinary stdlib constructs with no speculative abstractions. The only minor quibbles are the extra isinstance/bool type-checks on max_total and name which go slightly beyond the stated requirements (the spec only asks for ValueError on non-positive max_total and OverflowError on overflow), adding a small amount of unrequested defensive code, and the snapshot includes zero-value entries only if they were somehow set to zero externally, but since increment only adds positive values this is fine in practice. These are very minor issues that don't meaningfully detract from the overall structural quality.\",\n  \"strengths\": [\n    \"Flat, readable control flow with guard clauses before mutation\",\n    \"Lock scope is minimal and explicit in every method\",\n    \"snapshot() returns a defensive copy, preventing external mutation of internal state\",\n    \"Cached _total avoids recomputing sum on every total() call\",\n    \"__slots__ makes internal state explicit and prevents accidental attribute addition\",\n    \"Docstrings are concise and accurate\"\n  ],\n  \"weaknesses\": [\n    \"Type checks on max_total and name go beyond the stated requirements, adding unrequested defensive code\",\n    \"The bool-check idiom for max_total (isinstance(max_total, bool)) is a Python quirk that may surprise readers unfamiliar with bool subclassing int\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, readable control flow with guard clauses before mutation",
+      "Lock scope is minimal and explicit in every method",
+      "snapshot() returns a defensive copy, preventing external mutation of internal state",
+      "Cached _total avoids recomputing sum on every total() call",
+      "__slots__ makes internal state explicit and prevents accidental attribute addition",
+      "Docstrings are concise and accurate"
+    ],
+    "weaknesses": [
+      "Type checks on max_total and name go beyond the stated requirements, adding unrequested defensive code",
+      "The bool-check idiom for max_total (isinstance(max_total, bool)) is a Python quirk that may surprise readers unfamiliar with bool subclassing int"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.957,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 33,
+    "maintainability_index": 52.149,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_generation"
+}

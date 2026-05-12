@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without speculative abstractions. It uses a single lock, maintains a redundant `_total` integer for O(1) total() queries (a reasonable conservative optimization), and all three methods are straightforward and locally auditable. The docstrings are somewhat verbose for such simple methods but don't add harmful complexity. The `isinstance` check in the constructor is slightly over-engineered (the spec only says 'positive', not 'must be int'), and the `Dict` import from `typing` is unnecessary in modern Python, but these are minor issues. The core logic is correct, thread-safe, and the snapshot correctly returns only nonzero counts (since counts are only ever incremented). No mutable internal state is exposed.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without speculative abstractions. It uses a single lock, maintains a redundant `_total` integer for O(1) total() queries (a reasonable conservative optimization), and all three methods are straightforward and locally auditable. The docstrings are somewhat verbose for such simple methods but don't add harmful complexity. The `isinstance` check in the constructor is slightly over-engineered (the spec only says 'positive', not 'must be int'), and the `Dict` import from `typing` is unnecessary in modern Python, but these are minor issues. The core logic is correct, thread-safe, and the snapshot correctly returns only nonzero counts (since counts are only ever incremented). No mutable internal state is exposed.\",\n  \"strengths\": [\n    \"Minimal architecture: single lock, no unnecessary abstractions or inheritance\",\n    \"Correct thread-safety: all mutations and reads are under the same lock\",\n    \"Redundant _total field avoids O(n) sum on every total() call without over-engineering\",\n    \"snapshot() correctly returns a copy, preventing external mutation of internal state\",\n    \"Increment logic is atomic and correct under concurrent access\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(max_total, int) check is not required by the spec and rejects valid inputs like numpy integers or booleans in unexpected ways\",\n    \"typing.Dict import is unnecessary in Python 3.9+ where dict[str, int] works natively\",\n    \"Docstrings are more verbose than needed for such simple, self-evident methods\",\n    \"The comment in snapshot() explaining why all stored counts are nonzero is slightly redundant given the straightforward logic\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal architecture: single lock, no unnecessary abstractions or inheritance",
+      "Correct thread-safety: all mutations and reads are under the same lock",
+      "Redundant _total field avoids O(n) sum on every total() call without over-engineering",
+      "snapshot() correctly returns a copy, preventing external mutation of internal state",
+      "Increment logic is atomic and correct under concurrent access"
+    ],
+    "weaknesses": [
+      "isinstance(max_total, int) check is not required by the spec and rejects valid inputs like numpy integers or booleans in unexpected ways",
+      "typing.Dict import is unnecessary in Python 3.9+ where dict[str, int] works natively",
+      "Docstrings are more verbose than needed for such simple, self-evident methods",
+      "The comment in snapshot() explaining why all stored counts are nonzero is slightly redundant given the straightforward logic"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.226,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 58,
+    "maintainability_index": 71.397,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_karpathy_generation"
+}

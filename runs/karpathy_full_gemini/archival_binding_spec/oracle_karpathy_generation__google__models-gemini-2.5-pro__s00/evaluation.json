@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the persistent dictionary `sections_ledger`, stages parsing into clearly labeled steps (preprocessing, key-value split, section/key split, validation, recording), preserves insertion order, and raises `ValueError` with messages that identify the archival field being rejected. The staged comments are explicit and readable, making the logic locally auditable without needing to trace through abstractions. Minor deductions: the error messages could more precisely name the offending field value (e.g., quoting the actual line or field), and the use of `typing.Dict` instead of the modern built-in `dict` type hint is a small anachronism, but neither issue materially undermines the structural quality or spec compliance.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the persistent dictionary `sections_ledger`, stages parsing into clearly labeled steps (preprocessing, key-value split, section/key split, validation, recording), preserves insertion order, and raises `ValueError` with messages that identify the archival field being rejected. The staged comments are explicit and readable, making the logic locally auditable without needing to trace through abstractions. Minor deductions: the error messages could more precisely name the offending field value (e.g., quoting the actual line or field), and the use of `typing.Dict` instead of the modern built-in `dict` type hint is a small anachronism, but neither issue materially undermines the structural quality or spec compliance.\",\n  \"strengths\": [\n    \"Uses `sections_ledger` naming convention exactly as specified\",\n    \"Visibly staged parsing with labeled comments for each stage\",\n    \"Single public function with no unnecessary helpers\",\n    \"Insertion order preserved via standard dict\",\n    \"Error messages identify the archival field category being rejected\",\n    \"Clean, flat control flow with no nested comprehensions or compressed one-liners\"\n  ],\n  \"weaknesses\": [\n    \"Error messages don't include the actual offending line or field value, reducing auditability\",\n    \"Uses legacy `typing.Dict` instead of modern `dict` built-in type hints\",\n    \"Stage comments are slightly verbose/redundant given the self-evident code beneath them\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `sections_ledger` naming convention exactly as specified",
+      "Visibly staged parsing with labeled comments for each stage",
+      "Single public function with no unnecessary helpers",
+      "Insertion order preserved via standard dict",
+      "Error messages identify the archival field category being rejected",
+      "Clean, flat control flow with no nested comprehensions or compressed one-liners"
+    ],
+    "weaknesses": [
+      "Error messages don't include the actual offending line or field value, reducing auditability",
+      "Uses legacy `typing.Dict` instead of modern `dict` built-in type hints",
+      "Stage comments are slightly verbose/redundant given the self-evident code beneath them"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.596,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 54,
+    "maintainability_index": 82.33,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_karpathy_generation"
+}

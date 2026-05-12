@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, minimal realization of the spec. It uses a single Lock with no layering, keeps all state explicit and co-located in __init__, uses guard clauses to keep increment flat, and exposes no mutable internals (snapshot returns a copy, total returns a primitive). Variable names are self-explanatory and every method is locally auditable in a few lines. The cached _total field avoids recomputing sum(_counts.values()) on every call, which is a sensible micro-optimization that doesn't add complexity. The only minor quibble is that snapshot silently includes zero-value entries if they were somehow inserted, but the increment logic never writes a zero, so in practice only nonzero counts appear \u2014 the spec requirement is met implicitly rather than explicitly filtered, which is fine given the invariant holds. No speculative abstractions, no metaprogramming, no unused extension points.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, minimal realization of the spec. It uses a single Lock with no layering, keeps all state explicit and co-located in __init__, uses guard clauses to keep increment flat, and exposes no mutable internals (snapshot returns a copy, total returns a primitive). Variable names are self-explanatory and every method is locally auditable in a few lines. The cached _total field avoids recomputing sum(_counts.values()) on every call, which is a sensible micro-optimization that doesn't add complexity. The only minor quibble is that snapshot silently includes zero-value entries if they were somehow inserted, but the increment logic never writes a zero, so in practice only nonzero counts appear \u2014 the spec requirement is met implicitly rather than explicitly filtered, which is fine given the invariant holds. No speculative abstractions, no metaprogramming, no unused extension points.\",\n  \"strengths\": [\n    \"Single, obvious Lock protecting all shared state\",\n    \"Guard clause at top of increment keeps control flow flat\",\n    \"Cached _total avoids O(n) sum on every total() call without adding complexity\",\n    \"snapshot() returns a plain dict copy \u2014 no mutable internals exposed\",\n    \"Constructor validates input immediately with a clear error message\",\n    \"All state is explicit and co-located in __init__\"\n  ],\n  \"weaknesses\": [\n    \"The 'nonzero counts' requirement is satisfied implicitly by invariant rather than an explicit filter, which could confuse a future maintainer who adds a decrement method\",\n    \"No docstrings or type annotations on methods, though the names are clear enough\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single, obvious Lock protecting all shared state",
+      "Guard clause at top of increment keeps control flow flat",
+      "Cached _total avoids O(n) sum on every total() call without adding complexity",
+      "snapshot() returns a plain dict copy \u2014 no mutable internals exposed",
+      "Constructor validates input immediately with a clear error message",
+      "All state is explicit and co-located in __init__"
+    ],
+    "weaknesses": [
+      "The 'nonzero counts' requirement is satisfied implicitly by invariant rather than an explicit filter, which could confuse a future maintainer who adds a decrement method",
+      "No docstrings or type annotations on methods, though the names are clear enough"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 3.742,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.6,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 4,
+    "loc": 23,
+    "maintainability_index": 58.289,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "human_reference"
+}

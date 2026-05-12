@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate code faithfully satisfies the functional requirements and correctly follows the LT-11 structural spec by naming every branch variable with the required `branch_<state>_<event>` convention. However, from a Zen of Python perspective this is architecturally awkward: splitting each transition into a boolean assignment followed by a redundant `if` check doubles the decision points without adding clarity, and the boolean variables are immediately consumed and discarded, making them feel like cargo-cult labels rather than genuinely auditable state. A clean Pythonic approach would use a lookup dict or direct `if/elif` chain; the LT-11 spec's demand for labeled branch variables is itself an anti-pattern that conflicts with Python's preference for simplicity and flatness, and the implementation mechanically satisfies that anti-pattern without mitigating its costs.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The candidate code faithfully satisfies the functional requirements and correctly follows the LT-11 structural spec by naming every branch variable with the required `branch_<state>_<event>` convention. However, from a Zen of Python perspective this is architecturally awkward: splitting each transition into a boolean assignment followed by a redundant `if` check doubles the decision points without adding clarity, and the boolean variables are immediately consumed and discarded, making them feel like cargo-cult labels rather than genuinely auditable state. A clean Pythonic approach would use a lookup dict or direct `if/elif` chain; the LT-11 spec's demand for labeled branch variables is itself an anti-pattern that conflicts with Python's preference for simplicity and flatness, and the implementation mechanically satisfies that anti-pattern without mitigating its costs.\",\n  \"strengths\": [\n    \"All four valid transitions are correctly implemented and return the right states\",\n    \"Unknown transitions correctly fall through to return the current state\",\n    \"Branch variable names exactly match the required `branch_<state>_<event>` naming convention\",\n    \"Code is flat with no nesting and easy to read line-by-line\"\n  ],\n  \"weaknesses\": [\n    \"Splitting each transition into a boolean assignment plus a separate `if` is redundant and verbose \u2014 direct `if` conditions would be cleaner\",\n    \"The boolean variables are single-use and immediately discarded, providing no real auditability benefit\",\n    \"The LT-11 spec itself is an anti-Pythonic oracle; blindly following it produces structural slop\",\n    \"No use of a data-driven approach (e.g., dict lookup) that would be more Pythonic and maintainable for scaling transitions\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "All four valid transitions are correctly implemented and return the right states",
+      "Unknown transitions correctly fall through to return the current state",
+      "Branch variable names exactly match the required `branch_<state>_<event>` naming convention",
+      "Code is flat with no nesting and easy to read line-by-line"
+    ],
+    "weaknesses": [
+      "Splitting each transition into a boolean assignment plus a separate `if` is redundant and verbose \u2014 direct `if` conditions would be cleaner",
+      "The boolean variables are single-use and immediately discarded, providing no real auditability benefit",
+      "The LT-11 spec itself is an anti-Pythonic oracle; blindly following it produces structural slop",
+      "No use of a data-driven approach (e.g., dict lookup) that would be more Pythonic and maintainable for scaling transitions"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.352,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 58.492,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

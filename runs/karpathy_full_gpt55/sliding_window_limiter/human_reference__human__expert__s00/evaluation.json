@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses a small pure helper (_retained_events) to isolate the filtering logic, keeps control flow flat with a guard clause in allow(), uses explicit data movement with no hidden global state, raises clear errors for invalid inputs, and relies entirely on ordinary standard-library constructs. The naming is clear and the code is locally auditable. The one mild concern is that _retained_events has a side effect (it mutates self._events[key] as a pruning step), which slightly violates the 'pure helper' principle and makes the helper less transparent \u2014 a caller reading allow() must understand that _retained_events both filters and writes back. Separating the pruning from the filtering, or making the side effect more explicit, would improve auditability. The snapshot() method correctly returns a copy. Overall this is a solid, minimal implementation with only a minor structural impurity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses a small pure helper (_retained_events) to isolate the filtering logic, keeps control flow flat with a guard clause in allow(), uses explicit data movement with no hidden global state, raises clear errors for invalid inputs, and relies entirely on ordinary standard-library constructs. The naming is clear and the code is locally auditable. The one mild concern is that _retained_events has a side effect (it mutates self._events[key] as a pruning step), which slightly violates the 'pure helper' principle and makes the helper less transparent \u2014 a caller reading allow() must understand that _retained_events both filters and writes back. Separating the pruning from the filtering, or making the side effect more explicit, would improve auditability. The snapshot() method correctly returns a copy. Overall this is a solid, minimal implementation with only a minor structural impurity.\",\n  \"strengths\": [\n    \"Small helper function isolates window-filtering logic\",\n    \"Guard clause in allow() keeps control flow flat\",\n    \"Explicit data movement with no hidden global state\",\n    \"Clear ValueError with descriptive message for invalid inputs\",\n    \"Uses only standard-library constructs (dict, list comprehension)\",\n    \"snapshot() returns a defensive copy\",\n    \"Names are self-explanatory and easy to explain\"\n  ],\n  \"weaknesses\": [\n    \"_retained_events is not purely functional \u2014 it mutates self._events[key] as a side effect, making it harder to reason about in isolation\",\n    \"The pruning side effect in the helper is not signaled by its name, which reads as a query rather than a command\",\n    \"Minor: retained list is rebuilt and reassigned even when allow() will ultimately return False, doing slightly redundant work\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small helper function isolates window-filtering logic",
+      "Guard clause in allow() keeps control flow flat",
+      "Explicit data movement with no hidden global state",
+      "Clear ValueError with descriptive message for invalid inputs",
+      "Uses only standard-library constructs (dict, list comprehension)",
+      "snapshot() returns a defensive copy",
+      "Names are self-explanatory and easy to explain"
+    ],
+    "weaknesses": [
+      "_retained_events is not purely functional \u2014 it mutates self._events[key] as a side effect, making it harder to reason about in isolation",
+      "The pruning side effect in the helper is not signaled by its name, which reads as a query rather than a command",
+      "Minor: retained list is rebuilt and reassigned even when allow() will ultimately return False, doing slightly redundant work"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.122,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 21,
+    "maintainability_index": 56.366,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "human_reference"
+}

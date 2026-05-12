@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a standard threading.Lock with context managers, keeps all state in clearly named instance variables, and raises typed errors with clear messages. The increment method uses a guard clause pattern rather than nesting. The snapshot returns a defensive copy. The isinstance(max_total, bool) guard is a thoughtful edge case. Minor quibbles: the isinstance(name, str) check in increment is a speculative defensive addition not required by the spec (the spec doesn't mention it), and caching _total as a separate integer alongside _counts is a minor redundancy (though it avoids summing on every total() call, which is a reasonable trade-off). Overall the code is sparse, auditable, and uses only ordinary stdlib constructs with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a standard threading.Lock with context managers, keeps all state in clearly named instance variables, and raises typed errors with clear messages. The increment method uses a guard clause pattern rather than nesting. The snapshot returns a defensive copy. The isinstance(max_total, bool) guard is a thoughtful edge case. Minor quibbles: the isinstance(name, str) check in increment is a speculative defensive addition not required by the spec (the spec doesn't mention it), and caching _total as a separate integer alongside _counts is a minor redundancy (though it avoids summing on every total() call, which is a reasonable trade-off). Overall the code is sparse, auditable, and uses only ordinary stdlib constructs with no architectural slop.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses rather than nested conditionals\",\n    \"Explicit lock usage with context managers throughout\",\n    \"Defensive copy in snapshot() prevents mutable internal state exposure\",\n    \"Clear, descriptive error messages with appropriate exception types\",\n    \"bool subclass guard in __init__ is a correct and thoughtful edge case\",\n    \"Minimal, well-named instance variables with no speculative abstractions\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(name, str) type check in increment is speculative and not required by the spec\",\n    \"Maintaining a separate _total counter alongside _counts is a minor redundancy (though justified for O(1) total())\",\n    \"__all__ export is a minor speculative addition not needed for the task\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses rather than nested conditionals",
+      "Explicit lock usage with context managers throughout",
+      "Defensive copy in snapshot() prevents mutable internal state exposure",
+      "Clear, descriptive error messages with appropriate exception types",
+      "bool subclass guard in __init__ is a correct and thoughtful edge case",
+      "Minimal, well-named instance variables with no speculative abstractions"
+    ],
+    "weaknesses": [
+      "isinstance(name, str) type check in increment is speculative and not required by the spec",
+      "Maintaining a separate _total counter alongside _counts is a minor redundancy (though justified for O(1) total())",
+      "__all__ export is a minor speculative addition not needed for the task"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.818,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 27,
+    "maintainability_index": 53.761,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "baseline_generation"
+}

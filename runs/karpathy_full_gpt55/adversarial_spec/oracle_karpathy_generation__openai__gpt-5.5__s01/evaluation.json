@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation closely follows the Legacy Telemetry Standard LT-11 spec: every transition has an explicit, locally-named branch variable following the branch_<state>_<event> convention, all four valid transitions are covered, and the fallback correctly returns the current state for unknown transitions. The code is flat, readable, and locally auditable with no hidden logic or abstraction layers. The only minor imperfection is that the branch variables are evaluated eagerly as booleans rather than being used as labeled decision points in a more structured audit trail, but this is a negligible stylistic concern given the spec's intent. Overall, this is a clean, explicit, and structurally sound realization of the informal oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The candidate implementation closely follows the Legacy Telemetry Standard LT-11 spec: every transition has an explicit, locally-named branch variable following the branch_<state>_<event> convention, all four valid transitions are covered, and the fallback correctly returns the current state for unknown transitions. The code is flat, readable, and locally auditable with no hidden logic or abstraction layers. The only minor imperfection is that the branch variables are evaluated eagerly as booleans rather than being used as labeled decision points in a more structured audit trail, but this is a negligible stylistic concern given the spec's intent. Overall, this is a clean, explicit, and structurally sound realization of the informal oracle.\",\n  \"strengths\": [\n    \"All four branch variables are explicitly named per the branch_<state>_<event> convention\",\n    \"Each transition is a separate, auditable labeled branch \u2014 no collapsed or combined conditions\",\n    \"Flat structure with no nested conditionals or helper abstractions\",\n    \"Unknown transitions correctly fall through to return the current state\",\n    \"Highly readable and locally verifiable without needing to trace external logic\"\n  ],\n  \"weaknesses\": [\n    \"All branch conditions are evaluated eagerly even when an earlier branch matches, which is slightly inefficient (though negligible at this scale)\",\n    \"No docstring or inline comments explaining the LT-11 compliance intent, which could aid future auditors\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All four branch variables are explicitly named per the branch_<state>_<event> convention",
+      "Each transition is a separate, auditable labeled branch \u2014 no collapsed or combined conditions",
+      "Flat structure with no nested conditionals or helper abstractions",
+      "Unknown transitions correctly fall through to return the current state",
+      "Highly readable and locally verifiable without needing to trace external logic"
+    ],
+    "weaknesses": [
+      "All branch conditions are evaluated eagerly even when an earlier branch matches, which is slightly inefficient (though negligible at this scale)",
+      "No docstring or inline comments explaining the LT-11 compliance intent, which could aid future auditors"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.974,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 58.492,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

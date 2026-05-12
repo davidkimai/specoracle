@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: it validates all required fields before accepting any into the output (collect-all-errors pattern), error messages explicitly name the failing field, and the clean dict is only returned after all validations pass. The code is flat, explicit, and locally auditable with no hidden control flow. The bool-before-int guard for age is a subtle correctness detail that shows care. The only minor structural quibble is that bundling multiple errors into a single ValueError with semicolons slightly obscures individual field attribution compared to raising on the first error or using a structured error type, but this is a minor style point and the field names are still clearly present in each message.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: it validates all required fields before accepting any into the output (collect-all-errors pattern), error messages explicitly name the failing field, and the clean dict is only returned after all validations pass. The code is flat, explicit, and locally auditable with no hidden control flow. The bool-before-int guard for age is a subtle correctness detail that shows care. The only minor structural quibble is that bundling multiple errors into a single ValueError with semicolons slightly obscures individual field attribution compared to raising on the first error or using a structured error type, but this is a minor style point and the field names are still clearly present in each message.\",\n  \"strengths\": [\n    \"Validates all fields before returning \u2014 no partial acceptance\",\n    \"Every error message explicitly names the offending field\",\n    \"Bool-before-int guard correctly rejects boolean age values\",\n    \"Returns a clean copy (list(payload['symptoms'])) rather than aliasing input\",\n    \"Flat, readable structure with no unnecessary abstraction\"\n  ],\n  \"weaknesses\": [\n    \"Joining all errors into one string makes programmatic parsing of individual field errors harder\",\n    \"No validation that patient_id is non-empty (empty string passes)\",\n    \"symptoms list copy is shallow \u2014 nested mutable objects would still be aliased (minor, since str is immutable here)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Validates all fields before returning \u2014 no partial acceptance",
+      "Every error message explicitly names the offending field",
+      "Bool-before-int guard correctly rejects boolean age values",
+      "Returns a clean copy (list(payload['symptoms'])) rather than aliasing input",
+      "Flat, readable structure with no unnecessary abstraction"
+    ],
+    "weaknesses": [
+      "Joining all errors into one string makes programmatic parsing of individual field errors harder",
+      "No validation that patient_id is non-empty (empty string passes)",
+      "symptoms list copy is shallow \u2014 nested mutable objects would still be aliased (minor, since str is immutable here)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.117,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 75.295,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_karpathy_generation"
+}

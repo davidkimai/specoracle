@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It correctly uses csv.reader to handle CSV parsing (including quoted fields and escaped commas), preserves streaming behavior by never materializing the input iterable into a list, handles empty lines by skipping them, and gracefully handles the edge case of no header. The dict comprehension with bounds checking for short rows is a reasonable defensive touch. The only minor quibble is that the bounds-checking fallback to empty string for missing cells is a design assumption not explicitly stated in the spec, but it's a conservative and sensible choice. The code is flat, readable, and locally auditable in under 20 lines.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It correctly uses csv.reader to handle CSV parsing (including quoted fields and escaped commas), preserves streaming behavior by never materializing the input iterable into a list, handles empty lines by skipping them, and gracefully handles the edge case of no header. The dict comprehension with bounds checking for short rows is a reasonable defensive touch. The only minor quibble is that the bounds-checking fallback to empty string for missing cells is a design assumption not explicitly stated in the spec, but it's a conservative and sensible choice. The code is flat, readable, and locally auditable in under 20 lines.\",\n  \"strengths\": [\n    \"Uses csv.reader for correct CSV parsing including quoted fields\",\n    \"Fully streaming \u2014 never converts input to a list\",\n    \"Handles missing header (empty input) gracefully with early return\",\n    \"Skips empty rows in both header search and data rows\",\n    \"Minimal code with no speculative abstractions or unused imports\"\n  ],\n  \"weaknesses\": [\n    \"Bounds-checking for short rows (filling missing cells with empty string) is an undocumented assumption, though conservative\",\n    \"Could use itertools.islice or next() for header extraction to be slightly more idiomatic, but current approach is clear and correct\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses csv.reader for correct CSV parsing including quoted fields",
+      "Fully streaming \u2014 never converts input to a list",
+      "Handles missing header (empty input) gracefully with early return",
+      "Skips empty rows in both header search and data rows",
+      "Minimal code with no speculative abstractions or unused imports"
+    ],
+    "weaknesses": [
+      "Bounds-checking for short rows (filling missing cells with empty string) is an undocumented assumption, though conservative",
+      "Could use itertools.islice or next() for header extraction to be slightly more idiomatic, but current approach is clear and correct"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.827,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 62.993,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_karpathy_generation"
+}

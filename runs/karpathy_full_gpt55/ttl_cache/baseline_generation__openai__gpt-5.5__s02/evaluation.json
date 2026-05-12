@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses an OrderedDict appropriately for LRU tracking, keeps control flow flat with guard clauses, makes data movement explicit (explicit timestamps, explicit eviction), and raises clear errors for invalid inputs. The `_purge_expired` helper is a small pure helper that does one thing. The `set` method correctly handles the max_size==0 edge case. Minor weaknesses include: `__contains__` has a subtle semantic bug (returns False if value is None), `_purge_expired` is called on every `set` which may be unnecessary overhead and slightly obscures the primary LRU eviction path, and the `ttl_seconds` validation doesn't raise on negative values. The `clear` and `__len__` methods are reasonable extras that don't add speculative abstraction. Overall the code is locally auditable, uses ordinary stdlib constructs, and avoids metaprogramming or framework-shaped patterns.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses an OrderedDict appropriately for LRU tracking, keeps control flow flat with guard clauses, makes data movement explicit (explicit timestamps, explicit eviction), and raises clear errors for invalid inputs. The `_purge_expired` helper is a small pure helper that does one thing. The `set` method correctly handles the max_size==0 edge case. Minor weaknesses include: `__contains__` has a subtle semantic bug (returns False if value is None), `_purge_expired` is called on every `set` which may be unnecessary overhead and slightly obscures the primary LRU eviction path, and the `ttl_seconds` validation doesn't raise on negative values. The `clear` and `__len__` methods are reasonable extras that don't add speculative abstraction. Overall the code is locally auditable, uses ordinary stdlib constructs, and avoids metaprogramming or framework-shaped patterns.\",\n  \"strengths\": [\n    \"OrderedDict used naturally for LRU without reinventing the wheel\",\n    \"Explicit timestamp storage makes TTL logic easy to audit locally\",\n    \"Clear input validation with typed errors for max_size and now\",\n    \"_purge_expired is a small, named helper with a single responsibility\",\n    \"max_size==0 edge case handled explicitly with an early return\",\n    \"Flat control flow throughout; no deep nesting\"\n  ],\n  \"weaknesses\": [\n    \"__contains__ returns False when stored value is None, which is a semantic inconsistency\",\n    \"ttl_seconds is not validated for negative values, which would silently make all entries immediately expired\",\n    \"_purge_expired on every set adds overhead and slightly obscures the simpler LRU-only eviction path\",\n    \"The two-phase expired-key collection in _purge_expired (list then pop) is slightly verbose compared to iterating a snapshot\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "OrderedDict used naturally for LRU without reinventing the wheel",
+      "Explicit timestamp storage makes TTL logic easy to audit locally",
+      "Clear input validation with typed errors for max_size and now",
+      "_purge_expired is a small, named helper with a single responsibility",
+      "max_size==0 edge case handled explicitly with an early return",
+      "Flat control flow throughout; no deep nesting"
+    ],
+    "weaknesses": [
+      "__contains__ returns False when stored value is None, which is a semantic inconsistency",
+      "ttl_seconds is not validated for negative values, which would silently make all entries immediately expired",
+      "_purge_expired on every set adds overhead and slightly obscures the simpler LRU-only eviction path",
+      "The two-phase expired-key collection in _purge_expired (list then pop) is slightly verbose compared to iterating a snapshot"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.097,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 7,
+    "loc": 53,
+    "maintainability_index": 44.488,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

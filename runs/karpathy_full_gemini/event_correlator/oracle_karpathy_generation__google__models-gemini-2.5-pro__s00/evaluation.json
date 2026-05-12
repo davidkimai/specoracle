@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable two-pass approach (group by session, sort, then scan), but it violates the Karpathy simplicity principle in several ways: the docstring is excessively verbose (nearly as long as the code itself), the type annotations use the legacy `List`/`Dict`/`Tuple` forms from `typing` instead of the built-in generics available since Python 3.9, and the inline comments over-explain obvious logic. The `used_b_indices` set tracking is a reasonable mechanism but adds complexity that could be avoided by simply removing matched B events from a queue. The overall structure is acceptable but the ceremony around it (imports, type aliases, docstring length) inflates the apparent complexity beyond what the task warrants. A minimal, clean solution would be roughly half the line count with the same correctness.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable two-pass approach (group by session, sort, then scan), but it violates the Karpathy simplicity principle in several ways: the docstring is excessively verbose (nearly as long as the code itself), the type annotations use the legacy `List`/`Dict`/`Tuple` forms from `typing` instead of the built-in generics available since Python 3.9, and the inline comments over-explain obvious logic. The `used_b_indices` set tracking is a reasonable mechanism but adds complexity that could be avoided by simply removing matched B events from a queue. The overall structure is acceptable but the ceremony around it (imports, type aliases, docstring length) inflates the apparent complexity beyond what the task warrants. A minimal, clean solution would be roughly half the line count with the same correctness.\",\n  \"strengths\": [\n    \"Correctly implements the core pairing logic: first later B per A, within time window, same session\",\n    \"Sorts events by timestamp before scanning, ensuring 'first later' semantics\",\n    \"Properly prevents a B event from being reused across multiple A pairings via used_b_indices\",\n    \"Handles missing session_id gracefully by skipping such events\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately long relative to the function complexity, violating simplicity-first\",\n    \"Uses deprecated typing.List/Dict/Tuple instead of built-in list/dict/tuple generics\",\n    \"Inline comments over-explain trivial logic, adding noise rather than clarity\",\n    \"Importing collections and typing adds boilerplate; defaultdict could be replaced with a simple dict.setdefault or plain grouping loop\",\n    \"The `used_b_indices` index-tracking approach is more complex than needed; a deque or pointer per session would be simpler\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correctly implements the core pairing logic: first later B per A, within time window, same session",
+      "Sorts events by timestamp before scanning, ensuring 'first later' semantics",
+      "Properly prevents a B event from being reused across multiple A pairings via used_b_indices",
+      "Handles missing session_id gracefully by skipping such events"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately long relative to the function complexity, violating simplicity-first",
+      "Uses deprecated typing.List/Dict/Tuple instead of built-in list/dict/tuple generics",
+      "Inline comments over-explain trivial logic, adding noise rather than clarity",
+      "Importing collections and typing adds boilerplate; defaultdict could be replaced with a simple dict.setdefault or plain grouping loop",
+      "The `used_b_indices` index-tracking approach is more complex than needed; a deque or pointer per session would be simpler"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.23,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n>       pairs = correlate_events(events, within=5)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsolution.py:37: in correlate_events\n    session_events.sort(key=lambda e: e[\"timestamp\"])\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ne = {'session_id': 's', 'ts': 1, 'type': 'A'}\n\n>   session_events.sort(key=lambda e: e[\"timestamp\"])\n                                      ^^^^^^^^^^^^^^\nE   KeyError: 'timestamp'\n\nsolution.py:37: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - KeyError: 't...\n1 failed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 52,
+    "maintainability_index": 80.232,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "oracle_karpathy_generation"
+}

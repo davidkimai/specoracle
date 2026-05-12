@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable single-pass approach with a dictionary to track last-kept timestamps, which is the right core data structure. However, it violates the Karpathy simplicity principle significantly through excessive verbosity: the docstring alone is longer than the entire logic should be, type aliases add noise without value, inline comments over-explain obvious code, and the variable names are over-engineered (`deduplicated_events`, `last_kept_timestamps`, `last_kept_timestamp`). The `typing` import is unused. The defensive `KeyError` catch is correctly noted as redundant yet kept anyway. A clean implementation of this logic should be around 15-20 lines; this is ~70+ lines of code+comments for a simple filter loop. The structural spec calls for minimum code with no speculative flexibility \u2014 the docstring alone violates this by documenting edge cases in prose that the code already handles implicitly.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable single-pass approach with a dictionary to track last-kept timestamps, which is the right core data structure. However, it violates the Karpathy simplicity principle significantly through excessive verbosity: the docstring alone is longer than the entire logic should be, type aliases add noise without value, inline comments over-explain obvious code, and the variable names are over-engineered (`deduplicated_events`, `last_kept_timestamps`, `last_kept_timestamp`). The `typing` import is unused. The defensive `KeyError` catch is correctly noted as redundant yet kept anyway. A clean implementation of this logic should be around 15-20 lines; this is ~70+ lines of code+comments for a simple filter loop. The structural spec calls for minimum code with no speculative flexibility \u2014 the docstring alone violates this by documenting edge cases in prose that the code already handles implicitly.\",\n  \"strengths\": [\n    \"Correct single-pass O(n) algorithm using a dict for window tracking\",\n    \"Properly handles unhashable key values via TypeError catch\",\n    \"Correctly validates timestamp type and key field presence\",\n    \"Preserves input event order in output\"\n  ],\n  \"weaknesses\": [\n    \"Massive docstring dwarfs the actual logic \u2014 violates simplicity-first principle\",\n    \"Unused `import typing` at the top\",\n    \"Over-verbose variable names (`deduplicated_events`, `last_kept_timestamps`) add no clarity\",\n    \"Redundant inline comments explain every trivial line, treating the reader as a beginner\",\n    \"Acknowledged-redundant KeyError catch kept anyway \u2014 contradicts surgical-changes principle\",\n    \"Section separator comments (`# --- 1. Validate ---`) are unnecessary structure for a flat loop\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct single-pass O(n) algorithm using a dict for window tracking",
+      "Properly handles unhashable key values via TypeError catch",
+      "Correctly validates timestamp type and key field presence",
+      "Preserves input event order in output"
+    ],
+    "weaknesses": [
+      "Massive docstring dwarfs the actual logic \u2014 violates simplicity-first principle",
+      "Unused `import typing` at the top",
+      "Over-verbose variable names (`deduplicated_events`, `last_kept_timestamps`) add no clarity",
+      "Redundant inline comments explain every trivial line, treating the reader as a beginner",
+      "Acknowledged-redundant KeyError catch kept anyway \u2014 contradicts surgical-changes principle",
+      "Section separator comments (`# --- 1. Validate ---`) are unnecessary structure for a flat loop"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.309,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 65,
+    "maintainability_index": 72.4,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dedupe_event_stream",
+  "variant": "oracle_karpathy_generation"
+}

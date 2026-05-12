@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and flat \u2014 each field is validated in sequence with a clear early-exit pattern, error messages name the offending field, and the function returns only a clean dict containing exactly the three required fields. The boolean exclusion via `type(age) is not int` is a thoughtful edge-case guard. The docstring is thorough without being excessive. Minor quibbles: validating fields sequentially rather than collecting all errors means the first failure masks subsequent ones (though the spec says 'raise ValueError naming the bad field', implying single-field errors are acceptable), and silently stripping `patient_id` whitespace is a mild implicit transformation not explicitly required. The use of `typing.Dict` instead of the modern `dict` built-in hint is a minor style anachronism but not a structural flaw. Overall, the code is highly readable, locally auditable, and faithfully implements CD-7's requirement of full validation before accepting any field into output.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and flat \u2014 each field is validated in sequence with a clear early-exit pattern, error messages name the offending field, and the function returns only a clean dict containing exactly the three required fields. The boolean exclusion via `type(age) is not int` is a thoughtful edge-case guard. The docstring is thorough without being excessive. Minor quibbles: validating fields sequentially rather than collecting all errors means the first failure masks subsequent ones (though the spec says 'raise ValueError naming the bad field', implying single-field errors are acceptable), and silently stripping `patient_id` whitespace is a mild implicit transformation not explicitly required. The use of `typing.Dict` instead of the modern `dict` built-in hint is a minor style anachronism but not a structural flaw. Overall, the code is highly readable, locally auditable, and faithfully implements CD-7's requirement of full validation before accepting any field into output.\",\n  \"strengths\": [\n    \"All three fields are validated before any output is produced, satisfying CD-7's no-partial-validation rule\",\n    \"Error messages explicitly name the failing field\",\n    \"Boolean-as-int edge case is correctly handled with `type(age) is not int`\",\n    \"Returns a clean, minimal dict with only the required fields\",\n    \"Flat, readable structure with no unnecessary abstraction or loops over field definitions\"\n  ],\n  \"weaknesses\": [\n    \"Sequential validation means only the first failing field is reported; simultaneous multi-field failures are not surfaced\",\n    \"Silent `.strip()` on patient_id is an implicit transformation not specified in the requirements\",\n    \"Uses legacy `typing.Dict` annotation style instead of built-in `dict` (Python 3.9+)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All three fields are validated before any output is produced, satisfying CD-7's no-partial-validation rule",
+      "Error messages explicitly name the failing field",
+      "Boolean-as-int edge case is correctly handled with `type(age) is not int`",
+      "Returns a clean, minimal dict with only the required fields",
+      "Flat, readable structure with no unnecessary abstraction or loops over field definitions"
+    ],
+    "weaknesses": [
+      "Sequential validation means only the first failing field is reported; simultaneous multi-field failures are not surfaced",
+      "Silent `.strip()` on patient_id is an implicit transformation not specified in the requirements",
+      "Uses legacy `typing.Dict` annotation style instead of built-in `dict` (Python 3.9+)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.628,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 41,
+    "maintainability_index": 77.157,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

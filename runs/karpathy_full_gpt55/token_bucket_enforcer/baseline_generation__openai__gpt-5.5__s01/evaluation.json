@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. Validation is thorough and raises clear typed errors. Data movement is explicit with no hidden state. The `_refill_locked` helper is a sensible extraction that keeps `allow` readable. The use of `__slots__`, a threading lock, and `math.isfinite` checks are all appropriate standard-library choices. Minor weaknesses: the `_refill_locked` method has a small redundancy (checking `self._tokens >= self._capacity` before computing `added`, then also using `min`), and the `added <= 0` guard is slightly redundant given the `elapsed <= 0` guard above it. The public `capacity` and `refill_rate` properties are reasonable but arguably speculative if not required. Overall the code is sparse, auditable, and avoids framework-shaped abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. Validation is thorough and raises clear typed errors. Data movement is explicit with no hidden state. The `_refill_locked` helper is a sensible extraction that keeps `allow` readable. The use of `__slots__`, a threading lock, and `math.isfinite` checks are all appropriate standard-library choices. Minor weaknesses: the `_refill_locked` method has a small redundancy (checking `self._tokens >= self._capacity` before computing `added`, then also using `min`), and the `added <= 0` guard is slightly redundant given the `elapsed <= 0` guard above it. The public `capacity` and `refill_rate` properties are reasonable but arguably speculative if not required. Overall the code is sparse, auditable, and avoids framework-shaped abstractions.\",\n  \"strengths\": [\n    \"Clear, typed validation with explicit error messages for all invalid inputs\",\n    \"Flat control flow with guard clauses in both __init__ and allow()\",\n    \"Explicit data movement; no hidden mutation or global state\",\n    \"Threading safety handled simply with a standard Lock\",\n    \"Sensible extraction of _refill_locked keeps allow() easy to read\",\n    \"bool-before-int isinstance checks correctly reject boolean inputs\"\n  ],\n  \"weaknesses\": [\n    \"Minor redundancy: `self._tokens >= self._capacity` early-return in _refill_locked is superseded by the `min(capacity, ...)` clamp below it\",\n    \"`added <= 0` guard is redundant given the preceding `elapsed <= 0` guard and non-negative refill_rate invariant\",\n    \"Public `capacity` and `refill_rate` properties are speculative extension points not required by the task\",\n    \"Docstring is verbose for what is otherwise a sparse implementation style\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear, typed validation with explicit error messages for all invalid inputs",
+      "Flat control flow with guard clauses in both __init__ and allow()",
+      "Explicit data movement; no hidden mutation or global state",
+      "Threading safety handled simply with a standard Lock",
+      "Sensible extraction of _refill_locked keeps allow() easy to read",
+      "bool-before-int isinstance checks correctly reject boolean inputs"
+    ],
+    "weaknesses": [
+      "Minor redundancy: `self._tokens >= self._capacity` early-return in _refill_locked is superseded by the `min(capacity, ...)` clamp below it",
+      "`added <= 0` guard is redundant given the preceding `elapsed <= 0` guard and non-negative refill_rate invariant",
+      "Public `capacity` and `refill_rate` properties are speculative extension points not required by the task",
+      "Docstring is verbose for what is otherwise a sparse implementation style"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.078,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.667,
+    "cyclomatic_complexity_max": 11,
+    "cyclomatic_complexity_total": 28,
+    "function_count": 5,
+    "loc": 84,
+    "maintainability_index": 62.404,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "baseline_generation"
+}

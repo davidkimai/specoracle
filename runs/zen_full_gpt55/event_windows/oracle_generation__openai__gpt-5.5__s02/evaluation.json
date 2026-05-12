@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. The two small helpers (_is_integer, _event_fields) do exactly one thing each and are easy to audit locally. Control flow in summarize_windows is a single flat loop with a guard-clause skip, no deep nesting. Data movement is explicit: the accumulator dict is visible, mutation is local, and the final transformation is a straightforward sorted comprehension. Names are self-explanatory, standard-library constructs only, no speculative abstractions. The only minor quibble is that the type annotation `list[dict]` on the parameter isn't enforced (non-list iterables would still work, which is fine), and one could argue that storing a tuple of (count, total) in the dict is slightly less readable than a dedicated small dataclass or two separate dicts, but the tuple approach is compact and perfectly auditable here. Overall this is a textbook realization of the Zen principles for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. The two small helpers (_is_integer, _event_fields) do exactly one thing each and are easy to audit locally. Control flow in summarize_windows is a single flat loop with a guard-clause skip, no deep nesting. Data movement is explicit: the accumulator dict is visible, mutation is local, and the final transformation is a straightforward sorted comprehension. Names are self-explanatory, standard-library constructs only, no speculative abstractions. The only minor quibble is that the type annotation `list[dict]` on the parameter isn't enforced (non-list iterables would still work, which is fine), and one could argue that storing a tuple of (count, total) in the dict is slightly less readable than a dedicated small dataclass or two separate dicts, but the tuple approach is compact and perfectly auditable here. Overall this is a textbook realization of the Zen principles for this task.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers keep the main function focused and flat\",\n    \"Guard clause (fields is None \u2192 continue) avoids nesting inside the loop\",\n    \"Explicit accumulator dict with no hidden mutation or global state\",\n    \"Clear ValueError with a descriptive message for invalid window_size\",\n    \"Bool exclusion in _is_integer is a correct and explicit edge-case handle\",\n    \"Sorted comprehension at the end is readable and idiomatic\"\n  ],\n  \"weaknesses\": [\n    \"Storing (count, total) as a tuple in the dict is slightly less self-documenting than named fields, though still auditable\",\n    \"The window_size type check rejects non-int positives (e.g., float) without mention in the error message, which could surprise callers passing window_size=5.0\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers keep the main function focused and flat",
+      "Guard clause (fields is None \u2192 continue) avoids nesting inside the loop",
+      "Explicit accumulator dict with no hidden mutation or global state",
+      "Clear ValueError with a descriptive message for invalid window_size",
+      "Bool exclusion in _is_integer is a correct and explicit edge-case handle",
+      "Sorted comprehension at the end is readable and idiomatic"
+    ],
+    "weaknesses": [
+      "Storing (count, total) as a tuple in the dict is slightly less self-documenting than named fields, though still auditable",
+      "The window_size type check rejects non-int positives (e.g., float) without mention in the error message, which could surprise callers passing window_size=5.0"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.478,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 3,
+    "loc": 26,
+    "maintainability_index": 52.373,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_generation"
+}

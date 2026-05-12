@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. The helper `_parse_csv_line` is a small pure function with a single responsibility, and `parse_csv_rows` reads almost like a prose description of the algorithm. Control flow is flat with guard clauses (`if not header: return`, `if not row_values: continue`), data movement is explicit via `zip` and `dict`, and errors are raised clearly with informative messages. The streaming contract is preserved by using `iter()` and yielding rather than collecting. The only minor issues are the somewhat verbose docstrings (which add noise without adding clarity for a maintainer auditing behavior locally) and the typing imports from `typing` rather than the built-in generics available in Python 3.9+, but neither constitutes architectural slop. The duplicate-header check and column-count validation are appropriate correctness guards. Overall this is a near-ideal realization of the Zen principles for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. The helper `_parse_csv_line` is a small pure function with a single responsibility, and `parse_csv_rows` reads almost like a prose description of the algorithm. Control flow is flat with guard clauses (`if not header: return`, `if not row_values: continue`), data movement is explicit via `zip` and `dict`, and errors are raised clearly with informative messages. The streaming contract is preserved by using `iter()` and yielding rather than collecting. The only minor issues are the somewhat verbose docstrings (which add noise without adding clarity for a maintainer auditing behavior locally) and the typing imports from `typing` rather than the built-in generics available in Python 3.9+, but neither constitutes architectural slop. The duplicate-header check and column-count validation are appropriate correctness guards. Overall this is a near-ideal realization of the Zen principles for this task.\",\n  \"strengths\": [\n    \"Small, pure helper function with a single clear responsibility\",\n    \"Flat control flow with guard clauses instead of deep nesting\",\n    \"Explicit data movement via zip and dict construction\",\n    \"Streaming behavior preserved correctly with iter() and yield\",\n    \"Clear, informative ValueError messages for invalid inputs\",\n    \"Duplicate header detection is a sensible correctness guard\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstrings add noise; a maintainer auditing locally doesn't need Args/Returns/Raises sections for code this readable\",\n    \"Uses legacy `typing` module generics (Dict, List, Iterable, Iterator) instead of built-in lowercase generics available since Python 3.9\",\n    \"Module-level docstring is speculative boilerplate that adds no information\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helper function with a single clear responsibility",
+      "Flat control flow with guard clauses instead of deep nesting",
+      "Explicit data movement via zip and dict construction",
+      "Streaming behavior preserved correctly with iter() and yield",
+      "Clear, informative ValueError messages for invalid inputs",
+      "Duplicate header detection is a sensible correctness guard"
+    ],
+    "weaknesses": [
+      "Verbose docstrings add noise; a maintainer auditing locally doesn't need Args/Returns/Raises sections for code this readable",
+      "Uses legacy `typing` module generics (Dict, List, Iterable, Iterator) instead of built-in lowercase generics available since Python 3.9",
+      "Module-level docstring is speculative boilerplate that adds no information"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.243,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 2,
+    "loc": 57,
+    "maintainability_index": 79.599,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_generation"
+}

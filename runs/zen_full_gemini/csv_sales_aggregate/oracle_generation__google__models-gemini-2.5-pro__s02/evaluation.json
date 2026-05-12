@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably decomposed into small helpers, but it carries notable over-engineering relative to the task's complexity. The `SalesRecord` NamedTuple and `AggregatedSales` TypedDict add type-system ceremony without meaningful payoff\u2014the NamedTuple is immediately discarded after validation, and the TypedDict is just a dict alias. The `_aggregate_data` helper uses a mutable inner dict (`{'quantity': 0, 'cents': 0}`) where a simple `defaultdict` or even a two-tuple accumulator would be cleaner and more idiomatic. The `_EXPECTED_HEADERS` constant and the header-subset check are reasonable, but the early-return on missing headers silently swallows what could be a meaningful signal. The docstrings are verbose to the point of noise\u2014they restate the code rather than illuminate intent. The pipeline structure (`stream \u2192 aggregate \u2192 format`) is clean and explicit, which is a genuine strength, and control flow is flat throughout. Overall the code reads like it was written to demonstrate patterns rather than to solve the specific problem simply.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably decomposed into small helpers, but it carries notable over-engineering relative to the task's complexity. The `SalesRecord` NamedTuple and `AggregatedSales` TypedDict add type-system ceremony without meaningful payoff\u2014the NamedTuple is immediately discarded after validation, and the TypedDict is just a dict alias. The `_aggregate_data` helper uses a mutable inner dict (`{'quantity': 0, 'cents': 0}`) where a simple `defaultdict` or even a two-tuple accumulator would be cleaner and more idiomatic. The `_EXPECTED_HEADERS` constant and the header-subset check are reasonable, but the early-return on missing headers silently swallows what could be a meaningful signal. The docstrings are verbose to the point of noise\u2014they restate the code rather than illuminate intent. The pipeline structure (`stream \u2192 aggregate \u2192 format`) is clean and explicit, which is a genuine strength, and control flow is flat throughout. Overall the code reads like it was written to demonstrate patterns rather than to solve the specific problem simply.\",\n  \"strengths\": [\n    \"Clean three-stage pipeline (stream, aggregate, format) makes data movement explicit\",\n    \"Guard clauses in _parse_and_validate_row keep nesting flat\",\n    \"Sorting logic is straightforward and locally auditable\",\n    \"TypeError raised for non-string input is an explicit contract\"\n  ],\n  \"weaknesses\": [\n    \"SalesRecord NamedTuple is speculative abstraction\u2014created only to be immediately unpacked, adding no real value\",\n    \"AggregatedSales TypedDict is a no-op alias that adds ceremony without benefit\",\n    \"_aggregate_data uses a mutable inner dict instead of simpler defaultdict or tuple accumulator\",\n    \"Docstrings are excessively verbose, restating the obvious rather than clarifying non-obvious behavior\",\n    \"_EXPECTED_HEADERS constant and subset-check add complexity; a simpler .get() with None-check already handles missing fields\",\n    \"The empty-string early return is a special case that the normal code path would handle correctly anyway\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clean three-stage pipeline (stream, aggregate, format) makes data movement explicit",
+      "Guard clauses in _parse_and_validate_row keep nesting flat",
+      "Sorting logic is straightforward and locally auditable",
+      "TypeError raised for non-string input is an explicit contract"
+    ],
+    "weaknesses": [
+      "SalesRecord NamedTuple is speculative abstraction\u2014created only to be immediately unpacked, adding no real value",
+      "AggregatedSales TypedDict is a no-op alias that adds ceremony without benefit",
+      "_aggregate_data uses a mutable inner dict instead of simpler defaultdict or tuple accumulator",
+      "Docstrings are excessively verbose, restating the obvious rather than clarifying non-obvious behavior",
+      "_EXPECTED_HEADERS constant and subset-check add complexity; a simpler .get() with None-check already handles missing fields",
+      "The empty-string early return is a special case that the normal code path would handle correctly anyway"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.077,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 2.571,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 5,
+    "loc": 115,
+    "maintainability_index": 72.961,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

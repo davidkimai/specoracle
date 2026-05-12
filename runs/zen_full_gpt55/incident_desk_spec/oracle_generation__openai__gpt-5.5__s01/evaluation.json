@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Incident Desk Spec N-9 oracle: it uses a named lookup table (`severity_bonus_table`) with the required `_table` suffix, avoids classes entirely, preserves ticket order, uses an explicit string `status_code` of 'routed' rather than a boolean, and keeps skip logic as short explicit strings ('bad_ticket', 'missing_field'). The `required_field_table` naming is slightly unconventional (a tuple rather than a dict/mapping, and the name could be argued as not a true 'table'), but it still reads clearly. The code is flat, single-pass, and locally auditable with no hidden logic in comments. The only minor quibble is that `required_field_table` is a tuple rather than a more table-like structure, and the `isinstance` guard for non-dict tickets goes slightly beyond the stated spec (which only mentions skipping tickets missing fields), though it is a reasonable defensive addition that doesn't harm correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Incident Desk Spec N-9 oracle: it uses a named lookup table (`severity_bonus_table`) with the required `_table` suffix, avoids classes entirely, preserves ticket order, uses an explicit string `status_code` of 'routed' rather than a boolean, and keeps skip logic as short explicit strings ('bad_ticket', 'missing_field'). The `required_field_table` naming is slightly unconventional (a tuple rather than a dict/mapping, and the name could be argued as not a true 'table'), but it still reads clearly. The code is flat, single-pass, and locally auditable with no hidden logic in comments. The only minor quibble is that `required_field_table` is a tuple rather than a more table-like structure, and the `isinstance` guard for non-dict tickets goes slightly beyond the stated spec (which only mentions skipping tickets missing fields), though it is a reasonable defensive addition that doesn't harm correctness.\",\n  \"strengths\": [\n    \"Uses `severity_bonus_table` with the spec-required `_table` suffix for the lookup\",\n    \"Skip reasons are short explicit strings, not hidden in comments\",\n    \"No classes introduced; single-pass flat loop\",\n    \"Ticket order preserved via sequential append\",\n    \"status_code is a stable string literal 'routed', never a boolean\",\n    \"Default rule cached before the loop for clarity\"\n  ],\n  \"weaknesses\": [\n    \"`required_field_table` is a tuple, not a dict/mapping \u2014 slightly inconsistent use of the `_table` naming convention\",\n    \"The `isinstance(ticket, dict)` guard is a minor spec overreach not mentioned in requirements\",\n    \"No handling if `rules['default']` is absent (would raise KeyError silently)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `severity_bonus_table` with the spec-required `_table` suffix for the lookup",
+      "Skip reasons are short explicit strings, not hidden in comments",
+      "No classes introduced; single-pass flat loop",
+      "Ticket order preserved via sequential append",
+      "status_code is a stable string literal 'routed', never a boolean",
+      "Default rule cached before the loop for clarity"
+    ],
+    "weaknesses": [
+      "`required_field_table` is a tuple, not a dict/mapping \u2014 slightly inconsistent use of the `_table` naming convention",
+      "The `isinstance(ticket, dict)` guard is a minor spec overreach not mentioned in requirements",
+      "No handling if `rules['default']` is absent (would raise KeyError silently)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.955,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 59.034,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

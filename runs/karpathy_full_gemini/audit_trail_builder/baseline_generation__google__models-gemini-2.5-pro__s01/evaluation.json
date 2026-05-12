@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly handles the core requirements: it validates presence of source_system and actor_id, assigns monotonic sequence numbers starting at 1, and avoids mutating input events. The explicit extraction of source_system and actor_id into named variables before use aligns well with RAT-9's requirement for explicitly named derived fields. However, the implementation has some structural bloat: the isinstance/Sequence check adds complexity not required by the spec and introduces edge-case behavior (e.g., tuples would be accepted), the module-level type aliases add noise without value, and the docstring is overly verbose for a simple function. The silent skipping of non-dict items is a mild form of silent invention/rejection that isn't specified. The overall logic is flat, readable, and locally auditable, but the unnecessary defensive machinery slightly undermines the Zen of Python's simplicity principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation correctly handles the core requirements: it validates presence of source_system and actor_id, assigns monotonic sequence numbers starting at 1, and avoids mutating input events. The explicit extraction of source_system and actor_id into named variables before use aligns well with RAT-9's requirement for explicitly named derived fields. However, the implementation has some structural bloat: the isinstance/Sequence check adds complexity not required by the spec and introduces edge-case behavior (e.g., tuples would be accepted), the module-level type aliases add noise without value, and the docstring is overly verbose for a simple function. The silent skipping of non-dict items is a mild form of silent invention/rejection that isn't specified. The overall logic is flat, readable, and locally auditable, but the unnecessary defensive machinery slightly undermines the Zen of Python's simplicity principle.\",\n  \"strengths\": [\n    \"Explicitly extracts source_system and actor_id into named variables before use, satisfying RAT-9's explicit naming requirement\",\n    \"Does not mutate input events (uses event.copy())\",\n    \"Monotonic sequence numbering starting at 1 is correct\",\n    \"Flat, readable loop structure with no nested abstractions\",\n    \"Correctly rejects events with missing or None required fields\"\n  ],\n  \"weaknesses\": [\n    \"Unnecessary isinstance/Sequence type guard adds complexity not required by the spec\",\n    \"Silent skipping of non-dict list items is undocumented behavior not in the spec\",\n    \"Module-level type aliases (Event, AuditRecord) add noise without meaningful benefit\",\n    \"Overly verbose docstring relative to function simplicity\",\n    \"Importing collections.abc for a single isinstance check is architectural overhead\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Explicitly extracts source_system and actor_id into named variables before use, satisfying RAT-9's explicit naming requirement",
+      "Does not mutate input events (uses event.copy())",
+      "Monotonic sequence numbering starting at 1 is correct",
+      "Flat, readable loop structure with no nested abstractions",
+      "Correctly rejects events with missing or None required fields"
+    ],
+    "weaknesses": [
+      "Unnecessary isinstance/Sequence type guard adds complexity not required by the spec",
+      "Silent skipping of non-dict list items is undocumented behavior not in the spec",
+      "Module-level type aliases (Event, AuditRecord) add noise without meaningful benefit",
+      "Overly verbose docstring relative to function simplicity",
+      "Importing collections.abc for a single isinstance check is architectural overhead"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.253,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_builds_monotonic_audit_trail _______________________\n\n    def test_builds_monotonic_audit_trail():\n        rows = build_audit_trail([{'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}])\n>       assert rows == [{'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}]\nE       AssertionError: assert [{'action': '...stem': 'crm'}] == [{'action': '...stem': 'crm'}]\nE         \nE         At index 0 diff: {'source_system': 'crm', 'actor_id': 'u1', 'action': 'create', 'sequence_number': 1} != {'sequence': 1, 'source_system': 'crm', 'actor_id': 'u1', 'action': 'create'}\nE         Use -v to get more diff\n\ntest_solution.py:8: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_builds_monotonic_audit_trail - AssertionError: ...\n1 failed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 49,
+    "maintainability_index": 75.761,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "baseline_generation"
+}

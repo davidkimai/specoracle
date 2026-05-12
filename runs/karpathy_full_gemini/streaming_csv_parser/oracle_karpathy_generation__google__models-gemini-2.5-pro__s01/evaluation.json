@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and preserves streaming behavior using a generator expression and csv.reader, which is the right tool for the job. The core logic is clean and minimal. However, the docstring is excessively verbose \u2014 nearly 30 lines of documentation for a ~10-line function body \u2014 which directly violates the 'simplicity first' and 'minimum code' principles of the oracle. The module-level docstring is also unnecessary boilerplate. The type hints use the older `Dict`/`Iterable`/`Iterator` from `typing` instead of the built-in lowercase generics available since Python 3.9, a minor but real anachronism. The inline comments are mostly redundant, explaining obvious Python idioms rather than non-obvious decisions. Stripping the excess prose would bring this closer to the oracle ideal.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and preserves streaming behavior using a generator expression and csv.reader, which is the right tool for the job. The core logic is clean and minimal. However, the docstring is excessively verbose \u2014 nearly 30 lines of documentation for a ~10-line function body \u2014 which directly violates the 'simplicity first' and 'minimum code' principles of the oracle. The module-level docstring is also unnecessary boilerplate. The type hints use the older `Dict`/`Iterable`/`Iterator` from `typing` instead of the built-in lowercase generics available since Python 3.9, a minor but real anachronism. The inline comments are mostly redundant, explaining obvious Python idioms rather than non-obvious decisions. Stripping the excess prose would bring this closer to the oracle ideal.\",\n  \"strengths\": [\n    \"Uses csv.reader correctly, handling quoted fields without reinventing parsing\",\n    \"Preserves streaming via generator expression \u2014 no list conversion\",\n    \"Handles empty-input edge case cleanly with try/except StopIteration\",\n    \"Core logic is concise and correct\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is massively over-documented for a simple function \u2014 violates 'minimum code' principle\",\n    \"Inline comments explain obvious Python idioms, adding noise without value\",\n    \"Uses legacy typing.Dict/Iterable/Iterator instead of built-in generics\",\n    \"Module-level docstring is unnecessary boilerplate for a single-function module\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Uses csv.reader correctly, handling quoted fields without reinventing parsing",
+      "Preserves streaming via generator expression \u2014 no list conversion",
+      "Handles empty-input edge case cleanly with try/except StopIteration",
+      "Core logic is concise and correct"
+    ],
+    "weaknesses": [
+      "Docstring is massively over-documented for a simple function \u2014 violates 'minimum code' principle",
+      "Inline comments explain obvious Python idioms, adding noise without value",
+      "Uses legacy typing.Dict/Iterable/Iterator instead of built-in generics",
+      "Module-level docstring is unnecessary boilerplate for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.768,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 65.37,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_karpathy_generation"
+}

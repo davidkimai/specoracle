@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally reasonable and uses appropriate standard-library constructs (bisect), but it carries several structural issues that reduce its score. The `_latest_timestamp` dict is speculative complexity: it exists solely to support `snapshot`, but `snapshot` could simply use the last element of the sorted events list or accept a timestamp parameter. This hidden auxiliary state creates implicit coupling and a subtle inconsistency \u2014 `snapshot` returns events relative to the latest *seen* timestamp rather than a caller-supplied one, which is an undocumented design choice. The `allow` method also counts only events in `(cutoff, timestamp]` via `right - left` but then inserts the new event without pruning old ones, meaning the events list grows unboundedly; this is a memory leak that a maintainer would need to discover by reading carefully. The isinstance/bool guard in `__init__` is overly defensive and verbose for what the task requires \u2014 a simple `limit <= 0 or window_seconds <= 0` check with a ValueError would be cleaner and more explicit. The `__slots__` declaration is a micro-optimization that adds noise without meaningful benefit at this scale. Overall the code is readable and flat, but the auxiliary timestamp dict, unbounded growth, and over-engineered validation represent unnecessary complexity and hidden state that violate the spirit of the oracle.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally reasonable and uses appropriate standard-library constructs (bisect), but it carries several structural issues that reduce its score. The `_latest_timestamp` dict is speculative complexity: it exists solely to support `snapshot`, but `snapshot` could simply use the last element of the sorted events list or accept a timestamp parameter. This hidden auxiliary state creates implicit coupling and a subtle inconsistency \u2014 `snapshot` returns events relative to the latest *seen* timestamp rather than a caller-supplied one, which is an undocumented design choice. The `allow` method also counts only events in `(cutoff, timestamp]` via `right - left` but then inserts the new event without pruning old ones, meaning the events list grows unboundedly; this is a memory leak that a maintainer would need to discover by reading carefully. The isinstance/bool guard in `__init__` is overly defensive and verbose for what the task requires \u2014 a simple `limit <= 0 or window_seconds <= 0` check with a ValueError would be cleaner and more explicit. The `__slots__` declaration is a micro-optimization that adds noise without meaningful benefit at this scale. Overall the code is readable and flat, but the auxiliary timestamp dict, unbounded growth, and over-engineered validation represent unnecessary complexity and hidden state that violate the spirit of the oracle.\",\n  \"strengths\": [\n    \"Uses bisect for O(log n) window boundary calculations \u2014 appropriate and standard\",\n    \"Control flow in allow() is flat with clear guard clause before insertion\",\n    \"Docstring clearly states the half-open interval semantics\",\n    \"setdefault pattern for per-key initialization is idiomatic\"\n  ],\n  \"weaknesses\": [\n    \"_latest_timestamp is speculative auxiliary state; snapshot could derive the cutoff from the events list itself\",\n    \"Events list grows unboundedly \u2014 old events outside any window are never pruned, causing a memory leak\",\n    \"Over-engineered isinstance/bool validation in __init__ is verbose and not required by the task\",\n    \"__slots__ is a premature micro-optimization that adds noise without benefit\",\n    \"snapshot silently returns [] when key exists but events is empty, masking the distinction between unknown key and exhausted key\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Uses bisect for O(log n) window boundary calculations \u2014 appropriate and standard",
+      "Control flow in allow() is flat with clear guard clause before insertion",
+      "Docstring clearly states the half-open interval semantics",
+      "setdefault pattern for per-key initialization is idiomatic"
+    ],
+    "weaknesses": [
+      "_latest_timestamp is speculative auxiliary state; snapshot could derive the cutoff from the events list itself",
+      "Events list grows unboundedly \u2014 old events outside any window are never pruned, causing a memory leak",
+      "Over-engineered isinstance/bool validation in __init__ is verbose and not required by the task",
+      "__slots__ is a premature micro-optimization that adds noise without benefit",
+      "snapshot silently returns [] when key exists but events is empty, masking the distinction between unknown key and exhausted key"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.909,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 3,
+    "loc": 44,
+    "maintainability_index": 67.459,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

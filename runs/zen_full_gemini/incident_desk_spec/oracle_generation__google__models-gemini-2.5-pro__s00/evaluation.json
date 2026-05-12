@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Zen of Python oracle and the Incident Desk Spec N-9. It uses a properly named `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` lookup table, preserves ticket order via a simple linear pass, uses explicit short string status codes ('routed'), avoids classes entirely, and keeps branch logic flat and readable. The fallback to `rules['default']` is clean and explicit. Minor deductions: the inline comments are slightly verbose and partially redundant with the docstring, and the branch reason comment ('A ticket must have all required fields to be routed') is placed in a comment rather than as a named variable or inline string as the spec suggests for 'short explicit strings', though this is a minor stylistic point. Overall, the code is highly readable, locally auditable, and architecturally clean.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Zen of Python oracle and the Incident Desk Spec N-9. It uses a properly named `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` lookup table, preserves ticket order via a simple linear pass, uses explicit short string status codes ('routed'), avoids classes entirely, and keeps branch logic flat and readable. The fallback to `rules['default']` is clean and explicit. Minor deductions: the inline comments are slightly verbose and partially redundant with the docstring, and the branch reason comment ('A ticket must have all required fields to be routed') is placed in a comment rather than as a named variable or inline string as the spec suggests for 'short explicit strings', though this is a minor stylistic point. Overall, the code is highly readable, locally auditable, and architecturally clean.\",\n  \"strengths\": [\n    \"Uses `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` with the spec-mandated `_table` suffix\",\n    \"No classes introduced for single-pass routing\",\n    \"Ticket order preserved via straightforward iteration\",\n    \"Stable `status_code: 'routed'` string, never a boolean\",\n    \"Explicit fallback to `rules['default']` without hidden logic\",\n    \"Flat, single-loop structure with no nested functions or unnecessary abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Branch reason is in a comment rather than a named variable or explicit inline string as the spec implies\",\n    \"Docstring and inline comments are somewhat redundant and verbose for a simple routing function\",\n    \"Module-level docstring for the lookup table is unusual and adds minor noise\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` with the spec-mandated `_table` suffix",
+      "No classes introduced for single-pass routing",
+      "Ticket order preserved via straightforward iteration",
+      "Stable `status_code: 'routed'` string, never a boolean",
+      "Explicit fallback to `rules['default']` without hidden logic",
+      "Flat, single-loop structure with no nested functions or unnecessary abstractions"
+    ],
+    "weaknesses": [
+      "Branch reason is in a comment rather than a named variable or explicit inline string as the spec implies",
+      "Docstring and inline comments are somewhat redundant and verbose for a simple routing function",
+      "Module-level docstring for the lookup table is unusual and adds minor noise"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.021,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 51,
+    "maintainability_index": 84.259,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

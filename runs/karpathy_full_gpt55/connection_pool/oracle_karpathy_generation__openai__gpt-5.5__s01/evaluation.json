@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly addresses the stated requirements without speculative features. The core data structure (list of (conn, timestamp) tuples) is the simplest correct choice. Lock usage is tight and correct, with close() calls outside the lock to avoid holding it during potentially slow I/O. The three methods have clear, testable contracts. The main structural concern is the over-eager input validation in __init__: the Karpathy oracle favors writing minimum code, and defensive type/value checks for factory, max_size, and now go beyond what was asked and add ~10 lines of noise. The docstring on the class is reasonable but slightly verbose. Otherwise the implementation is flat, explicit, and locally auditable with no unnecessary abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and directly addresses the stated requirements without speculative features. The core data structure (list of (conn, timestamp) tuples) is the simplest correct choice. Lock usage is tight and correct, with close() calls outside the lock to avoid holding it during potentially slow I/O. The three methods have clear, testable contracts. The main structural concern is the over-eager input validation in __init__: the Karpathy oracle favors writing minimum code, and defensive type/value checks for factory, max_size, and now go beyond what was asked and add ~10 lines of noise. The docstring on the class is reasonable but slightly verbose. Otherwise the implementation is flat, explicit, and locally auditable with no unnecessary abstractions.\",\n  \"strengths\": [\n    \"Minimal data structure: list of (conn, timestamp) tuples is the simplest correct representation\",\n    \"Lock held only for list mutation; close() called outside lock avoids holding lock during I/O\",\n    \"evict_idle correctly partitions in a single pass and closes outside the lock\",\n    \"now parameter correctly defaults to time.monotonic and is injectable for testing\",\n    \"No speculative abstractions, inheritance, or extra configurability\"\n  ],\n  \"weaknesses\": [\n    \"Defensive type/value validation in __init__ adds ~10 lines not asked for and violates simplicity-first principle\",\n    \"Class docstring slightly over-explains the max_size semantics, adding noise\",\n    \"Minor: popping from the end of the list is fine but the comment about LIFO vs FIFO ordering is absent \u2014 not a bug but worth noting for auditability\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal data structure: list of (conn, timestamp) tuples is the simplest correct representation",
+      "Lock held only for list mutation; close() called outside lock avoids holding lock during I/O",
+      "evict_idle correctly partitions in a single pass and closes outside the lock",
+      "now parameter correctly defaults to time.monotonic and is injectable for testing",
+      "No speculative abstractions, inheritance, or extra configurability"
+    ],
+    "weaknesses": [
+      "Defensive type/value validation in __init__ adds ~10 lines not asked for and violates simplicity-first principle",
+      "Class docstring slightly over-explains the max_size semantics, adding noise",
+      "Minor: popping from the end of the list is fine but the comment about LIFO vs FIFO ordering is absent \u2014 not a bug but worth noting for auditability"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.319,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.2,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 4,
+    "loc": 52,
+    "maintainability_index": 63.257,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_karpathy_generation"
+}

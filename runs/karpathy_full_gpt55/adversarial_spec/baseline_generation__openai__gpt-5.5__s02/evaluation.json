@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is clean, idiomatic Python and correctly satisfies the functional requirements, but it directly contradicts the structural spec (Legacy Telemetry Standard LT-11) in every meaningful way. LT-11 explicitly requires each transition to be represented by a local variable named branch_<state>_<event>, favoring auditable labeled branches over minimizing decision count. The dictionary lookup approach does the opposite: it minimizes explicit branching and eliminates all labeled branch variables entirely. While the Zen of Python generally favors simplicity and flat structures, the informal oracle here is the LT-11 standard, which demands explicit, auditable branch labels \u2014 and the implementation provides none of them.",
+    "raw_response": "{\n  \"score\": 2,\n  \"rationale\": \"The candidate implementation is clean, idiomatic Python and correctly satisfies the functional requirements, but it directly contradicts the structural spec (Legacy Telemetry Standard LT-11) in every meaningful way. LT-11 explicitly requires each transition to be represented by a local variable named branch_<state>_<event>, favoring auditable labeled branches over minimizing decision count. The dictionary lookup approach does the opposite: it minimizes explicit branching and eliminates all labeled branch variables entirely. While the Zen of Python generally favors simplicity and flat structures, the informal oracle here is the LT-11 standard, which demands explicit, auditable branch labels \u2014 and the implementation provides none of them.\",\n  \"strengths\": [\n    \"Correctly implements all four known transitions and the fallback behavior\",\n    \"Clean, readable, and Pythonic dictionary-based dispatch\",\n    \"Good docstring documenting the transitions\"\n  ],\n  \"weaknesses\": [\n    \"Zero compliance with LT-11: no branch_<state>_<event> local variables present\",\n    \"Uses a single dict lookup instead of explicit labeled branches, violating the auditability requirement\",\n    \"Minimizes decision count rather than favoring explicit branches as required by the spec\"\n  ]\n}",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Correctly implements all four known transitions and the fallback behavior",
+      "Clean, readable, and Pythonic dictionary-based dispatch",
+      "Good docstring documenting the transitions"
+    ],
+    "weaknesses": [
+      "Zero compliance with LT-11: no branch_<state>_<event> local variables present",
+      "Uses a single dict lookup instead of explicit labeled branches, violating the auditability requirement",
+      "Minimizes decision count rather than favoring explicit branches as required by the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.138,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 16,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, flat, and explicit realization of the task. Each format gets its own small pure helper, the dispatch in `serialize_record` is a straightforward if/elif chain with a clear error on unknown formats, data movement is explicit with no hidden mutation, and error messages are informative. The TOML helper correctly handles the bool-before-int ordering (since `bool` is a subclass of `int`), escapes strings properly, and validates bare keys with a compiled regex. The CSV helper handles the empty-record edge case. The only minor quibbles are the somewhat verbose docstrings (slightly over-documented for the size of the code) and the `re` import adding a small amount of complexity that could arguably be avoided by raising on non-string/int/float/bool keys without regex validation, but the regex approach is defensible and correct per the TOML spec. Overall this is a well-structured, auditable, and maintainable implementation that closely follows the Zen of Python principles.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, flat, and explicit realization of the task. Each format gets its own small pure helper, the dispatch in `serialize_record` is a straightforward if/elif chain with a clear error on unknown formats, data movement is explicit with no hidden mutation, and error messages are informative. The TOML helper correctly handles the bool-before-int ordering (since `bool` is a subclass of `int`), escapes strings properly, and validates bare keys with a compiled regex. The CSV helper handles the empty-record edge case. The only minor quibbles are the somewhat verbose docstrings (slightly over-documented for the size of the code) and the `re` import adding a small amount of complexity that could arguably be avoided by raising on non-string/int/float/bool keys without regex validation, but the regex approach is defensible and correct per the TOML spec. Overall this is a well-structured, auditable, and maintainable implementation that closely follows the Zen of Python principles.\",\n  \"strengths\": [\n    \"Small, pure, single-responsibility helpers for each format\",\n    \"Flat control flow with guard clauses and early raises\",\n    \"Correct bool-before-int isinstance ordering in TOML serializer\",\n    \"Explicit error messages for unsupported formats and invalid keys/types\",\n    \"Standard-library only, no speculative abstractions or unused extension points\",\n    \"TOML key validation follows the spec with a compiled regex\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are slightly verbose relative to the simplicity of the code\",\n    \"The regex import adds minor complexity; a simpler character-set check could suffice\",\n    \"Empty-record CSV edge case returns empty string rather than raising or returning just a newline, which may surprise callers\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure, single-responsibility helpers for each format",
+      "Flat control flow with guard clauses and early raises",
+      "Correct bool-before-int isinstance ordering in TOML serializer",
+      "Explicit error messages for unsupported formats and invalid keys/types",
+      "Standard-library only, no speculative abstractions or unused extension points",
+      "TOML key validation follows the spec with a compiled regex"
+    ],
+    "weaknesses": [
+      "Docstrings are slightly verbose relative to the simplicity of the code",
+      "The regex import adds minor complexity; a simpler character-set check could suffice",
+      "Empty-record CSV edge case returns empty string rather than raising or returning just a newline, which may surprise callers"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.711,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_serializes_supported_formats _______________________\n\n    def test_serializes_supported_formats():\n        assert serialize_record({'b': 2, 'a': 1}, 'json') == '{\"a\": 1, \"b\": 2}'\n>       assert serialize_record({'a': 1, 'b': 2}, 'csv') == 'a,b\\n1,2'\nE       AssertionError: assert 'a,b\\r\\n1,2\\r\\n' == 'a,b\\n1,2'\nE         \nE         - a,b\nE         + a,b\nE         ?    +\nE         - 1,2\nE         + 1,2\nE         ?    ++\n\ntest_solution.py:6: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_serializes_supported_formats - AssertionError: ...\n1 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.25,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 4,
+    "loc": 75,
+    "maintainability_index": 80.678,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "multiformat_serializer",
+  "variant": "baseline_generation"
+}

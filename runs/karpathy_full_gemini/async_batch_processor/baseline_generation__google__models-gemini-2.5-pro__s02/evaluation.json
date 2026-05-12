@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: validation is explicit and early, the semaphore pattern is idiomatic, data flow is clear, and `asyncio.gather` preserves order naturally. The helper `process_one_batch` is a clean extraction. The main weaknesses are over-documentation (the docstrings and inline comments explain obvious things at length, violating 'sparse enough to audit locally'), the TypeVar generics add speculative abstraction for a task that doesn't require it, and the `itertools.islice` loop could be replaced with a simpler list-comprehension batch-builder helper that makes the chunking logic more locally readable. Overall the architecture is flat and honest with no hidden mutation or framework-shaped scaffolding, landing it solidly above average.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: validation is explicit and early, the semaphore pattern is idiomatic, data flow is clear, and `asyncio.gather` preserves order naturally. The helper `process_one_batch` is a clean extraction. The main weaknesses are over-documentation (the docstrings and inline comments explain obvious things at length, violating 'sparse enough to audit locally'), the TypeVar generics add speculative abstraction for a task that doesn't require it, and the `itertools.islice` loop could be replaced with a simpler list-comprehension batch-builder helper that makes the chunking logic more locally readable. Overall the architecture is flat and honest with no hidden mutation or framework-shaped scaffolding, landing it solidly above average.\",\n  \"strengths\": [\n    \"Guard clauses for invalid inputs are explicit and early\",\n    \"Semaphore correctly gates concurrency without over-engineering\",\n    \"asyncio.gather preserves batch order naturally\",\n    \"process_one_batch is a clean, single-responsibility helper\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstrings and inline comments over-explain obvious mechanics, reducing auditability density\",\n    \"TypeVar generics are speculative abstraction not required by the task\",\n    \"Batch-building loop with itertools.islice could be extracted into a named pure helper (e.g., `make_batches`) for clarity\",\n    \"All tasks are created before any run, which could be a memory concern for very large iterables \u2014 a chunked gather approach would be more principled\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses for invalid inputs are explicit and early",
+      "Semaphore correctly gates concurrency without over-engineering",
+      "asyncio.gather preserves batch order naturally",
+      "process_one_batch is a clean, single-responsibility helper",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "Verbose docstrings and inline comments over-explain obvious mechanics, reducing auditability density",
+      "TypeVar generics are speculative abstraction not required by the task",
+      "Batch-building loop with itertools.islice could be extracted into a named pure helper (e.g., `make_batches`) for clarity",
+      "All tasks are created before any run, which could be a memory concern for very large iterables \u2014 a chunked gather approach would be more principled"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.162,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.33s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 2,
+    "loc": 67,
+    "maintainability_index": 84.044,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are named constants and exposed via a public `state` attribute satisfying RCS-5's inspectability requirement. Configuration values (`failure_threshold`, `recovery_timeout`) are named attributes, not magic constants. Half-open trials correctly close on success and reopen on failure. The `call` method reads as a flat, auditable state machine with clear branching. Helper methods are small and single-purpose. The injectable `now` clock enables deterministic testing. Minor over-engineering includes defensive type/value checks that add noise but don't harm correctness, and the `_transition_to_half_open` resetting `failure_count` is slightly redundant (it's reset again on close), but these are trivial concerns. Overall this is a textbook-quality circuit breaker implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are named constants and exposed via a public `state` attribute satisfying RCS-5's inspectability requirement. Configuration values (`failure_threshold`, `recovery_timeout`) are named attributes, not magic constants. Half-open trials correctly close on success and reopen on failure. The `call` method reads as a flat, auditable state machine with clear branching. Helper methods are small and single-purpose. The injectable `now` clock enables deterministic testing. Minor over-engineering includes defensive type/value checks that add noise but don't harm correctness, and the `_transition_to_half_open` resetting `failure_count` is slightly redundant (it's reset again on close), but these are trivial concerns. Overall this is a textbook-quality circuit breaker implementation.\",\n  \"strengths\": [\n    \"Explicit named state constants (STATE_CLOSED, STATE_OPEN, STATE_HALF_OPEN) satisfy inspectability requirement\",\n    \"Named configuration attributes rather than magic constants\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Injectable `now` callable enables deterministic testing without patching\",\n    \"Flat, readable `call` method structured as an explicit state machine\",\n    \"Transition helpers are small, focused, and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Defensive isinstance/callable checks add boilerplate noise not required by the spec\",\n    \"Resetting `failure_count` in `_transition_to_half_open` is redundant since it's reset again in `_transition_to_closed`\",\n    \"No concurrent-access protection, though not required by the spec\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit named state constants (STATE_CLOSED, STATE_OPEN, STATE_HALF_OPEN) satisfy inspectability requirement",
+      "Named configuration attributes rather than magic constants",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Injectable `now` callable enables deterministic testing without patching",
+      "Flat, readable `call` method structured as an explicit state machine",
+      "Transition helpers are small, focused, and locally auditable"
+    ],
+    "weaknesses": [
+      "Defensive isinstance/callable checks add boilerplate noise not required by the spec",
+      "Resetting `failure_count` in `_transition_to_half_open` is redundant since it's reset again in `_transition_to_closed`",
+      "No concurrent-access protection, though not required by the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.983,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.222,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 29,
+    "function_count": 8,
+    "loc": 76,
+    "maintainability_index": 39.92,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_karpathy_generation"
+}

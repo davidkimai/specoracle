@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, correct, and structurally clean. It uses a single closure to carry mutable state rather than threading an accumulator through recursion or using a class, which is the simplest viable architecture for this task. The prefix logic is explicit and readable, the base case (non-dict leaf) is handled with a simple else branch, and there are no speculative abstractions, configurability hooks, or unnecessary features. The only minor quibble is that the inner `walk` function could alternatively be written as a standalone recursive function returning a dict (avoiding the closure over `flattened`), which some would argue is slightly more explicit and testable in isolation, but the closure approach is equally idiomatic and arguably simpler for single-use code. Overall this is a tight, auditable, zero-slop implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, correct, and structurally clean. It uses a single closure to carry mutable state rather than threading an accumulator through recursion or using a class, which is the simplest viable architecture for this task. The prefix logic is explicit and readable, the base case (non-dict leaf) is handled with a simple else branch, and there are no speculative abstractions, configurability hooks, or unnecessary features. The only minor quibble is that the inner `walk` function could alternatively be written as a standalone recursive function returning a dict (avoiding the closure over `flattened`), which some would argue is slightly more explicit and testable in isolation, but the closure approach is equally idiomatic and arguably simpler for single-use code. Overall this is a tight, auditable, zero-slop implementation.\",\n  \"strengths\": [\n    \"Minimal code \u2014 solves exactly the stated problem with no extra features\",\n    \"Explicit prefix construction logic is easy to audit locally\",\n    \"Lists and other non-dict types are correctly treated as leaf values\",\n    \"No unnecessary abstractions, classes, or configurability\"\n  ],\n  \"weaknesses\": [\n    \"Closure over mutable `flattened` dict is slightly less pure than a recursive accumulator pattern, making unit-testing the inner walk harder\",\n    \"No docstring or type annotation on the inner function, though this is a minor omission for single-use private code\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 solves exactly the stated problem with no extra features",
+      "Explicit prefix construction logic is easy to audit locally",
+      "Lists and other non-dict types are correctly treated as leaf values",
+      "No unnecessary abstractions, classes, or configurability"
+    ],
+    "weaknesses": [
+      "Closure over mutable `flattened` dict is slightly less pure than a recursive accumulator pattern, making unit-testing the inner walk harder",
+      "No docstring or type annotation on the inner function, though this is a minor omission for single-use private code"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.94,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 2,
+    "loc": 11,
+    "maintainability_index": 74.216,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "oracle_karpathy_generation"
+}

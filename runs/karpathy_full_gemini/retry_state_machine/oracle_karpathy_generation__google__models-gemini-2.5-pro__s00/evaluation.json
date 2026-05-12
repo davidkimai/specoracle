@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, with clean state encapsulation and no speculative abstractions. However, it violates the 'simplicity first' and 'minimum code' principles by including excessive docstrings that dwarf the actual logic \u2014 the docstring-to-code ratio is roughly 3:1. The `isinstance` check adds a minor over-constraint not required by the spec (floats like 3.0 would be rejected unnecessarily), and the intermediate variable `remaining_count` in `remaining()` is a trivial one-liner that doesn't need a named binding. The class-level docstring and per-method Args/Returns/Raises sections are documentation overhead for a ~15-line implementation that should be self-evident. The core logic itself is exactly right: minimal state, correct semantics, no global state or threading.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, with clean state encapsulation and no speculative abstractions. However, it violates the 'simplicity first' and 'minimum code' principles by including excessive docstrings that dwarf the actual logic \u2014 the docstring-to-code ratio is roughly 3:1. The `isinstance` check adds a minor over-constraint not required by the spec (floats like 3.0 would be rejected unnecessarily), and the intermediate variable `remaining_count` in `remaining()` is a trivial one-liner that doesn't need a named binding. The class-level docstring and per-method Args/Returns/Raises sections are documentation overhead for a ~15-line implementation that should be self-evident. The core logic itself is exactly right: minimal state, correct semantics, no global state or threading.\",\n  \"strengths\": [\n    \"Correct and complete implementation of all four required methods\",\n    \"No speculative features or unnecessary abstractions\",\n    \"Self-contained, deterministic, no forbidden dependencies\",\n    \"Proper ValueError on invalid max_attempts\",\n    \"max(0, remaining_count) correctly handles over-failure edge case\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings (Args/Returns/Raises blocks) for trivially simple methods \u2014 violates 'minimum code' principle\",\n    \"isinstance(max_attempts, int) check is an over-constraint not specified in the task (rejects valid duck-typed integers)\",\n    \"Unnecessary intermediate variable `remaining_count` in a one-liner method\",\n    \"Module-level docstring adds noise for a single-class file with no ambiguity\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct and complete implementation of all four required methods",
+      "No speculative features or unnecessary abstractions",
+      "Self-contained, deterministic, no forbidden dependencies",
+      "Proper ValueError on invalid max_attempts",
+      "max(0, remaining_count) correctly handles over-failure edge case"
+    ],
+    "weaknesses": [
+      "Excessive docstrings (Args/Returns/Raises blocks) for trivially simple methods \u2014 violates 'minimum code' principle",
+      "isinstance(max_attempts, int) check is an over-constraint not specified in the task (rejects valid duck-typed integers)",
+      "Unnecessary intermediate variable `remaining_count` in a one-liner method",
+      "Module-level docstring adds noise for a single-class file with no ambiguity"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.584,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 55,
+    "maintainability_index": 49.733,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_karpathy_generation"
+}

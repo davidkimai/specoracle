@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and flat. State is tracked via a named `state` attribute with clear string literals ('closed', 'open', 'half_open'), satisfying RCS-5's inspectability requirement. Configuration values are stored as named instance attributes. The half-open trial logic correctly reopens on failure and closes on success. The `now` injection pattern is idiomatic and testable. The logic flow in `call` is linear and locally auditable without deep nesting. Minor weaknesses include that the failure counter isn't reset when transitioning to half_open (though this is a minor semantic point), and the validation rejecting zero/negative values is a reasonable guard. Overall this is a tight, readable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and flat. State is tracked via a named `state` attribute with clear string literals ('closed', 'open', 'half_open'), satisfying RCS-5's inspectability requirement. Configuration values are stored as named instance attributes. The half-open trial logic correctly reopens on failure and closes on success. The `now` injection pattern is idiomatic and testable. The logic flow in `call` is linear and locally auditable without deep nesting. Minor weaknesses include that the failure counter isn't reset when transitioning to half_open (though this is a minor semantic point), and the validation rejecting zero/negative values is a reasonable guard. Overall this is a tight, readable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Explicit named state attribute with clear string values\",\n    \"Named configuration attributes (failure_threshold, recovery_timeout)\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Flat, linear control flow in call() with no unnecessary abstraction\",\n    \"Testable via injected now= clock function\"\n  ],\n  \"weaknesses\": [\n    \"Failure counter not reset when entering half_open state, which could cause subtle edge cases\",\n    \"No docstring or inline comments explaining the state machine transitions\",\n    \"Combining the half_open reopen condition with the threshold check in a single boolean expression slightly obscures intent\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit named state attribute with clear string values",
+      "Named configuration attributes (failure_threshold, recovery_timeout)",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Flat, linear control flow in call() with no unnecessary abstraction",
+      "Testable via injected now= clock function"
+    ],
+    "weaknesses": [
+      "Failure counter not reset when entering half_open state, which could cause subtle edge cases",
+      "No docstring or inline comments explaining the state machine transitions",
+      "Combining the half_open reopen condition with the threshold check in a single boolean expression slightly obscures intent"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.24,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 2,
+    "loc": 28,
+    "maintainability_index": 51.613,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "human_reference"
+}

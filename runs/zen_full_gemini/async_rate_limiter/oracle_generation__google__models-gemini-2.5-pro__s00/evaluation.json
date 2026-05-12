@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses ordinary standard-library constructs (collections.deque, asyncio.Lock, time.monotonic), keeps control flow flat with a clear guard clause pattern, makes data movement explicit through the lock discipline, and raises a clear ValueError for invalid input. The `_prune_timestamps` helper is a well-named pure extraction. The main weakness is the `isinstance(rate, int)` check which rejects valid numeric types like numpy integers or booleans (True passes as int=1, which is arguably correct but surprising), and the docstrings are somewhat verbose for the task's simplicity\u2014the Zen favors sparse code a maintainer can audit locally. The sleep-outside-lock pattern is correct and well-commented. The `time_to_wait > 0` guard before sleeping is a nice touch. Overall this is a solid, auditable implementation with minor over-engineering in documentation and the type annotation verbosity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses ordinary standard-library constructs (collections.deque, asyncio.Lock, time.monotonic), keeps control flow flat with a clear guard clause pattern, makes data movement explicit through the lock discipline, and raises a clear ValueError for invalid input. The `_prune_timestamps` helper is a well-named pure extraction. The main weakness is the `isinstance(rate, int)` check which rejects valid numeric types like numpy integers or booleans (True passes as int=1, which is arguably correct but surprising), and the docstrings are somewhat verbose for the task's simplicity\u2014the Zen favors sparse code a maintainer can audit locally. The sleep-outside-lock pattern is correct and well-commented. The `time_to_wait > 0` guard before sleeping is a nice touch. Overall this is a solid, auditable implementation with minor over-engineering in documentation and the type annotation verbosity.\",\n  \"strengths\": [\n    \"Clear separation of concerns with _prune_timestamps helper\",\n    \"Lock released during sleep, allowing other tasks to proceed\",\n    \"Explicit ValueError with descriptive message for invalid rate\",\n    \"Uses standard-library constructs exclusively (deque, asyncio.Lock)\",\n    \"Flat control flow with guard clause returning early on success\",\n    \"Deterministic testing supported via injectable now callable\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(rate, int) check is overly strict and rejects valid numeric types like float(1.0) or numpy integers\",\n    \"Docstrings are verbose relative to the simplicity of the task, adding noise over signal\",\n    \"Type annotations use Optional/Callable from typing instead of the simpler modern union syntax\",\n    \"The comment 'must be called within a context where self._lock is held' is a hidden coupling that could be made structural\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear separation of concerns with _prune_timestamps helper",
+      "Lock released during sleep, allowing other tasks to proceed",
+      "Explicit ValueError with descriptive message for invalid rate",
+      "Uses standard-library constructs exclusively (deque, asyncio.Lock)",
+      "Flat control flow with guard clause returning early on success",
+      "Deterministic testing supported via injectable now callable"
+    ],
+    "weaknesses": [
+      "isinstance(rate, int) check is overly strict and rejects valid numeric types like float(1.0) or numpy integers",
+      "Docstrings are verbose relative to the simplicity of the task, adding noise over signal",
+      "Type annotations use Optional/Callable from typing instead of the simpler modern union syntax",
+      "The comment 'must be called within a context where self._lock is held' is a hidden coupling that could be made structural"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 10.077,
+    "exit_code": 124,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "",
+    "timed_out": true
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 3,
+    "loc": 58,
+    "maintainability_index": 73.614,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_generation"
+}

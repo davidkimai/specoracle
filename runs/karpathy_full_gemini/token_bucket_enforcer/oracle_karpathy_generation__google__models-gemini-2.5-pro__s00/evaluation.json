@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core algorithm is correct and minimal \u2014 the token bucket logic itself is clean, flat, and readable. However, the implementation is bloated with docstrings, type annotations, and validation that go well beyond what was asked. The Karpathy oracle explicitly warns against speculative features and over-engineering: the input validation (isinstance checks with ValueError raises) was not requested in the spec, the verbose multi-paragraph docstrings add noise without value, and the Optional/Callable type imports add ceremony. The actual logic could be expressed in ~20 lines without losing any correctness. The `_last_update_time` update inside the `elapsed_time > 0` guard is a subtle correctness choice (avoids unnecessary writes) but the overall structure is sound. The public attribute exposure of `capacity` and `refill_rate` is fine. The main penalty is the significant over-documentation and unsolicited validation logic that violates 'write the minimum code that solves the problem.'",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The core algorithm is correct and minimal \u2014 the token bucket logic itself is clean, flat, and readable. However, the implementation is bloated with docstrings, type annotations, and validation that go well beyond what was asked. The Karpathy oracle explicitly warns against speculative features and over-engineering: the input validation (isinstance checks with ValueError raises) was not requested in the spec, the verbose multi-paragraph docstrings add noise without value, and the Optional/Callable type imports add ceremony. The actual logic could be expressed in ~20 lines without losing any correctness. The `_last_update_time` update inside the `elapsed_time > 0` guard is a subtle correctness choice (avoids unnecessary writes) but the overall structure is sound. The public attribute exposure of `capacity` and `refill_rate` is fine. The main penalty is the significant over-documentation and unsolicited validation logic that violates 'write the minimum code that solves the problem.'\",\n  \"strengths\": [\n    \"Core token bucket algorithm is correct: refill capped at capacity, tokens consumed only when sufficient\",\n    \"Dependency injection via `now` parameter is clean and testable\",\n    \"Flat structure with no unnecessary abstractions or inheritance\",\n    \"Correct use of `time.monotonic` as default (monotonic, not wall clock)\"\n  ],\n  \"weaknesses\": [\n    \"Unsolicited input validation (isinstance checks, ValueError raises) not requested in spec \u2014 speculative defensiveness\",\n    \"Excessive docstrings and comments far exceed what the simple logic warrants\",\n    \"Unnecessary imports (Optional, Callable from typing) add boilerplate for a simple class\",\n    \"Public exposure of `capacity` and `refill_rate` as mutable attributes without intent is a minor slop\",\n    \"The `if elapsed_time > 0` guard is a micro-optimization that adds a branch without meaningful benefit\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core token bucket algorithm is correct: refill capped at capacity, tokens consumed only when sufficient",
+      "Dependency injection via `now` parameter is clean and testable",
+      "Flat structure with no unnecessary abstractions or inheritance",
+      "Correct use of `time.monotonic` as default (monotonic, not wall clock)"
+    ],
+    "weaknesses": [
+      "Unsolicited input validation (isinstance checks, ValueError raises) not requested in spec \u2014 speculative defensiveness",
+      "Excessive docstrings and comments far exceed what the simple logic warrants",
+      "Unnecessary imports (Optional, Callable from typing) add boilerplate for a simple class",
+      "Public exposure of `capacity` and `refill_rate` as mutable attributes without intent is a minor slop",
+      "The `if elapsed_time > 0` guard is a micro-optimization that adds a branch without meaningful benefit"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.298,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 2,
+    "loc": 74,
+    "maintainability_index": 69.611,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "oracle_karpathy_generation"
+}

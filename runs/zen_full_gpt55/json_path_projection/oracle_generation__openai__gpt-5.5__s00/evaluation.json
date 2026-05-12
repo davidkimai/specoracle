@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and closely follows the Zen of Python. Each helper has a single clear responsibility: `_split_path` validates and tokenizes, `_normalize_paths` validates the paths dict, `_resolve_path` walks the data structure, and `_list_index` safely parses integer segments. Control flow is flat with guard clauses and early returns rather than deep nesting. The sentinel `_MISSING` is used explicitly to distinguish missing values from `None` defaults, which is correct and auditable. Input validation raises clear `TypeError`/`ValueError` with informative messages. No mutation of the input occurs. The only minor quibbles are: `_normalize_paths` returns a list of tuples rather than a dict (slightly unconventional but harmless), and the `__all__` export list and `from __future__ import annotations` are minor speculative additions that add negligible noise. Overall this is a well-structured, locally auditable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, well-decomposed, and closely follows the Zen of Python. Each helper has a single clear responsibility: `_split_path` validates and tokenizes, `_normalize_paths` validates the paths dict, `_resolve_path` walks the data structure, and `_list_index` safely parses integer segments. Control flow is flat with guard clauses and early returns rather than deep nesting. The sentinel `_MISSING` is used explicitly to distinguish missing values from `None` defaults, which is correct and auditable. Input validation raises clear `TypeError`/`ValueError` with informative messages. No mutation of the input occurs. The only minor quibbles are: `_normalize_paths` returns a list of tuples rather than a dict (slightly unconventional but harmless), and the `__all__` export list and `from __future__ import annotations` are minor speculative additions that add negligible noise. Overall this is a well-structured, locally auditable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers with clear names\",\n    \"Flat control flow using guard clauses and early returns in `_resolve_path`\",\n    \"Explicit sentinel `_MISSING` cleanly separates missing-path from None default\",\n    \"Clear, informative error messages for invalid inputs\",\n    \"No mutation of input record or paths\"\n  ],\n  \"weaknesses\": [\n    \"`_normalize_paths` returns a list of tuples instead of a dict, slightly unconventional\",\n    \"`from __future__ import annotations` and `__all__` are minor speculative additions not required by the task\",\n    \"Negative index rejection is implicit (silently returns MISSING) rather than raising, which could surprise callers who pass negative indexes intentionally\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers with clear names",
+      "Flat control flow using guard clauses and early returns in `_resolve_path`",
+      "Explicit sentinel `_MISSING` cleanly separates missing-path from None default",
+      "Clear, informative error messages for invalid inputs",
+      "No mutation of input record or paths"
+    ],
+    "weaknesses": [
+      "`_normalize_paths` returns a list of tuples instead of a dict, slightly unconventional",
+      "`from __future__ import annotations` and `__all__` are minor speculative additions not required by the task",
+      "Negative index rejection is implicit (silently returns MISSING) rather than raising, which could surprise callers who pass negative indexes intentionally"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.052,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.6,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 5,
+    "loc": 58,
+    "maintainability_index": 44.101,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

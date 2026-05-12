@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Incident Desk Spec N-9 oracle: it uses local lookup tables with proper `_table` suffixes (`required_fields_table`, `severity_boost_table`), returns explicit `status_code: 'routed'` strings rather than booleans, avoids classes entirely, preserves input order via sequential append, and keeps skip logic as short explicit string reasons (`'not_dict'`, `'missing_field'`). The code is flat, readable, and locally auditable in a single pass. The minor quibble is that `required_fields_table` is a tuple rather than a set or frozenset (slightly suboptimal for membership testing, though negligible at this scale), and the `skip_reason` two-step pattern adds a tiny bit of indirection compared to a direct `continue` with an inline comment, but these are very minor stylistic points that don't detract meaningfully from the overall quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Incident Desk Spec N-9 oracle: it uses local lookup tables with proper `_table` suffixes (`required_fields_table`, `severity_boost_table`), returns explicit `status_code: 'routed'` strings rather than booleans, avoids classes entirely, preserves input order via sequential append, and keeps skip logic as short explicit string reasons (`'not_dict'`, `'missing_field'`). The code is flat, readable, and locally auditable in a single pass. The minor quibble is that `required_fields_table` is a tuple rather than a set or frozenset (slightly suboptimal for membership testing, though negligible at this scale), and the `skip_reason` two-step pattern adds a tiny bit of indirection compared to a direct `continue` with an inline comment, but these are very minor stylistic points that don't detract meaningfully from the overall quality.\",\n  \"strengths\": [\n    \"Uses `_table` suffix naming convention as specified\",\n    \"Explicit `status_code: 'routed'` string, never a boolean\",\n    \"No classes introduced for single-pass routing\",\n    \"Skip reasons are short explicit strings, not hidden in comments\",\n    \"Input order preserved via sequential append to `routed_rows`\",\n    \"Clean fallback to `rules['default']` with readable ternary-style lookup\"\n  ],\n  \"weaknesses\": [\n    \"`required_fields_table` is a tuple rather than a frozenset, slightly misleading name for a membership-check structure\",\n    \"Two-step `skip_reason` pattern adds minor indirection; direct `continue` would be marginally flatter\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `_table` suffix naming convention as specified",
+      "Explicit `status_code: 'routed'` string, never a boolean",
+      "No classes introduced for single-pass routing",
+      "Skip reasons are short explicit strings, not hidden in comments",
+      "Input order preserved via sequential append to `routed_rows`",
+      "Clean fallback to `rules['default']` with readable ternary-style lookup"
+    ],
+    "weaknesses": [
+      "`required_fields_table` is a tuple rather than a frozenset, slightly misleading name for a membership-check structure",
+      "Two-step `skip_reason` pattern adds minor indirection; direct `continue` would be marginally flatter"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.932,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 28,
+    "maintainability_index": 59.612,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_karpathy_generation"
+}

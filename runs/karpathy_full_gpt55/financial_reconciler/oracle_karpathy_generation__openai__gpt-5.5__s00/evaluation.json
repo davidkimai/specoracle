@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation faithfully follows TR-4's core mandates: direction is validated and tagged before any accumulation occurs, debit and credit are maintained in separate named accumulators, and arithmetic is never placed inside the conditionals that decide monetary direction. The `_TaggedDelta` dataclass cleanly separates tagging from accumulation. However, the solution is over-engineered for the task's complexity: the `_TaggedDelta` frozen dataclass adds ceremony without meaningful safety benefit over a simple named tuple or even a plain validated dispatch; `_updated_total` and `_total_for_account` are trivial helpers that obscure rather than clarify; the redundant `raise ValueError` in `_apply_tagged_delta` is dead code since `_validated_direction` already guarantees only valid directions reach that point; and the order-tracking machinery (`accounts_in_order`, `accounts_seen`) is unnecessary since Python dicts preserve insertion order. The code is correct and structurally sound but violates the Zen principle of simplicity\u2014there are too many indirection layers for a straightforward accumulation task.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation faithfully follows TR-4's core mandates: direction is validated and tagged before any accumulation occurs, debit and credit are maintained in separate named accumulators, and arithmetic is never placed inside the conditionals that decide monetary direction. The `_TaggedDelta` dataclass cleanly separates tagging from accumulation. However, the solution is over-engineered for the task's complexity: the `_TaggedDelta` frozen dataclass adds ceremony without meaningful safety benefit over a simple named tuple or even a plain validated dispatch; `_updated_total` and `_total_for_account` are trivial helpers that obscure rather than clarify; the redundant `raise ValueError` in `_apply_tagged_delta` is dead code since `_validated_direction` already guarantees only valid directions reach that point; and the order-tracking machinery (`accounts_in_order`, `accounts_seen`) is unnecessary since Python dicts preserve insertion order. The code is correct and structurally sound but violates the Zen principle of simplicity\u2014there are too many indirection layers for a straightforward accumulation task.\",\n  \"strengths\": [\n    \"Direction is validated and tagged in a dedicated step before any monetary accumulation, fully satisfying TR-4\",\n    \"Separate named accumulators `debit_totals` and `credit_totals` are explicit and never conflated\",\n    \"No inline arithmetic inside direction-deciding conditionals\",\n    \"Frozen dataclass enforces immutability of the tagged delta, preventing accidental mutation\",\n    \"Clear, descriptive naming throughout\"\n  ],\n  \"weaknesses\": [\n    \"Over-engineered: `_TaggedDelta` dataclass, `_record_debit`/`_record_credit`, `_updated_total`, and `_total_for_account` are all thin wrappers adding indirection without meaningful abstraction\",\n    \"Dead code: the second `raise ValueError` in `_apply_tagged_delta` can never be reached after `_validated_direction` already rejects unknown directions\",\n    \"Manual order-tracking with `accounts_in_order` + `accounts_seen` is unnecessary since Python 3.7+ dicts preserve insertion order\",\n    \"Excessive use of `Any` type annotations undermines the type-safety intent of the dataclass\",\n    \"The `_ZERO` constant alias for `0` adds noise without clarity\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Direction is validated and tagged in a dedicated step before any monetary accumulation, fully satisfying TR-4",
+      "Separate named accumulators `debit_totals` and `credit_totals` are explicit and never conflated",
+      "No inline arithmetic inside direction-deciding conditionals",
+      "Frozen dataclass enforces immutability of the tagged delta, preventing accidental mutation",
+      "Clear, descriptive naming throughout"
+    ],
+    "weaknesses": [
+      "Over-engineered: `_TaggedDelta` dataclass, `_record_debit`/`_record_credit`, `_updated_total`, and `_total_for_account` are all thin wrappers adding indirection without meaningful abstraction",
+      "Dead code: the second `raise ValueError` in `_apply_tagged_delta` can never be reached after `_validated_direction` already rejects unknown directions",
+      "Manual order-tracking with `accounts_in_order` + `accounts_seen` is unnecessary since Python 3.7+ dicts preserve insertion order",
+      "Excessive use of `Any` type annotations undermines the type-safety intent of the dataclass",
+      "The `_ZERO` constant alias for `0` adds noise without clarity"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.039,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 8,
+    "loc": 75,
+    "maintainability_index": 43.617,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

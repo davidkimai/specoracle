@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and minimal \u2014 it uses the standard library idiomatically (csv.DictReader, StringIO), avoids unnecessary abstractions, and keeps the logic flat and readable. The early-return guard on missing headers is a reasonable conservative choice. The use of a dict of lists for accumulation is slightly less readable than a dict of tuples or a defaultdict, but it's not egregious. The None-in-row check for extra fields is a correct and non-obvious edge case handled well. The final list comprehension with sorted() is idiomatic. Minor issues: the early header check could be simplified (checking fieldnames before iterating is good, but the any() expression is slightly verbose), and using a mutable list [0, 0] instead of a named tuple or simple defaultdict(lambda: [0, 0]) adds a tiny bit of friction. Overall this is close to the minimum correct implementation with good structural discipline.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, direct, and minimal \u2014 it uses the standard library idiomatically (csv.DictReader, StringIO), avoids unnecessary abstractions, and keeps the logic flat and readable. The early-return guard on missing headers is a reasonable conservative choice. The use of a dict of lists for accumulation is slightly less readable than a dict of tuples or a defaultdict, but it's not egregious. The None-in-row check for extra fields is a correct and non-obvious edge case handled well. The final list comprehension with sorted() is idiomatic. Minor issues: the early header check could be simplified (checking fieldnames before iterating is good, but the any() expression is slightly verbose), and using a mutable list [0, 0] instead of a named tuple or simple defaultdict(lambda: [0, 0]) adds a tiny bit of friction. Overall this is close to the minimum correct implementation with good structural discipline.\",\n  \"strengths\": [\n    \"Flat, linear control flow with no unnecessary nesting or abstraction\",\n    \"Correct handling of edge cases: missing headers, extra fields (None key), empty strings, non-integer values\",\n    \"Idiomatic use of csv.DictReader and StringIO\",\n    \"Sorting and output shape match the spec exactly\",\n    \"No speculative features or configurability\"\n  ],\n  \"weaknesses\": [\n    \"Mutable list [0, 0] for accumulation is slightly less clear than a named tuple or defaultdict approach\",\n    \"Early header validation with any() is slightly verbose and could be a simple set-subset check\",\n    \"row.get() calls are redundant after DictReader guarantees all fieldnames are present as keys (though harmless)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat, linear control flow with no unnecessary nesting or abstraction",
+      "Correct handling of edge cases: missing headers, extra fields (None key), empty strings, non-integer values",
+      "Idiomatic use of csv.DictReader and StringIO",
+      "Sorting and output shape match the spec exactly",
+      "No speculative features or configurability"
+    ],
+    "weaknesses": [
+      "Mutable list [0, 0] for accumulation is slightly less clear than a named tuple or defaultdict approach",
+      "Early header validation with any() is slightly verbose and could be a simple set-subset check",
+      "row.get() calls are redundant after DictReader guarantees all fieldnames are present as keys (though harmless)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.046,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 41,
+    "maintainability_index": 50.483,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_karpathy_generation"
+}

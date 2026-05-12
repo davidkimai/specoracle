@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the top-level accumulator `bindings_ledger` as required, creates a named `section_ledger` for the inner dict rather than an anonymous literal, stages parsing visibly across clearly separated steps (strip, skip, split on '=', split on '.', validate, insert), preserves insertion order via plain dict, and raises `ValueError` messages that name the archival field being rejected with line-number context. The only minor deviations are that `section_ledger` is re-declared inside the conditional block on every new section rather than being a persistent cross-iteration ledger (though it is immediately assigned into `bindings_ledger`, so the spirit is preserved), and the `.strip()` calls on `section_part` and `key_part` are slightly redundant given the earlier `name_part.strip()`, but this is a trivial cosmetic issue. Overall the code is flat, explicit, locally auditable, and structurally aligned with the spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the top-level accumulator `bindings_ledger` as required, creates a named `section_ledger` for the inner dict rather than an anonymous literal, stages parsing visibly across clearly separated steps (strip, skip, split on '=', split on '.', validate, insert), preserves insertion order via plain dict, and raises `ValueError` messages that name the archival field being rejected with line-number context. The only minor deviations are that `section_ledger` is re-declared inside the conditional block on every new section rather than being a persistent cross-iteration ledger (though it is immediately assigned into `bindings_ledger`, so the spirit is preserved), and the `.strip()` calls on `section_part` and `key_part` are slightly redundant given the earlier `name_part.strip()`, but this is a trivial cosmetic issue. Overall the code is flat, explicit, locally auditable, and structurally aligned with the spec.\",\n  \"strengths\": [\n    \"Uses `bindings_ledger` naming convention for the cross-iteration accumulator as specified\",\n    \"Visibly staged parsing: each concern (blank skip, comment skip, '=' check, '.' check, empty checks) is a distinct, readable step\",\n    \"Single public function with no extraneous helpers\",\n    \"Error messages name the archival field and include line number for auditability\",\n    \"Insertion order preserved naturally via dict\",\n    \"Named `section_ledger` variable instead of anonymous `{}` literal\"\n  ],\n  \"weaknesses\": [\n    \"`section_ledger` is only alive within the conditional block, so it doesn't truly 'survive across loop iterations' as the spec implies for ledger-named variables\",\n    \"Redundant `.strip()` on `section_part` and `key_part` after already stripping `name_part`\",\n    \"No type annotation on the return value in the function signature (minor style gap)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `bindings_ledger` naming convention for the cross-iteration accumulator as specified",
+      "Visibly staged parsing: each concern (blank skip, comment skip, '=' check, '.' check, empty checks) is a distinct, readable step",
+      "Single public function with no extraneous helpers",
+      "Error messages name the archival field and include line number for auditability",
+      "Insertion order preserved naturally via dict",
+      "Named `section_ledger` variable instead of anonymous `{}` literal"
+    ],
+    "weaknesses": [
+      "`section_ledger` is only alive within the conditional block, so it doesn't truly 'survive across loop iterations' as the spec implies for ledger-named variables",
+      "Redundant `.strip()` on `section_part` and `key_part` after already stripping `name_part`",
+      "No type annotation on the return value in the function signature (minor style gap)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.387,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 35,
+    "maintainability_index": 54.499,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_karpathy_generation"
+}

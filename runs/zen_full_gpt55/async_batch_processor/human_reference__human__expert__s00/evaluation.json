@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a guard clause for validation, a clear list comprehension for batching, a semaphore for concurrency control, a small named helper `run_batch` that encapsulates the semaphore logic, and `asyncio.gather` for concurrent execution with order preservation. The final flattening is a straightforward list comprehension. There is no speculative abstraction, no hidden mutation, and no unnecessary complexity. The only minor quibble is that the inner `run_batch` function could arguably be inlined or extracted as a module-level helper, but its current placement is readable and locally auditable. The type annotations are appropriate without being over-engineered.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a guard clause for validation, a clear list comprehension for batching, a semaphore for concurrency control, a small named helper `run_batch` that encapsulates the semaphore logic, and `asyncio.gather` for concurrent execution with order preservation. The final flattening is a straightforward list comprehension. There is no speculative abstraction, no hidden mutation, and no unnecessary complexity. The only minor quibble is that the inner `run_batch` function could arguably be inlined or extracted as a module-level helper, but its current placement is readable and locally auditable. The type annotations are appropriate without being over-engineered.\",\n  \"strengths\": [\n    \"Guard clause at the top rejects invalid inputs clearly and immediately\",\n    \"Batching via a single list comprehension is explicit and easy to verify\",\n    \"Semaphore usage is encapsulated in a small, well-named helper\",\n    \"asyncio.gather preserves order, satisfying the 'batch order' requirement naturally\",\n    \"Flat control flow with no deep nesting\",\n    \"No hidden state or mutation; data movement is fully explicit\"\n  ],\n  \"weaknesses\": [\n    \"`run_batch` is a closure over `semaphore` and `handler`; a module-level helper with explicit parameters would be slightly more auditable\",\n    \"The batching list comprehension is slightly long for one line but still readable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Guard clause at the top rejects invalid inputs clearly and immediately",
+      "Batching via a single list comprehension is explicit and easy to verify",
+      "Semaphore usage is encapsulated in a small, well-named helper",
+      "asyncio.gather preserves order, satisfying the 'batch order' requirement naturally",
+      "Flat control flow with no deep nesting",
+      "No hidden state or mutation; data movement is fully explicit"
+    ],
+    "weaknesses": [
+      "`run_batch` is a closure over `semaphore` and `handler`; a module-level helper with explicit parameters would be slightly more auditable",
+      "The batching list comprehension is slightly long for one line but still readable"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 4.169,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.36s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 20,
+    "maintainability_index": 62.338,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "human_reference"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem with a simple while-True loop, extend, and early return pattern. The core logic is exactly right and readable. The only mild concern is the type annotation overhead \u2014 importing TypeVar, Callable, Awaitable, Iterable, and defining two TypeVars adds boilerplate that isn't strictly necessary for a simple async utility function, and the Karpathy guidelines favor minimum code. A simpler annotation approach (or even just `Any` hints) would reduce noise without losing correctness. The logic itself is flat, explicit, and has no speculative abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem with a simple while-True loop, extend, and early return pattern. The core logic is exactly right and readable. The only mild concern is the type annotation overhead \u2014 importing TypeVar, Callable, Awaitable, Iterable, and defining two TypeVars adds boilerplate that isn't strictly necessary for a simple async utility function, and the Karpathy guidelines favor minimum code. A simpler annotation approach (or even just `Any` hints) would reduce noise without losing correctness. The logic itself is flat, explicit, and has no speculative abstractions.\",\n  \"strengths\": [\n    \"Minimal loop body \u2014 extend, check None, advance cursor is exactly the right structure\",\n    \"No unnecessary abstractions, classes, or helper functions\",\n    \"Correct handling of start_cursor passed to first call\",\n    \"Readable and locally auditable in one glance\"\n  ],\n  \"weaknesses\": [\n    \"Type annotation imports (TypeVar, Callable, Awaitable, Iterable) add boilerplate beyond what the task requires\",\n    \"Defining two TypeVars (T, C) for a single-use function is speculative generality that conflicts with simplicity-first principle\",\n    \"Could use a simpler `break` pattern instead of early return for slightly more conventional loop structure, though this is minor\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal loop body \u2014 extend, check None, advance cursor is exactly the right structure",
+      "No unnecessary abstractions, classes, or helper functions",
+      "Correct handling of start_cursor passed to first call",
+      "Readable and locally auditable in one glance"
+    ],
+    "weaknesses": [
+      "Type annotation imports (TypeVar, Callable, Awaitable, Iterable) add boilerplate beyond what the task requires",
+      "Defining two TypeVars (T, C) for a single-use function is speculative generality that conflicts with simplicity-first principle",
+      "Could use a simpler `break` pattern instead of early return for slightly more conventional loop structure, though this is minor"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.932,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.24s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 17,
+    "maintainability_index": 69.854,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_karpathy_generation"
+}

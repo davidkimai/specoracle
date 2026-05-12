@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the task requirements without speculative abstractions. Each method does exactly one thing, control flow is flat with simple guard clauses, data movement is explicit through the `_refs` dict, and names are self-explanatory. The docstrings add useful context without being verbose. The only minor quibbles are that `self._refs.pop(key, None)` in `get()` is a small side-effect that could surprise callers (though it's a reasonable lazy-cleanup optimization), and the `Dict`/`Optional` imports from `typing` are legacy style in modern Python (3.9+ prefers built-in generics), but these are negligible issues that don't affect structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the task requirements without speculative abstractions. Each method does exactly one thing, control flow is flat with simple guard clauses, data movement is explicit through the `_refs` dict, and names are self-explanatory. The docstrings add useful context without being verbose. The only minor quibbles are that `self._refs.pop(key, None)` in `get()` is a small side-effect that could surprise callers (though it's a reasonable lazy-cleanup optimization), and the `Dict`/`Optional` imports from `typing` are legacy style in modern Python (3.9+ prefers built-in generics), but these are negligible issues that don't affect structural quality.\",\n  \"strengths\": [\n    \"Each method is small, single-purpose, and locally auditable\",\n    \"Flat control flow with guard clauses instead of nesting\",\n    \"Explicit data movement through a single well-named dict\",\n    \"Clear docstring explaining the TypeError constraint on weakref-incompatible objects\",\n    \"cleanup() uses a clean two-pass approach avoiding mutation during iteration\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Lazy cleanup in get() is a hidden side effect not mentioned in the method's docstring\",\n    \"Uses legacy typing.Dict/Optional instead of built-in generics (minor, Python version dependent)\",\n    \"pop(key, None) in cleanup() is redundant since keys are guaranteed to exist from the list comprehension\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Each method is small, single-purpose, and locally auditable",
+      "Flat control flow with guard clauses instead of nesting",
+      "Explicit data movement through a single well-named dict",
+      "Clear docstring explaining the TypeError constraint on weakref-incompatible objects",
+      "cleanup() uses a clean two-pass approach avoiding mutation during iteration",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Lazy cleanup in get() is a hidden side effect not mentioned in the method's docstring",
+      "Uses legacy typing.Dict/Optional instead of built-in generics (minor, Python version dependent)",
+      "pop(key, None) in cleanup() is redundant since keys are guaranteed to exist from the list comprehension"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.064,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 31,
+    "maintainability_index": 87.354,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "baseline_generation"
+}

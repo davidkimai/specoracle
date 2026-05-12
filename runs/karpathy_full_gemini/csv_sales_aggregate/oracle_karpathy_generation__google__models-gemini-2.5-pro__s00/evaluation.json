@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, using standard library tools (csv.DictReader, io.StringIO) appropriately. The logic is flat, readable, and avoids unnecessary abstractions. However, the docstring is verbose and over-engineered for a single-use utility function \u2014 the Karpathy oracle would prefer minimal or no docstring here. The inline comments are also somewhat excessive, explaining obvious Python idioms (e.g., what ValueError/TypeError mean, what setdefault does) rather than non-obvious design decisions. The two-step build-then-sort pattern is clean, though a minor nit is that the intermediate `result` list comprehension unpacks keys that shadow the outer loop variables (`region`, `product`) which could cause subtle confusion. Overall the architecture is sound and minimal, but the annotation overhead adds noise that the oracle would trim.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, using standard library tools (csv.DictReader, io.StringIO) appropriately. The logic is flat, readable, and avoids unnecessary abstractions. However, the docstring is verbose and over-engineered for a single-use utility function \u2014 the Karpathy oracle would prefer minimal or no docstring here. The inline comments are also somewhat excessive, explaining obvious Python idioms (e.g., what ValueError/TypeError mean, what setdefault does) rather than non-obvious design decisions. The two-step build-then-sort pattern is clean, though a minor nit is that the intermediate `result` list comprehension unpacks keys that shadow the outer loop variables (`region`, `product`) which could cause subtle confusion. Overall the architecture is sound and minimal, but the annotation overhead adds noise that the oracle would trim.\",\n  \"strengths\": [\n    \"Uses csv.DictReader correctly \u2014 no manual header parsing\",\n    \"Single-pass aggregation with setdefault is idiomatic and efficient\",\n    \"Exception handling is appropriately scoped to conversion errors only\",\n    \"Flat control flow with no unnecessary helper functions or classes\",\n    \"Correct sort key and output shape\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is far too verbose for a simple utility function \u2014 violates simplicity-first principle\",\n    \"Inline comments over-explain obvious Python idioms rather than non-obvious decisions\",\n    \"Variable shadowing in list comprehension (region, product reused from loop) is a minor readability hazard\",\n    \"row.get() calls with subsequent None-checks could be simplified by relying solely on the try/except for missing fields\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses csv.DictReader correctly \u2014 no manual header parsing",
+      "Single-pass aggregation with setdefault is idiomatic and efficient",
+      "Exception handling is appropriately scoped to conversion errors only",
+      "Flat control flow with no unnecessary helper functions or classes",
+      "Correct sort key and output shape"
+    ],
+    "weaknesses": [
+      "Docstring is far too verbose for a simple utility function \u2014 violates simplicity-first principle",
+      "Inline comments over-explain obvious Python idioms rather than non-obvious decisions",
+      "Variable shadowing in list comprehension (region, product reused from loop) is a minor readability hazard",
+      "row.get() calls with subsequent None-checks could be simplified by relying solely on the try/except for missing fields"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.081,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 55,
+    "maintainability_index": 84.423,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_karpathy_generation"
+}

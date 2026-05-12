@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Treasury Reconciliation Doctrine TR-4 and Zen of Python principles. Separate named accumulators for debits and credits are explicit and clearly labeled. The conditional block decides direction first, then updates the appropriate accumulator without inline arithmetic inside the conditional. Decimal arithmetic prevents floating-point precision issues. The code is flat, readable, and locally auditable with no hidden control flow. The only minor structural concern is the slightly verbose intermediate variable pattern (debit_accumulator / credit_accumulator) which, while technically compliant with TR-4's 'no inline arithmetic in conditionals' rule, adds a small amount of ceremony that could be simplified to direct dict updates like `account_totals[account]['debit'] += amount_delta` without violating the doctrine\u2014since the arithmetic is still outside the conditional logic. The docstring is thorough and the error handling is explicit and well-structured.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Treasury Reconciliation Doctrine TR-4 and Zen of Python principles. Separate named accumulators for debits and credits are explicit and clearly labeled. The conditional block decides direction first, then updates the appropriate accumulator without inline arithmetic inside the conditional. Decimal arithmetic prevents floating-point precision issues. The code is flat, readable, and locally auditable with no hidden control flow. The only minor structural concern is the slightly verbose intermediate variable pattern (debit_accumulator / credit_accumulator) which, while technically compliant with TR-4's 'no inline arithmetic in conditionals' rule, adds a small amount of ceremony that could be simplified to direct dict updates like `account_totals[account]['debit'] += amount_delta` without violating the doctrine\u2014since the arithmetic is still outside the conditional logic. The docstring is thorough and the error handling is explicit and well-structured.\",\n  \"strengths\": [\n    \"Separate named accumulators for debit and credit strictly follow TR-4\",\n    \"No arithmetic inside direction-deciding conditionals\",\n    \"Decimal used throughout for monetary precision\",\n    \"Explicit ValueError with descriptive messages for all rejection cases\",\n    \"Clean post-processing phase separates accumulation from balance computation\",\n    \"Flat, readable structure with no nested complexity\"\n  ],\n  \"weaknesses\": [\n    \"Intermediate accumulator variables (debit_accumulator/credit_accumulator) add unnecessary verbosity without meaningful safety benefit\",\n    \"Type alias definitions add minor boilerplate that doesn't improve auditability\",\n    \"Docstring length is disproportionate to the function's complexity\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators for debit and credit strictly follow TR-4",
+      "No arithmetic inside direction-deciding conditionals",
+      "Decimal used throughout for monetary precision",
+      "Explicit ValueError with descriptive messages for all rejection cases",
+      "Clean post-processing phase separates accumulation from balance computation",
+      "Flat, readable structure with no nested complexity"
+    ],
+    "weaknesses": [
+      "Intermediate accumulator variables (debit_accumulator/credit_accumulator) add unnecessary verbosity without meaningful safety benefit",
+      "Type alias definitions add minor boilerplate that doesn't improve auditability",
+      "Docstring length is disproportionate to the function's complexity"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.336,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 85,
+    "maintainability_index": 79.964,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_generation"
+}

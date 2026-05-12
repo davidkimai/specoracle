@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: it uses a small pure helper, keeps control flow flat with a guard clause, avoids mutation, raises a clear ValueError, and uses ordinary stdlib constructs (itertools.cycle). The main weaknesses are cosmetic but non-trivial from a Zen perspective: the verbose Google-style docstrings add significant noise relative to the simplicity of the code (sparse enough to audit locally is violated), the typing imports use the legacy List/Dict forms instead of the built-in generics available since Python 3.9, and the module-level docstring is placed after the import (a minor but real oddity). The helper extraction is appropriate and the overall architecture is clean, but the docstring verbosity is the opposite of sparse.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: it uses a small pure helper, keeps control flow flat with a guard clause, avoids mutation, raises a clear ValueError, and uses ordinary stdlib constructs (itertools.cycle). The main weaknesses are cosmetic but non-trivial from a Zen perspective: the verbose Google-style docstrings add significant noise relative to the simplicity of the code (sparse enough to audit locally is violated), the typing imports use the legacy List/Dict forms instead of the built-in generics available since Python 3.9, and the module-level docstring is placed after the import (a minor but real oddity). The helper extraction is appropriate and the overall architecture is clean, but the docstring verbosity is the opposite of sparse.\",\n  \"strengths\": [\n    \"Small pure helper _get_enabled_worker_names separates concerns cleanly\",\n    \"Guard clause raises ValueError immediately with a clear message\",\n    \"itertools.cycle is the idiomatic stdlib choice for round-robin cycling\",\n    \"No mutation of inputs; returns a fresh list of dicts\",\n    \"Control flow is flat and easy to follow locally\"\n  ],\n  \"weaknesses\": [\n    \"Verbose multi-paragraph docstrings overwhelm the actual logic, violating 'sparse enough to audit locally'\",\n    \"Uses legacy typing.List/Dict instead of built-in list/dict generics (Python 3.9+)\",\n    \"Module docstring placed after imports, which is non-standard and slightly confusing\",\n    \"The inline comment 'Assuming name is a required key...' is speculative noise rather than signal\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Small pure helper _get_enabled_worker_names separates concerns cleanly",
+      "Guard clause raises ValueError immediately with a clear message",
+      "itertools.cycle is the idiomatic stdlib choice for round-robin cycling",
+      "No mutation of inputs; returns a fresh list of dicts",
+      "Control flow is flat and easy to follow locally"
+    ],
+    "weaknesses": [
+      "Verbose multi-paragraph docstrings overwhelm the actual logic, violating 'sparse enough to audit locally'",
+      "Uses legacy typing.List/Dict instead of built-in list/dict generics (Python 3.9+)",
+      "Module docstring placed after imports, which is non-standard and slightly confusing",
+      "The inline comment 'Assuming name is a required key...' is speculative noise rather than signal"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.865,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 2,
+    "loc": 51,
+    "maintainability_index": 85.557,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

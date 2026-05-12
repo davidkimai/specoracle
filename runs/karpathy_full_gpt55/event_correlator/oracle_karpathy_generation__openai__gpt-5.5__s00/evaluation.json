@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, but carries some unnecessary complexity. The docstring mentions 'Events missing these keys are ignored' which is a speculative feature not explicitly required. The `pending_a` list approach with a manual `remaining` filter loop is more complex than needed \u2014 since events are sorted by (session_id, timestamp, index), a simpler two-pointer or nested loop over pre-grouped events would be cleaner and more auditable. The `delta <= 0` branch in the B-event loop is logically sound (guards against same-timestamp or out-of-order after sort), but the sort already handles ordering so this is subtle. The use of `object()` as a sentinel for `current_session` is a minor cleverness that adds cognitive load. The `indexed_events` intermediate list with 5-tuples is heavier than necessary. A cleaner approach would group A and B events by session, then for each A find the first B \u2014 roughly 20-30 lines total vs ~50 here. The code works correctly and avoids major architectural slop, but misses the 'minimum code' principle by a meaningful margin.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, but carries some unnecessary complexity. The docstring mentions 'Events missing these keys are ignored' which is a speculative feature not explicitly required. The `pending_a` list approach with a manual `remaining` filter loop is more complex than needed \u2014 since events are sorted by (session_id, timestamp, index), a simpler two-pointer or nested loop over pre-grouped events would be cleaner and more auditable. The `delta <= 0` branch in the B-event loop is logically sound (guards against same-timestamp or out-of-order after sort), but the sort already handles ordering so this is subtle. The use of `object()` as a sentinel for `current_session` is a minor cleverness that adds cognitive load. The `indexed_events` intermediate list with 5-tuples is heavier than necessary. A cleaner approach would group A and B events by session, then for each A find the first B \u2014 roughly 20-30 lines total vs ~50 here. The code works correctly and avoids major architectural slop, but misses the 'minimum code' principle by a meaningful margin.\",\n  \"strengths\": [\n    \"Correct handling of the 'first later B' constraint via consumed-A tracking\",\n    \"Stable sort by (session_id, timestamp, index) preserves original order for ties\",\n    \"No external dependencies or unnecessary abstractions\",\n    \"Clear variable naming throughout\"\n  ],\n  \"weaknesses\": [\n    \"Speculative feature: silently ignoring malformed events was not asked for\",\n    \"`object()` sentinel is unnecessarily clever; a simple `None` or explicit session-change check suffices\",\n    \"5-tuple intermediate list is heavier than needed; grouping by session first would simplify logic\",\n    \"Manual `remaining` filter loop adds complexity; a simpler nested loop over grouped data would be more readable\",\n    \"~50 lines where ~25-30 would suffice \u2014 violates 'minimum code' principle\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct handling of the 'first later B' constraint via consumed-A tracking",
+      "Stable sort by (session_id, timestamp, index) preserves original order for ties",
+      "No external dependencies or unnecessary abstractions",
+      "Clear variable naming throughout"
+    ],
+    "weaknesses": [
+      "Speculative feature: silently ignoring malformed events was not asked for",
+      "`object()` sentinel is unnecessarily clever; a simple `None` or explicit session-change check suffices",
+      "5-tuple intermediate list is heavier than needed; grouping by session first would simplify logic",
+      "Manual `remaining` filter loop adds complexity; a simpler nested loop over grouped data would be more readable",
+      "~50 lines where ~25-30 would suffice \u2014 violates 'minimum code' principle"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.985,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n        pairs = correlate_events(events, within=5)\n>       assert pairs == [(events[0], events[1])]\nE       AssertionError: assert [] == [({'session_i...'type': 'B'})]\nE         \nE         Right contains one more item: ({'session_id': 's', 'ts': 1, 'type': 'A'}, {'session_id': 's', 'ts': 3, 'type': 'B'})\nE         Use -v to get more diff\n\ntest_solution.py:7: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - AssertionErr...\n1 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 11.0,
+    "cyclomatic_complexity_max": 11,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 1,
+    "loc": 42,
+    "maintainability_index": 71.754,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "oracle_karpathy_generation"
+}

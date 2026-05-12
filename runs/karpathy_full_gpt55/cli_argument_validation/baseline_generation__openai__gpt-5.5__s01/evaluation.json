@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with a straightforward while-loop that handles each flag explicitly. Control flow is easy to follow locally: boolean flag, value-taking flags, unknown flags, and positional arguments are each handled with guard clauses and early continues rather than deep nesting. The final required-field check is clear. Minor issues: the digit-by-digit check for --limit is slightly clever when `value.isdigit()` would be more idiomatic and readable; the final explicit dict reconstruction is redundant since `result` already has the right shape and could be returned directly; and the missing-value check `argv[i+1].startswith('--')` treats a value like '--myfile' as missing, which is a reasonable but implicit policy choice that could be documented. No speculative abstractions, no hidden state, no framework-shaped code\u2014overall a solid, auditable implementation very close to what the Zen oracle would endorse.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with a straightforward while-loop that handles each flag explicitly. Control flow is easy to follow locally: boolean flag, value-taking flags, unknown flags, and positional arguments are each handled with guard clauses and early continues rather than deep nesting. The final required-field check is clear. Minor issues: the digit-by-digit check for --limit is slightly clever when `value.isdigit()` would be more idiomatic and readable; the final explicit dict reconstruction is redundant since `result` already has the right shape and could be returned directly; and the missing-value check `argv[i+1].startswith('--')` treats a value like '--myfile' as missing, which is a reasonable but implicit policy choice that could be documented. No speculative abstractions, no hidden state, no framework-shaped code\u2014overall a solid, auditable implementation very close to what the Zen oracle would endorse.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses and continue statements avoids nesting\",\n    \"Explicit handling of each flag case makes behavior locally auditable\",\n    \"Clear ValueError messages identify the offending flag\",\n    \"No hidden mutation, global state, or speculative abstractions\",\n    \"Defaults are declared upfront in a single dict, making them easy to review\"\n  ],\n  \"weaknesses\": [\n    \"Manual digit-by-digit check is less readable than value.isdigit() or a try/except int() conversion\",\n    \"Final dict reconstruction is redundant\u2014result already has the correct shape and keys\",\n    \"Missing-value heuristic (next arg starts with '--') silently rejects valid paths beginning with '--' without documentation\",\n    \"Checking `not value` before the digit loop is unreachable since argv entries can't be empty strings in practice, adding noise\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses and continue statements avoids nesting",
+      "Explicit handling of each flag case makes behavior locally auditable",
+      "Clear ValueError messages identify the offending flag",
+      "No hidden mutation, global state, or speculative abstractions",
+      "Defaults are declared upfront in a single dict, making them easy to review"
+    ],
+    "weaknesses": [
+      "Manual digit-by-digit check is less readable than value.isdigit() or a try/except int() conversion",
+      "Final dict reconstruction is redundant\u2014result already has the correct shape and keys",
+      "Missing-value heuristic (next arg starts with '--') silently rejects valid paths beginning with '--' without documentation",
+      "Checking `not value` before the digit loop is unreachable since argv entries can't be empty strings in practice, adding noise"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.918,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 17.0,
+    "cyclomatic_complexity_max": 17,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 1,
+    "loc": 58,
+    "maintainability_index": 69.791,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "baseline_generation"
+}

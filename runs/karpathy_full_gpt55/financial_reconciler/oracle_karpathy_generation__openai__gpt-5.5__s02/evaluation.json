@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4's doctrine: debit and credit are tracked in separate named accumulators (`debit_balances`, `credit_balances`), direction validation is isolated before any arithmetic occurs, and no inline arithmetic appears inside conditionals that decide monetary direction. The `_tag_delta` helper is somewhat ceremonial\u2014it wraps two values into a dict only to unpack them immediately in `_apply_tagged_delta`\u2014adding indirection without meaningful abstraction. The dispatch dict in `_apply_tagged_delta` is a clean way to select the correct accumulator without conditionals. The `account_order` list alongside a `known_accounts` set is slightly redundant (a single `dict` with insertion-order preservation in Python 3.7+ would suffice), but it's not harmful. Overall the code is explicit, flat, locally auditable, and structurally aligned with the doctrine, with only minor over-engineering in the tagging layer.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows TR-4's doctrine: debit and credit are tracked in separate named accumulators (`debit_balances`, `credit_balances`), direction validation is isolated before any arithmetic occurs, and no inline arithmetic appears inside conditionals that decide monetary direction. The `_tag_delta` helper is somewhat ceremonial\u2014it wraps two values into a dict only to unpack them immediately in `_apply_tagged_delta`\u2014adding indirection without meaningful abstraction. The dispatch dict in `_apply_tagged_delta` is a clean way to select the correct accumulator without conditionals. The `account_order` list alongside a `known_accounts` set is slightly redundant (a single `dict` with insertion-order preservation in Python 3.7+ would suffice), but it's not harmful. Overall the code is explicit, flat, locally auditable, and structurally aligned with the doctrine, with only minor over-engineering in the tagging layer.\",\n  \"strengths\": [\n    \"Separate named accumulators for debit and credit satisfy TR-4 explicitly\",\n    \"Direction validation is fully isolated before any monetary delta is computed\",\n    \"No arithmetic inside direction-deciding conditionals\",\n    \"Dispatch dict in _apply_tagged_delta cleanly selects accumulator without branching\",\n    \"Balance computation is deferred to a dedicated _build_reconciliation function, keeping concerns separated\"\n  ],\n  \"weaknesses\": [\n    \"_tag_delta wraps values into a dict only to immediately unpack them, adding unnecessary indirection\",\n    \"Parallel account_order list + known_accounts set is redundant; a plain dict (insertion-ordered) would suffice\",\n    \"Splitting trivially small logic across many private helpers slightly hurts locality without meaningful gain\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators for debit and credit satisfy TR-4 explicitly",
+      "Direction validation is fully isolated before any monetary delta is computed",
+      "No arithmetic inside direction-deciding conditionals",
+      "Dispatch dict in _apply_tagged_delta cleanly selects accumulator without branching",
+      "Balance computation is deferred to a dedicated _build_reconciliation function, keeping concerns separated"
+    ],
+    "weaknesses": [
+      "_tag_delta wraps values into a dict only to immediately unpack them, adding unnecessary indirection",
+      "Parallel account_order list + known_accounts set is redundant; a plain dict (insertion-ordered) would suffice",
+      "Splitting trivially small logic across many private helpers slightly hurts locality without meaningful gain"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.934,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 5,
+    "loc": 59,
+    "maintainability_index": 50.504,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

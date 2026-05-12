@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and largely follows the simplicity-first principle. The three format branches are flat and direct, with no unnecessary abstraction layers. The TOML helpers are small and focused. However, there are a few over-engineering signals: the `_BARE_TOML_KEY` regex and `_toml_key` function add complexity beyond what the task requires (the spec says 'key = value lines for primitive values', implying simple string keys are expected), the `math` import and NaN/Inf handling in `_toml_value` is speculative flexibility not asked for, and the `isinstance(record, dict)` guard is defensive programming beyond the stated contract. The `re` and `typing` imports are also pulled in for minimal use. Stripping these speculative additions would bring the code closer to the 50-line ideal the oracle demands.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and largely follows the simplicity-first principle. The three format branches are flat and direct, with no unnecessary abstraction layers. The TOML helpers are small and focused. However, there are a few over-engineering signals: the `_BARE_TOML_KEY` regex and `_toml_key` function add complexity beyond what the task requires (the spec says 'key = value lines for primitive values', implying simple string keys are expected), the `math` import and NaN/Inf handling in `_toml_value` is speculative flexibility not asked for, and the `isinstance(record, dict)` guard is defensive programming beyond the stated contract. The `re` and `typing` imports are also pulled in for minimal use. Stripping these speculative additions would bring the code closer to the 50-line ideal the oracle demands.\",\n  \"strengths\": [\n    \"Three format branches are flat, explicit, and easy to audit locally\",\n    \"JSON branch is a one-liner using stdlib correctly with sort_keys\",\n    \"CSV branch correctly uses csv.writer with StringIO for proper escaping\",\n    \"TOML branch uses a generator expression keeping it concise\",\n    \"bool-before-int ordering in _toml_value correctly handles Python's bool subtype\"\n  ],\n  \"weaknesses\": [\n    \"Speculative NaN/Inf handling in _toml_value not required by the spec\",\n    \"_BARE_TOML_KEY regex and quoted-key logic is over-engineering for a simple key=value task\",\n    \"TypeError guard on record type is defensive beyond the stated contract\",\n    \"Unnecessary imports: re, math, typing.Any add noise without task-required value\",\n    \"Helper functions add indirection that could be inlined given the simplicity of the task\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Three format branches are flat, explicit, and easy to audit locally",
+      "JSON branch is a one-liner using stdlib correctly with sort_keys",
+      "CSV branch correctly uses csv.writer with StringIO for proper escaping",
+      "TOML branch uses a generator expression keeping it concise",
+      "bool-before-int ordering in _toml_value correctly handles Python's bool subtype"
+    ],
+    "weaknesses": [
+      "Speculative NaN/Inf handling in _toml_value not required by the spec",
+      "_BARE_TOML_KEY regex and quoted-key logic is over-engineering for a simple key=value task",
+      "TypeError guard on record type is defensive beyond the stated contract",
+      "Unnecessary imports: re, math, typing.Any add noise without task-required value",
+      "Helper functions add indirection that could be inlined given the simplicity of the task"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.997,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_serializes_supported_formats _______________________\n\n    def test_serializes_supported_formats():\n        assert serialize_record({'b': 2, 'a': 1}, 'json') == '{\"a\": 1, \"b\": 2}'\n>       assert serialize_record({'a': 1, 'b': 2}, 'csv') == 'a,b\\n1,2'\nE       AssertionError: assert 'a,b\\n1,2\\n' == 'a,b\\n1,2'\nE         \nE           a,b\nE         - 1,2\nE         + 1,2\nE         ?    +\n\ntest_solution.py:6: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_serializes_supported_formats - AssertionError: ...\n1 failed in 0.13s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.667,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 3,
+    "loc": 43,
+    "maintainability_index": 51.359,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "multiformat_serializer",
+  "variant": "oracle_karpathy_generation"
+}

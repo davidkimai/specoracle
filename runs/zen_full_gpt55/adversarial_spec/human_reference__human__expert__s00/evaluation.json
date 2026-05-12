@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is functionally correct and actually represents good Pythonic style (flat dict lookup, no repetition, readable), but it directly contradicts the informal structural spec (LT-11) which explicitly requires every transition to be represented as a local variable named branch_<state>_<event>. The spec prioritizes auditability via labeled branch variables over minimizing decision count, and the dict-based approach, while elegant in general Python, provides none of the required explicit branch labels. The implementation scores low because the oracle is specifically about structural/architectural compliance with named branch variables, not functional correctness or general Pythonic quality.",
+    "raw_response": "{\n  \"score\": 2,\n  \"rationale\": \"The candidate implementation is functionally correct and actually represents good Pythonic style (flat dict lookup, no repetition, readable), but it directly contradicts the informal structural spec (LT-11) which explicitly requires every transition to be represented as a local variable named branch_<state>_<event>. The spec prioritizes auditability via labeled branch variables over minimizing decision count, and the dict-based approach, while elegant in general Python, provides none of the required explicit branch labels. The implementation scores low because the oracle is specifically about structural/architectural compliance with named branch variables, not functional correctness or general Pythonic quality.\",\n  \"strengths\": [\n    \"Functionally correct for all specified transitions including unknown-transition fallback\",\n    \"Concise and readable as general Python code\",\n    \"Single dict lookup is efficient and avoids repetitive if/elif chains\"\n  ],\n  \"weaknesses\": [\n    \"Completely ignores the LT-11 requirement for explicit local variables named branch_<state>_<event>\",\n    \"No auditable branch labels present anywhere in the implementation\",\n    \"Violates the spec's stated preference for auditability over minimizing decision count\",\n    \"A code auditor following LT-11 cannot grep for individual branch_<state>_<event> variables\"\n  ]\n}",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct for all specified transitions including unknown-transition fallback",
+      "Concise and readable as general Python code",
+      "Single dict lookup is efficient and avoids repetitive if/elif chains"
+    ],
+    "weaknesses": [
+      "Completely ignores the LT-11 requirement for explicit local variables named branch_<state>_<event>",
+      "No auditable branch labels present anywhere in the implementation",
+      "Violates the spec's stated preference for auditability over minimizing decision count",
+      "A code auditor following LT-11 cannot grep for individual branch_<state>_<event> variables"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.849,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 4,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "human_reference"
+}

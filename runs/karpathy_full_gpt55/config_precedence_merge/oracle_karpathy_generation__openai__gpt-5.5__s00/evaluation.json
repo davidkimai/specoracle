@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the stated requirements without speculative abstractions. Each helper function has a single clear responsibility, the deep-merge is correctly non-mutating via deepcopy, the env-var parsing covers all specified cases (bool, int, list, string), and the nested path writing handles missing intermediate dicts gracefully. The code is flat, readable, and locally auditable\u2014no unnecessary classes, no over-engineering, no dead code. The only minor quibble is that `_is_base10_integer` manually reimplements digit checking rather than using a simple try/except int() or str.lstrip/isdigit pattern, which adds a few extra lines, but it is still correct and explicit. Overall this is a tight, goal-driven implementation that closely follows the Karpathy simplicity-first principle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the stated requirements without speculative abstractions. Each helper function has a single clear responsibility, the deep-merge is correctly non-mutating via deepcopy, the env-var parsing covers all specified cases (bool, int, list, string), and the nested path writing handles missing intermediate dicts gracefully. The code is flat, readable, and locally auditable\u2014no unnecessary classes, no over-engineering, no dead code. The only minor quibble is that `_is_base10_integer` manually reimplements digit checking rather than using a simple try/except int() or str.lstrip/isdigit pattern, which adds a few extra lines, but it is still correct and explicit. Overall this is a tight, goal-driven implementation that closely follows the Karpathy simplicity-first principle.\",\n  \"strengths\": [\n    \"No mutation of input dicts; deepcopy used correctly\",\n    \"Each helper is single-purpose and short\",\n    \"Env-var parsing covers all required types explicitly\",\n    \"Flat structure with no unnecessary abstractions or classes\",\n    \"Precedence order (defaults < file_config < env) is clearly expressed in the top-level function\"\n  ],\n  \"weaknesses\": [\n    \"_is_base10_integer manually reimplements digit checking; a try/except int() would be shorter and equally correct\",\n    \"Comma-separated list parsing could be a one-liner inline rather than a separate branch, though current form is still readable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "No mutation of input dicts; deepcopy used correctly",
+      "Each helper is single-purpose and short",
+      "Env-var parsing covers all required types explicitly",
+      "Flat structure with no unnecessary abstractions or classes",
+      "Precedence order (defaults < file_config < env) is clearly expressed in the top-level function"
+    ],
+    "weaknesses": [
+      "_is_base10_integer manually reimplements digit checking; a try/except int() would be shorter and equally correct",
+      "Comma-separated list parsing could be a one-liner inline rather than a separate branch, though current form is still readable"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.17,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.8,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 5,
+    "loc": 45,
+    "maintainability_index": 46.196,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "oracle_karpathy_generation"
+}

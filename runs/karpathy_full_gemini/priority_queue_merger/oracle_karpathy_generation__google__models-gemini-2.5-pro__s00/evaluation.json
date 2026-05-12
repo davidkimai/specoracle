@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses the right algorithm (min-heap with lazy iteration), which is the canonical solution for this problem. The core logic is clean and minimal. However, the docstrings are excessively verbose for what is essentially a well-known standard library pattern \u2014 `heapq.merge` exists and could be a one-liner, but even setting that aside, the module-level docstring and the lengthy function docstring with Args/Yields sections add significant noise relative to the actual code. The Karpathy oracle favors minimum code; the ratio of documentation to implementation is inverted here. The tie-breaker index approach is correct and necessary in Python 3, and the empty-iterator handling is proper. The typing imports are reasonable. Overall the algorithm and structure are sound, but the verbosity of comments and docstrings violates the simplicity-first principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and uses the right algorithm (min-heap with lazy iteration), which is the canonical solution for this problem. The core logic is clean and minimal. However, the docstrings are excessively verbose for what is essentially a well-known standard library pattern \u2014 `heapq.merge` exists and could be a one-liner, but even setting that aside, the module-level docstring and the lengthy function docstring with Args/Yields sections add significant noise relative to the actual code. The Karpathy oracle favors minimum code; the ratio of documentation to implementation is inverted here. The tie-breaker index approach is correct and necessary in Python 3, and the empty-iterator handling is proper. The typing imports are reasonable. Overall the algorithm and structure are sound, but the verbosity of comments and docstrings violates the simplicity-first principle.\",\n  \"strengths\": [\n    \"Correct min-heap algorithm with O(k log k) complexity per element\",\n    \"Proper tie-breaker index prevents comparison errors between iterator objects\",\n    \"Lazy evaluation preserved throughout \u2014 no eager materialization\",\n    \"Handles empty iterators gracefully\",\n    \"Uses standard library heapq appropriately\"\n  ],\n  \"weaknesses\": [\n    \"Extremely verbose docstring dwarfs the actual implementation \u2014 violates simplicity-first\",\n    \"Module-level docstring adds no value for a single-function module\",\n    \"Could have used heapq.merge directly as a one-liner, which is the most conservative/simple interpretation\",\n    \"Inline comments over-explain obvious operations (e.g., 'This iterator is exhausted')\",\n    \"Unnecessary typing imports (List, Iterable, Iterator) when built-in generics suffice in modern Python\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct min-heap algorithm with O(k log k) complexity per element",
+      "Proper tie-breaker index prevents comparison errors between iterator objects",
+      "Lazy evaluation preserved throughout \u2014 no eager materialization",
+      "Handles empty iterators gracefully",
+      "Uses standard library heapq appropriately"
+    ],
+    "weaknesses": [
+      "Extremely verbose docstring dwarfs the actual implementation \u2014 violates simplicity-first",
+      "Module-level docstring adds no value for a single-function module",
+      "Could have used heapq.merge directly as a one-liner, which is the most conservative/simple interpretation",
+      "Inline comments over-explain obvious operations (e.g., 'This iterator is exhausted')",
+      "Unnecessary typing imports (List, Iterable, Iterator) when built-in generics suffice in modern Python"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.203,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 41,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "priority_queue_merger",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable sliding-window deque approach with proper lock usage and sleep-outside-lock pattern. However, it violates the 'simplicity first' principle in several ways: the docstrings are verbose and over-explain obvious things (the SPDX header, the class docstring, the lengthy method docstrings with Args/Returns/Raises sections), the type annotations use the older Optional/Callable from typing rather than the simpler built-in forms, and the `isinstance(rate, int)` check adds speculative strictness not required by the spec (which only says 'non-positive rates'). The `acquire` contract says it returns bool but always returns True, making the bool return type misleading. The overall line count (~80 lines) is roughly double what a minimal implementation needs (~35-40 lines). The architecture itself is sound\u2014deque + lock + sleep is the right minimal structure\u2014but the surrounding ceremony inflates the implementation beyond what the task demands.",
+    "raw_response": "```json\n{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable sliding-window deque approach with proper lock usage and sleep-outside-lock pattern. However, it violates the 'simplicity first' principle in several ways: the docstrings are verbose and over-explain obvious things (the SPDX header, the class docstring, the lengthy method docstrings with Args/Returns/Raises sections), the type annotations use the older Optional/Callable from typing rather than the simpler built-in forms, and the `isinstance(rate, int)` check adds speculative strictness not required by the spec (which only says 'non-positive rates'). The `acquire` contract says it returns bool but always returns True, making the bool return type misleading. The overall line count (~80 lines) is roughly double what a minimal implementation needs (~35-40 lines). The architecture itself is sound\u2014deque + lock + sleep is the right minimal structure\u2014but the surrounding ceremony inflates the implementation beyond what the task demands.\",\n  \"strengths\": [\n    \"Correct sliding-window algorithm using a deque\",\n    \"Lock released before sleeping, allowing other tasks to proceed\",\n    \"Deterministic `now` injection for testing is clean\",\n    \"ValueError raised for non-positive rates as required\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings and comments inflate line count well beyond minimal\",\n    \"SPDX header and module docstring are irrelevant boilerplate for a task implementation\",\n    \"isinstance(rate, int) check is speculative strictness not asked for (floats like 5.0 would be rejected)\",\n    \"Uses legacy typing.Optional/Callable instead of simpler built-in equivalents\",\n    \"acquire() always returns True yet is typed as bool, which is misleading\",\n    \"Verbose inline comments re-explain what the code already clearly states\"\n  ]\n}\n```",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct sliding-window algorithm using a deque",
+      "Lock released before sleeping, allowing other tasks to proceed",
+      "Deterministic `now` injection for testing is clean",
+      "ValueError raised for non-positive rates as required"
+    ],
+    "weaknesses": [
+      "Excessive docstrings and comments inflate line count well beyond minimal",
+      "SPDX header and module docstring are irrelevant boilerplate for a task implementation",
+      "isinstance(rate, int) check is speculative strictness not asked for (floats like 5.0 would be rejected)",
+      "Uses legacy typing.Optional/Callable instead of simpler built-in equivalents",
+      "acquire() always returns True yet is typed as bool, which is misleading",
+      "Verbose inline comments re-explain what the code already clearly states"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 10.077,
+    "exit_code": 124,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "",
+    "timed_out": true
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 2,
+    "loc": 60,
+    "maintainability_index": 69.861,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_karpathy_generation"
+}

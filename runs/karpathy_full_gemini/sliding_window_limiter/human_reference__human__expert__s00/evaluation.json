@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses a small pure helper (_retained_events) to isolate the window-filtering logic, keeps control flow flat with a guard clause in allow(), uses explicit data movement, raises clear errors, and avoids speculative abstractions. The naming is clear and the code is locally auditable. One minor concern is that _retained_events has a side effect (it mutates self._events[key] as a cache update), which slightly violates the 'pure helper' principle and makes the helper less transparent \u2014 a caller reading allow() must understand that _retained_events also writes state. The snapshot() method correctly returns a copy. Overall this is a solid, idiomatic implementation with only a small structural impurity in the helper's hidden mutation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses a small pure helper (_retained_events) to isolate the window-filtering logic, keeps control flow flat with a guard clause in allow(), uses explicit data movement, raises clear errors, and avoids speculative abstractions. The naming is clear and the code is locally auditable. One minor concern is that _retained_events has a side effect (it mutates self._events[key] as a cache update), which slightly violates the 'pure helper' principle and makes the helper less transparent \u2014 a caller reading allow() must understand that _retained_events also writes state. The snapshot() method correctly returns a copy. Overall this is a solid, idiomatic implementation with only a small structural impurity in the helper's hidden mutation.\",\n  \"strengths\": [\n    \"Clear guard clause in allow() keeps control flow flat\",\n    \"Small helper _retained_events isolates window-filtering logic\",\n    \"Explicit ValueError with descriptive message for invalid inputs\",\n    \"snapshot() returns a defensive copy, avoiding hidden mutation from outside\",\n    \"No speculative abstractions or unused extension points\",\n    \"Readable names throughout\"\n  ],\n  \"weaknesses\": [\n    \"_retained_events mutates self._events as a side effect, making it not truly a pure helper \u2014 the name and signature don't signal this write\",\n    \"The side-effecting helper is called for its return value in allow() but also silently updates state, which a maintainer must discover by reading the body\",\n    \"Minor: no type annotation on timestamp parameter in allow() to enforce int vs float edge cases\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear guard clause in allow() keeps control flow flat",
+      "Small helper _retained_events isolates window-filtering logic",
+      "Explicit ValueError with descriptive message for invalid inputs",
+      "snapshot() returns a defensive copy, avoiding hidden mutation from outside",
+      "No speculative abstractions or unused extension points",
+      "Readable names throughout"
+    ],
+    "weaknesses": [
+      "_retained_events mutates self._events as a side effect, making it not truly a pure helper \u2014 the name and signature don't signal this write",
+      "The side-effecting helper is called for its return value in allow() but also silently updates state, which a maintainer must discover by reading the body",
+      "Minor: no type annotation on timestamp parameter in allow() to enforce int vs float edge cases"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.635,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 21,
+    "maintainability_index": 56.366,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "human_reference"
+}

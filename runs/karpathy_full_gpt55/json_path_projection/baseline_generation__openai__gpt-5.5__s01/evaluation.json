@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and closely follows the Zen of Python. It splits responsibility sensibly between a small pure helper `_is_non_negative_integer_text`, a path resolver `_resolve_path`, and the public entry point `extract_fields`. Control flow is flat with early returns via guard clauses rather than deep nesting. The sentinel `_MISSING` pattern is idiomatic and explicit, avoiding confusion with `None` as a legitimate value. Data movement is transparent\u2014no mutation of the input, no hidden state. Names are self-explanatory and the code is locally auditable. The one minor quibble is that `_is_non_negative_integer_text` is a slightly verbose helper that could be replaced by a simple `segment.isdigit()` call (which handles the non-empty check and ASCII digit check in one step), and the docstrings, while helpful, are slightly heavier than strictly necessary for code this readable. The non-raising behavior for invalid `path` types (silently using `default`) is a mild deviation from the 'raise clear errors for invalid inputs' constraint, but it's defensible given the task spec says 'if a path cannot be resolved, use default'. Overall this is a high-quality, maintainable implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, well-decomposed, and closely follows the Zen of Python. It splits responsibility sensibly between a small pure helper `_is_non_negative_integer_text`, a path resolver `_resolve_path`, and the public entry point `extract_fields`. Control flow is flat with early returns via guard clauses rather than deep nesting. The sentinel `_MISSING` pattern is idiomatic and explicit, avoiding confusion with `None` as a legitimate value. Data movement is transparent\u2014no mutation of the input, no hidden state. Names are self-explanatory and the code is locally auditable. The one minor quibble is that `_is_non_negative_integer_text` is a slightly verbose helper that could be replaced by a simple `segment.isdigit()` call (which handles the non-empty check and ASCII digit check in one step), and the docstrings, while helpful, are slightly heavier than strictly necessary for code this readable. The non-raising behavior for invalid `path` types (silently using `default`) is a mild deviation from the 'raise clear errors for invalid inputs' constraint, but it's defensible given the task spec says 'if a path cannot be resolved, use default'. Overall this is a high-quality, maintainable implementation.\",\n  \"strengths\": [\n    \"Clean separation into small, single-purpose helpers\",\n    \"Flat control flow with guard-clause early returns\",\n    \"Sentinel pattern correctly distinguishes missing values from None\",\n    \"No mutation of input; explicit data movement\",\n    \"Readable, self-documenting names throughout\"\n  ],\n  \"weaknesses\": [\n    \"`_is_non_negative_integer_text` could be replaced by the simpler built-in `segment.isdigit()`\",\n    \"Invalid path type silently falls back to default rather than raising, slightly violating the 'raise clear errors' constraint\",\n    \"Docstrings are slightly heavier than needed given the code's inherent clarity\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into small, single-purpose helpers",
+      "Flat control flow with guard-clause early returns",
+      "Sentinel pattern correctly distinguishes missing values from None",
+      "No mutation of input; explicit data movement",
+      "Readable, self-documenting names throughout"
+    ],
+    "weaknesses": [
+      "`_is_non_negative_integer_text` could be replaced by the simpler built-in `segment.isdigit()`",
+      "Invalid path type silently falls back to default rather than raising, slightly violating the 'raise clear errors' constraint",
+      "Docstrings are slightly heavier than needed given the code's inherent clarity"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.103,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 3,
+    "loc": 44,
+    "maintainability_index": 77.477,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "baseline_generation"
+}

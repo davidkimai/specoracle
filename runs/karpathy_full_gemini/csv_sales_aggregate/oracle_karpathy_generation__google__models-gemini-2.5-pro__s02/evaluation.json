@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally reasonable, using csv.DictReader and a simple dict-of-dicts accumulator pattern. However, it adds speculative constraints not in the spec (rejecting negative integers), has an overly verbose docstring that restates the spec rather than adding insight, imports typing aliases (Dict, List, Tuple) that are unnecessary in modern Python when built-ins suffice, and the module-level docstring and extensive inline comments add noise without aiding auditability. The header validation is a sensible conservative choice. The core logic is flat and readable, but the overall file is roughly 2x longer than it needs to be due to docstring verbosity and comment density, violating the 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally reasonable, using csv.DictReader and a simple dict-of-dicts accumulator pattern. However, it adds speculative constraints not in the spec (rejecting negative integers), has an overly verbose docstring that restates the spec rather than adding insight, imports typing aliases (Dict, List, Tuple) that are unnecessary in modern Python when built-ins suffice, and the module-level docstring and extensive inline comments add noise without aiding auditability. The header validation is a sensible conservative choice. The core logic is flat and readable, but the overall file is roughly 2x longer than it needs to be due to docstring verbosity and comment density, violating the 'minimum code' principle.\",\n  \"strengths\": [\n    \"Correct use of csv.DictReader with io.StringIO for clean CSV parsing\",\n    \"Simple (region, product) tuple key with dict accumulator \u2014 no unnecessary abstraction\",\n    \"Header presence check before iteration is a conservative, defensible design choice\",\n    \"Sort is applied post-aggregation cleanly with a lambda key\"\n  ],\n  \"weaknesses\": [\n    \"Rejects negative integers, which the spec does not require \u2014 speculative constraint\",\n    \"Uses legacy typing.Dict/List/Tuple instead of built-in generics (Python 3.9+)\",\n    \"Docstring is excessively long and merely restates the spec verbatim\",\n    \"Inline comments are over-explanatory for trivial operations, adding noise rather than clarity\",\n    \"Module-level docstring is unnecessary for a single-function utility module\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct use of csv.DictReader with io.StringIO for clean CSV parsing",
+      "Simple (region, product) tuple key with dict accumulator \u2014 no unnecessary abstraction",
+      "Header presence check before iteration is a conservative, defensible design choice",
+      "Sort is applied post-aggregation cleanly with a lambda key"
+    ],
+    "weaknesses": [
+      "Rejects negative integers, which the spec does not require \u2014 speculative constraint",
+      "Uses legacy typing.Dict/List/Tuple instead of built-in generics (Python 3.9+)",
+      "Docstring is excessively long and merely restates the spec verbatim",
+      "Inline comments are over-explanatory for trivial operations, adding noise rather than clarity",
+      "Module-level docstring is unnecessary for a single-function utility module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.199,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 73,
+    "maintainability_index": 77.898,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_karpathy_generation"
+}

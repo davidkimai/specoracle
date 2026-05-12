@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, using standard library tools (csv.DictReader, io.StringIO) appropriately. However, it has notable structural bloat: the early-exit check for fieldnames is overly defensive (DictReader with a well-formed header will populate fieldnames after the first read, and the check fires before any rows are consumed, which is actually fine but adds complexity), the `while True / try next / except StopIteration` loop is a verbose anti-pattern when a simple `for row in reader` would suffice and is more Pythonic and readable, and the redundant None-checks after the KeyError-guarded extraction add noise since DictReader with known fieldnames won't raise KeyError for those keys. The `None in row` check (for extra columns) is a reasonable edge-case guard but is unexplained. The list `[0, 0]` accumulator instead of a simple tuple or named pair is a minor readability issue. Overall the code is about 30-40% longer than necessary without adding correctness value, violating the 'minimum code' principle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, using standard library tools (csv.DictReader, io.StringIO) appropriately. However, it has notable structural bloat: the early-exit check for fieldnames is overly defensive (DictReader with a well-formed header will populate fieldnames after the first read, and the check fires before any rows are consumed, which is actually fine but adds complexity), the `while True / try next / except StopIteration` loop is a verbose anti-pattern when a simple `for row in reader` would suffice and is more Pythonic and readable, and the redundant None-checks after the KeyError-guarded extraction add noise since DictReader with known fieldnames won't raise KeyError for those keys. The `None in row` check (for extra columns) is a reasonable edge-case guard but is unexplained. The list `[0, 0]` accumulator instead of a simple tuple or named pair is a minor readability issue. Overall the code is about 30-40% longer than necessary without adding correctness value, violating the 'minimum code' principle.\",\n  \"strengths\": [\n    \"Uses csv.DictReader and io.StringIO correctly \u2014 no manual parsing\",\n    \"Catches csv.Error per-row to skip malformed lines\",\n    \"Sorting and output shape are correct and clean\",\n    \"No unnecessary abstractions or classes\"\n  ],\n  \"weaknesses\": [\n    \"while True / next() / StopIteration pattern instead of simple `for row in reader`\",\n    \"Redundant None-checks after KeyError-guarded dict access \u2014 DictReader guarantees keys when fieldnames are confirmed\",\n    \"Early fieldnames check reads fieldnames before iterating, which works but adds fragile pre-flight logic\",\n    \"Unexplained `None in row` guard (extra-column sentinel) without a comment\",\n    \"Mutable list [0, 0] accumulator is less readable than a simple tuple update or defaultdict(lambda: [0,0])\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Uses csv.DictReader and io.StringIO correctly \u2014 no manual parsing",
+      "Catches csv.Error per-row to skip malformed lines",
+      "Sorting and output shape are correct and clean",
+      "No unnecessary abstractions or classes"
+    ],
+    "weaknesses": [
+      "while True / next() / StopIteration pattern instead of simple `for row in reader`",
+      "Redundant None-checks after KeyError-guarded dict access \u2014 DictReader guarantees keys when fieldnames are confirmed",
+      "Early fieldnames check reads fieldnames before iterating, which works but adds fragile pre-flight logic",
+      "Unexplained `None in row` guard (extra-column sentinel) without a comment",
+      "Mutable list [0, 0] accumulator is less readable than a simple tuple update or defaultdict(lambda: [0,0])"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.978,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 16.0,
+    "cyclomatic_complexity_max": 16,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 1,
+    "loc": 51,
+    "maintainability_index": 47.409,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_karpathy_generation"
+}

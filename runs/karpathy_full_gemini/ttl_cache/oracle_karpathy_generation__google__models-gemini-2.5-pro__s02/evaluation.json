@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses the right data structure (OrderedDict) for LRU eviction. The code is clean and readable with a clear contract. However, it over-engineers the solution with excessive docstrings (the module docstring, class docstring, and three method docstrings together dwarf the actual logic), type annotations that add noise without being required, and validation logic (ValueError raises) that wasn't asked for in the spec. The core logic itself is minimal and correct \u2014 roughly 15 lines of real work \u2014 but it's buried under ~50 lines of documentation and boilerplate. There's also a subtle logic bug in `set`: when a key already exists AND the cache is at max_size, the `elif` branch is skipped so no eviction occurs, which is correct behavior, but the branching structure (if/elif rather than handling update and insert separately) makes this non-obvious. Per Karpathy guidelines, the minimum code that solves the problem would be significantly shorter with inline comments only where necessary.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and uses the right data structure (OrderedDict) for LRU eviction. The code is clean and readable with a clear contract. However, it over-engineers the solution with excessive docstrings (the module docstring, class docstring, and three method docstrings together dwarf the actual logic), type annotations that add noise without being required, and validation logic (ValueError raises) that wasn't asked for in the spec. The core logic itself is minimal and correct \u2014 roughly 15 lines of real work \u2014 but it's buried under ~50 lines of documentation and boilerplate. There's also a subtle logic bug in `set`: when a key already exists AND the cache is at max_size, the `elif` branch is skipped so no eviction occurs, which is correct behavior, but the branching structure (if/elif rather than handling update and insert separately) makes this non-obvious. Per Karpathy guidelines, the minimum code that solves the problem would be significantly shorter with inline comments only where necessary.\",\n  \"strengths\": [\n    \"Correct LRU eviction using OrderedDict.popitem(last=False) and move_to_end\",\n    \"TTL check on get with lazy eviction of expired entries\",\n    \"Pluggable `now` callable enables deterministic testing\",\n    \"Core logic is flat and easy to audit\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings \u2014 module, class, and all three methods \u2014 far exceed what the task warrants\",\n    \"Unsolicited input validation (ValueError for max_size/ttl_seconds) adds untested surface area not in spec\",\n    \"Type annotations add verbosity without being required by the task\",\n    \"if/elif structure in set() obscures the update-vs-insert distinction slightly\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct LRU eviction using OrderedDict.popitem(last=False) and move_to_end",
+      "TTL check on get with lazy eviction of expired entries",
+      "Pluggable `now` callable enables deterministic testing",
+      "Core logic is flat and easy to audit"
+    ],
+    "weaknesses": [
+      "Excessive docstrings \u2014 module, class, and all three methods \u2014 far exceed what the task warrants",
+      "Unsolicited input validation (ValueError for max_size/ttl_seconds) adds untested surface area not in spec",
+      "Type annotations add verbosity without being required by the task",
+      "if/elif structure in set() obscures the update-vs-insert distinction slightly"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.982,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 3,
+    "loc": 78,
+    "maintainability_index": 73.241,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "oracle_karpathy_generation"
+}

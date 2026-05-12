@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for every decision that touches money (status_paid_branch, integer_amount_cents_branch, non_empty_region_branch), returns records with the exact legacy keys, stages the work visibly across three named audit-stage comments, and avoids clever one-liners in favour of a readable, auditable loop structure. The only notable deviations are the overly verbose accumulator variable name (paid_valid_region_integer_amount_by_region) which, while explicit, borders on noise rather than clarity, and the extra invoice_mapping_branch guard (checking isinstance(invoice, dict)) which is a reasonable defensive addition but not required by the spec and adds a small amount of structural clutter. The staged audit trail is clear and the output is correct and non-mutating.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for every decision that touches money (status_paid_branch, integer_amount_cents_branch, non_empty_region_branch), returns records with the exact legacy keys, stages the work visibly across three named audit-stage comments, and avoids clever one-liners in favour of a readable, auditable loop structure. The only notable deviations are the overly verbose accumulator variable name (paid_valid_region_integer_amount_by_region) which, while explicit, borders on noise rather than clarity, and the extra invoice_mapping_branch guard (checking isinstance(invoice, dict)) which is a reasonable defensive addition but not required by the spec and adds a small amount of structural clutter. The staged audit trail is clear and the output is correct and non-mutating.\",\n  \"strengths\": [\n    \"Single public function, zero helper functions\",\n    \"Every money-affecting decision uses an explicit branch-label local variable\",\n    \"Three clearly named legacy audit stage comments structure the logic visibly\",\n    \"Exact legacy keys (bucket_code, item_count, cents_total) used in output\",\n    \"type(amount_cents_value) is int correctly rejects booleans\",\n    \"Input is never mutated; sorted() produces a new ordering\"\n  ],\n  \"weaknesses\": [\n    \"Accumulator variable name paid_valid_region_integer_amount_by_region is excessively long and reduces readability without adding audit value\",\n    \"invoice_mapping_branch isinstance check is undocumented by the spec and adds minor noise\",\n    \"Repeated long dict-key lookups in the accumulation step could be simplified with a local reference without violating the spec\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single public function, zero helper functions",
+      "Every money-affecting decision uses an explicit branch-label local variable",
+      "Three clearly named legacy audit stage comments structure the logic visibly",
+      "Exact legacy keys (bucket_code, item_count, cents_total) used in output",
+      "type(amount_cents_value) is int correctly rejects booleans",
+      "Input is never mutated; sorted() produces a new ordering"
+    ],
+    "weaknesses": [
+      "Accumulator variable name paid_valid_region_integer_amount_by_region is excessively long and reduces readability without adding audit value",
+      "invoice_mapping_branch isinstance check is undocumented by the spec and adds minor noise",
+      "Repeated long dict-key lookups in the accumulation step could be simplified with a local reference without violating the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.332,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 68.367,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

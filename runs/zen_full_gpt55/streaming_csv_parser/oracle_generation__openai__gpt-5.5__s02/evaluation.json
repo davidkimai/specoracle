@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured with clear helper decomposition, explicit data movement, good error messages, and streaming behavior preserved throughout. It correctly uses `csv.reader` for proper CSV parsing rather than naive splitting. The helpers are small and focused, control flow is reasonably flat, and names are self-explanatory. However, there is some speculative over-engineering: the task spec says nothing about validating duplicate header names or empty field names, and adding these checks introduces untested edge-case behavior that a maintainer must audit without clear requirement justification. The `_iter_non_empty_lines` yielding tuples with line numbers adds complexity that only serves error messages \u2014 a reasonable trade-off but slightly heavier than minimal. The `isinstance(lines, str)` guard is a sensible defensive check. The `_duplicate_names` helper is slightly verbose where a `collections.Counter` one-liner would be clearer. Overall the code is clean and auditable but leans toward defensive completeness over minimal simplicity.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is well-structured with clear helper decomposition, explicit data movement, good error messages, and streaming behavior preserved throughout. It correctly uses `csv.reader` for proper CSV parsing rather than naive splitting. The helpers are small and focused, control flow is reasonably flat, and names are self-explanatory. However, there is some speculative over-engineering: the task spec says nothing about validating duplicate header names or empty field names, and adding these checks introduces untested edge-case behavior that a maintainer must audit without clear requirement justification. The `_iter_non_empty_lines` yielding tuples with line numbers adds complexity that only serves error messages \u2014 a reasonable trade-off but slightly heavier than minimal. The `isinstance(lines, str)` guard is a sensible defensive check. The `_duplicate_names` helper is slightly verbose where a `collections.Counter` one-liner would be clearer. Overall the code is clean and auditable but leans toward defensive completeness over minimal simplicity.\",\n  \"strengths\": [\n    \"Proper use of csv.reader preserves correct CSV semantics (quoted fields, escapes)\",\n    \"Streaming behavior is genuinely preserved \u2014 no list conversion of input\",\n    \"Small, single-purpose helpers with descriptive names\",\n    \"Explicit error raising with informative messages including line numbers\",\n    \"Guard against passing a bare string as lines is a practical defensive check\"\n  ],\n  \"weaknesses\": [\n    \"Duplicate and empty header name validation is speculative \u2014 not required by the task spec\",\n    \"_duplicate_names is verbose; collections.Counter would be simpler and more idiomatic\",\n    \"Yielding (line_number, line) tuples from _iter_non_empty_lines adds indirection primarily for error messages, increasing cognitive load\",\n    \"The two-step iter() call in parse_csv_rows is redundant since _iter_non_empty_lines already calls enumerate(lines) which handles iteration\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Proper use of csv.reader preserves correct CSV semantics (quoted fields, escapes)",
+      "Streaming behavior is genuinely preserved \u2014 no list conversion of input",
+      "Small, single-purpose helpers with descriptive names",
+      "Explicit error raising with informative messages including line numbers",
+      "Guard against passing a bare string as lines is a practical defensive check"
+    ],
+    "weaknesses": [
+      "Duplicate and empty header name validation is speculative \u2014 not required by the task spec",
+      "_duplicate_names is verbose; collections.Counter would be simpler and more idiomatic",
+      "Yielding (line_number, line) tuples from _iter_non_empty_lines adds indirection primarily for error messages, increasing cognitive load",
+      "The two-step iter() call in parse_csv_rows is redundant since _iter_non_empty_lines already calls enumerate(lines) which handles iteration"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.858,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.167,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 25,
+    "function_count": 6,
+    "loc": 72,
+    "maintainability_index": 44.882,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_generation"
+}

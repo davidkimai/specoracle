@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, minimal realization of the task. It uses a plain dict of weak references, exposes exactly the three required methods, keeps control flow flat with a guard clause in `get`, and makes data movement explicit. The cleanup method uses a straightforward dict comprehension that is easy to audit locally. The only minor quibble is that `register` silently accepts non-weakly-referenceable objects (which would raise a TypeError from `weakref.ref` anyway, so it's not a real problem), and the type annotation `dict[str, weakref.ReferenceType[Any]]` is slightly verbose but accurate. There are no speculative abstractions, no hidden state, and no framework-shaped scaffolding.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, minimal realization of the task. It uses a plain dict of weak references, exposes exactly the three required methods, keeps control flow flat with a guard clause in `get`, and makes data movement explicit. The cleanup method uses a straightforward dict comprehension that is easy to audit locally. The only minor quibble is that `register` silently accepts non-weakly-referenceable objects (which would raise a TypeError from `weakref.ref` anyway, so it's not a real problem), and the type annotation `dict[str, weakref.ReferenceType[Any]]` is slightly verbose but accurate. There are no speculative abstractions, no hidden state, and no framework-shaped scaffolding.\",\n  \"strengths\": [\n    \"Minimal surface area: exactly three methods, no unused extension points\",\n    \"Flat control flow with a clean guard clause in `get`\",\n    \"Explicit data movement; no hidden mutation beyond the single `_refs` dict\",\n    \"Cleanup via dict comprehension is readable and locally auditable\",\n    \"Standard-library only, no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"No explicit validation or clear error for invalid key types (though Python's dict will handle it naturally)\",\n    \"Cleanup iterates refs twice (once for the comprehension condition, once implicitly); a minor efficiency note but not a structural flaw\",\n    \"Missing docstrings or inline comments, though the code is self-explanatory enough that this is a very minor concern\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal surface area: exactly three methods, no unused extension points",
+      "Flat control flow with a clean guard clause in `get`",
+      "Explicit data movement; no hidden mutation beyond the single `_refs` dict",
+      "Cleanup via dict comprehension is readable and locally auditable",
+      "Standard-library only, no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "No explicit validation or clear error for invalid key types (though Python's dict will handle it naturally)",
+      "Cleanup iterates refs twice (once for the comprehension condition, once implicitly); a minor efficiency note but not a structural flaw",
+      "Missing docstrings or inline comments, though the code is self-explanatory enough that this is a very minor concern"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 4.257,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 13,
+    "maintainability_index": 64.932,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "human_reference"
+}

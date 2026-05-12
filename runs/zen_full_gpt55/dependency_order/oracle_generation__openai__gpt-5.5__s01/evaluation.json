@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and follows the Zen of Python closely. Each helper has a single clear responsibility: validation, building prerequisite sets, and building dependents. Control flow is flat with no deep nesting. Data movement is explicit\u2014no hidden mutation, no global state, and the input is not mutated (list copies are made). The Kahn's algorithm loop is readable and locally auditable. The cycle detection via count comparison is idiomatic. Minor weaknesses include the validation helper being somewhat verbose for a task that doesn't strictly require type-checking (the spec says 'raise clear errors for invalid inputs' but doesn't mandate type guards on every field), and `_validated_items` returning a list of tuples that is immediately re-processed in `_build_prerequisite_sets` rather than building the sets directly\u2014a small redundancy. The `completed_count` variable is slightly awkward since `len(remaining_prerequisites)` is already available and the count could be derived from `batches` after the loop. Overall the architecture is sound, names are self-explanatory, and there are no speculative abstractions or framework-shaped patterns.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-decomposed, and follows the Zen of Python closely. Each helper has a single clear responsibility: validation, building prerequisite sets, and building dependents. Control flow is flat with no deep nesting. Data movement is explicit\u2014no hidden mutation, no global state, and the input is not mutated (list copies are made). The Kahn's algorithm loop is readable and locally auditable. The cycle detection via count comparison is idiomatic. Minor weaknesses include the validation helper being somewhat verbose for a task that doesn't strictly require type-checking (the spec says 'raise clear errors for invalid inputs' but doesn't mandate type guards on every field), and `_validated_items` returning a list of tuples that is immediately re-processed in `_build_prerequisite_sets` rather than building the sets directly\u2014a small redundancy. The `completed_count` variable is slightly awkward since `len(remaining_prerequisites)` is already available and the count could be derived from `batches` after the loop. Overall the architecture is sound, names are self-explanatory, and there are no speculative abstractions or framework-shaped patterns.\",\n  \"strengths\": [\n    \"Clean separation into small, single-purpose helpers\",\n    \"Explicit data flow with no hidden mutation or global state\",\n    \"Flat control flow throughout; guard clauses used appropriately\",\n    \"Cycle detection is simple and correct\",\n    \"Input is not mutated (prerequisites copied via list())\",\n    \"Ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"Validation helper is overly defensive for the stated requirements, adding noise without clear benefit\",\n    \"Two-pass construction (items list then prerequisite sets) introduces minor redundancy\",\n    \"completed_count tracking is slightly awkward when len(remaining_prerequisites) suffices\",\n    \"Importing Mapping from collections.abc for a single isinstance check is minor over-engineering\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into small, single-purpose helpers",
+      "Explicit data flow with no hidden mutation or global state",
+      "Flat control flow throughout; guard clauses used appropriately",
+      "Cycle detection is simple and correct",
+      "Input is not mutated (prerequisites copied via list())",
+      "Ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "Validation helper is overly defensive for the stated requirements, adding noise without clear benefit",
+      "Two-pass construction (items list then prerequisite sets) introduces minor redundancy",
+      "completed_count tracking is slightly awkward when len(remaining_prerequisites) suffices",
+      "Importing Mapping from collections.abc for a single isinstance check is minor over-engineering"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.469,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.75,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 4,
+    "loc": 57,
+    "maintainability_index": 46.335,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

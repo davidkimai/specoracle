@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4 doctrine: debit and credit are accumulated in separate named accumulators within the defaultdict structure, the direction check is a clean conditional that only routes to the appropriate accumulator without inline arithmetic, and the balance computation is deferred to a separate final-calculation pass with clearly named local variables. The code is explicit, flat, and locally auditable. Minor deductions: the heavy validation machinery (type checks, missing-key checks, negative-amount checks) goes beyond the functional requirements and adds bulk, and the use of a `defaultdict` with a lambda factory is slightly more indirect than a plain dict with explicit initialization, but neither issue violates the structural doctrine meaningfully.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4 doctrine: debit and credit are accumulated in separate named accumulators within the defaultdict structure, the direction check is a clean conditional that only routes to the appropriate accumulator without inline arithmetic, and the balance computation is deferred to a separate final-calculation pass with clearly named local variables. The code is explicit, flat, and locally auditable. Minor deductions: the heavy validation machinery (type checks, missing-key checks, negative-amount checks) goes beyond the functional requirements and adds bulk, and the use of a `defaultdict` with a lambda factory is slightly more indirect than a plain dict with explicit initialization, but neither issue violates the structural doctrine meaningfully.\",\n  \"strengths\": [\n    \"Debit and credit totals are kept in separate named accumulators as required by TR-4\",\n    \"No inline arithmetic inside the direction-deciding conditional \u2014 aggregation is cleanly separated\",\n    \"Balance computation is isolated in a final pass with explicit named variables (debit, credit)\",\n    \"Explicit validation with clear error messages aids auditability\",\n    \"Code is flat and readable with no deeply nested logic\"\n  ],\n  \"weaknesses\": [\n    \"Extensive validation logic (type checks, negative amounts, whitespace stripping) exceeds the stated functional requirements and adds unnecessary bulk\",\n    \"Lambda-based defaultdict factory is slightly less explicit than a straightforward dict initialization pattern\",\n    \"Heavy use of typing imports and verbose docstring, while not harmful, adds noise beyond what the task warrants\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Debit and credit totals are kept in separate named accumulators as required by TR-4",
+      "No inline arithmetic inside the direction-deciding conditional \u2014 aggregation is cleanly separated",
+      "Balance computation is isolated in a final pass with explicit named variables (debit, credit)",
+      "Explicit validation with clear error messages aids auditability",
+      "Code is flat and readable with no deeply nested logic"
+    ],
+    "weaknesses": [
+      "Extensive validation logic (type checks, negative amounts, whitespace stripping) exceeds the stated functional requirements and adds unnecessary bulk",
+      "Lambda-based defaultdict factory is slightly less explicit than a straightforward dict initialization pattern",
+      "Heavy use of typing imports and verbose docstring, while not harmful, adds noise beyond what the task warrants"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.286,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 85,
+    "maintainability_index": 76.528,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

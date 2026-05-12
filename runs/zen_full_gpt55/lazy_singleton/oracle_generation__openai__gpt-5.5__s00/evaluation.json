@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and uses ordinary standard-library constructs (threading.Lock, __slots__). The sentinel pattern with _MISSING is explicit and avoids None-ambiguity for the stored value. The callable check with a clear TypeError is good defensive practice. However, there is mild over-engineering: the double-checked None guard on _factory after assignment is redundant dead code (once _value is set, the factory branch is never re-entered), adding cognitive noise without safety benefit. The typing imports (Generic, Optional, TypeVar, cast) add boilerplate that, while not wrong, feels speculative for a simple utility class\u2014plain Python without generics would be equally auditable and more sparse. The docstring is helpful. Overall the architecture is flat, explicit, and locally auditable, with only minor unnecessary complexity.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, correct, and uses ordinary standard-library constructs (threading.Lock, __slots__). The sentinel pattern with _MISSING is explicit and avoids None-ambiguity for the stored value. The callable check with a clear TypeError is good defensive practice. However, there is mild over-engineering: the double-checked None guard on _factory after assignment is redundant dead code (once _value is set, the factory branch is never re-entered), adding cognitive noise without safety benefit. The typing imports (Generic, Optional, TypeVar, cast) add boilerplate that, while not wrong, feels speculative for a simple utility class\u2014plain Python without generics would be equally auditable and more sparse. The docstring is helpful. Overall the architecture is flat, explicit, and locally auditable, with only minor unnecessary complexity.\",\n  \"strengths\": [\n    \"Uses threading.Lock correctly with a simple with-block; no double-checked locking complexity\",\n    \"Sentinel _MISSING avoids None-ambiguity for stored values\",\n    \"Raises TypeError for non-callable factory with a clear message\",\n    \"__slots__ makes memory layout explicit\",\n    \"Control flow is flat and easy to follow\"\n  ],\n  \"weaknesses\": [\n    \"The None-check on _factory inside the locked branch is dead code\u2014once _value is set the branch is never reached, adding confusion\",\n    \"Heavy typing imports (Generic, TypeVar, cast, Optional) feel speculative for a small utility; they add boilerplate without improving local auditability\",\n    \"Nulling out _factory after first call is a minor hidden mutation that complicates reasoning without meaningful benefit\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses threading.Lock correctly with a simple with-block; no double-checked locking complexity",
+      "Sentinel _MISSING avoids None-ambiguity for stored values",
+      "Raises TypeError for non-callable factory with a clear message",
+      "__slots__ makes memory layout explicit",
+      "Control flow is flat and easy to follow"
+    ],
+    "weaknesses": [
+      "The None-check on _factory inside the locked branch is dead code\u2014once _value is set the branch is never reached, adding confusion",
+      "Heavy typing imports (Generic, TypeVar, cast, Optional) feel speculative for a small utility; they add boilerplate without improving local auditability",
+      "Nulling out _factory after first call is a minor hidden mutation that complicates reasoning without meaningful benefit"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.638,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 22,
+    "maintainability_index": 59.623,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "oracle_generation"
+}

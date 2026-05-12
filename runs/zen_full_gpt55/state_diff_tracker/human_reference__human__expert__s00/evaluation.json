@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of Pythonic clarity and directness. It uses a single sorted iteration over the union of keys, explicitly constructs each change record with the required field/before/after structure, and returns a flat sorted list. There is no unnecessary abstraction, no helper classes, no collapsed summaries, and no architectural complexity. The use of dict.get() elegantly handles both added and removed fields by returning None as the sentinel, which is semantically correct and explicit. The code is trivially auditable in one pass.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of Pythonic clarity and directness. It uses a single sorted iteration over the union of keys, explicitly constructs each change record with the required field/before/after structure, and returns a flat sorted list. There is no unnecessary abstraction, no helper classes, no collapsed summaries, and no architectural complexity. The use of dict.get() elegantly handles both added and removed fields by returning None as the sentinel, which is semantically correct and explicit. The code is trivially auditable in one pass.\",\n  \"strengths\": [\n    \"Single flat loop with no nesting or abstraction layers\",\n    \"Sorting is done once at the iteration level, not as a post-processing step\",\n    \"dict.get() cleanly handles added/removed fields without branching\",\n    \"Explicit record construction with all three required keys\",\n    \"No imports beyond __future__ annotations; zero dependencies\"\n  ],\n  \"weaknesses\": [\n    \"None sentinel for missing fields could be ambiguous if None is a legitimate stored value, but this is an inherent semantic limitation of the spec rather than a code flaw\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single flat loop with no nesting or abstraction layers",
+      "Sorting is done once at the iteration level, not as a post-processing step",
+      "dict.get() cleanly handles added/removed fields without branching",
+      "Explicit record construction with all three required keys",
+      "No imports beyond __future__ annotations; zero dependencies"
+    ],
+    "weaknesses": [
+      "None sentinel for missing fields could be ambiguous if None is a legitimate stored value, but this is an inherent semantic limitation of the spec rather than a code flaw"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.511,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 69.446,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "human_reference"
+}

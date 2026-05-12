@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. Data movement is visible, mutation is intentional and documented, and the separation of validation into a small pure helper follows the 'prefer small pure helpers' constraint. The class is minimal with no speculative abstractions or unused extension points. The copy() call correctly satisfies the mutable-object separation requirement. Minor weaknesses: the `import typing` is unused (dead import), the docstrings are somewhat verbose for the simplicity of the code (bordering on over-documentation that obscures rather than aids local auditability), and the validation helper raises errors for empty strings which goes slightly beyond the stated functional requirements (though it's a reasonable defensive choice). The `_validate_record_fields` helper is a reasonable extraction, though it could be argued the validation is simple enough to inline without harming readability. Overall, this is a solid, auditable implementation that closely follows the structural oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. Data movement is visible, mutation is intentional and documented, and the separation of validation into a small pure helper follows the 'prefer small pure helpers' constraint. The class is minimal with no speculative abstractions or unused extension points. The copy() call correctly satisfies the mutable-object separation requirement. Minor weaknesses: the `import typing` is unused (dead import), the docstrings are somewhat verbose for the simplicity of the code (bordering on over-documentation that obscures rather than aids local auditability), and the validation helper raises errors for empty strings which goes slightly beyond the stated functional requirements (though it's a reasonable defensive choice). The `_validate_record_fields` helper is a reasonable extraction, though it could be argued the validation is simple enough to inline without harming readability. Overall, this is a solid, auditable implementation that closely follows the structural oracle.\",\n  \"strengths\": [\n    \"Explicit data movement: sink mutation and copy() return are both visible and intentional\",\n    \"Small pure helper for validation keeps write() flat and focused\",\n    \"No speculative abstractions or unused extension points\",\n    \"Clear TypeError/ValueError raises with descriptive messages\",\n    \"Sequence numbering is straightforward and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Unused `import typing` is dead code\",\n    \"Docstrings are overly verbose relative to the simplicity of the implementation, reducing sparse auditability\",\n    \"Validating for empty strings goes beyond stated requirements (minor speculative defensiveness)\",\n    \"The validation helper is arguably over-extracted for two isinstance checks and two truthiness checks\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit data movement: sink mutation and copy() return are both visible and intentional",
+      "Small pure helper for validation keeps write() flat and focused",
+      "No speculative abstractions or unused extension points",
+      "Clear TypeError/ValueError raises with descriptive messages",
+      "Sequence numbering is straightforward and locally auditable"
+    ],
+    "weaknesses": [
+      "Unused `import typing` is dead code",
+      "Docstrings are overly verbose relative to the simplicity of the implementation, reducing sparse auditability",
+      "Validating for empty strings goes beyond stated requirements (minor speculative defensiveness)",
+      "The validation helper is arguably over-extracted for two isinstance checks and two truthiness checks"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.971,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________________ test_writes_monotonic_records_without_aliasing ________________\n\n    def test_writes_monotonic_records_without_aliasing():\n        sink = []\n        writer = AuditLogWriter(sink)\n        first = writer.write('alice', 'create')\n        second = writer.write('bob', 'delete')\n>       assert [row['sequence'] for row in sink] == [1, 2]\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:9: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n.0 = <list_iterator object at 0xffff8b015360>\n\n>   assert [row['sequence'] for row in sink] == [1, 2]\n            ^^^^^^^^^^^^^^^\nE   KeyError: 'sequence'\n\ntest_solution.py:9: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_writes_monotonic_records_without_aliasing - Key...\n1 failed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.75,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 65,
+    "maintainability_index": 72.65,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_log_writer",
+  "variant": "oracle_generation"
+}

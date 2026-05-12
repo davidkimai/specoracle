@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, well-decomposed solution that closely follows the Zen of Python. It uses small, single-purpose helpers (_require_dict, _require_string, _split_path, _resolve_path, _parse_list_index) with clear names that make the behavior locally auditable. Control flow is flat with guard clauses and early returns rather than deep nesting. Data movement is explicit with no mutation of the input. Error handling is clear and purposeful. The only minor weaknesses are that _require_string is called inside the paths.items() loop for output_key validation (which is slightly redundant since dict keys are always strings in typed Python, though it's a reasonable runtime guard), and negative list indexes are silently rejected via isdecimal() without a clear error message, which could surprise users who expect Python-style negative indexing. Overall this is a well-structured, maintainable implementation with no speculative abstractions or framework-shaped code.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, well-decomposed solution that closely follows the Zen of Python. It uses small, single-purpose helpers (_require_dict, _require_string, _split_path, _resolve_path, _parse_list_index) with clear names that make the behavior locally auditable. Control flow is flat with guard clauses and early returns rather than deep nesting. Data movement is explicit with no mutation of the input. Error handling is clear and purposeful. The only minor weaknesses are that _require_string is called inside the paths.items() loop for output_key validation (which is slightly redundant since dict keys are always strings in typed Python, though it's a reasonable runtime guard), and negative list indexes are silently rejected via isdecimal() without a clear error message, which could surprise users who expect Python-style negative indexing. Overall this is a well-structured, maintainable implementation with no speculative abstractions or framework-shaped code.\",\n  \"strengths\": [\n    \"Small, pure helpers with descriptive names make each piece independently auditable\",\n    \"Flat control flow using guard clauses and early returns in _resolve_path\",\n    \"Explicit input validation with clear TypeError/ValueError messages\",\n    \"No mutation of the input record\",\n    \"Standard library only, no clever metaprogramming\",\n    \"_split_path validates empty paths and empty segments explicitly\"\n  ],\n  \"weaknesses\": [\n    \"Negative list indexes are silently treated as unresolvable (via isdecimal()) rather than raising a clear error or supporting them\",\n    \"Validating output_key type inside the loop is slightly redundant since dict keys in Python are already constrained, though harmless\",\n    \"The _require_string call for paths values happens inside _split_path rather than at the top-level validation boundary, slightly obscuring where path validation occurs\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helpers with descriptive names make each piece independently auditable",
+      "Flat control flow using guard clauses and early returns in _resolve_path",
+      "Explicit input validation with clear TypeError/ValueError messages",
+      "No mutation of the input record",
+      "Standard library only, no clever metaprogramming",
+      "_split_path validates empty paths and empty segments explicitly"
+    ],
+    "weaknesses": [
+      "Negative list indexes are silently treated as unresolvable (via isdecimal()) rather than raising a clear error or supporting them",
+      "Validating output_key type inside the loop is slightly redundant since dict keys in Python are already constrained, though harmless",
+      "The _require_string call for paths values happens inside _split_path rather than at the top-level validation boundary, slightly obscuring where path validation occurs"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 3.063,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.167,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 6,
+    "loc": 46,
+    "maintainability_index": 47.579,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

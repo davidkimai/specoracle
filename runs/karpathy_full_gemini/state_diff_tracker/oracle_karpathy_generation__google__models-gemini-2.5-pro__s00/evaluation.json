@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally clean: it uses a sentinel for absent values, iterates sorted fields in a single flat loop, and produces explicit per-field records with the required keys. The logic is locally auditable and avoids unnecessary abstraction. The main concern from a Zen-of-Python perspective is the public ABSENT sentinel\u2014exposing an opaque object() as part of the API is implicit rather than explicit, making callers unable to easily check for absence without importing the sentinel, and it leaks an implementation detail into the contract. A more explicit approach would use None or a named constant with a clear __repr__. The docstring is thorough but slightly over-engineered for the task size. Otherwise the code is flat, readable, and free of architectural slop.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally clean: it uses a sentinel for absent values, iterates sorted fields in a single flat loop, and produces explicit per-field records with the required keys. The logic is locally auditable and avoids unnecessary abstraction. The main concern from a Zen-of-Python perspective is the public ABSENT sentinel\u2014exposing an opaque object() as part of the API is implicit rather than explicit, making callers unable to easily check for absence without importing the sentinel, and it leaks an implementation detail into the contract. A more explicit approach would use None or a named constant with a clear __repr__. The docstring is thorough but slightly over-engineered for the task size. Otherwise the code is flat, readable, and free of architectural slop.\",\n  \"strengths\": [\n    \"Single flat loop with no nested conditionals or helper functions\",\n    \"Sorted iteration during construction avoids a second sort pass\",\n    \"Explicit record structure with all three required keys on every change\",\n    \"Sentinel correctly distinguishes None values from absent fields\",\n    \"Type annotations are present and accurate\"\n  ],\n  \"weaknesses\": [\n    \"ABSENT = object() has no __repr__, making records opaque when printed or logged\",\n    \"Exposing ABSENT as a public API detail is implicit; callers must import it to do identity checks\",\n    \"Docstring length is disproportionate to the simplicity of the function\",\n    \"No guard against non-comparable values where != could raise (minor edge case)\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single flat loop with no nested conditionals or helper functions",
+      "Sorted iteration during construction avoids a second sort pass",
+      "Explicit record structure with all three required keys on every change",
+      "Sentinel correctly distinguishes None values from absent fields",
+      "Type annotations are present and accurate"
+    ],
+    "weaknesses": [
+      "ABSENT = object() has no __repr__, making records opaque when printed or logged",
+      "Exposing ABSENT as a public API detail is implicit; callers must import it to do identity checks",
+      "Docstring length is disproportionate to the simplicity of the function",
+      "No guard against non-comparable values where != could raise (minor edge case)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.115,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________________________ test_field_level_diffs_sorted _________________________\n\n    def test_field_level_diffs_sorted():\n>       assert diff_versions({'a': 1, 'b': 2}, {'a': 1, 'b': 3, 'c': 4}) == [\n            {'field': 'b', 'before': 2, 'after': 3},\n            {'field': 'c', 'before': None, 'after': 4},\n        ]\nE       AssertionError: assert [{'after': 3,...'field': 'c'}] == [{'after': 3,...'field': 'c'}]\nE         \nE         At index 1 diff: {'field': 'c', 'before': <object object at 0xffff92985450>, 'after': 4} != {'field': 'c', 'before': None, 'after': 4}\nE         Use -v to get more diff\n\ntest_solution.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_field_level_diffs_sorted - AssertionError: asse...\n1 failed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 83.822,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "oracle_karpathy_generation"
+}

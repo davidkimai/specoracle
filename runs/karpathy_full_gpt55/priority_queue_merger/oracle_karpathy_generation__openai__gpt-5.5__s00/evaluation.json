@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook-clean realization of the priority-queue merge pattern: it uses the standard library's heapq correctly, handles empty iterables gracefully, is fully lazy (generator), and contains zero speculative abstraction. The tie-breaking index in the heap tuple is the canonical solution to the comparability problem when two values are equal and Iterator objects are not orderable. The docstring is minimal and accurate. The only marginal quibble is that the type annotation uses `list[Iterable[int]]` for the parameter while the return is `Iterator[int]`, which is precise and correct. There is no dead code, no over-engineering, and the logic is immediately auditable in a single read-through.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a textbook-clean realization of the priority-queue merge pattern: it uses the standard library's heapq correctly, handles empty iterables gracefully, is fully lazy (generator), and contains zero speculative abstraction. The tie-breaking index in the heap tuple is the canonical solution to the comparability problem when two values are equal and Iterator objects are not orderable. The docstring is minimal and accurate. The only marginal quibble is that the type annotation uses `list[Iterable[int]]` for the parameter while the return is `Iterator[int]`, which is precise and correct. There is no dead code, no over-engineering, and the logic is immediately auditable in a single read-through.\",\n  \"strengths\": [\n    \"Minimal, correct use of heapq \u2014 exactly the right tool for k-way merge\",\n    \"Fully lazy: implemented as a generator with no intermediate list materialization\",\n    \"Handles empty iterables without special-casing outside the normal flow\",\n    \"Tie-breaking via insertion index prevents TypeError on equal values\",\n    \"No unnecessary abstractions, classes, or configurability\"\n  ],\n  \"weaknesses\": [\n    \"Minor: the docstring adds negligible value over the signature and could be omitted per strict minimalism\",\n    \"The heap tuple stores the full iterator object, which is idiomatic but slightly opaque to a first-time reader unfamiliar with the pattern\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal, correct use of heapq \u2014 exactly the right tool for k-way merge",
+      "Fully lazy: implemented as a generator with no intermediate list materialization",
+      "Handles empty iterables without special-casing outside the normal flow",
+      "Tie-breaking via insertion index prevents TypeError on equal values",
+      "No unnecessary abstractions, classes, or configurability"
+    ],
+    "weaknesses": [
+      "Minor: the docstring adds negligible value over the signature and could be omitted per strict minimalism",
+      "The heap tuple stores the full iterator object, which is idiomatic but slightly opaque to a first-time reader unfamiliar with the pattern"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.081,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 20,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "priority_queue_merger",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4 doctrine: separate named accumulators for debit and credit are maintained in a defaultdict, the direction tag is resolved before any accumulation occurs, and no arithmetic appears inside the conditional branches that decide direction. The balance computation is cleanly separated into a final reconciliation pass with explicit named variables. The code is flat, readable, and locally auditable. Minor deductions: the heavy use of type aliases and verbose docstring/comments slightly over-engineer a straightforward function, and the `Numeric` union type alias adds noise without meaningful benefit in this context.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4 doctrine: separate named accumulators for debit and credit are maintained in a defaultdict, the direction tag is resolved before any accumulation occurs, and no arithmetic appears inside the conditional branches that decide direction. The balance computation is cleanly separated into a final reconciliation pass with explicit named variables. The code is flat, readable, and locally auditable. Minor deductions: the heavy use of type aliases and verbose docstring/comments slightly over-engineer a straightforward function, and the `Numeric` union type alias adds noise without meaningful benefit in this context.\",\n  \"strengths\": [\n    \"Separate named accumulators (debit/credit) strictly satisfy TR-4.2\",\n    \"Direction tag resolved before affecting totals, satisfying TR-4.1\",\n    \"No inline arithmetic inside direction-deciding conditionals, satisfying TR-4.3\",\n    \"Unknown directions raise ValueError with a clear message\",\n    \"Balance computation is isolated in a clean second pass with named intermediates\",\n    \"defaultdict cleanly handles new account initialization without boilerplate\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstring and inline TR-4 comments add noise without improving auditability\",\n    \"Unnecessary type alias `Numeric` and heavy typing imports for a simple function\",\n    \"Docstring mentions KeyError propagation but this is implicit, not a deliberate design choice worth documenting\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators (debit/credit) strictly satisfy TR-4.2",
+      "Direction tag resolved before affecting totals, satisfying TR-4.1",
+      "No inline arithmetic inside direction-deciding conditionals, satisfying TR-4.3",
+      "Unknown directions raise ValueError with a clear message",
+      "Balance computation is isolated in a clean second pass with named intermediates",
+      "defaultdict cleanly handles new account initialization without boilerplate"
+    ],
+    "weaknesses": [
+      "Verbose docstring and inline TR-4 comments add noise without improving auditability",
+      "Unnecessary type alias `Numeric` and heavy typing imports for a simple function",
+      "Docstring mentions KeyError propagation but this is implicit, not a deliberate design choice worth documenting"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.275,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 79.991,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_generation"
+}

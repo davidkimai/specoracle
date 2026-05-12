@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Each method does exactly one thing, data movement is visible (the idle list is the only state), and the guard clause on max_size gives a clear error early. The evict_idle loop is a straightforward filter-and-close pattern with no hidden mutation. The only minor quibbles are the speculative `hasattr(conn, 'close')` duck-typing in two places\u2014it silently swallows the case where a connection has no close method, which could hide bugs\u2014and the `from __future__ import annotations` import is unnecessary for Python 3.10+ style hints used here. Otherwise the architecture is minimal, auditable, and uses only standard-library constructs with well-chosen names.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Each method does exactly one thing, data movement is visible (the idle list is the only state), and the guard clause on max_size gives a clear error early. The evict_idle loop is a straightforward filter-and-close pattern with no hidden mutation. The only minor quibbles are the speculative `hasattr(conn, 'close')` duck-typing in two places\u2014it silently swallows the case where a connection has no close method, which could hide bugs\u2014and the `from __future__ import annotations` import is unnecessary for Python 3.10+ style hints used here. Otherwise the architecture is minimal, auditable, and uses only standard-library constructs with well-chosen names.\",\n  \"strengths\": [\n    \"Single responsibility per method; no monolithic logic\",\n    \"Flat control flow with guard clause for invalid max_size\",\n    \"Explicit state: one list of (conn, timestamp) tuples, nothing hidden\",\n    \"evict_idle is a clean filter loop with no deep nesting\",\n    \"Ordinary stdlib (time.monotonic) with injectable clock for testability\",\n    \"Sparse enough to audit behavior in one read\"\n  ],\n  \"weaknesses\": [\n    \"hasattr(conn, 'close') silently ignores connections without a close method, potentially hiding resource leaks\",\n    \"`from __future__ import annotations` is unnecessary and adds a small noise import\",\n    \"No tracking of total active connections, so max_size only bounds the idle pool, not total connections\u2014this may or may not match intent but is undocumented\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single responsibility per method; no monolithic logic",
+      "Flat control flow with guard clause for invalid max_size",
+      "Explicit state: one list of (conn, timestamp) tuples, nothing hidden",
+      "evict_idle is a clean filter loop with no deep nesting",
+      "Ordinary stdlib (time.monotonic) with injectable clock for testability",
+      "Sparse enough to audit behavior in one read"
+    ],
+    "weaknesses": [
+      "hasattr(conn, 'close') silently ignores connections without a close method, potentially hiding resource leaks",
+      "`from __future__ import annotations` is unnecessary and adds a small noise import",
+      "No tracking of total active connections, so max_size only bounds the idle pool, not total connections\u2014this may or may not match intent but is undocumented"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.854,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.14s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.2,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 4,
+    "loc": 32,
+    "maintainability_index": 52.748,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "human_reference"
+}

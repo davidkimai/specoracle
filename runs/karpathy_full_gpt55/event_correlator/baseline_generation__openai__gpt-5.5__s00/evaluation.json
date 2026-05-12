@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a straightforward nested loop with early `break`, flat guard clauses (`continue`) to avoid deep nesting, and a small pure helper `_delta_seconds` for the time arithmetic. Names are descriptive and the data flow is explicit with no hidden mutation. The docstring is thorough. Minor weaknesses: the `_delta_seconds` helper uses `Any` typing which is overly permissive and slightly obscures intent; there's no input validation (e.g., missing required keys raise unhelpful KeyErrors rather than clear errors as the spec requests); the `within` parameter accepts `int` but the comparison `0 <= delta <= within` silently works for floats too without acknowledgment; and the helper's generality (handling both timedelta and numeric) adds a small speculative abstraction for a task that likely only needs one. Overall the code is sparse, auditable, and avoids framework-shaped patterns, landing solidly above average.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a straightforward nested loop with early `break`, flat guard clauses (`continue`) to avoid deep nesting, and a small pure helper `_delta_seconds` for the time arithmetic. Names are descriptive and the data flow is explicit with no hidden mutation. The docstring is thorough. Minor weaknesses: the `_delta_seconds` helper uses `Any` typing which is overly permissive and slightly obscures intent; there's no input validation (e.g., missing required keys raise unhelpful KeyErrors rather than clear errors as the spec requests); the `within` parameter accepts `int` but the comparison `0 <= delta <= within` silently works for floats too without acknowledgment; and the helper's generality (handling both timedelta and numeric) adds a small speculative abstraction for a task that likely only needs one. Overall the code is sparse, auditable, and avoids framework-shaped patterns, landing solidly above average.\",\n  \"strengths\": [\n    \"Flat control flow using guard clauses (continue/break) avoids deep nesting\",\n    \"Small pure helper isolates the time-delta logic cleanly\",\n    \"Explicit data movement: no mutation of input events, returns new list of tuples\",\n    \"Descriptive variable names (session_id, start_time, candidate, delta) make behavior easy to explain\",\n    \"Early break after first match is correct and efficient\"\n  ],\n  \"weaknesses\": [\n    \"No input validation: missing keys raise opaque KeyErrors instead of clear errors as the spec requires\",\n    \"Use of Any typing in _delta_seconds is overly permissive and obscures the contract\",\n    \"_delta_seconds handles both timedelta and numeric types speculatively; the task likely only needs one path\",\n    \"within typed as int but delta can be float; silent widening without acknowledgment\",\n    \"Docstring on correlate_events is verbose relative to the sparse-code goal\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow using guard clauses (continue/break) avoids deep nesting",
+      "Small pure helper isolates the time-delta logic cleanly",
+      "Explicit data movement: no mutation of input events, returns new list of tuples",
+      "Descriptive variable names (session_id, start_time, candidate, delta) make behavior easy to explain",
+      "Early break after first match is correct and efficient"
+    ],
+    "weaknesses": [
+      "No input validation: missing keys raise opaque KeyErrors instead of clear errors as the spec requires",
+      "Use of Any typing in _delta_seconds is overly permissive and obscures the contract",
+      "_delta_seconds handles both timedelta and numeric types speculatively; the task likely only needs one path",
+      "within typed as int but delta can be float; silent widening without acknowledgment",
+      "Docstring on correlate_events is verbose relative to the sparse-code goal"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.933,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n>       pairs = correlate_events(events, within=5)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nevents = [{'session_id': 's', 'ts': 1, 'type': 'A'}, {'session_id': 's', 'ts': 3, 'type': 'B'}]\n\n    def correlate_events(events: list[dict], *, within: int) -> list[tuple[dict, dict]]:\n        \"\"\"\n        Pair each type 'A' event with the first later type 'B' event in the same\n        session whose timestamp delta is between 0 and ``within`` seconds.\n    \n        Expected event keys:\n          - \"type\": event type, where relevant values are \"A\" and \"B\"\n          - \"session_id\": session identifier\n          - \"timestamp\": numeric seconds or datetime/date-like value\n    \n        The returned tuples contain references to the original event dictionaries.\n        \"\"\"\n        pairs: list[tuple[dict, dict]] = []\n    \n        for i, event in enumerate(events):\n            if event.get(\"type\") != \"A\":\n                continue\n    \n            session_id = event[\"session_id\"]\n>           start_time = event[\"timestamp\"]\n                         ^^^^^^^^^^^^^^^^^^\nE           KeyError: 'timestamp'\n\nsolution.py:36: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - KeyError: 't...\n1 failed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.5,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 37,
+    "maintainability_index": 80.524,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "baseline_generation"
+}

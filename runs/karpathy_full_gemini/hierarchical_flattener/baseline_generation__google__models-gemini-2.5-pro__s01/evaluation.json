@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct with good separation between the public entry point and the recursive helper. Input validation is explicit and error messages are informative. The control flow is reasonably flat with a clear guard clause for recursion. The main structural concern is the use of mutable accumulator pattern (passing `result` dict for mutation) rather than a pure functional approach that returns values \u2014 this introduces hidden mutation that the operational constraints warn against. A cleaner approach would have the helper return a dict and merge results explicitly. The empty-dict-as-leaf behavior is correctly handled and documented. The docstring is thorough. Overall this is solid, idiomatic Python that a maintainer can audit locally, with one architectural choice (mutable accumulator) that slightly violates the 'make data movement explicit' constraint.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct with good separation between the public entry point and the recursive helper. Input validation is explicit and error messages are informative. The control flow is reasonably flat with a clear guard clause for recursion. The main structural concern is the use of mutable accumulator pattern (passing `result` dict for mutation) rather than a pure functional approach that returns values \u2014 this introduces hidden mutation that the operational constraints warn against. A cleaner approach would have the helper return a dict and merge results explicitly. The empty-dict-as-leaf behavior is correctly handled and documented. The docstring is thorough. Overall this is solid, idiomatic Python that a maintainer can audit locally, with one architectural choice (mutable accumulator) that slightly violates the 'make data movement explicit' constraint.\",\n  \"strengths\": [\n    \"Clear separation between public API and private recursive helper\",\n    \"Explicit TypeError for non-dict input and non-string keys with informative messages\",\n    \"Correct handling of empty dicts as leaf values with clear inline comment\",\n    \"Readable path construction using f-string with ternary guard\",\n    \"Docstring includes a working example that matches the implementation\"\n  ],\n  \"weaknesses\": [\n    \"Mutable accumulator pattern hides data flow \u2014 helper mutates `result` in place rather than returning values explicitly\",\n    \"Two-function split adds a small layer of indirection for what could be a simple iterative stack-based solution\",\n    \"The `typing` imports use legacy `Dict` and `Any` instead of built-in `dict` and `object` as hinted in the task signature\",\n    \"Module-level docstring is generic boilerplate that adds no information\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear separation between public API and private recursive helper",
+      "Explicit TypeError for non-dict input and non-string keys with informative messages",
+      "Correct handling of empty dicts as leaf values with clear inline comment",
+      "Readable path construction using f-string with ternary guard",
+      "Docstring includes a working example that matches the implementation"
+    ],
+    "weaknesses": [
+      "Mutable accumulator pattern hides data flow \u2014 helper mutates `result` in place rather than returning values explicitly",
+      "Two-function split adds a small layer of indirection for what could be a simple iterative stack-based solution",
+      "The `typing` imports use legacy `Dict` and `Any` instead of built-in `dict` and `object` as hinted in the task signature",
+      "Module-level docstring is generic boilerplate that adds no information"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.872,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 2,
+    "loc": 52,
+    "maintainability_index": 83.149,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "baseline_generation"
+}

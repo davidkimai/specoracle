@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and idiomatic. It uses standard-library weakref without any metaprogramming or speculative abstractions. Each method is small and does exactly one thing. Control flow is flat throughout\u2014guard clauses in `get`, a dict comprehension in `cleanup`. Data movement is explicit: the registry is a plain dict, mutation is visible, and there is no hidden state. The docstrings are informative without being bloated. The only minor issues are the TypeVar `T` which adds a small layer of type-system complexity that isn't strictly necessary for this simple registry (Optional[Any] would suffice and be more honest about the erasure), and the verbose class/method docstrings slightly exceed what a maintainer needs for local auditability, but neither rises to the level of architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, direct, and idiomatic. It uses standard-library weakref without any metaprogramming or speculative abstractions. Each method is small and does exactly one thing. Control flow is flat throughout\u2014guard clauses in `get`, a dict comprehension in `cleanup`. Data movement is explicit: the registry is a plain dict, mutation is visible, and there is no hidden state. The docstrings are informative without being bloated. The only minor issues are the TypeVar `T` which adds a small layer of type-system complexity that isn't strictly necessary for this simple registry (Optional[Any] would suffice and be more honest about the erasure), and the verbose class/method docstrings slightly exceed what a maintainer needs for local auditability, but neither rises to the level of architectural slop.\",\n  \"strengths\": [\n    \"Minimal, single-responsibility methods with no deep nesting\",\n    \"Explicit data movement: registry is a plain dict, no hidden mutation\",\n    \"cleanup() uses a comprehension to replace the dict atomically, avoiding mid-iteration mutation\",\n    \"get() uses a guard clause to keep the happy path flat\",\n    \"Relies entirely on ordinary standard-library constructs (weakref, dict)\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar T is cosmetic here\u2014weak references erase the type at runtime, so the generic annotation adds complexity without real safety\",\n    \"Docstrings are slightly over-documented for such a small, self-evident class, reducing sparseness\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal, single-responsibility methods with no deep nesting",
+      "Explicit data movement: registry is a plain dict, no hidden mutation",
+      "cleanup() uses a comprehension to replace the dict atomically, avoiding mid-iteration mutation",
+      "get() uses a guard clause to keep the happy path flat",
+      "Relies entirely on ordinary standard-library constructs (weakref, dict)"
+    ],
+    "weaknesses": [
+      "TypeVar T is cosmetic here\u2014weak references erase the type at runtime, so the generic annotation adds complexity without real safety",
+      "Docstrings are slightly over-documented for such a small, self-evident class, reducing sparseness"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.987,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 51,
+    "maintainability_index": 78.093,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "oracle_generation"
+}

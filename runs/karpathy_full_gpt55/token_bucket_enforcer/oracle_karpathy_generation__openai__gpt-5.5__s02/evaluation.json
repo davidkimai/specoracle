@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core token bucket logic is correct and minimal: refill on access, cap at capacity, deduct on success. The structure is flat and readable with no unnecessary abstractions. However, the implementation adds defensive validation (TypeError/ValueError guards for capacity, refill_rate, cost, and now) that was never asked for in the spec and violates the 'minimum code that solves the problem' and 'no features beyond what was asked' principles. This is speculative robustness, not task-driven code. The Karpathy oracle would collapse these degrees of freedom by omitting the guards entirely unless the spec demanded them. The core algorithm itself is clean and correct, which prevents a lower score.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The core token bucket logic is correct and minimal: refill on access, cap at capacity, deduct on success. The structure is flat and readable with no unnecessary abstractions. However, the implementation adds defensive validation (TypeError/ValueError guards for capacity, refill_rate, cost, and now) that was never asked for in the spec and violates the 'minimum code that solves the problem' and 'no features beyond what was asked' principles. This is speculative robustness, not task-driven code. The Karpathy oracle would collapse these degrees of freedom by omitting the guards entirely unless the spec demanded them. The core algorithm itself is clean and correct, which prevents a lower score.\",\n  \"strengths\": [\n    \"Core token bucket algorithm is correct: refill by elapsed time, cap at capacity, deduct cost atomically\",\n    \"Flat, single-class structure with no unnecessary abstractions or inheritance\",\n    \"Injectable `now` parameter handled cleanly for testability\",\n    \"Readable and locally auditable \u2014 the allow() method is easy to reason about\"\n  ],\n  \"weaknesses\": [\n    \"Adds unsolicited input validation (TypeError/ValueError) not required by the spec \u2014 violates 'minimum code' principle\",\n    \"Validation of `now` callable, negative capacity, negative cost etc. are speculative features beyond the task\",\n    \"Minor: explicit `float()` casts on capacity/refill_rate are defensive noise not required by the spec\",\n    \"Could be ~30% shorter by removing all guard clauses, matching the oracle's simplicity-first mandate\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core token bucket algorithm is correct: refill by elapsed time, cap at capacity, deduct cost atomically",
+      "Flat, single-class structure with no unnecessary abstractions or inheritance",
+      "Injectable `now` parameter handled cleanly for testability",
+      "Readable and locally auditable \u2014 the allow() method is easy to reason about"
+    ],
+    "weaknesses": [
+      "Adds unsolicited input validation (TypeError/ValueError) not required by the spec \u2014 violates 'minimum code' principle",
+      "Validation of `now` callable, negative capacity, negative cost etc. are speculative features beyond the task",
+      "Minor: explicit `float()` casts on capacity/refill_rate are defensive noise not required by the spec",
+      "Could be ~30% shorter by removing all guard clauses, matching the oracle's simplicity-first mandate"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.246,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 6.333,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 2,
+    "loc": 30,
+    "maintainability_index": 49.889,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "oracle_karpathy_generation"
+}

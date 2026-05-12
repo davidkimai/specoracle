@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation has a reasonable recursive approach and correct core logic, but it is syntactically incomplete (the final `_traverse(value` call is cut off, making it non-functional as submitted). Beyond that, the docstring is overly verbose for a simple utility function, the `from typing import Any` import is unnecessary in modern Python (3.9+) for this use case, and the module-level docstring adds no value. The nested closure approach is acceptable but slightly more complex than a simple iterative or direct recursive approach that returns a dict. The `TypeError` guard is a reasonable defensive check. Overall, the structural intent is sound but the verbosity and the incomplete code are significant issues.",
+    "raw_response": "```json\n{\n  \"score\": 4,\n  \"rationale\": \"The candidate implementation has a reasonable recursive approach and correct core logic, but it is syntactically incomplete (the final `_traverse(value` call is cut off, making it non-functional as submitted). Beyond that, the docstring is overly verbose for a simple utility function, the `from typing import Any` import is unnecessary in modern Python (3.9+) for this use case, and the module-level docstring adds no value. The nested closure approach is acceptable but slightly more complex than a simple iterative or direct recursive approach that returns a dict. The `TypeError` guard is a reasonable defensive check. Overall, the structural intent is sound but the verbosity and the incomplete code are significant issues.\",\n  \"strengths\": [\n    \"Core recursive logic is correct and handles dot-path construction properly\",\n    \"Lists and non-dict values are correctly treated as leaf values\",\n    \"Non-dict integer keys are converted to strings via f-string formatting\",\n    \"Defensive TypeError check for non-dict input is reasonable\"\n  ],\n  \"weaknesses\": [\n    \"Code is syntactically incomplete \u2014 the final `_traverse(value` call is truncated, making it non-runnable\",\n    \"Docstring is excessively long for a simple utility function, violating simplicity-first principle\",\n    \"Unnecessary `from typing import Any` import adds noise without value in Python 3.10+\",\n    \"Module-level docstring adds no information beyond the function docstring\",\n    \"Closure with mutable outer dict is slightly more complex than a clean recursive function that returns a dict directly\"\n  ]\n}\n```",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Core recursive logic is correct and handles dot-path construction properly",
+      "Lists and non-dict values are correctly treated as leaf values",
+      "Non-dict integer keys are converted to strings via f-string formatting",
+      "Defensive TypeError check for non-dict input is reasonable"
+    ],
+    "weaknesses": [
+      "Code is syntactically incomplete \u2014 the final `_traverse(value` call is truncated, making it non-runnable",
+      "Docstring is excessively long for a simple utility function, violating simplicity-first principle",
+      "Unnecessary `from typing import Any` import adds noise without value in Python 3.10+",
+      "Module-level docstring adds no information beyond the function docstring",
+      "Closure with mutable outer dict is slightly more complex than a clean recursive function that returns a dict directly"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.124,
+    "exit_code": 2,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "\n==================================== ERRORS ====================================\n______________________ ERROR collecting test_solution.py _______________________\n/usr/local/lib/python3.11/site-packages/_pytest/python.py:507: in importtestmodule\n    mod = import_path(\n/usr/local/lib/python3.11/site-packages/_pytest/pathlib.py:587: in import_path\n    importlib.import_module(module_name)\n/usr/local/lib/python3.11/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n<frozen importlib._bootstrap>:1204: in _gcd_import\n    ???\n<frozen importlib._bootstrap>:1176: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1147: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:690: in _load_unlocked\n    ???\n/usr/local/lib/python3.11/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntest_solution.py:1: in <module>\n    from solution import flatten_paths\nE     File \"/work/solution.py\", line 43\nE       _traverse(value\nE                ^\nE   SyntaxError: '(' was never closed\n=========================== short test summary info ============================\nERROR test_solution.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.25s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 0.0,
+    "cyclomatic_complexity_max": 0,
+    "cyclomatic_complexity_total": 0,
+    "function_count": 0,
+    "loc": 32,
+    "maintainability_index": null,
+    "max_nesting_depth": 0,
+    "syntax_error": "'(' was never closed at line 43",
+    "syntax_ok": false
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "oracle_karpathy_generation"
+}

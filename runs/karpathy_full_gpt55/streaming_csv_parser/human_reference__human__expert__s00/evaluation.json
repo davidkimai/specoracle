@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit data movement and no hidden state. It correctly preserves streaming behavior by working directly on the iterator without materializing the input. The two-phase loop (header extraction then row yielding) is a natural and auditable structure. The unused `Callable` import is a minor slop artifact. The lack of error raising for mismatched column counts (more or fewer cells than headers) is a mild functional gap given the spec's instruction to 'raise clear errors for invalid inputs.' The `cell.strip()` duplication across header and row parsing is a small redundancy that a tiny helper could eliminate, but it's not severe enough to meaningfully harm readability.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit data movement and no hidden state. It correctly preserves streaming behavior by working directly on the iterator without materializing the input. The two-phase loop (header extraction then row yielding) is a natural and auditable structure. The unused `Callable` import is a minor slop artifact. The lack of error raising for mismatched column counts (more or fewer cells than headers) is a mild functional gap given the spec's instruction to 'raise clear errors for invalid inputs.' The `cell.strip()` duplication across header and row parsing is a small redundancy that a tiny helper could eliminate, but it's not severe enough to meaningfully harm readability.\",\n  \"strengths\": [\n    \"Streaming behavior fully preserved \u2014 no list conversion of input\",\n    \"Flat control flow with guard clauses for empty lines\",\n    \"Explicit data movement: header extracted once, rows zipped cleanly\",\n    \"Uses only standard-library constructs (iter, zip, dict)\",\n    \"Easy to audit locally \u2014 behavior is obvious at a glance\"\n  ],\n  \"weaknesses\": [\n    \"Unused `Callable` import is dead code / slop\",\n    \"No error raised for row/header length mismatch (silent truncation via zip)\",\n    \"Minor duplication: `[cell.strip() for cell in line.split(',')]` repeated for header and rows \u2014 a one-line helper would DRY this up\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Streaming behavior fully preserved \u2014 no list conversion of input",
+      "Flat control flow with guard clauses for empty lines",
+      "Explicit data movement: header extracted once, rows zipped cleanly",
+      "Uses only standard-library constructs (iter, zip, dict)",
+      "Easy to audit locally \u2014 behavior is obvious at a glance"
+    ],
+    "weaknesses": [
+      "Unused `Callable` import is dead code / slop",
+      "No error raised for row/header length mismatch (silent truncation via zip)",
+      "Minor duplication: `[cell.strip() for cell in line.split(',')]` repeated for header and rows \u2014 a one-line helper would DRY this up"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.021,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 19,
+    "maintainability_index": 60.402,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "human_reference"
+}

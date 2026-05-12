@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Each helper has a single clear responsibility, control flow is shallow with guard clauses rather than nesting, data movement is fully explicit (no mutation of inputs, explicit `dict()` copy), and errors are raised with informative messages rather than silent fallbacks. The type aliases `FlagMap` and `SegmentMap` add clarity without over-engineering. The main `resolve_flags` function reads almost like a specification: validate inputs, extract segment names and overrides, build result by layering defaults \u2192 segment overrides \u2192 user overrides. The only minor quibble is that the validation helpers are somewhat verbose for what the task strictly requires\u2014the spec doesn't mandate input validation at all, so the validation layer is a mild speculative addition\u2014but it's well-structured and doesn't obscure the core logic. Overall this is an excellent realization of the Zen principles: simple, explicit, flat, locally auditable, and free of framework-shaped abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Each helper has a single clear responsibility, control flow is shallow with guard clauses rather than nesting, data movement is fully explicit (no mutation of inputs, explicit `dict()` copy), and errors are raised with informative messages rather than silent fallbacks. The type aliases `FlagMap` and `SegmentMap` add clarity without over-engineering. The main `resolve_flags` function reads almost like a specification: validate inputs, extract segment names and overrides, build result by layering defaults \u2192 segment overrides \u2192 user overrides. The only minor quibble is that the validation helpers are somewhat verbose for what the task strictly requires\u2014the spec doesn't mandate input validation at all, so the validation layer is a mild speculative addition\u2014but it's well-structured and doesn't obscure the core logic. Overall this is an excellent realization of the Zen principles: simple, explicit, flat, locally auditable, and free of framework-shaped abstractions.\",\n  \"strengths\": [\n    \"Pure helpers with single responsibilities keep the main function readable and auditable\",\n    \"No mutation of inputs; explicit dict copy before updates\",\n    \"Flat control flow with guard clauses in helpers instead of deep nesting\",\n    \"Clear, descriptive error messages for invalid inputs\",\n    \"Ordinary standard-library constructs only; no metaprogramming or clever tricks\",\n    \"Names accurately describe what each piece does\"\n  ],\n  \"weaknesses\": [\n    \"Validation helpers are speculative\u2014the task spec doesn't require input validation, adding modest unrequested complexity\",\n    \"Type aliases (FlagMap, SegmentMap) are mildly redundant given the explicit annotations already present\",\n    \"_require_dict returns Any-typed dict, requiring callers to re-validate, slightly awkward typing flow\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Pure helpers with single responsibilities keep the main function readable and auditable",
+      "No mutation of inputs; explicit dict copy before updates",
+      "Flat control flow with guard clauses in helpers instead of deep nesting",
+      "Clear, descriptive error messages for invalid inputs",
+      "Ordinary standard-library constructs only; no metaprogramming or clever tricks",
+      "Names accurately describe what each piece does"
+    ],
+    "weaknesses": [
+      "Validation helpers are speculative\u2014the task spec doesn't require input validation, adding modest unrequested complexity",
+      "Type aliases (FlagMap, SegmentMap) are mildly redundant given the explicit annotations already present",
+      "_require_dict returns Any-typed dict, requiring callers to re-validate, slightly awkward typing flow"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.239,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.13s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.167,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 6,
+    "loc": 53,
+    "maintainability_index": 47.845,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "oracle_generation"
+}

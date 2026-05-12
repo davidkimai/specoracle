@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and flat. The core logic in `has_permission` is minimal and readable: validate inputs, guard on missing role, return membership check. The helper decomposition is reasonable \u2014 `_require_string` and `_validate_matrix` are small, named, and do one thing. The guard clause pattern avoids nesting. The main weakness is that `_validate_matrix` performs a full deep traversal on every call, which is speculative overhead for a simple lookup function \u2014 the task only requires denying unknown roles/permissions, not validating the matrix structure. This validation is not asked for in the requirements and adds complexity without clear benefit. A simpler implementation could just use `matrix.get(role, set())` and return `permission in that set`, with perhaps a single type check if desired. The deep matrix validation feels like defensive over-engineering that violates 'sparse enough to audit locally' and 'avoid speculative abstractions'. Otherwise the naming is clear, the module structure is appropriate, and the logic is correct.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and flat. The core logic in `has_permission` is minimal and readable: validate inputs, guard on missing role, return membership check. The helper decomposition is reasonable \u2014 `_require_string` and `_validate_matrix` are small, named, and do one thing. The guard clause pattern avoids nesting. The main weakness is that `_validate_matrix` performs a full deep traversal on every call, which is speculative overhead for a simple lookup function \u2014 the task only requires denying unknown roles/permissions, not validating the matrix structure. This validation is not asked for in the requirements and adds complexity without clear benefit. A simpler implementation could just use `matrix.get(role, set())` and return `permission in that set`, with perhaps a single type check if desired. The deep matrix validation feels like defensive over-engineering that violates 'sparse enough to audit locally' and 'avoid speculative abstractions'. Otherwise the naming is clear, the module structure is appropriate, and the logic is correct.\",\n  \"strengths\": [\n    \"Core logic is flat and easy to audit in a single read\",\n    \"Guard clause on missing role avoids nesting\",\n    \"Helper functions are small and single-purpose\",\n    \"Explicit type errors with clear messages\",\n    \"Correct deny-by-default behavior\"\n  ],\n  \"weaknesses\": [\n    \"Deep matrix validation is speculative \u2014 not required by the task and adds O(n) overhead on every call\",\n    \"Validating every permission string in every role set is excessive for a simple lookup\",\n    \"The `_validate_matrix` helper is disproportionately large relative to the actual task complexity\",\n    \"Splitting `_require_string` into a helper for only two call sites is marginal abstraction\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Core logic is flat and easy to audit in a single read",
+      "Guard clause on missing role avoids nesting",
+      "Helper functions are small and single-purpose",
+      "Explicit type errors with clear messages",
+      "Correct deny-by-default behavior"
+    ],
+    "weaknesses": [
+      "Deep matrix validation is speculative \u2014 not required by the task and adds O(n) overhead on every call",
+      "Validating every permission string in every role set is excessive for a simple lookup",
+      "The `_validate_matrix` helper is disproportionately large relative to the actual task complexity",
+      "Splitting `_require_string` into a helper for only two call sites is marginal abstraction"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.383,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 25,
+    "maintainability_index": 56.089,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "permission_gate",
+  "variant": "oracle_generation"
+}

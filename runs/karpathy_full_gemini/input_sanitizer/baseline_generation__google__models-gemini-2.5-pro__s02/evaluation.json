@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with flat control flow and explicit data movement. However, it has several structural issues relative to the Zen oracle: it silently swallows non-string inputs instead of raising a clear error (violating 'raise clear errors for invalid inputs'); the regex is compiled inside the function on every call without being a module-level constant or extracted helper; the docstring is verbose and over-engineered for a small utility; using `re.fullmatch` with a compiled pattern that lacks anchors in the pattern string itself (relying on fullmatch for anchoring) is fine but slightly opaque; and the `seen` set duplicates work that could be collapsed. The overall shape is acceptable but carries minor speculative ceremony (the elaborate docstring, the isinstance guard without error) that adds noise without adding safety.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with flat control flow and explicit data movement. However, it has several structural issues relative to the Zen oracle: it silently swallows non-string inputs instead of raising a clear error (violating 'raise clear errors for invalid inputs'); the regex is compiled inside the function on every call without being a module-level constant or extracted helper; the docstring is verbose and over-engineered for a small utility; using `re.fullmatch` with a compiled pattern that lacks anchors in the pattern string itself (relying on fullmatch for anchoring) is fine but slightly opaque; and the `seen` set duplicates work that could be collapsed. The overall shape is acceptable but carries minor speculative ceremony (the elaborate docstring, the isinstance guard without error) that adds noise without adding safety.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses keeps nesting shallow\",\n    \"Explicit seen-set for deduplication with preserved order\",\n    \"Uses standard-library re module without clever metaprogramming\",\n    \"Variable names are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Silently skips non-string inputs instead of raising TypeError, hiding invalid usage\",\n    \"Regex compiled inside function body on every call rather than as a module-level constant\",\n    \"Overly verbose docstring adds ceremony disproportionate to function complexity\",\n    \"No input validation for the `allowed` parameter (e.g., not a set)\",\n    \"Could be expressed more concisely with a small is_valid helper and a single-pass comprehension pattern\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses keeps nesting shallow",
+      "Explicit seen-set for deduplication with preserved order",
+      "Uses standard-library re module without clever metaprogramming",
+      "Variable names are self-explanatory"
+    ],
+    "weaknesses": [
+      "Silently skips non-string inputs instead of raising TypeError, hiding invalid usage",
+      "Regex compiled inside function body on every call rather than as a module-level constant",
+      "Overly verbose docstring adds ceremony disproportionate to function complexity",
+      "No input validation for the `allowed` parameter (e.g., not a set)",
+      "Could be expressed more concisely with a small is_valid helper and a single-pass comprehension pattern"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 3.215,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 82.721,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "baseline_generation"
+}

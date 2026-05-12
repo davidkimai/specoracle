@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are named constants, configuration values are stored as named attributes, and the half-open trial logic correctly closes on success and reopens on failure. The lock usage is correct and the helper methods are small and focused. Minor concerns: the half-open state blocks concurrent callers with a distinct error message rather than queuing them, which is a reasonable design choice but slightly deviates from the simplest possible model; the TypeVar T import adds minor noise for a non-generic runtime class; and the input validation guards (isinstance checks, ValueError) add lines that aren't required by the spec but don't hurt readability. Overall the code is flat, auditable, and closely follows the RCS-5 structural spec.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are named constants, configuration values are stored as named attributes, and the half-open trial logic correctly closes on success and reopens on failure. The lock usage is correct and the helper methods are small and focused. Minor concerns: the half-open state blocks concurrent callers with a distinct error message rather than queuing them, which is a reasonable design choice but slightly deviates from the simplest possible model; the TypeVar T import adds minor noise for a non-generic runtime class; and the input validation guards (isinstance checks, ValueError) add lines that aren't required by the spec but don't hurt readability. Overall the code is flat, auditable, and closely follows the RCS-5 structural spec.\",\n  \"strengths\": [\n    \"Explicit STATE_* class constants make state inspectable and self-documenting\",\n    \"Named configuration attributes (failure_threshold, recovery_timeout) satisfy RCS-5 naming requirement\",\n    \"Transition helpers (_transition_to_closed/open/half_open) keep state mutation centralized and auditable\",\n    \"Thread-safety via Lock with correct acquire/release around state reads and writes\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Injected `now` callable enables deterministic testing without monkey-patching\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar T is imported but provides no runtime value; the class isn't actually generic\",\n    \"Blocking concurrent half-open callers with a distinct RuntimeError message may surprise callers expecting the same open-circuit error\",\n    \"Input validation boilerplate (isinstance, ValueError) adds noise not required by the spec\",\n    \"_record_success silently resets failure_count in closed state, which is a minor implicit side-effect not called out in comments\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit STATE_* class constants make state inspectable and self-documenting",
+      "Named configuration attributes (failure_threshold, recovery_timeout) satisfy RCS-5 naming requirement",
+      "Transition helpers (_transition_to_closed/open/half_open) keep state mutation centralized and auditable",
+      "Thread-safety via Lock with correct acquire/release around state reads and writes",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Injected `now` callable enables deterministic testing without monkey-patching"
+    ],
+    "weaknesses": [
+      "TypeVar T is imported but provides no runtime value; the class isn't actually generic",
+      "Blocking concurrent half-open callers with a distinct RuntimeError message may surprise callers expecting the same open-circuit error",
+      "Input validation boilerplate (isinstance, ValueError) adds noise not required by the spec",
+      "_record_success silently resets failure_count in closed state, which is a minor implicit side-effect not called out in comments"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 4.035,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.2,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 32,
+    "function_count": 9,
+    "loc": 88,
+    "maintainability_index": 36.838,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_generation"
+}

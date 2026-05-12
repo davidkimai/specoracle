@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, but it violates the 'simplicity first' and 'minimum code' principles from the Karpathy oracle. The docstrings are excessively verbose \u2014 the class docstring, `__init__` docstring, `_refill` docstring, and `allow` docstring together dwarf the actual logic. The input validation (isinstance checks with ValueError) is speculative defensive programming not requested by the spec. The `__all__` export list and the module-level docstring are unnecessary additions. The `_refill` helper method is a reasonable factoring but the guard `if elapsed_time > 0` is slightly over-cautious. The core algorithm itself is clean and correct: refill on elapsed time, cap at capacity, consume tokens atomically in `allow`. If stripped of the speculative validation and verbose documentation, this would be a tight ~25-line implementation; as written it's ~80 lines of which roughly half is noise.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, but it violates the 'simplicity first' and 'minimum code' principles from the Karpathy oracle. The docstrings are excessively verbose \u2014 the class docstring, `__init__` docstring, `_refill` docstring, and `allow` docstring together dwarf the actual logic. The input validation (isinstance checks with ValueError) is speculative defensive programming not requested by the spec. The `__all__` export list and the module-level docstring are unnecessary additions. The `_refill` helper method is a reasonable factoring but the guard `if elapsed_time > 0` is slightly over-cautious. The core algorithm itself is clean and correct: refill on elapsed time, cap at capacity, consume tokens atomically in `allow`. If stripped of the speculative validation and verbose documentation, this would be a tight ~25-line implementation; as written it's ~80 lines of which roughly half is noise.\",\n  \"strengths\": [\n    \"Core token bucket logic is correct: refill by elapsed*rate, cap at capacity, consume only if sufficient tokens\",\n    \"Injected `now` callable enables deterministic testing without patching\",\n    \"Private `_refill` helper keeps `allow` readable\",\n    \"Correct default of starting bucket at full capacity\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstrings bloat the file well beyond what the task warrants \u2014 violates 'minimum code' principle\",\n    \"Speculative input validation (isinstance + ValueError) was not requested and adds noise\",\n    \"Module-level docstring and `__all__` are unnecessary for a single-class file\",\n    \"Type annotation import of Optional/Callable adds boilerplate; plain `= None` default suffices\",\n    \"`if elapsed_time > 0` guard is overly defensive; monotonic/wall time won't go backward in normal use\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core token bucket logic is correct: refill by elapsed*rate, cap at capacity, consume only if sufficient tokens",
+      "Injected `now` callable enables deterministic testing without patching",
+      "Private `_refill` helper keeps `allow` readable",
+      "Correct default of starting bucket at full capacity"
+    ],
+    "weaknesses": [
+      "Excessive docstrings bloat the file well beyond what the task warrants \u2014 violates 'minimum code' principle",
+      "Speculative input validation (isinstance + ValueError) was not requested and adds noise",
+      "Module-level docstring and `__all__` are unnecessary for a single-class file",
+      "Type annotation import of Optional/Callable adds boilerplate; plain `= None` default suffices",
+      "`if elapsed_time > 0` guard is overly defensive; monotonic/wall time won't go backward in normal use"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.2,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.25,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 3,
+    "loc": 74,
+    "maintainability_index": 71.346,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "oracle_karpathy_generation"
+}

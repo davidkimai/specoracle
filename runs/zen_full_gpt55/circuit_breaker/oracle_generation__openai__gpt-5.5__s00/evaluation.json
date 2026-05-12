@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are named constants and exposed via a public `state` attribute satisfying RCS-5's inspectability requirement. Configuration values (`failure_threshold`, `recovery_timeout`) are named attributes, not magic constants. Half-open trials correctly close on success and reopen on failure. The `call` method reads as a flat, auditable state machine with no hidden branching. Helper methods are small and single-purpose. The only minor concerns are the somewhat defensive input validation (type/value checks that go beyond the functional spec, adding noise) and the `ERROR_CIRCUIT_OPEN` class constant being a minor over-engineering for a single-use string, but neither constitutes architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are named constants and exposed via a public `state` attribute satisfying RCS-5's inspectability requirement. Configuration values (`failure_threshold`, `recovery_timeout`) are named attributes, not magic constants. Half-open trials correctly close on success and reopen on failure. The `call` method reads as a flat, auditable state machine with no hidden branching. Helper methods are small and single-purpose. The only minor concerns are the somewhat defensive input validation (type/value checks that go beyond the functional spec, adding noise) and the `ERROR_CIRCUIT_OPEN` class constant being a minor over-engineering for a single-use string, but neither constitutes architectural slop.\",\n  \"strengths\": [\n    \"Explicit named state constants (STATE_CLOSED, STATE_OPEN, STATE_HALF_OPEN) satisfy RCS-5 inspectability\",\n    \"Named configuration attributes on the instance, no magic numbers\",\n    \"Clean, flat call() method that reads as an explicit state machine\",\n    \"Half-open transitions correctly implemented: success\u2192closed, failure\u2192open\",\n    \"Injected `now` clock enables deterministic testing\",\n    \"Small, single-responsibility private methods with clear names\"\n  ],\n  \"weaknesses\": [\n    \"Defensive type/value validation in __init__ goes beyond the functional spec and adds boilerplate noise\",\n    \"ERROR_CIRCUIT_OPEN class constant is minor over-engineering for a single inline string\",\n    \"Resetting failure_count in _transition_to_half_open is redundant since half-open path doesn't use it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit named state constants (STATE_CLOSED, STATE_OPEN, STATE_HALF_OPEN) satisfy RCS-5 inspectability",
+      "Named configuration attributes on the instance, no magic numbers",
+      "Clean, flat call() method that reads as an explicit state machine",
+      "Half-open transitions correctly implemented: success\u2192closed, failure\u2192open",
+      "Injected `now` clock enables deterministic testing",
+      "Small, single-responsibility private methods with clear names"
+    ],
+    "weaknesses": [
+      "Defensive type/value validation in __init__ goes beyond the functional spec and adds boilerplate noise",
+      "ERROR_CIRCUIT_OPEN class constant is minor over-engineering for a single inline string",
+      "Resetting failure_count in _transition_to_half_open is redundant since half-open path doesn't use it"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 5.24,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.222,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 29,
+    "function_count": 8,
+    "loc": 72,
+    "maintainability_index": 40.132,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_generation"
+}

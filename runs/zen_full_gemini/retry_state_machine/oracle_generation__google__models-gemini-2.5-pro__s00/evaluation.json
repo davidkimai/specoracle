@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and correct. State is explicit and local, names are self-explanatory, control flow is trivially auditable, and there are no speculative abstractions or hidden side effects. The only minor issues are the isinstance guard (the spec says positive, not necessarily int \u2014 booleans pass this check since bool is a subclass of int, which is actually a subtle correctness concern), and the docstrings are somewhat verbose relative to the Zen preference for sparse, self-evident code. The `remaining()` helper using `max(0, ...)` is a clean guard clause. Overall this is a solid, maintainable implementation that closely follows the structural oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and correct. State is explicit and local, names are self-explanatory, control flow is trivially auditable, and there are no speculative abstractions or hidden side effects. The only minor issues are the isinstance guard (the spec says positive, not necessarily int \u2014 booleans pass this check since bool is a subclass of int, which is actually a subtle correctness concern), and the docstrings are somewhat verbose relative to the Zen preference for sparse, self-evident code. The `remaining()` helper using `max(0, ...)` is a clean guard clause. Overall this is a solid, maintainable implementation that closely follows the structural oracle.\",\n  \"strengths\": [\n    \"All state is explicit and instance-local with no global mutation\",\n    \"Method bodies are one-liners or near-one-liners, easy to audit locally\",\n    \"Clear ValueError with a descriptive message for invalid input\",\n    \"No speculative abstractions, unused extension points, or framework-shaped code\",\n    \"remaining() correctly clamps to zero without deep nesting\"\n  ],\n  \"weaknesses\": [\n    \"isinstance check doesn't exclude bool (True/False would pass as max_attempts=1/0 respectively, with False silently raising but True silently accepted)\",\n    \"Docstrings are over-explained relative to the Zen preference for sparse, self-evident code\",\n    \"Module-level docstring and class docstring add noise without adding clarity beyond the names themselves\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "All state is explicit and instance-local with no global mutation",
+      "Method bodies are one-liners or near-one-liners, easy to audit locally",
+      "Clear ValueError with a descriptive message for invalid input",
+      "No speculative abstractions, unused extension points, or framework-shaped code",
+      "remaining() correctly clamps to zero without deep nesting"
+    ],
+    "weaknesses": [
+      "isinstance check doesn't exclude bool (True/False would pass as max_attempts=1/0 respectively, with False silently raising but True silently accepted)",
+      "Docstrings are over-explained relative to the Zen preference for sparse, self-evident code",
+      "Module-level docstring and class docstring add noise without adding clarity beyond the names themselves"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.189,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 45,
+    "maintainability_index": 66.263,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_generation"
+}

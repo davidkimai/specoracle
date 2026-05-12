@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate correctly implements the functional requirements and follows several spec guidelines well: it uses `_table`-suffixed names for lookup structures, avoids classes, preserves ticket order, and uses a stable `status_code` string. However, the `missing_field_reason` and `default_rule_reason` variables assigned to `_` are dead code that adds noise rather than clarity \u2014 the spec asks for 'short explicit strings' as branch reasons, but these are never surfaced anywhere meaningful. The `required_ticket_fields_table` is a set, not a dict/table in the conventional sense, which is a minor naming mismatch. The `_ = missing_field_reason` pattern is particularly confusing and anti-Pythonic, appearing to be a misguided attempt to satisfy the 'branch reasons as short explicit strings' guideline without actually using them. The service lookup could be simplified with `rules.get(service, rules['default'])` for cleaner, flatter code.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The candidate correctly implements the functional requirements and follows several spec guidelines well: it uses `_table`-suffixed names for lookup structures, avoids classes, preserves ticket order, and uses a stable `status_code` string. However, the `missing_field_reason` and `default_rule_reason` variables assigned to `_` are dead code that adds noise rather than clarity \u2014 the spec asks for 'short explicit strings' as branch reasons, but these are never surfaced anywhere meaningful. The `required_ticket_fields_table` is a set, not a dict/table in the conventional sense, which is a minor naming mismatch. The `_ = missing_field_reason` pattern is particularly confusing and anti-Pythonic, appearing to be a misguided attempt to satisfy the 'branch reasons as short explicit strings' guideline without actually using them. The service lookup could be simplified with `rules.get(service, rules['default'])` for cleaner, flatter code.\",\n  \"strengths\": [\n    \"Uses `_table` suffix for severity boost and required fields, matching the spec's naming convention\",\n    \"No classes introduced for single-pass routing\",\n    \"Ticket order preserved via sequential append\",\n    \"Stable `status_code: 'routed'` string used correctly\",\n    \"Correct functional behavior including default rule fallback and severity priority boost\"\n  ],\n  \"weaknesses\": [\n    \"`_ = missing_field_reason` and `_ = default_rule_reason` are dead code anti-patterns that obscure rather than clarify branch reasons\",\n    \"Branch reason strings are never actually surfaced or logged, making them meaningless noise\",\n    \"Service lookup could be simplified to `rules.get(service, rules['default'])` for flatter, more readable code\",\n    \"`required_ticket_fields_table` is a set, not a table/dict, making the `_table` suffix slightly misleading\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Uses `_table` suffix for severity boost and required fields, matching the spec's naming convention",
+      "No classes introduced for single-pass routing",
+      "Ticket order preserved via sequential append",
+      "Stable `status_code: 'routed'` string used correctly",
+      "Correct functional behavior including default rule fallback and severity priority boost"
+    ],
+    "weaknesses": [
+      "`_ = missing_field_reason` and `_ = default_rule_reason` are dead code anti-patterns that obscure rather than clarify branch reasons",
+      "Branch reason strings are never actually surfaced or logged, making them meaningless noise",
+      "Service lookup could be simplified to `rules.get(service, rules['default'])` for flatter, more readable code",
+      "`required_ticket_fields_table` is a set, not a table/dict, making the `_table` suffix slightly misleading"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.897,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 35,
+    "maintainability_index": 59.69,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

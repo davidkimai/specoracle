@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State is represented via a proper Enum and exposed through a `state` attribute (accessible as `_state`, though not publicly named `state` per RCS-5's 'inspectable through a state attribute' requirement \u2014 a minor gap). Configuration values are named (`_failure_threshold`, `_recovery_timeout`), not magic constants. Half-open trials correctly close on success and reopen on failure. The `call` method is flat and readable with a clear linear flow. Helper methods `_handle_success`, `_handle_failure`, and `_trip` are small and single-purpose. The `now` injection for testability is idiomatic. The only notable weakness is that RCS-5 specifies a public `state` attribute for inspectability, but the implementation uses `_state` (private), making it technically non-compliant with the spec's inspectability requirement. Input validation in `__init__` is thorough but slightly over-engineered for this context. Overall, this is a high-quality, auditable implementation with minimal architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State is represented via a proper Enum and exposed through a `state` attribute (accessible as `_state`, though not publicly named `state` per RCS-5's 'inspectable through a state attribute' requirement \u2014 a minor gap). Configuration values are named (`_failure_threshold`, `_recovery_timeout`), not magic constants. Half-open trials correctly close on success and reopen on failure. The `call` method is flat and readable with a clear linear flow. Helper methods `_handle_success`, `_handle_failure`, and `_trip` are small and single-purpose. The `now` injection for testability is idiomatic. The only notable weakness is that RCS-5 specifies a public `state` attribute for inspectability, but the implementation uses `_state` (private), making it technically non-compliant with the spec's inspectability requirement. Input validation in `__init__` is thorough but slightly over-engineered for this context. Overall, this is a high-quality, auditable implementation with minimal architectural slop.\",\n  \"strengths\": [\n    \"Explicit state machine using Enum with three well-named states\",\n    \"Named configuration attributes, no magic constants\",\n    \"Flat, readable `call` method with clear control flow\",\n    \"Correct half-open trial semantics: success closes, failure reopens\",\n    \"Testable via injected `now` callable\",\n    \"Small, focused helper methods with clear responsibilities\"\n  ],\n  \"weaknesses\": [\n    \"RCS-5 requires a public `state` attribute for inspectability; implementation uses private `_state`\",\n    \"Input validation in `__init__` is more defensive than typical Pythonic style (EAFP preferred)\",\n    \"Docstrings are verbose relative to the simplicity of the code, adding noise\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit state machine using Enum with three well-named states",
+      "Named configuration attributes, no magic constants",
+      "Flat, readable `call` method with clear control flow",
+      "Correct half-open trial semantics: success closes, failure reopens",
+      "Testable via injected `now` callable",
+      "Small, focused helper methods with clear responsibilities"
+    ],
+    "weaknesses": [
+      "RCS-5 requires a public `state` attribute for inspectability; implementation uses private `_state`",
+      "Input validation in `__init__` is more defensive than typical Pythonic style (EAFP preferred)",
+      "Docstrings are verbose relative to the simplicity of the code, adding noise"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.144,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\n               ^^^^^^^^^^^^^\nE       AttributeError: 'CircuitBreaker' object has no attribute 'state'\n\ntest_solution.py:11: AttributeError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AttributeError: 'C...\n1 failed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 5,
+    "loc": 95,
+    "maintainability_index": 72.385,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

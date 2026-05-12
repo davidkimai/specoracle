@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, correct, and flat \u2014 a single while-True loop with an early return, no unnecessary abstractions, no speculative features. The type annotations are precise and informative without being verbose. The only mild criticism is that the imports and TypeVar add a small amount of ceremony that isn't strictly required for a simple async utility (plain `Any` annotations or even no annotations would suffice for the task), but they do serve auditability and are not excessive. The logic is immediately readable and locally auditable in one pass.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, correct, and flat \u2014 a single while-True loop with an early return, no unnecessary abstractions, no speculative features. The type annotations are precise and informative without being verbose. The only mild criticism is that the imports and TypeVar add a small amount of ceremony that isn't strictly required for a simple async utility (plain `Any` annotations or even no annotations would suffice for the task), but they do serve auditability and are not excessive. The logic is immediately readable and locally auditable in one pass.\",\n  \"strengths\": [\n    \"Minimal implementation \u2014 exactly the code needed, nothing more\",\n    \"Flat control flow with a single loop and early return, no nested helpers or classes\",\n    \"Correct cursor threading: start_cursor passed to first call, next_cursor advanced each iteration\",\n    \"Type annotations improve auditability without adding abstraction layers\",\n    \"Explicit termination condition (next_cursor is None) matches the spec precisely\"\n  ],\n  \"weaknesses\": [\n    \"TypeVar T and the full Callable/Awaitable/Iterable imports add minor boilerplate for a single-function module\",\n    \"Using `while True` with an internal return is slightly less explicit than a `while cursor is not None` pattern, though the current form handles the start_cursor=None case correctly\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal implementation \u2014 exactly the code needed, nothing more",
+      "Flat control flow with a single loop and early return, no nested helpers or classes",
+      "Correct cursor threading: start_cursor passed to first call, next_cursor advanced each iteration",
+      "Type annotations improve auditability without adding abstraction layers",
+      "Explicit termination condition (next_cursor is None) matches the spec precisely"
+    ],
+    "weaknesses": [
+      "TypeVar T and the full Callable/Awaitable/Iterable imports add minor boilerplate for a single-function module",
+      "Using `while True` with an internal return is slightly less explicit than a `while cursor is not None` pattern, though the current form handles the start_cursor=None case correctly"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.053,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.14s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 16,
+    "maintainability_index": 70.556,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_karpathy_generation"
+}

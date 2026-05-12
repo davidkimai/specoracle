@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, but it carries significant bloat relative to the task's simplicity. The docstrings are verbose to the point of noise \u2014 every method has multi-line explanations for trivial one-liners. The `sys.version_info` compatibility block for `ClassVar` is pure dead code: `ClassVar` is imported but never used, and the conditional import is identical in both branches, making it doubly pointless. The class-level type annotations (`_max_attempts: int`, `_failure_count: int`) are fine but the `ClassVar` import suggests speculative over-engineering. The `isinstance` check on `max_attempts` goes beyond the spec (which only says 'must be positive'), adding undocumented behavior. The module docstring and class docstring restate the obvious. Stripping the dead import, the redundant docstring prose, and the isinstance guard would yield a clean ~20-line implementation; as written it's ~80 lines for a trivially simple state machine.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, but it carries significant bloat relative to the task's simplicity. The docstrings are verbose to the point of noise \u2014 every method has multi-line explanations for trivial one-liners. The `sys.version_info` compatibility block for `ClassVar` is pure dead code: `ClassVar` is imported but never used, and the conditional import is identical in both branches, making it doubly pointless. The class-level type annotations (`_max_attempts: int`, `_failure_count: int`) are fine but the `ClassVar` import suggests speculative over-engineering. The `isinstance` check on `max_attempts` goes beyond the spec (which only says 'must be positive'), adding undocumented behavior. The module docstring and class docstring restate the obvious. Stripping the dead import, the redundant docstring prose, and the isinstance guard would yield a clean ~20-line implementation; as written it's ~80 lines for a trivially simple state machine.\",\n  \"strengths\": [\n    \"Functionally correct across all four methods\",\n    \"No global state, no I/O, fully deterministic\",\n    \"`remaining()` correctly clamps to zero with `max(0, ...)`\",\n    \"Clean attribute naming and straightforward logic\"\n  ],\n  \"weaknesses\": [\n    \"`ClassVar` is imported but never used \u2014 dead code\",\n    \"The `sys.version_info` compatibility block is identical in both branches, serving no purpose\",\n    \"Docstrings are excessively verbose for trivial one-liner methods\",\n    \"`isinstance(max_attempts, int)` check is beyond the stated spec and silently rejects booleans or subclasses without documentation\",\n    \"Module-level docstring adds no information\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct across all four methods",
+      "No global state, no I/O, fully deterministic",
+      "`remaining()` correctly clamps to zero with `max(0, ...)`",
+      "Clean attribute naming and straightforward logic"
+    ],
+    "weaknesses": [
+      "`ClassVar` is imported but never used \u2014 dead code",
+      "The `sys.version_info` compatibility block is identical in both branches, serving no purpose",
+      "Docstrings are excessively verbose for trivial one-liner methods",
+      "`isinstance(max_attempts, int)` check is beyond the stated spec and silently rejects booleans or subclasses without documentation",
+      "Module-level docstring adds no information"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.523,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 63,
+    "maintainability_index": 61.749,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_karpathy_generation"
+}

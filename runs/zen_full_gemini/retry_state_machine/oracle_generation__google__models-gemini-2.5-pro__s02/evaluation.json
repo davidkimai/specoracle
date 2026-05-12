@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, flat, and readable with explicit data movement and clear naming. The core logic is minimal and auditable locally. The main structural issues are: the `import typing` is unused (dead import), the `TypeError` check for non-integer input is speculative over-engineering not requested by the spec (the spec only asks for `ValueError` on non-positive), and the docstrings are verbose to the point of padding \u2014 a maintainer doesn't need three-line explanations for one-line methods. The `remaining()` helper using `max(0, ...)` is a clean guard clause. Overall the architecture is sound but carries minor speculative additions that violate 'sparse enough to audit locally' and 'avoid speculative abstractions'.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, flat, and readable with explicit data movement and clear naming. The core logic is minimal and auditable locally. The main structural issues are: the `import typing` is unused (dead import), the `TypeError` check for non-integer input is speculative over-engineering not requested by the spec (the spec only asks for `ValueError` on non-positive), and the docstrings are verbose to the point of padding \u2014 a maintainer doesn't need three-line explanations for one-line methods. The `remaining()` helper using `max(0, ...)` is a clean guard clause. Overall the architecture is sound but carries minor speculative additions that violate 'sparse enough to audit locally' and 'avoid speculative abstractions'.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses in __init__\",\n    \"Explicit, well-named instance variables (_max_attempts, _failure_count)\",\n    \"No hidden mutation, global state, or clever metaprogramming\",\n    \"remaining() correctly clamps to zero with a simple max(0, ...) idiom\",\n    \"Ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"Unused `import typing` is dead code\",\n    \"TypeError check for non-integer is speculative \u2014 spec only requires ValueError for non-positive\",\n    \"Docstrings are over-verbose for trivially simple one-liner methods, adding noise without clarity\",\n    \"Class-level docstring restates the class name rather than adding insight\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses in __init__",
+      "Explicit, well-named instance variables (_max_attempts, _failure_count)",
+      "No hidden mutation, global state, or clever metaprogramming",
+      "remaining() correctly clamps to zero with a simple max(0, ...) idiom",
+      "Ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "Unused `import typing` is dead code",
+      "TypeError check for non-integer is speculative \u2014 spec only requires ValueError for non-positive",
+      "Docstrings are over-verbose for trivially simple one-liner methods, adding noise without clarity",
+      "Class-level docstring restates the class name rather than adding insight"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.536,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 47,
+    "maintainability_index": 72.569,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_generation"
+}

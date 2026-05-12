@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a reasonable double-checked locking pattern with standard-library threading primitives. However, it suffers from significant documentation bloat: the docstrings are far longer than the actual logic, with a multi-paragraph class docstring, a full usage example, and verbose inline comments explaining every line of a well-known pattern. The Zen of Python favors sparse, auditable code where the implementation speaks for itself. The Generic[T] typing is a speculative abstraction that adds complexity without runtime benefit. The inline comments ('First check (optimistic)', 'Second check (pessimistic)') are over-explanatory for a maintainer familiar with Python. The TypeError guard on factory is a good touch. Overall, the core logic is sound but the surrounding ceremony violates 'sparse enough to audit locally' and 'avoid speculative abstractions.'",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a reasonable double-checked locking pattern with standard-library threading primitives. However, it suffers from significant documentation bloat: the docstrings are far longer than the actual logic, with a multi-paragraph class docstring, a full usage example, and verbose inline comments explaining every line of a well-known pattern. The Zen of Python favors sparse, auditable code where the implementation speaks for itself. The Generic[T] typing is a speculative abstraction that adds complexity without runtime benefit. The inline comments ('First check (optimistic)', 'Second check (pessimistic)') are over-explanatory for a maintainer familiar with Python. The TypeError guard on factory is a good touch. Overall, the core logic is sound but the surrounding ceremony violates 'sparse enough to audit locally' and 'avoid speculative abstractions.'\",\n  \"strengths\": [\n    \"Correct double-checked locking with threading.Lock for thread safety\",\n    \"Clear TypeError raised for non-callable factory input\",\n    \"Flat control flow with guard clause structure in get()\",\n    \"Uses only standard-library constructs (threading module)\"\n  ],\n  \"weaknesses\": [\n    \"Excessive docstring verbosity dwarfs the actual implementation, harming auditability\",\n    \"Generic[T] is speculative abstraction with no runtime value\",\n    \"Inline comments over-explain a well-known pattern, adding noise\",\n    \"T | None union syntax mixes modern and legacy styles unnecessarily\",\n    \"Usage example in docstring is framework-shaped padding, not needed for this simple utility\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct double-checked locking with threading.Lock for thread safety",
+      "Clear TypeError raised for non-callable factory input",
+      "Flat control flow with guard clause structure in get()",
+      "Uses only standard-library constructs (threading module)"
+    ],
+    "weaknesses": [
+      "Excessive docstring verbosity dwarfs the actual implementation, harming auditability",
+      "Generic[T] is speculative abstraction with no runtime value",
+      "Inline comments over-explain a well-known pattern, adding noise",
+      "T | None union syntax mixes modern and legacy styles unnecessarily",
+      "Usage example in docstring is framework-shaped padding, not needed for this simple utility"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.053,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.24s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 65,
+    "maintainability_index": 46.097,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "baseline_generation"
+}

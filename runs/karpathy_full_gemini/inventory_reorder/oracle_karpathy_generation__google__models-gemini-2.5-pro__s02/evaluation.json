@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses reasonable patterns (try/except for malformed items, .get() for absent velocity, integer ceiling arithmetic), but it violates the Karpathy oracle's core principle of simplicity first. The docstring is massively over-engineered\u2014it's longer than the logic itself, restating every requirement in prose. The module-level docstring, the verbose Args/Returns section, and the inline comments explaining basic Python idioms (like what .get() does or what ceil arithmetic is) all constitute speculative documentation overhead that adds noise without value. The type annotations import `Any` and use `List`/`Dict` from `typing` instead of the built-in `list`/`dict` generics available since Python 3.9, which is minor but adds an unnecessary import. The explicit `isinstance(case_pack, int)` check is slightly redundant given the try/except already handles TypeError. The core logic loop is flat and readable, which is good, but the surrounding ceremony inflates the implementation well beyond its minimal form.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and uses reasonable patterns (try/except for malformed items, .get() for absent velocity, integer ceiling arithmetic), but it violates the Karpathy oracle's core principle of simplicity first. The docstring is massively over-engineered\u2014it's longer than the logic itself, restating every requirement in prose. The module-level docstring, the verbose Args/Returns section, and the inline comments explaining basic Python idioms (like what .get() does or what ceil arithmetic is) all constitute speculative documentation overhead that adds noise without value. The type annotations import `Any` and use `List`/`Dict` from `typing` instead of the built-in `list`/`dict` generics available since Python 3.9, which is minor but adds an unnecessary import. The explicit `isinstance(case_pack, int)` check is slightly redundant given the try/except already handles TypeError. The core logic loop is flat and readable, which is good, but the surrounding ceremony inflates the implementation well beyond its minimal form.\",\n  \"strengths\": [\n    \"Correct ceiling arithmetic using integer math, avoiding float issues\",\n    \"Flat single-loop structure with no unnecessary abstractions or helper functions\",\n    \"Proper use of .get(sku, 0) to handle absent velocity keys cleanly\",\n    \"try/except correctly scoped to handle malformed items without crashing\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is longer than the implementation itself\u2014severe over-documentation violating simplicity-first\",\n    \"Excessive inline comments explaining trivial Python idioms (e.g., what .get() does)\",\n    \"Unnecessary `from typing import List, Dict, Any` import when built-in generics suffice\",\n    \"Redundant isinstance check on case_pack when TypeError would already be caught\",\n    \"Module-level docstring adds no value for a single-function module\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correct ceiling arithmetic using integer math, avoiding float issues",
+      "Flat single-loop structure with no unnecessary abstractions or helper functions",
+      "Proper use of .get(sku, 0) to handle absent velocity keys cleanly",
+      "try/except correctly scoped to handle malformed items without crashing"
+    ],
+    "weaknesses": [
+      "Docstring is longer than the implementation itself\u2014severe over-documentation violating simplicity-first",
+      "Excessive inline comments explaining trivial Python idioms (e.g., what .get() does)",
+      "Unnecessary `from typing import List, Dict, Any` import when built-in generics suffice",
+      "Redundant isinstance check on case_pack when TypeError would already be caught",
+      "Module-level docstring adds no value for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.597,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 68,
+    "maintainability_index": 71.495,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_karpathy_generation"
+}

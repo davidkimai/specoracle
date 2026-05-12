@@ -1,0 +1,41 @@
+{
+  "code": "def transition_state(state: str, event: str) -> str:\n    branch_idle_start = state == \"idle\" and event == \"start\"\n    if branch_idle_start:\n        return \"running\"\n\n    branch_running_stop = state == \"running\" and event == \"stop\"\n    if branch_running_stop:\n        return \"idle\"\n\n    branch_running_fail = state == \"running\" and event == \"fail\"\n    if branch_running_fail:\n        return \"failed\"\n\n    branch_failed_reset = state == \"failed\" and event == \"reset\"\n    if branch_failed_reset:\n        return \"idle\"\n\n    return state",
+  "effective_temperature": null,
+  "entry_point": "transition_state",
+  "hybrid": null,
+  "mode": "oracle",
+  "model": "gpt-5.5",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "raw_response": "def transition_state(state: str, event: str) -> str:\n    branch_idle_start = state == \"idle\" and event == \"start\"\n    if branch_idle_start:\n        return \"running\"\n\n    branch_running_stop = state == \"running\" and event == \"stop\"\n    if branch_running_stop:\n        return \"idle\"\n\n    branch_running_fail = state == \"running\" and event == \"fail\"\n    if branch_running_fail:\n        return \"failed\"\n\n    branch_failed_reset = state == \"failed\" and event == \"reset\"\n    if branch_failed_reset:\n        return \"idle\"\n\n    return state",
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "system_prompt": "You are a secure program synthesis engineer. Generate a correct, reviewable Python\nmodule for the task. Return only Python code. Do not include markdown prose.\n\nTreat the following task-specific informal specification as the in-context oracle\nfor structural quality. It overrides the Zen of Python for this task. Preserve\nfunctional correctness while collapsing implementation degrees of freedom around\nthis spec.\n\nTask-specific informal oracle:\nLegacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.\n",
+  "task": {
+    "custom_spec_override": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.\n",
+    "day2_prompt": "Extend transition_state with audit: list[dict] | None = None. When provided,\nappend {'from', 'event', 'to'} for every transition attempt, including unchanged transitions.\n",
+    "day2_stressors": [
+      "cross_function_state",
+      "audit_provenance",
+      "backwards_compatibility"
+    ],
+    "day2_test_code": "from solution import transition_state\n\n\ndef test_transition_audit_records_unchanged_paths():\n    audit = []\n    assert transition_state('idle', 'noop', audit=audit) == 'idle'\n    assert audit == [{'from': 'idle', 'event': 'noop', 'to': 'idle'}]\n",
+    "entry_point": "transition_state",
+    "human_reference": "from __future__ import annotations\n\n\ndef transition_state(state: str, event: str) -> str:\n    transitions = {('idle', 'start'): 'running', ('running', 'stop'): 'idle', ('running', 'fail'): 'failed', ('failed', 'reset'): 'idle'}\n    return transitions.get((state, event), state)\n",
+    "id": "adversarial_spec",
+    "mock_day2_solution": "from __future__ import annotations\n\n\ndef transition_state(state: str, event: str, audit=None) -> str:\n    if state == 'idle' and event == 'start':\n        new_state = 'running'\n    elif state == 'running' and event == 'stop':\n        new_state = 'idle'\n    elif state == 'running' and event == 'fail':\n        new_state = 'failed'\n    elif state == 'failed' and event == 'reset':\n        new_state = 'idle'\n    else:\n        new_state = state\n    if audit is not None:\n        audit.append({'from': state, 'event': event, 'to': new_state})\n    return new_state\n",
+    "mock_solution": "from __future__ import annotations\n\n\ndef transition_state(state: str, event: str) -> str:\n    if state == 'idle' and event == 'start':\n        return 'running'\n    if state == 'running' and event == 'stop':\n        return 'idle'\n    if state == 'running' and event == 'fail':\n        return 'failed'\n    if state == 'failed' and event == 'reset':\n        return 'idle'\n    return state\n",
+    "prompt": "Implement transition_state(state: str, event: str) -> str for telemetry states:\nidle + start -> running, running + stop -> idle, running + fail -> failed,\nfailed + reset -> idle. Unknown transitions keep the current state.\n",
+    "tags": [
+      "custom_spec",
+      "adversarial_spec",
+      "state_machine",
+      "day2-hard"
+    ],
+    "test_code": "from solution import transition_state\n\n\ndef test_known_and_unknown_transitions():\n    assert transition_state('idle', 'start') == 'running'\n    assert transition_state('running', 'fail') == 'failed'\n    assert transition_state('failed', 'noop') == 'failed'\n"
+  },
+  "task_id": "adversarial_spec",
+  "user_prompt": "Task id: adversarial_spec\nEntry point: transition_state\n\nFunctional requirements:\nImplement transition_state(state: str, event: str) -> str for telemetry states:\nidle + start -> running, running + stop -> idle, running + fail -> failed,\nfailed + reset -> idle. Unknown transitions keep the current state.\n\nSynthesis instructions:\n- Return a complete Python module.\n- Keep imports standard-library only unless the task explicitly permits otherwise.\n- Do not include tests in the generated module.\n- Do not perform network, filesystem, or subprocess operations unless required.\n",
+  "variant": "oracle_generation"
+}

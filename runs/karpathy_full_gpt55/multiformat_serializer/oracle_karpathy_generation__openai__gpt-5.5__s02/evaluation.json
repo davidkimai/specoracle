@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and correctly handles the three formats with minimal abstraction. The main serialize_record function is flat and explicit with clear dispatch logic. The TOML helpers are reasonably sized and handle edge cases (bare keys, bool-before-int ordering, NaN/inf). However, there is some over-engineering relative to the minimal task spec: the regex-based TOML key quoting, the math.isnan/isinf handling for floats, and the _toml_key helper add complexity beyond what the spec ('key = value lines for primitive values') strictly requires. The import of `re`, `math`, and `Any` signals speculative completeness. The TypeError guard on record type and TOML key/value types are defensive additions not asked for. The TOML output lacks a trailing newline which may or may not matter. Overall the structure is sound and locally auditable, but it slightly overshoots the 'minimum code that solves the problem' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and correctly handles the three formats with minimal abstraction. The main serialize_record function is flat and explicit with clear dispatch logic. The TOML helpers are reasonably sized and handle edge cases (bare keys, bool-before-int ordering, NaN/inf). However, there is some over-engineering relative to the minimal task spec: the regex-based TOML key quoting, the math.isnan/isinf handling for floats, and the _toml_key helper add complexity beyond what the spec ('key = value lines for primitive values') strictly requires. The import of `re`, `math`, and `Any` signals speculative completeness. The TypeError guard on record type and TOML key/value types are defensive additions not asked for. The TOML output lacks a trailing newline which may or may not matter. Overall the structure is sound and locally auditable, but it slightly overshoots the 'minimum code that solves the problem' principle.\",\n  \"strengths\": [\n    \"Flat, explicit dispatch with no unnecessary abstraction or class hierarchy\",\n    \"Correct bool-before-int isinstance ordering in _toml_value\",\n    \"CSV uses stdlib csv.writer correctly with explicit lineterminator\",\n    \"JSON sort_keys=True matches spec exactly\",\n    \"Helper functions are small and single-purpose\"\n  ],\n  \"weaknesses\": [\n    \"Regex-based TOML key quoting is speculative complexity beyond the spec's 'key = value' requirement\",\n    \"NaN/inf float handling adds untested edge-case code not implied by the task\",\n    \"Unnecessary imports (re, math, typing.Any) signal over-engineering\",\n    \"TypeError guards on input types are defensive additions not requested\",\n    \"Missing trailing newline on TOML output (minor but inconsistent with JSON/CSV behavior)\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat, explicit dispatch with no unnecessary abstraction or class hierarchy",
+      "Correct bool-before-int isinstance ordering in _toml_value",
+      "CSV uses stdlib csv.writer correctly with explicit lineterminator",
+      "JSON sort_keys=True matches spec exactly",
+      "Helper functions are small and single-purpose"
+    ],
+    "weaknesses": [
+      "Regex-based TOML key quoting is speculative complexity beyond the spec's 'key = value' requirement",
+      "NaN/inf float handling adds untested edge-case code not implied by the task",
+      "Unnecessary imports (re, math, typing.Any) signal over-engineering",
+      "TypeError guards on input types are defensive additions not requested",
+      "Missing trailing newline on TOML output (minor but inconsistent with JSON/CSV behavior)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.549,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_serializes_supported_formats _______________________\n\n    def test_serializes_supported_formats():\n        assert serialize_record({'b': 2, 'a': 1}, 'json') == '{\"a\": 1, \"b\": 2}'\n>       assert serialize_record({'a': 1, 'b': 2}, 'csv') == 'a,b\\n1,2'\nE       AssertionError: assert 'a,b\\n1,2\\n' == 'a,b\\n1,2'\nE         \nE           a,b\nE         - 1,2\nE         + 1,2\nE         ?    +\n\ntest_solution.py:6: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_serializes_supported_formats - AssertionError: ...\n1 failed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.333,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 3,
+    "loc": 45,
+    "maintainability_index": 50.099,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "multiformat_serializer",
+  "variant": "oracle_karpathy_generation"
+}

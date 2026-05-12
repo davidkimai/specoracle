@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured with good separation of concerns. Validation helpers are small and focused, control flow is flat throughout, data movement is explicit (no hidden mutation), and names are self-explanatory. The `_close_connection` helper is a reasonable extraction. Minor issues: `_validate_max_idle_seconds` accepting `Real` adds speculative complexity (the task says nothing about non-integer idle seconds requiring a `numbers.Real` import), and the `math` import for `isfinite` is a minor overhead for an edge case that could be handled more simply. The `_close_connection` raising `TypeError` when `close` is missing is a reasonable guard but slightly over-engineered for a pool that presumably only holds connections it created. The `__all__` export list is a small speculative addition. Overall the code is sparse, auditable, and avoids framework-shaped patterns \u2014 a maintainer can understand the full behavior locally with minimal effort.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured with good separation of concerns. Validation helpers are small and focused, control flow is flat throughout, data movement is explicit (no hidden mutation), and names are self-explanatory. The `_close_connection` helper is a reasonable extraction. Minor issues: `_validate_max_idle_seconds` accepting `Real` adds speculative complexity (the task says nothing about non-integer idle seconds requiring a `numbers.Real` import), and the `math` import for `isfinite` is a minor overhead for an edge case that could be handled more simply. The `_close_connection` raising `TypeError` when `close` is missing is a reasonable guard but slightly over-engineered for a pool that presumably only holds connections it created. The `__all__` export list is a small speculative addition. Overall the code is sparse, auditable, and avoids framework-shaped patterns \u2014 a maintainer can understand the full behavior locally with minimal effort.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses throughout\",\n    \"Small, single-purpose helper functions\",\n    \"Explicit data movement \u2014 idle list mutations are visible at call sites\",\n    \"Clear error messages for invalid inputs\",\n    \"Eviction correctly separates collection from closing, avoiding mutation during iteration\",\n    \"Clock injection via `now` parameter is clean and testable\"\n  ],\n  \"weaknesses\": [\n    \"`numbers.Real` and `math.isfinite` add unnecessary complexity for `max_idle_seconds` validation beyond what the task requires\",\n    \"`_close_connection` as a standalone helper adds indirection for a one-liner that could be inlined or simplified\",\n    \"`__all__` is speculative boilerplate not required by the task\",\n    \"No tracking of total active connections, so `max_size` only limits the idle pool, not total connections \u2014 this may or may not match intent but is worth noting\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses throughout",
+      "Small, single-purpose helper functions",
+      "Explicit data movement \u2014 idle list mutations are visible at call sites",
+      "Clear error messages for invalid inputs",
+      "Eviction correctly separates collection from closing, avoiding mutation during iteration",
+      "Clock injection via `now` parameter is clean and testable"
+    ],
+    "weaknesses": [
+      "`numbers.Real` and `math.isfinite` add unnecessary complexity for `max_idle_seconds` validation beyond what the task requires",
+      "`_close_connection` as a standalone helper adds indirection for a one-liner that could be inlined or simplified",
+      "`__all__` is speculative boilerplate not required by the task",
+      "No tracking of total active connections, so `max_size` only limits the idle pool, not total connections \u2014 this may or may not match intent but is worth noting"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 3.64,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.29s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.375,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 27,
+    "function_count": 7,
+    "loc": 57,
+    "maintainability_index": 43.201,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, following a straightforward accumulate-then-sort pattern that matches the task requirements. However, it carries notable bloat relative to the Karpathy oracle: the module-level docstring is unnecessary for a single-function module, the function docstring is excessively verbose (restating the spec in prose rather than serving as a terse contract), the intermediate `window_summaries` dict stores nested dicts with string keys when a simple tuple `(count, total)` or a `collections.defaultdict` would be cleaner and more direct, and the type alias `Dict[int, Dict[str, int]]` adds annotation ceremony without clarity gain. The `isinstance(window_size, int)` check is reasonable but the `or` condition could be collapsed. The logic itself is minimal and flat with no speculative abstractions, which is good, but the surrounding prose and annotation overhead inflates the apparent complexity beyond what the task warrants.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, following a straightforward accumulate-then-sort pattern that matches the task requirements. However, it carries notable bloat relative to the Karpathy oracle: the module-level docstring is unnecessary for a single-function module, the function docstring is excessively verbose (restating the spec in prose rather than serving as a terse contract), the intermediate `window_summaries` dict stores nested dicts with string keys when a simple tuple `(count, total)` or a `collections.defaultdict` would be cleaner and more direct, and the type alias `Dict[int, Dict[str, int]]` adds annotation ceremony without clarity gain. The `isinstance(window_size, int)` check is reasonable but the `or` condition could be collapsed. The logic itself is minimal and flat with no speculative abstractions, which is good, but the surrounding prose and annotation overhead inflates the apparent complexity beyond what the task warrants.\",\n  \"strengths\": [\n    \"Correct half-open window grouping via floor division\",\n    \"Proper malformed-event filtering with explicit isinstance checks\",\n    \"Flat, single-pass accumulation with no unnecessary abstraction layers\",\n    \"Output sorted correctly using sorted() on dict items\"\n  ],\n  \"weaknesses\": [\n    \"Excessively long docstring restates the spec verbatim rather than serving as a terse contract\",\n    \"Module-level docstring adds no value for a single-function module\",\n    \"Nested dict for window state (`{'count': 0, 'total': 0}`) is heavier than a simple tuple or defaultdict approach\",\n    \"Verbose type annotations (Dict[int, Dict[str, int]]) add ceremony without meaningful clarity\",\n    \"Inline comments narrate obvious code steps, violating the 'code should speak for itself' principle\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct half-open window grouping via floor division",
+      "Proper malformed-event filtering with explicit isinstance checks",
+      "Flat, single-pass accumulation with no unnecessary abstraction layers",
+      "Output sorted correctly using sorted() on dict items"
+    ],
+    "weaknesses": [
+      "Excessively long docstring restates the spec verbatim rather than serving as a terse contract",
+      "Module-level docstring adds no value for a single-function module",
+      "Nested dict for window state (`{'count': 0, 'total': 0}`) is heavier than a simple tuple or defaultdict approach",
+      "Verbose type annotations (Dict[int, Dict[str, int]]) add ceremony without meaningful clarity",
+      "Inline comments narrate obvious code steps, violating the 'code should speak for itself' principle"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 4.075,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 52,
+    "maintainability_index": 79.312,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_karpathy_generation"
+}

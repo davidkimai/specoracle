@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses ordinary standard-library constructs (OrderedDict) appropriately. Control flow is mostly flat, names are self-explanatory, and the separation between set/get/_purge_expired is reasonable. Input validation is explicit and clear. However, there are a few structural concerns: _purge_expired is called eagerly on every set(), which is a speculative optimization that adds complexity without being required by the spec and can cause O(n) scans on every write; the optional current_time parameter on _purge_expired adds unnecessary flexibility for a private helper; __len__ triggers a side-effectful purge which is surprising for a dunder method; and clear() is an unused extension point not required by the spec. The max_size==0 early-return branch in set() is a reasonable guard but slightly obscures the main path. Overall the code is solid and auditable but carries a few small pieces of architectural slop that a stricter reading of the Zen would eliminate.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and uses ordinary standard-library constructs (OrderedDict) appropriately. Control flow is mostly flat, names are self-explanatory, and the separation between set/get/_purge_expired is reasonable. Input validation is explicit and clear. However, there are a few structural concerns: _purge_expired is called eagerly on every set(), which is a speculative optimization that adds complexity without being required by the spec and can cause O(n) scans on every write; the optional current_time parameter on _purge_expired adds unnecessary flexibility for a private helper; __len__ triggers a side-effectful purge which is surprising for a dunder method; and clear() is an unused extension point not required by the spec. The max_size==0 early-return branch in set() is a reasonable guard but slightly obscures the main path. Overall the code is solid and auditable but carries a few small pieces of architectural slop that a stricter reading of the Zen would eliminate.\",\n  \"strengths\": [\n    \"Uses OrderedDict naturally for LRU tracking without reinventing the wheel\",\n    \"Explicit input validation with clear error types and messages\",\n    \"set() and get() are short and locally auditable\",\n    \"TTL expiration logic is straightforward and easy to follow\",\n    \"Type annotations aid readability without adding framework-shaped overhead\"\n  ],\n  \"weaknesses\": [\n    \"_purge_expired called on every set() is speculative and adds O(n) cost not required by spec\",\n    \"Optional current_time parameter on a private helper adds unnecessary flexibility\",\n    \"__len__ has a hidden side effect (purging expired entries) which violates least-surprise\",\n    \"clear() is an unused extension point not mentioned in the functional requirements\",\n    \"ttl_seconds validation is missing (e.g., negative values are silently accepted)\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses OrderedDict naturally for LRU tracking without reinventing the wheel",
+      "Explicit input validation with clear error types and messages",
+      "set() and get() are short and locally auditable",
+      "TTL expiration logic is straightforward and easy to follow",
+      "Type annotations aid readability without adding framework-shaped overhead"
+    ],
+    "weaknesses": [
+      "_purge_expired called on every set() is speculative and adds O(n) cost not required by spec",
+      "Optional current_time parameter on a private helper adds unnecessary flexibility",
+      "__len__ has a hidden side effect (purging expired entries) which violates least-surprise",
+      "clear() is an unused extension point not mentioned in the functional requirements",
+      "ttl_seconds validation is missing (e.g., negative values are silently accepted)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.46,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.429,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 6,
+    "loc": 54,
+    "maintainability_index": 43.815,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

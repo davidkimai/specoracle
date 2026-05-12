@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and minimal \u2014 it solves exactly the stated problem without speculative abstractions or unnecessary features. The validation logic is explicit and conservative (using `type(...) is not int` to reject booleans, which are a subclass of int). The accumulator uses a simple two-element list per window key, which is slightly less readable than a named tuple or two separate dicts but still locally auditable. The docstring is informative without being excessive. The `from typing import Any` import and the `Any` type annotations add minor noise that isn't strictly necessary in modern Python but don't harm correctness. The `type(window_size) is not int` check rejects booleans as window_size, which is a reasonable conservative interpretation. Overall the code is flat, readable, and matches the spirit of the oracle well, with only minor cosmetic imperfections.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, direct, and minimal \u2014 it solves exactly the stated problem without speculative abstractions or unnecessary features. The validation logic is explicit and conservative (using `type(...) is not int` to reject booleans, which are a subclass of int). The accumulator uses a simple two-element list per window key, which is slightly less readable than a named tuple or two separate dicts but still locally auditable. The docstring is informative without being excessive. The `from typing import Any` import and the `Any` type annotations add minor noise that isn't strictly necessary in modern Python but don't harm correctness. The `type(window_size) is not int` check rejects booleans as window_size, which is a reasonable conservative interpretation. Overall the code is flat, readable, and matches the spirit of the oracle well, with only minor cosmetic imperfections.\",\n  \"strengths\": [\n    \"Minimal and direct \u2014 no unnecessary abstractions or helper classes\",\n    \"Explicit boolean rejection via `type(...) is not int` is a defensible conservative choice\",\n    \"Single-pass accumulation with a simple dict is the right data structure\",\n    \"Output construction is clean and readable in a list comprehension\",\n    \"No speculative features or configurability beyond the spec\"\n  ],\n  \"weaknesses\": [\n    \"`from typing import Any` import and `Any` annotations add minor noise without benefit\",\n    \"Two-element list `[count, total]` as accumulator is slightly opaque compared to two separate dicts or a simple named structure\",\n    \"The `type(window_size) is not int` check silently rejects float window sizes rather than raising a more descriptive error, though this is a minor point\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal and direct \u2014 no unnecessary abstractions or helper classes",
+      "Explicit boolean rejection via `type(...) is not int` is a defensible conservative choice",
+      "Single-pass accumulation with a simple dict is the right data structure",
+      "Output construction is clean and readable in a list comprehension",
+      "No speculative features or configurability beyond the spec"
+    ],
+    "weaknesses": [
+      "`from typing import Any` import and `Any` annotations add minor noise without benefit",
+      "Two-element list `[count, total]` as accumulator is slightly opaque compared to two separate dicts or a simple named structure",
+      "The `type(window_size) is not int` check silently rejects float window sizes rather than raising a more descriptive error, though this is a minor point"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.058,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 27,
+    "maintainability_index": 77.906,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_karpathy_generation"
+}

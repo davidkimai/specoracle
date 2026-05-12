@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly satisfies all functional requirements and follows most of the Spec N-9 structural guidelines: it uses a module-level lookup table with a name ending in `_table`, avoids classes, preserves ticket order, and uses a stable `status_code` string. The severity adjustment table and routing logic are clean and locally auditable. However, the code is over-documented with verbose docstrings and inline comments that largely restate the code rather than adding insight, which works against the Zen of Python's preference for sparse, self-evident code. The `_STATUS_ROUTED` constant is a minor over-engineering for a single literal used once. The `required_keys` set is a reasonable abstraction but the comment explaining the skip branch is wordy rather than 'short explicit.' The use of `typing` imports with verbose `Dict[str, Any]` annotations (rather than modern `dict[str, Any]`) is a minor style anachronism. Overall the structure is sound but the verbosity and over-commenting slightly undermine the 'simple is better than complex' and 'sparse is better than dense' principles.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation correctly satisfies all functional requirements and follows most of the Spec N-9 structural guidelines: it uses a module-level lookup table with a name ending in `_table`, avoids classes, preserves ticket order, and uses a stable `status_code` string. The severity adjustment table and routing logic are clean and locally auditable. However, the code is over-documented with verbose docstrings and inline comments that largely restate the code rather than adding insight, which works against the Zen of Python's preference for sparse, self-evident code. The `_STATUS_ROUTED` constant is a minor over-engineering for a single literal used once. The `required_keys` set is a reasonable abstraction but the comment explaining the skip branch is wordy rather than 'short explicit.' The use of `typing` imports with verbose `Dict[str, Any]` annotations (rather than modern `dict[str, Any]`) is a minor style anachronism. Overall the structure is sound but the verbosity and over-commenting slightly undermine the 'simple is better than complex' and 'sparse is better than dense' principles.\",\n  \"strengths\": [\n    \"Correct use of a module-level `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` matching the naming convention\",\n    \"No classes introduced; clean single-pass procedural loop\",\n    \"Ticket order preserved via sequential append\",\n    \"Stable `status_code` value used, not a boolean\",\n    \"Fallback to `rules['default']` is explicit and correct\"\n  ],\n  \"weaknesses\": [\n    \"Excessive inline comments restate the code rather than clarifying intent\",\n    \"Verbose docstring adds bulk without aiding auditability\",\n    \"Single-use `_STATUS_ROUTED` constant is minor over-engineering\",\n    \"Uses legacy `typing.Dict`/`List` instead of built-in `dict`/`list` generics\",\n    \"Comment on the skip branch is wordy rather than a 'short explicit string'\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct use of a module-level `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` matching the naming convention",
+      "No classes introduced; clean single-pass procedural loop",
+      "Ticket order preserved via sequential append",
+      "Stable `status_code` value used, not a boolean",
+      "Fallback to `rules['default']` is explicit and correct"
+    ],
+    "weaknesses": [
+      "Excessive inline comments restate the code rather than clarifying intent",
+      "Verbose docstring adds bulk without aiding auditability",
+      "Single-use `_STATUS_ROUTED` constant is minor over-engineering",
+      "Uses legacy `typing.Dict`/`List` instead of built-in `dict`/`list` generics",
+      "Comment on the skip branch is wordy rather than a 'short explicit string'"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.591,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 68,
+    "maintainability_index": 81.333,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_karpathy_generation"
+}

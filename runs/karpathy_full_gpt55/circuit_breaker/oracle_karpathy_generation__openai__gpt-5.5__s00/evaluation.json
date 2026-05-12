@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are named constants and handled through dedicated private methods, making the flow auditable at a glance. Configuration values are stored as named attributes matching the spec. The call() method reads as a clear state machine with flat branching. Half-open trials correctly close on success and reopen on failure. The now() injection is handled cleanly. Minor deductions: the input validation in __init__ (type/value checks) adds some boilerplate that isn't required by the spec and slightly inflates the constructor, and the TypeVar T import adds minor noise for a runtime-only class, but neither constitutes architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are named constants and handled through dedicated private methods, making the flow auditable at a glance. Configuration values are stored as named attributes matching the spec. The call() method reads as a clear state machine with flat branching. Half-open trials correctly close on success and reopen on failure. The now() injection is handled cleanly. Minor deductions: the input validation in __init__ (type/value checks) adds some boilerplate that isn't required by the spec and slightly inflates the constructor, and the TypeVar T import adds minor noise for a runtime-only class, but neither constitutes architectural slop.\",\n  \"strengths\": [\n    \"State is explicit via named string constants and a public .state attribute\",\n    \"All transitions go through dedicated _transition_to_* methods \u2014 easy to audit\",\n    \"call() reads as a clean, flat state machine with no nested conditionals\",\n    \"Named configuration attributes (failure_threshold, recovery_timeout) match RCS-5\",\n    \"Half-open logic correctly closes on success and reopens on failure\",\n    \"now() injection is clean and defaults sensibly to time.monotonic\"\n  ],\n  \"weaknesses\": [\n    \"Verbose input validation in __init__ is not required by the spec and adds noise\",\n    \"TypeVar T is imported but provides no runtime benefit in a pure Python class\",\n    \"Resetting failure_count in _transition_to_half_open is implicit bookkeeping that could be surprising\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "State is explicit via named string constants and a public .state attribute",
+      "All transitions go through dedicated _transition_to_* methods \u2014 easy to audit",
+      "call() reads as a clean, flat state machine with no nested conditionals",
+      "Named configuration attributes (failure_threshold, recovery_timeout) match RCS-5",
+      "Half-open logic correctly closes on success and reopens on failure",
+      "now() injection is clean and defaults sensibly to time.monotonic"
+    ],
+    "weaknesses": [
+      "Verbose input validation in __init__ is not required by the spec and adds noise",
+      "TypeVar T is imported but provides no runtime benefit in a pure Python class",
+      "Resetting failure_count in _transition_to_half_open is implicit bookkeeping that could be surprising"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.058,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.222,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 29,
+    "function_count": 8,
+    "loc": 76,
+    "maintainability_index": 39.852,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_karpathy_generation"
+}

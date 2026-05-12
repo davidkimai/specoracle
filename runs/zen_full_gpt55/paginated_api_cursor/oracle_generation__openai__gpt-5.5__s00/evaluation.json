@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured with clear separation of concerns across small helpers, explicit error handling, and flat control flow in the main function. The helper decomposition (_call_fetch_page, _unpack_page, _items_as_list) is reasonable and each piece is locally auditable. However, there is mild over-engineering: the string/bytes guard in _items_as_list is speculative (the spec says nothing about this edge case), the inspect.isawaitable check adds complexity that could be replaced by simply letting the await fail naturally with a clear Python error, and the callable() check similarly adds noise since a non-callable would raise TypeError on call anyway. The typing imports (Any throughout) and __all__ are fine but the overall validation surface is slightly larger than the task warrants. The core loop logic is clean and correct.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is well-structured with clear separation of concerns across small helpers, explicit error handling, and flat control flow in the main function. The helper decomposition (_call_fetch_page, _unpack_page, _items_as_list) is reasonable and each piece is locally auditable. However, there is mild over-engineering: the string/bytes guard in _items_as_list is speculative (the spec says nothing about this edge case), the inspect.isawaitable check adds complexity that could be replaced by simply letting the await fail naturally with a clear Python error, and the callable() check similarly adds noise since a non-callable would raise TypeError on call anyway. The typing imports (Any throughout) and __all__ are fine but the overall validation surface is slightly larger than the task warrants. The core loop logic is clean and correct.\",\n  \"strengths\": [\n    \"Control flow in collect_cursor_items is flat and easy to follow\",\n    \"Small focused helpers with single responsibilities\",\n    \"Explicit error messages for invalid inputs\",\n    \"Data movement is transparent with no hidden mutation\",\n    \"Correct async semantics throughout\"\n  ],\n  \"weaknesses\": [\n    \"String/bytes guard in _items_as_list is speculative abstraction not required by the spec\",\n    \"callable() and isawaitable() checks add defensive noise; natural Python errors would suffice\",\n    \"Using Any pervasively reduces type-level documentation value\",\n    \"inspect import is heavyweight for a single isawaitable check that could be avoided\",\n    \"Slight over-engineering relative to the simplicity the task demands\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Control flow in collect_cursor_items is flat and easy to follow",
+      "Small focused helpers with single responsibilities",
+      "Explicit error messages for invalid inputs",
+      "Data movement is transparent with no hidden mutation",
+      "Correct async semantics throughout"
+    ],
+    "weaknesses": [
+      "String/bytes guard in _items_as_list is speculative abstraction not required by the spec",
+      "callable() and isawaitable() checks add defensive noise; natural Python errors would suffice",
+      "Using Any pervasively reduces type-level documentation value",
+      "inspect import is heavyweight for a single isawaitable check that could be avoided",
+      "Slight over-engineering relative to the simplicity the task demands"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.78,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.33s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 32,
+    "maintainability_index": 52.984,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_generation"
+}

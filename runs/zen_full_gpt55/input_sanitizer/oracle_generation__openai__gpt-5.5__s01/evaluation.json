@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured with small pure helpers, flat control flow using guard clauses, explicit data movement, and clear error raising for invalid inputs. The decomposition into `_require_list_of_strings`, `_require_set_of_strings`, and `_is_safe_field` is appropriate and auditable locally. The main loop is flat and easy to follow. Minor weaknesses include the manual reimplementation of `str.isalnum()` and underscore checking via a frozenset when `re.match` or `field.replace('_','').isalnum()` would be more idiomatic and self-documenting, and the `_ALLOWED_CHARACTERS` frozenset is a speculative micro-optimization that adds noise. The validation helpers are slightly over-engineered for the task size but not egregiously so. Overall this is a solid, Zen-aligned implementation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured with small pure helpers, flat control flow using guard clauses, explicit data movement, and clear error raising for invalid inputs. The decomposition into `_require_list_of_strings`, `_require_set_of_strings`, and `_is_safe_field` is appropriate and auditable locally. The main loop is flat and easy to follow. Minor weaknesses include the manual reimplementation of `str.isalnum()` and underscore checking via a frozenset when `re.match` or `field.replace('_','').isalnum()` would be more idiomatic and self-documenting, and the `_ALLOWED_CHARACTERS` frozenset is a speculative micro-optimization that adds noise. The validation helpers are slightly over-engineered for the task size but not egregiously so. Overall this is a solid, Zen-aligned implementation.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses in the main loop\",\n    \"Small, single-purpose helper functions with clear names\",\n    \"Explicit input validation with informative TypeError messages\",\n    \"No hidden mutation or global state\",\n    \"Deduplication logic is simple and transparent\"\n  ],\n  \"weaknesses\": [\n    \"Manual frozenset character membership check is more verbose than `re.fullmatch(r'\\\\w+', field)` or `field.replace('_','').isalnum()`\",\n    \"Module-level `_ASCII_LETTERS`, `_ASCII_DIGITS`, `_ALLOWED_CHARACTERS` constants add noise for a simple character check\",\n    \"Validation helpers are slightly over-engineered relative to the task's scope\",\n    \"Checking `isinstance(value, set)` rejects valid `frozenset` inputs without clear justification\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses in the main loop",
+      "Small, single-purpose helper functions with clear names",
+      "Explicit input validation with informative TypeError messages",
+      "No hidden mutation or global state",
+      "Deduplication logic is simple and transparent"
+    ],
+    "weaknesses": [
+      "Manual frozenset character membership check is more verbose than `re.fullmatch(r'\\w+', field)` or `field.replace('_','').isalnum()`",
+      "Module-level `_ASCII_LETTERS`, `_ASCII_DIGITS`, `_ALLOWED_CHARACTERS` constants add noise for a simple character check",
+      "Validation helpers are slightly over-engineered relative to the task's scope",
+      "Checking `isinstance(value, set)` rejects valid `frozenset` inputs without clear justification"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.87,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 4,
+    "loc": 36,
+    "maintainability_index": 49.369,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_generation"
+}

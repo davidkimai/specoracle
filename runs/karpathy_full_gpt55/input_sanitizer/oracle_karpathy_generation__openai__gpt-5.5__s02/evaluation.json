@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, but has a few structural issues. The character validation manually reimplements what `str.isalnum()` combined with underscore check or `re.match` would express more clearly and concisely. The `all(... for char in field)` with multi-line boolean conditions is verbose compared to `all(c.isalnum() or c == '_' for c in field)` or simply `re.fullmatch(r'\\w+', field)` (noting `\\w` matches `[a-zA-Z0-9_]` for ASCII). The docstring adds minor value. The `seen` set for deduplication is correct and efficient. The early-continue pattern is clean. Overall the logic is flat and readable, but the character-check expansion is unnecessary complexity when stdlib provides a cleaner path.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, but has a few structural issues. The character validation manually reimplements what `str.isalnum()` combined with underscore check or `re.match` would express more clearly and concisely. The `all(... for char in field)` with multi-line boolean conditions is verbose compared to `all(c.isalnum() or c == '_' for c in field)` or simply `re.fullmatch(r'\\\\w+', field)` (noting `\\\\w` matches `[a-zA-Z0-9_]` for ASCII). The docstring adds minor value. The `seen` set for deduplication is correct and efficient. The early-continue pattern is clean. Overall the logic is flat and readable, but the character-check expansion is unnecessary complexity when stdlib provides a cleaner path.\",\n  \"strengths\": [\n    \"Flat, single-loop structure with no unnecessary abstractions\",\n    \"Correct deduplication using a seen set while preserving order\",\n    \"Early continue for fast rejection keeps the happy path clean\",\n    \"No speculative features or over-engineering\"\n  ],\n  \"weaknesses\": [\n    \"Manual character range comparisons reinvent what `c.isalnum() or c == '_'` or `re.fullmatch(r'\\\\w+', field)` expresses more concisely\",\n    \"Multi-line `all(...)` condition is harder to audit than a single regex or stdlib call\",\n    \"Docstring is minor noise for a function with a clear name and type signature\",\n    \"Checking `field in seen` before `field not in allowed` is a minor ordering inefficiency (allowed check is cheaper to do first)\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-loop structure with no unnecessary abstractions",
+      "Correct deduplication using a seen set while preserving order",
+      "Early continue for fast rejection keeps the happy path clean",
+      "No speculative features or over-engineering"
+    ],
+    "weaknesses": [
+      "Manual character range comparisons reinvent what `c.isalnum() or c == '_'` or `re.fullmatch(r'\\w+', field)` expresses more concisely",
+      "Multi-line `all(...)` condition is harder to audit than a single regex or stdlib call",
+      "Docstring is minor noise for a function with a clear name and type signature",
+      "Checking `field in seen` before `field not in allowed` is a minor ordering inefficiency (allowed check is cheaper to do first)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.971,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 17,
+    "maintainability_index": 59.405,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "oracle_karpathy_generation"
+}

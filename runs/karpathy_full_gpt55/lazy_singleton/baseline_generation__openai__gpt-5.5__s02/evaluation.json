@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and handles edge cases (recursion detection, factory failure recovery, concurrent initialization) that a production singleton needs, but it over-engineers the solution relative to what the task requires. The three-state machine with an `_owner` field, the `_UNINITIALIZED/INITIALIZING/INITIALIZED` constants, the `while True` loop with a `break`, and the `cast` import all add cognitive weight that a simple `threading.Lock` with a double-checked pattern (or just a `threading.Lock` with a single check) would avoid. The Zen oracle favors the simplest architecture that satisfies the task; a plain lock plus a sentinel is sufficient and far easier to audit locally. The recursion-detection feature is speculative\u2014it is not required by the spec and adds a non-trivial amount of state and branching. Clearing `_factory` after initialization is a nice memory hygiene touch, but the overall structure is framework-shaped for a task that warrants ~15 lines.",
+    "raw_response": "```json\n{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and handles edge cases (recursion detection, factory failure recovery, concurrent initialization) that a production singleton needs, but it over-engineers the solution relative to what the task requires. The three-state machine with an `_owner` field, the `_UNINITIALIZED/INITIALIZING/INITIALIZED` constants, the `while True` loop with a `break`, and the `cast` import all add cognitive weight that a simple `threading.Lock` with a double-checked pattern (or just a `threading.Lock` with a single check) would avoid. The Zen oracle favors the simplest architecture that satisfies the task; a plain lock plus a sentinel is sufficient and far easier to audit locally. The recursion-detection feature is speculative\u2014it is not required by the spec and adds a non-trivial amount of state and branching. Clearing `_factory` after initialization is a nice memory hygiene touch, but the overall structure is framework-shaped for a task that warrants ~15 lines.\",\n  \"strengths\": [\n    \"Correctly handles concurrent initialization with condition variable and notify_all\",\n    \"Raises TypeError for non-callable factory rather than silently failing\",\n    \"Recovers cleanly if the factory raises, resetting state so a retry is possible\",\n    \"Uses __slots__ to keep memory footprint explicit\",\n    \"Clears factory reference after initialization to avoid holding a closure alive\"\n  ],\n  \"weaknesses\": [\n    \"Three-state machine is over-engineered; a simple lock + None sentinel suffices\",\n    \"Recursion detection (_owner tracking) is speculative and not required by the spec\",\n    \"while True / break pattern obscures control flow; a guard clause or helper would be flatter\",\n    \"cast() import and Generic[_T] typing machinery adds noise beyond what the task needs\",\n    \"factory is None guard inside get() is dead code under normal operation, adding confusion\"\n  ]\n}\n```",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Correctly handles concurrent initialization with condition variable and notify_all",
+      "Raises TypeError for non-callable factory rather than silently failing",
+      "Recovers cleanly if the factory raises, resetting state so a retry is possible",
+      "Uses __slots__ to keep memory footprint explicit",
+      "Clears factory reference after initialization to avoid holding a closure alive"
+    ],
+    "weaknesses": [
+      "Three-state machine is over-engineered; a simple lock + None sentinel suffices",
+      "Recursion detection (_owner tracking) is speculative and not required by the spec",
+      "while True / break pattern obscures control flow; a guard clause or helper would be flatter",
+      "cast() import and Generic[_T] typing machinery adds noise beyond what the task needs",
+      "factory is None guard inside get() is dead code under normal operation, adding confusion"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 2.317,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 2,
+    "loc": 49,
+    "maintainability_index": 48.59,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "baseline_generation"
+}

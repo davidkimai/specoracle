@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly maps to the functional requirements and SRL-3 spec. Each change is represented as an explicit record with the required 'field', 'before', and 'after' keys. The logic is flat with a single loop, no nested abstractions, and the three cases (added, removed, changed) are handled with clear inline comments. Sorting is done at iteration time via sorted(), which is idiomatic. The docstring is thorough without being excessive. The only minor quibble is that the in_previous/in_current boolean variables add a small layer of indirection that could be replaced by direct membership checks in the conditionals, but this is a negligible style preference and arguably improves readability.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly maps to the functional requirements and SRL-3 spec. Each change is represented as an explicit record with the required 'field', 'before', and 'after' keys. The logic is flat with a single loop, no nested abstractions, and the three cases (added, removed, changed) are handled with clear inline comments. Sorting is done at iteration time via sorted(), which is idiomatic. The docstring is thorough without being excessive. The only minor quibble is that the in_previous/in_current boolean variables add a small layer of indirection that could be replaced by direct membership checks in the conditionals, but this is a negligible style preference and arguably improves readability.\",\n  \"strengths\": [\n    \"Explicit three-case handling (added, removed, changed) with clear comments\",\n    \"Flat single-loop structure with no unnecessary abstractions\",\n    \"Sorting done at iteration time with sorted(), avoiding a separate sort step\",\n    \"Record structure exactly matches the spec (field, before, after)\",\n    \"None sentinel for missing values is clearly documented and consistent\"\n  ],\n  \"weaknesses\": [\n    \"Intermediate boolean variables (in_previous, in_current) add slight verbosity; direct 'key not in previous' checks in conditionals would be marginally more Pythonic\",\n    \"The docstring is slightly over-engineered for a small utility function\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit three-case handling (added, removed, changed) with clear comments",
+      "Flat single-loop structure with no unnecessary abstractions",
+      "Sorting done at iteration time with sorted(), avoiding a separate sort step",
+      "Record structure exactly matches the spec (field, before, after)",
+      "None sentinel for missing values is clearly documented and consistent"
+    ],
+    "weaknesses": [
+      "Intermediate boolean variables (in_previous, in_current) add slight verbosity; direct 'key not in previous' checks in conditionals would be marginally more Pythonic",
+      "The docstring is slightly over-engineered for a small utility function"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 6.415,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 48,
+    "maintainability_index": 86.819,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "baseline_generation"
+}

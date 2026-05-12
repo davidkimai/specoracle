@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean, with explicit data movement, flat control flow, and no hidden mutation. It correctly copies defaults, applies segment overrides in order, and applies user overrides last. The main structural weaknesses are the over-reliance on isinstance checks (which silently swallow type errors rather than raising clear errors as the constraints specify), the verbose docstring that restates the spec rather than adding insight, and the lack of small pure helpers that the constraints prefer. The isinstance guards treat malformed input permissively instead of raising clear errors, which violates the 'raise clear errors for invalid inputs' constraint. The code is otherwise readable and locally auditable, with good naming and no speculative abstractions.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean, with explicit data movement, flat control flow, and no hidden mutation. It correctly copies defaults, applies segment overrides in order, and applies user overrides last. The main structural weaknesses are the over-reliance on isinstance checks (which silently swallow type errors rather than raising clear errors as the constraints specify), the verbose docstring that restates the spec rather than adding insight, and the lack of small pure helpers that the constraints prefer. The isinstance guards treat malformed input permissively instead of raising clear errors, which violates the 'raise clear errors for invalid inputs' constraint. The code is otherwise readable and locally auditable, with good naming and no speculative abstractions.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit copy of defaults prevents mutation of inputs\",\n    \"Clear variable names that map directly to the domain\",\n    \"No speculative abstractions or unused extension points\",\n    \"Correct precedence order: defaults \u2192 segments \u2192 user overrides\"\n  ],\n  \"weaknesses\": [\n    \"isinstance checks silently ignore malformed inputs instead of raising clear errors\",\n    \"No small pure helpers as preferred by the constraints (monolithic single function)\",\n    \"Docstring is overly verbose and largely restates the task spec rather than aiding local auditability\",\n    \"segment_overrides isinstance check is redundant given segments is typed as dict[str, dict[str, bool]]\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit copy of defaults prevents mutation of inputs",
+      "Clear variable names that map directly to the domain",
+      "No speculative abstractions or unused extension points",
+      "Correct precedence order: defaults \u2192 segments \u2192 user overrides"
+    ],
+    "weaknesses": [
+      "isinstance checks silently ignore malformed inputs instead of raising clear errors",
+      "No small pure helpers as preferred by the constraints (monolithic single function)",
+      "Docstring is overly verbose and largely restates the task spec rather than aiding local auditability",
+      "segment_overrides isinstance check is redundant given segments is typed as dict[str, dict[str, bool]]"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.37,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "baseline_generation"
+}

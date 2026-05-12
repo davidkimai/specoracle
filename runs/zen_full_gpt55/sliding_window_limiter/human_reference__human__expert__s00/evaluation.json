@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses a small pure helper (_retained_events) to isolate the filtering logic, keeps control flow flat with a guard clause in allow(), uses explicit data movement, raises clear errors, and avoids speculative abstractions. The naming is clear and the code is locally auditable. One minor concern is that _retained_events has a side effect (mutating self._events[key]) while also returning a value, which slightly violates the principle of making data movement explicit and could surprise a maintainer \u2014 a pure helper that only filters would be cleaner, with the mutation kept in allow(). The snapshot method correctly returns a copy. Overall this is a solid, idiomatic implementation very close to what the Zen oracle would prescribe.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses a small pure helper (_retained_events) to isolate the filtering logic, keeps control flow flat with a guard clause in allow(), uses explicit data movement, raises clear errors, and avoids speculative abstractions. The naming is clear and the code is locally auditable. One minor concern is that _retained_events has a side effect (mutating self._events[key]) while also returning a value, which slightly violates the principle of making data movement explicit and could surprise a maintainer \u2014 a pure helper that only filters would be cleaner, with the mutation kept in allow(). The snapshot method correctly returns a copy. Overall this is a solid, idiomatic implementation very close to what the Zen oracle would prescribe.\",\n  \"strengths\": [\n    \"Small focused helper (_retained_events) separates filtering from decision logic\",\n    \"Flat control flow with guard clause in allow()\",\n    \"Clear, descriptive names throughout\",\n    \"Explicit ValueError with informative message\",\n    \"snapshot returns a defensive copy, avoiding hidden mutation\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"_retained_events both filters and mutates state, mixing query and command responsibilities\",\n    \"The side-effecting helper makes it slightly harder to reason about locally without reading both methods together\",\n    \"Minor: storing an empty list for unknown keys in _retained_events is a small implicit state initialization that could be avoided\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small focused helper (_retained_events) separates filtering from decision logic",
+      "Flat control flow with guard clause in allow()",
+      "Clear, descriptive names throughout",
+      "Explicit ValueError with informative message",
+      "snapshot returns a defensive copy, avoiding hidden mutation",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "_retained_events both filters and mutates state, mixing query and command responsibilities",
+      "The side-effecting helper makes it slightly harder to reason about locally without reading both methods together",
+      "Minor: storing an empty list for unknown keys in _retained_events is a small implicit state initialization that could be avoided"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.813,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 21,
+    "maintainability_index": 56.366,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "human_reference"
+}

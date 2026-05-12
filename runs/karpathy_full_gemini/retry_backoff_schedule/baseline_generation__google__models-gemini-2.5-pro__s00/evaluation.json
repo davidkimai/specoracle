@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. Validation is done upfront with clear guard clauses, the early return for the zero case is idiomatic, and the list comprehension expressing the core logic is readable and locally auditable in a single glance. The docstring is thorough without being excessive. The only minor quibbles are the redundant `if attempts == 0: return []` check (the list comprehension over `range(0)` already returns `[]` naturally, making this a speculative guard), and the use of `List` from `typing` instead of the built-in `list` available since Python 3.9, which adds a minor unnecessary import. Neither issue materially harms clarity or correctness, and the overall structure is exemplary of the Zen principles: simple, explicit, flat, and easy to audit.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. Validation is done upfront with clear guard clauses, the early return for the zero case is idiomatic, and the list comprehension expressing the core logic is readable and locally auditable in a single glance. The docstring is thorough without being excessive. The only minor quibbles are the redundant `if attempts == 0: return []` check (the list comprehension over `range(0)` already returns `[]` naturally, making this a speculative guard), and the use of `List` from `typing` instead of the built-in `list` available since Python 3.9, which adds a minor unnecessary import. Neither issue materially harms clarity or correctness, and the overall structure is exemplary of the Zen principles: simple, explicit, flat, and easy to audit.\",\n  \"strengths\": [\n    \"Guard clauses are flat and ordered logically with clear error messages\",\n    \"Core logic expressed as a single, readable list comprehension\",\n    \"No hidden state, no mutation, no speculative abstractions\",\n    \"Names are self-explanatory and match the domain vocabulary\"\n  ],\n  \"weaknesses\": [\n    \"Redundant `attempts == 0` early-return check \u2014 `range(0)` already yields an empty list\",\n    \"Uses `typing.List` instead of the built-in `list` type hint (Python 3.9+)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses are flat and ordered logically with clear error messages",
+      "Core logic expressed as a single, readable list comprehension",
+      "No hidden state, no mutation, no speculative abstractions",
+      "Names are self-explanatory and match the domain vocabulary"
+    ],
+    "weaknesses": [
+      "Redundant `attempts == 0` early-return check \u2014 `range(0)` already yields an empty list",
+      "Uses `typing.List` instead of the built-in `list` type hint (Python 3.9+)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.197,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 83.39,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "baseline_generation"
+}

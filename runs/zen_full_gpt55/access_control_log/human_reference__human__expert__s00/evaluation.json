@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision in a single, readable expression using `matrix.get(role, set())` which correctly defaults to deny, then unconditionally appends the full audit record before returning. There is no branching, no short-circuit path that could skip the log, and the log record contains exactly the required fields. The code is flat, explicit, and locally auditable in five lines with zero architectural slop.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision in a single, readable expression using `matrix.get(role, set())` which correctly defaults to deny, then unconditionally appends the full audit record before returning. There is no branching, no short-circuit path that could skip the log, and the log record contains exactly the required fields. The code is flat, explicit, and locally auditable in five lines with zero architectural slop.\",\n  \"strengths\": [\n    \"Single unconditional log.append guarantees every attempt is recorded before return\",\n    \"Deny-by-default via `matrix.get(role, set())` is idiomatic and correct\",\n    \"Log record contains all three required fields: role, permission, allowed\",\n    \"Flat, linear control flow with no branching or early returns\",\n    \"Minimal and readable \u2014 nothing extraneous\"\n  ],\n  \"weaknesses\": [\n    \"No type validation or error handling for malformed inputs (minor, not required by spec)\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single unconditional log.append guarantees every attempt is recorded before return",
+      "Deny-by-default via `matrix.get(role, set())` is idiomatic and correct",
+      "Log record contains all three required fields: role, permission, allowed",
+      "Flat, linear control flow with no branching or early returns",
+      "Minimal and readable \u2014 nothing extraneous"
+    ],
+    "weaknesses": [
+      "No type validation or error handling for malformed inputs (minor, not required by spec)"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.484,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 5,
+    "maintainability_index": 78.15,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "human_reference"
+}

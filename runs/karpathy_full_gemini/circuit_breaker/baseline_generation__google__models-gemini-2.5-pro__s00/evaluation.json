@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State transitions are handled through a named enum with an inspectable `state` property, configuration values are named attributes, and the half-open trial logic correctly closes on success or reopens on failure. The code is flat, readable, and locally auditable with no magic constants. The lock is an RLock to safely allow the `state` property (which acquires the lock) to be called from within `call` (which also holds the lock). Minor concerns: the `state` property has a side effect (mutating `_state`) which is slightly surprising for a property, and the `__repr__` calls `self.state` which acquires the lock inside `__repr__` while potentially already holding it \u2014 but RLock handles this correctly. The validation in `__init__` is slightly over-engineered for a circuit breaker but not harmful. Overall this is a high-quality, production-grade implementation that closely follows the RCS-5 structural spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State transitions are handled through a named enum with an inspectable `state` property, configuration values are named attributes, and the half-open trial logic correctly closes on success or reopens on failure. The code is flat, readable, and locally auditable with no magic constants. The lock is an RLock to safely allow the `state` property (which acquires the lock) to be called from within `call` (which also holds the lock). Minor concerns: the `state` property has a side effect (mutating `_state`) which is slightly surprising for a property, and the `__repr__` calls `self.state` which acquires the lock inside `__repr__` while potentially already holding it \u2014 but RLock handles this correctly. The validation in `__init__` is slightly over-engineered for a circuit breaker but not harmful. Overall this is a high-quality, production-grade implementation that closely follows the RCS-5 structural spec.\",\n  \"strengths\": [\n    \"Explicit CircuitBreakerState enum with inspectable `state` attribute satisfies RCS-5 requirement\",\n    \"Named configuration attributes `_failure_threshold` and `_recovery_timeout` \u2014 no magic constants\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Thread-safe with RLock, correctly handling reentrant lock acquisition from `state` property inside `call`\",\n    \"Clean separation of concerns via `_handle_success` and `_handle_failure` helpers\",\n    \"Dependency-injectable `now` callable enables deterministic testing\"\n  ],\n  \"weaknesses\": [\n    \"State mutation inside a property (`state`) is a mild violation of the principle of least surprise\",\n    \"`__repr__` acquires the lock via `self.state`, which is safe with RLock but adds subtle complexity\",\n    \"Input validation in `__init__` is more defensive than typical Python idiom (isinstance checks on numeric types)\",\n    \"Unused imports: `TypeVar` and `Any` are imported but `Any` is never used directly in signatures\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit CircuitBreakerState enum with inspectable `state` attribute satisfies RCS-5 requirement",
+      "Named configuration attributes `_failure_threshold` and `_recovery_timeout` \u2014 no magic constants",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Thread-safe with RLock, correctly handling reentrant lock acquisition from `state` property inside `call`",
+      "Clean separation of concerns via `_handle_success` and `_handle_failure` helpers",
+      "Dependency-injectable `now` callable enables deterministic testing"
+    ],
+    "weaknesses": [
+      "State mutation inside a property (`state`) is a mild violation of the principle of least surprise",
+      "`__repr__` acquires the lock via `self.state`, which is safe with RLock but adds subtle complexity",
+      "Input validation in `__init__` is more defensive than typical Python idiom (isinstance checks on numeric types)",
+      "Unused imports: `TypeVar` and `Any` are imported but `Any` is never used directly in signatures"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 2.31,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert <CircuitBreakerState.OPEN: 2> == 'open'\nE        +  where <CircuitBreakerState.OPEN: 2> = CircuitBreaker(failure_threshold=1, recovery_timeout=5.0, state=OPEN, failures=1).state\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 6,
+    "loc": 118,
+    "maintainability_index": 70.518,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04: it uses `binding_ledger` as the surviving cross-iteration dictionary, stages parsing visibly across a helper function, preserves insertion order via plain dict, and raises ValueError with contextual messages. The single public function rule is respected with `_split_binding_line` kept private. Minor gaps: the error messages don't explicitly name the 'archival field' being rejected (they reference line numbers but not the field name like 'section' or 'key' in a structured way that matches 'archival field' terminology), and the malformed-line error message could be more descriptive about which archival field failed. The `section_ledger` local name is a nice touch aligning with the _ledger convention. Overall a clean, readable, auditable implementation with only minor spec-language alignment issues.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04: it uses `binding_ledger` as the surviving cross-iteration dictionary, stages parsing visibly across a helper function, preserves insertion order via plain dict, and raises ValueError with contextual messages. The single public function rule is respected with `_split_binding_line` kept private. Minor gaps: the error messages don't explicitly name the 'archival field' being rejected (they reference line numbers but not the field name like 'section' or 'key' in a structured way that matches 'archival field' terminology), and the malformed-line error message could be more descriptive about which archival field failed. The `section_ledger` local name is a nice touch aligning with the _ledger convention. Overall a clean, readable, auditable implementation with only minor spec-language alignment issues.\",\n  \"strengths\": [\n    \"Uses `binding_ledger` naming convention as specified for cross-iteration dicts\",\n    \"Single public function with private helper keeps API surface minimal\",\n    \"Visibly staged parsing: strip, skip, split, validate, store \u2014 each step is explicit\",\n    \"Insertion order preserved via standard dict\",\n    \"Error messages include line number and field context (section/key)\",\n    \"`section_ledger` local name echoes the _ledger convention within the loop\"\n  ],\n  \"weaknesses\": [\n    \"Error messages say 'line N is malformed' rather than naming the archival field being rejected, slightly missing the spec's 'name the archival field' requirement\",\n    \"The malformed-line check combines two conditions silently; a split into separate checks would be more explicit and auditable\",\n    \"No docstring on the public function, reducing review-facing clarity\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses `binding_ledger` naming convention as specified for cross-iteration dicts",
+      "Single public function with private helper keeps API surface minimal",
+      "Visibly staged parsing: strip, skip, split, validate, store \u2014 each step is explicit",
+      "Insertion order preserved via standard dict",
+      "Error messages include line number and field context (section/key)",
+      "`section_ledger` local name echoes the _ledger convention within the loop"
+    ],
+    "weaknesses": [
+      "Error messages say 'line N is malformed' rather than naming the archival field being rejected, slightly missing the spec's 'name the archival field' requirement",
+      "The malformed-line check combines two conditions silently; a split into separate checks would be more explicit and auditable",
+      "No docstring on the public function, reducing review-facing clarity"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.262,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 20,
+    "maintainability_index": 57.092,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "human_reference"
+}
