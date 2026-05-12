@@ -12,25 +12,25 @@ To measure this, we introduce **SlopBench**: a benchmark curated specifically to
 
 ## Experimental Design and Findings
 
-Based on comprehensive evaluation across three frontier models (Claude 4.6, GPT-5.5, Gemini 2.5 Pro) and a suite of downstream stress tests, SpecOracle provides four core empirical insights regarding agentic evaluation and structural maintainability.
+Based on an evaluation across three frontier models (Claude 4.6, GPT-5.5, Gemini 2.5 Pro) and a suite of downstream stress tests, SpecOracle provides four empirical observations regarding agentic evaluation and structural maintainability.
 
-### 1. Cross-Model Generalization & The Deterministic Inversion
-**Soft Oracles Shift the Mode, Not Just the Mean:** Across three frontier architectures and two sampling regimes, conditioning on informal specifications yielded consistent **30-42% reductions in mean cyclomatic complexity (CC)** with minimal functional degradation. 
+### 1. Cross-Model Generalization & Deterministic Decoding
+**Structural Impact Across Models:** Across three frontier architectures, conditioning on informal specifications yielded consistent **30-42% reductions in mean cyclomatic complexity (CC)** with minimal functional degradation. 
 
-Crucially, this effect persists under **deterministic decoding** (GPT-5.5 at temperature 0). When a model is forced to output its single most-preferred completion, the oracle still enforces severe structural compression. This proves that soft oracles structurally shift what the model *wants to produce*, rather than merely sampling simpler variants from the tail of a probability distribution.
+This effect persists under **deterministic decoding** (GPT-5.5 at temperature 0). The persistence of the effect at $T=0$ indicates that the soft oracle influences the model's highest-probability completions, rather than merely shifting the mean of a sampled distribution.
 
-### 2. The CEGIS Bridge: Hybrid Oracles
-**Formal Feedback from Informal Specs:** SpecOracle implements a CEGIS-inspired (Counterexample-Guided Inductive Synthesis) feedback loop via the `hybrid` mode. By coupling an informal specification prompt with hard structural gates (e.g., Radon CC threshold > 8), the system generates deterministic, targeted feedback naming specific violating functions and branch counts. 
+### 2. Hybrid Oracles: Executable Gates for Informal Specs
+SpecOracle implements a CEGIS-inspired (Counterexample-Guided Inductive Synthesis) feedback loop via the `hybrid` mode. By coupling an informal specification prompt with strict structural gates (e.g., Radon CC threshold > 8), the system generates deterministic feedback citing specific violating functions and branch counts. 
 
-On a 20-task proof-of-concept run, the Hybrid Oracle fired on 55% of tasks, **improving cyclomatic complexity on every single retried task** (average $\Delta$CC = -4.0) until all artifacts passed the strict complexity gate. This demonstrates that executable structural gates can instantiate formal CEGIS loops over informal specs at zero formalization cost.
+On a 20-task proof-of-concept run, the Hybrid Oracle triggered on 55% of tasks, **reducing cyclomatic complexity on the retried tasks** (average ΔCC = -4.0) until the artifacts passed the complexity gate. This suggests that executable structural gates can instantiate formal feedback loops over informal specifications.
 
-### 3. Boundary Conditions: The Maintenance Null
-**Epistemic Discipline in Threshold Hunting:** To assess whether structural rigor improves downstream agentic maintainability, we introduced a long-horizon chained maintenance stress test via SpecArena v2. 
+### 3. Boundary Conditions: Maintenance Stress Testing
+To assess whether structural rigor improves downstream agentic maintainability, we evaluated a long-horizon chained maintenance stress test via SpecArena v2. 
 
-At SlopBench-Min complexity across 3-step maintenance chains, we observe a **null result**: `THRESHOLD_FOUND: False`. Current frontier maintenance agents successfully brute-force feature patches on highly complex, unconstrained code with near 100% success. We report this explicitly. However, the data reveals a persistent structural advantage: **oracle-conditioned code maintains a cyclomatic complexity ~1.2 points lower than unconstrained code even after 3 rounds of context-ablated maintenance.** Finding the failure threshold requires scaling to 50+ task suites and 5-10 step chains.
+At the current SlopBench-Min complexity scale across 3-step maintenance chains, we observe a **null result** for functional failure (`THRESHOLD_FOUND: False`). Current frontier maintenance agents successfully applied feature patches on both constrained and unconstrained code with near 100% success. However, the structural data reveals a persistent effect: **oracle-conditioned code maintains a cyclomatic complexity ~1.2 points lower than unconstrained code even after 3 rounds of context-ablated maintenance.**
 
 ### 4. Adversarial Control: Isolating Semantic Adherence
-**Oracles Follow Semantics, Not Brevity Bias:** To confirm models respond to specification semantics rather than a generic pressure to "write less code," we use an adversarial control task (Task 045) requiring explicit labeled branch variables. Conditioning on this specification successfully forces the model to *increase* cyclomatic complexity, confirming strict adherence to the in-context constraint even when it conflicts with simplicity.
+To test whether models respond to specification semantics rather than a generic pressure to "write less code," we include an adversarial control task (Task 045) requiring explicit labeled branch variables. Conditioning on this specification successfully forces the model to *increase* cyclomatic complexity, indicating adherence to the in-context constraint even when it conflicts with structural simplicity.
 
 ---
 
