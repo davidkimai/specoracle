@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Spec N-9: it uses a named lookup table (`severity_boost_table`) with the required `_table` suffix, avoids classes entirely, preserves ticket order via a simple linear pass, uses explicit string constants for status codes (never booleans), and keeps branch logic flat and readable. The required-field check is concise and correct. The fallback to `rules['default']` is handled explicitly with a `continue` when no default exists, which is a reasonable and auditable choice. Minor quibbles: `REQUIRED_FIELDS`, `STATUS_ROUTED`, and `REASON_*` constants are module-level but the reason constants go unused (they were named but never surfaced in output or logs), which is slight dead code. The comment style is adequate but the spec asks for 'short explicit strings' as branch reasons rather than inline comments \u2014 the constants are defined but not actually used as branch reasons in any output. Overall the code is clean, flat, locally auditable, and structurally sound.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Spec N-9: it uses a named lookup table (`severity_boost_table`) with the required `_table` suffix, avoids classes entirely, preserves ticket order via a simple linear pass, uses explicit string constants for status codes (never booleans), and keeps branch logic flat and readable. The required-field check is concise and correct. The fallback to `rules['default']` is handled explicitly with a `continue` when no default exists, which is a reasonable and auditable choice. Minor quibbles: `REQUIRED_FIELDS`, `STATUS_ROUTED`, and `REASON_*` constants are module-level but the reason constants go unused (they were named but never surfaced in output or logs), which is slight dead code. The comment style is adequate but the spec asks for 'short explicit strings' as branch reasons rather than inline comments \u2014 the constants are defined but not actually used as branch reasons in any output. Overall the code is clean, flat, locally auditable, and structurally sound.\",\n  \"strengths\": [\n    \"Uses `severity_boost_table` with the spec-required `_table` suffix\",\n    \"No classes introduced; single-pass linear routing\",\n    \"Ticket order preserved via simple list append\",\n    \"status_code is a stable string constant, never a boolean\",\n    \"Explicit fallback chain: service rule \u2192 default \u2192 skip\",\n    \"Flat control flow with no nested functions or lambdas\"\n  ],\n  \"weaknesses\": [\n    \"`REASON_MISSING_FIELDS` and `REASON_NO_DEFAULT` constants are defined but never used, constituting dead code\",\n    \"Inline comments duplicate what the code already expresses clearly, adding minor noise\",\n    \"No validation that `rule` dict actually contains `queue` and `priority` keys, which could raise KeyError silently\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `severity_boost_table` with the spec-required `_table` suffix",
+      "No classes introduced; single-pass linear routing",
+      "Ticket order preserved via simple list append",
+      "status_code is a stable string constant, never a boolean",
+      "Explicit fallback chain: service rule \u2192 default \u2192 skip",
+      "Flat control flow with no nested functions or lambdas"
+    ],
+    "weaknesses": [
+      "`REASON_MISSING_FIELDS` and `REASON_NO_DEFAULT` constants are defined but never used, constituting dead code",
+      "Inline comments duplicate what the code already expresses clearly, adding minor noise",
+      "No validation that `rule` dict actually contains `queue` and `priority` keys, which could raise KeyError silently"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.357,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 78.427,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_karpathy_generation"
+}

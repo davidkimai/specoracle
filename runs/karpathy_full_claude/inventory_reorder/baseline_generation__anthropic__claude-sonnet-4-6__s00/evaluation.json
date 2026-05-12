@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with flat control flow and explicit guard clauses that make the logic easy to audit locally. However, it suffers from speculative over-validation: the task says 'skip malformed items' and 'non-positive case_pack', but the candidate adds extensive isinstance checks for numeric types and booleans that go well beyond the stated requirements, adding noise without clear justification. The docstring is verbose for a simple utility. The 'required_keys.issubset' pattern is fine but the repeated isinstance/bool guards create a wall of defensive code that obscures the core logic. A small pure helper (e.g., `_is_valid_item`) could have isolated that complexity, or simpler: the spec doesn't demand type-checking numeric fields at all. The core computation (ceil division) is correct and clear, and the sort is straightforward. Overall, the architecture is sound but the implementation is heavier than the task warrants.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with flat control flow and explicit guard clauses that make the logic easy to audit locally. However, it suffers from speculative over-validation: the task says 'skip malformed items' and 'non-positive case_pack', but the candidate adds extensive isinstance checks for numeric types and booleans that go well beyond the stated requirements, adding noise without clear justification. The docstring is verbose for a simple utility. The 'required_keys.issubset' pattern is fine but the repeated isinstance/bool guards create a wall of defensive code that obscures the core logic. A small pure helper (e.g., `_is_valid_item`) could have isolated that complexity, or simpler: the spec doesn't demand type-checking numeric fields at all. The core computation (ceil division) is correct and clear, and the sort is straightforward. Overall, the architecture is sound but the implementation is heavier than the task warrants.\",\n  \"strengths\": [\n    \"Flat control flow with early-continue guard clauses keeps nesting minimal\",\n    \"Core reorder quantity computation is correct and easy to follow\",\n    \"Explicit variable extraction (sku, on_hand, target, case_pack) improves local readability\",\n    \"Sort by sku is clean and direct\"\n  ],\n  \"weaknesses\": [\n    \"Extensive isinstance/bool type checks go beyond the stated spec, adding speculative defensive code\",\n    \"No extraction of validation into a small helper, leaving a monolithic loop body\",\n    \"Verbose docstring adds bulk without proportional value for a simple utility\",\n    \"velocity isinstance check is inconsistent with the spec which only mentions int values in sales_velocity\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with early-continue guard clauses keeps nesting minimal",
+      "Core reorder quantity computation is correct and easy to follow",
+      "Explicit variable extraction (sku, on_hand, target, case_pack) improves local readability",
+      "Sort by sku is clean and direct"
+    ],
+    "weaknesses": [
+      "Extensive isinstance/bool type checks go beyond the stated spec, adding speculative defensive code",
+      "No extraction of validation into a small helper, leaving a monolithic loop body",
+      "Verbose docstring adds bulk without proportional value for a simple utility",
+      "velocity isinstance check is inconsistent with the spec which only mentions int values in sales_velocity"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.552,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 17.0,
+    "cyclomatic_complexity_max": 17,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 1,
+    "loc": 56,
+    "maintainability_index": 75.836,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "baseline_generation"
+}

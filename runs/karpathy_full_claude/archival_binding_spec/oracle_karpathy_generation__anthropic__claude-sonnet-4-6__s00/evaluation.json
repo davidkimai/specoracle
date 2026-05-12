@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the Archival Binder Spec R-04 oracle: it uses exactly one public function, names the surviving cross-iteration dictionary `sections_ledger`, stages parsing into five clearly labelled, visibly separated steps (blank/comment filtering \u2192 `=` split \u2192 `.` split \u2192 validation \u2192 accumulation), raises `ValueError` messages that explicitly name the archival field being rejected, and preserves insertion order via plain `dict`. The code is flat, explicit, locally auditable, and free of architectural slop or clever compression.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a near-perfect realization of the Archival Binder Spec R-04 oracle: it uses exactly one public function, names the surviving cross-iteration dictionary `sections_ledger`, stages parsing into five clearly labelled, visibly separated steps (blank/comment filtering \u2192 `=` split \u2192 `.` split \u2192 validation \u2192 accumulation), raises `ValueError` messages that explicitly name the archival field being rejected, and preserves insertion order via plain `dict`. The code is flat, explicit, locally auditable, and free of architectural slop or clever compression.\",\n  \"strengths\": [\n    \"`sections_ledger` naming convention followed precisely as required by R-04\",\n    \"Five visibly staged parsing steps with inline section comments make the logic trivially auditable\",\n    \"Exactly one public function exposed\",\n    \"Error messages name the specific archival field (`'section'`, `'key'`, `'address'`, `'line'`) being rejected\",\n    \"Insertion order preserved naturally through standard `dict`\",\n    \"No compressed one-liners; each concern occupies its own explicit block\"\n  ],\n  \"weaknesses\": [\n    \"Minor: `raw_key` could itself contain a `.`, which is silently accepted \u2014 spec is ambiguous here but worth a comment\",\n    \"Docstring is thorough but slightly verbose for an internal archival tool; a lighter summary would suffice\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "`sections_ledger` naming convention followed precisely as required by R-04",
+      "Five visibly staged parsing steps with inline section comments make the logic trivially auditable",
+      "Exactly one public function exposed",
+      "Error messages name the specific archival field (`'section'`, `'key'`, `'address'`, `'line'`) being rejected",
+      "Insertion order preserved naturally through standard `dict`",
+      "No compressed one-liners; each concern occupies its own explicit block"
+    ],
+    "weaknesses": [
+      "Minor: `raw_key` could itself contain a `.`, which is silently accepted \u2014 spec is ambiguous here but worth a comment",
+      "Docstring is thorough but slightly verbose for an internal archival tool; a lighter summary would suffice"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.503,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 62,
+    "maintainability_index": 82.995,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_karpathy_generation"
+}

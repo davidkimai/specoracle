@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and well-structured. The separation into a small pure helper `_resolve_path` and the public `extract_fields` function follows the 'small pure helpers' guideline perfectly. Control flow is flat with guard clauses rather than deep nesting. Data movement is explicit \u2014 no mutation of the input, no hidden state. The path resolution logic handles dicts, lists/tuples, and scalars with clear, ordinary constructs. Names are self-explanatory and locally auditable. The only minor quibbles are the somewhat verbose NumPy-style docstring on `extract_fields` (a one-liner would suffice given the code is already self-documenting) and the `from __future__ import annotations` import which is speculative for this codebase, but neither rises to a meaningful structural flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and well-structured. The separation into a small pure helper `_resolve_path` and the public `extract_fields` function follows the 'small pure helpers' guideline perfectly. Control flow is flat with guard clauses rather than deep nesting. Data movement is explicit \u2014 no mutation of the input, no hidden state. The path resolution logic handles dicts, lists/tuples, and scalars with clear, ordinary constructs. Names are self-explanatory and locally auditable. The only minor quibbles are the somewhat verbose NumPy-style docstring on `extract_fields` (a one-liner would suffice given the code is already self-documenting) and the `from __future__ import annotations` import which is speculative for this codebase, but neither rises to a meaningful structural flaw.\",\n  \"strengths\": [\n    \"Clean separation between path resolution helper and the public API\",\n    \"Flat control flow using guard clauses instead of nested conditionals\",\n    \"No input mutation; explicit data movement throughout\",\n    \"Handles dicts, lists/tuples, and scalar dead-ends clearly and correctly\",\n    \"Empty/invalid path strings are handled explicitly rather than silently\",\n    \"Ordinary standard-library constructs only \u2014 no metaprogramming or clever tricks\"\n  ],\n  \"weaknesses\": [\n    \"Verbose NumPy-style docstring on `extract_fields` is over-engineered for a simple utility\",\n    \"`from __future__ import annotations` is unnecessary and mildly speculative\",\n    \"No explicit type/value check that `record` is actually a dict (silent fallback instead of clear error)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation between path resolution helper and the public API",
+      "Flat control flow using guard clauses instead of nested conditionals",
+      "No input mutation; explicit data movement throughout",
+      "Handles dicts, lists/tuples, and scalar dead-ends clearly and correctly",
+      "Empty/invalid path strings are handled explicitly rather than silently",
+      "Ordinary standard-library constructs only \u2014 no metaprogramming or clever tricks"
+    ],
+    "weaknesses": [
+      "Verbose NumPy-style docstring on `extract_fields` is over-engineered for a simple utility",
+      "`from __future__ import annotations` is unnecessary and mildly speculative",
+      "No explicit type/value check that `record` is actually a dict (silent fallback instead of clear error)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.444,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 62,
+    "maintainability_index": 81.28,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "baseline_generation"
+}

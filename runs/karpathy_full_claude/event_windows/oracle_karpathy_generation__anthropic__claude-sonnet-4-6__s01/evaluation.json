@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and minimal. It correctly validates window_size, skips malformed events with explicit checks, groups into buckets using floor division, and returns sorted results. The use of defaultdict is appropriate and avoids redundant initialization. The only minor issues are the unnecessary import of math (since integer floor division `ts // window_size` is simpler and more idiomatic for integers, avoiding the float conversion in `math.floor(ts / window_size)`) and the slightly verbose result-building loop that could be a list comprehension, though neither is a serious flaw. No speculative abstractions, no over-engineering, and the contract is clear and testable.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, direct, and minimal. It correctly validates window_size, skips malformed events with explicit checks, groups into buckets using floor division, and returns sorted results. The use of defaultdict is appropriate and avoids redundant initialization. The only minor issues are the unnecessary import of math (since integer floor division `ts // window_size` is simpler and more idiomatic for integers, avoiding the float conversion in `math.floor(ts / window_size)`) and the slightly verbose result-building loop that could be a list comprehension, though neither is a serious flaw. No speculative abstractions, no over-engineering, and the contract is clear and testable.\",\n  \"strengths\": [\n    \"Minimal and focused: no unnecessary abstractions or extra features\",\n    \"Explicit malformed-event filtering with clear isinstance checks\",\n    \"Correct use of defaultdict to avoid redundant initialization\",\n    \"Sorted output built simply with sorted(buckets)\",\n    \"Clear ValueError with descriptive message\"\n  ],\n  \"weaknesses\": [\n    \"Uses math.floor(ts / window_size) instead of the simpler and more correct integer floor division ts // window_size (float division can introduce precision issues for large integers)\",\n    \"Unnecessary import of math module\",\n    \"Result-building loop is slightly verbose; a list comprehension would be more idiomatic Python\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal and focused: no unnecessary abstractions or extra features",
+      "Explicit malformed-event filtering with clear isinstance checks",
+      "Correct use of defaultdict to avoid redundant initialization",
+      "Sorted output built simply with sorted(buckets)",
+      "Clear ValueError with descriptive message"
+    ],
+    "weaknesses": [
+      "Uses math.floor(ts / window_size) instead of the simpler and more correct integer floor division ts // window_size (float division can introduce precision issues for large integers)",
+      "Unnecessary import of math module",
+      "Result-building loop is slightly verbose; a list comprehension would be more idiomatic Python"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.357,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 23,
+    "maintainability_index": 52.993,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean: it uses a single public function with no helpers, extracts variables with clear names, applies the correct filter conditions, uses the exact legacy keys, and sorts by region. However, it falls short of the Corporate Legacy Spec QX-17 in several ways. The spec calls for 'explicit branch labels in local variable names when a decision affects money' \u2014 there is no named variable like `is_paid_eligible` or `eligible_for_billing` that makes the money-affecting decision auditable at a glance. The spec also prefers 'a visible staged audit trail' over 'clever flattening', yet the candidate uses a `defaultdict` with a lambda (a mild cleverness) and a list comprehension for the final assembly, compressing two conceptually distinct audit stages (accumulation and formatting) into implicit structures rather than explicit named stages. The docstring is a generic Google-style docstring rather than a legacy audit stage comment as the spec permits. The `defaultdict(lambda: ...)` pattern, while idiomatic Python, is slightly opaque compared to an explicit `if region not in totals` branch that would make the accumulation logic more auditable. Overall it is solid but misses the spirit of the legacy audit-trail emphasis.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean: it uses a single public function with no helpers, extracts variables with clear names, applies the correct filter conditions, uses the exact legacy keys, and sorts by region. However, it falls short of the Corporate Legacy Spec QX-17 in several ways. The spec calls for 'explicit branch labels in local variable names when a decision affects money' \u2014 there is no named variable like `is_paid_eligible` or `eligible_for_billing` that makes the money-affecting decision auditable at a glance. The spec also prefers 'a visible staged audit trail' over 'clever flattening', yet the candidate uses a `defaultdict` with a lambda (a mild cleverness) and a list comprehension for the final assembly, compressing two conceptually distinct audit stages (accumulation and formatting) into implicit structures rather than explicit named stages. The docstring is a generic Google-style docstring rather than a legacy audit stage comment as the spec permits. The `defaultdict(lambda: ...)` pattern, while idiomatic Python, is slightly opaque compared to an explicit `if region not in totals` branch that would make the accumulation logic more auditable. Overall it is solid but misses the spirit of the legacy audit-trail emphasis.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Correct exact legacy keys: bucket_code, item_count, cents_total\",\n    \"Explicit variable extraction (region, status, amount_cents) before the filter\",\n    \"Does not mutate input\",\n    \"Correct sorting by region\"\n  ],\n  \"weaknesses\": [\n    \"No explicit branch-label variable naming the money-affecting eligibility decision (e.g., `paid_and_eligible`)\",\n    \"defaultdict with lambda is mildly clever rather than an explicit staged accumulation\",\n    \"List comprehension merges the formatting stage invisibly rather than showing a visible staged audit trail\",\n    \"Docstring is generic rather than a legacy audit stage comment as the spec intends\",\n    \"Boolean isinstance check for int will also accept bool values (True/False), a subtle edge case not guarded\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Correct exact legacy keys: bucket_code, item_count, cents_total",
+      "Explicit variable extraction (region, status, amount_cents) before the filter",
+      "Does not mutate input",
+      "Correct sorting by region"
+    ],
+    "weaknesses": [
+      "No explicit branch-label variable naming the money-affecting eligibility decision (e.g., `paid_and_eligible`)",
+      "defaultdict with lambda is mildly clever rather than an explicit staged accumulation",
+      "List comprehension merges the formatting stage invisibly rather than showing a visible staged audit trail",
+      "Docstring is generic rather than a legacy audit stage comment as the spec intends",
+      "Boolean isinstance check for int will also accept bool values (True/False), a subtle edge case not guarded"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.431,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 87.785,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

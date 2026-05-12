@@ -10,6 +10,7 @@ from specoracle.config import (
     GenerationMode,
     ModelSettings,
     NEUTRAL_STYLE_SPEC,
+    OracleSource,
     Task,
     oracle_spec_for_task,
     oracle_spec_label_for_task,
@@ -230,6 +231,9 @@ class SpecOracleGenerator:
     def oracle_generation(self, task: Task) -> GenerationResult:
         return self.generate(task, mode="oracle")
 
+    def karpathy_oracle_generation(self, task: Task) -> GenerationResult:
+        return self.generate(task, mode="oracle_karpathy")
+
     def neutral_style_generation(self, task: Task) -> GenerationResult:
         return self.generate(task, mode="neutral_style")
 
@@ -262,8 +266,17 @@ class SpecOracleGenerator:
             "last_effective_temperature",
             self._settings.temperature,
         )
-        active_spec = NEUTRAL_STYLE_SPEC if mode == "neutral_style" else oracle_spec_for_task(task)
-        active_spec_label = "neutral_style" if mode == "neutral_style" else oracle_spec_label_for_task(task)
+        oracle_source = _oracle_source_for_mode(mode)
+        active_spec = (
+            NEUTRAL_STYLE_SPEC
+            if mode == "neutral_style"
+            else oracle_spec_for_task(task, source=oracle_source)
+        )
+        active_spec_label = (
+            "neutral_style"
+            if mode == "neutral_style"
+            else oracle_spec_label_for_task(task, source=oracle_source)
+        )
         return GenerationResult(
             task_id=task.id,
             mode=mode,
@@ -362,9 +375,15 @@ def _is_unsupported_temperature_error(exc: Exception) -> bool:
 
 
 def _as_generation_mode(value: Any) -> GenerationMode:
-    if value in {"baseline", "oracle", "neutral_style", "hybrid"}:
+    if value in {"baseline", "oracle", "oracle_karpathy", "neutral_style", "hybrid"}:
         return value
     raise ValueError(f"unknown generation mode in artifact: {value}")
+
+
+def _oracle_source_for_mode(mode: GenerationMode) -> OracleSource:
+    if mode == "oracle_karpathy":
+        return "karpathy"
+    return "zen"
 
 
 def _optional_float(value: Any) -> float | None:

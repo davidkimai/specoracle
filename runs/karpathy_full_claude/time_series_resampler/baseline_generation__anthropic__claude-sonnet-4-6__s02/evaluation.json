@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a straightforward linear scan with a pointer, makes data movement explicit, raises a clear error for invalid interval, and avoids unnecessary abstractions. The docstring is thorough without being excessive. Minor weaknesses include the monolithic structure (no small pure helpers as the spec prefers), and the while-loop-based timestamp generation could be a simple range() or generator expression for clarity. The type annotations and variable names are clear and locally auditable.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a straightforward linear scan with a pointer, makes data movement explicit, raises a clear error for invalid interval, and avoids unnecessary abstractions. The docstring is thorough without being excessive. Minor weaknesses include the monolithic structure (no small pure helpers as the spec prefers), and the while-loop-based timestamp generation could be a simple range() or generator expression for clarity. The type annotations and variable names are clear and locally auditable.\",\n  \"strengths\": [\n    \"Clear error raised for invalid interval\",\n    \"Explicit sorting step with readable lambda\",\n    \"Linear scan with pointer is simple and efficient\",\n    \"No hidden mutation or global state\",\n    \"Good variable names (ptr, current_value, sorted_points)\",\n    \"Docstring explains semantics without over-engineering\"\n  ],\n  \"weaknesses\": [\n    \"No small pure helpers extracted (e.g., timestamp grid generation, forward-fill lookup) as the spec prefers\",\n    \"While-loop for timestamp generation is slightly less readable than range(start, end+1, interval)\",\n    \"Docstring length slightly exceeds what a sparse, locally-auditable implementation needs\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear error raised for invalid interval",
+      "Explicit sorting step with readable lambda",
+      "Linear scan with pointer is simple and efficient",
+      "No hidden mutation or global state",
+      "Good variable names (ptr, current_value, sorted_points)",
+      "Docstring explains semantics without over-engineering"
+    ],
+    "weaknesses": [
+      "No small pure helpers extracted (e.g., timestamp grid generation, forward-fill lookup) as the spec prefers",
+      "While-loop for timestamp generation is slightly less readable than range(start, end+1, interval)",
+      "Docstring length slightly exceeds what a sparse, locally-auditable implementation needs"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.378,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 43,
+    "maintainability_index": 82.566,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "baseline_generation"
+}

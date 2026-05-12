@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly addresses the stated requirements without speculative abstractions. The data model (deque of (conn, idle_since) tuples, active_count integer) is the simplest viable representation. The three public methods have clear contracts and are easy to audit locally. Minor issues: the docstring on the class is redundant noise; the `acquire` method has a dead `len(self._idle)` call after the idle branch already popped (total will always equal `self._active_count` at that point, making the comment misleading but not incorrect); the `getattr`-based close pattern adds a small layer of defensive complexity that wasn't asked for; and the RuntimeError on pool exhaustion is a reasonable conservative choice but is undocumented in the task spec. Overall the code is well within the spirit of the oracle\u2014short, flat, no unnecessary indirection\u2014but a few small redundancies and the defensive close pattern keep it from a top score.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, minimal, and directly addresses the stated requirements without speculative abstractions. The data model (deque of (conn, idle_since) tuples, active_count integer) is the simplest viable representation. The three public methods have clear contracts and are easy to audit locally. Minor issues: the docstring on the class is redundant noise; the `acquire` method has a dead `len(self._idle)` call after the idle branch already popped (total will always equal `self._active_count` at that point, making the comment misleading but not incorrect); the `getattr`-based close pattern adds a small layer of defensive complexity that wasn't asked for; and the RuntimeError on pool exhaustion is a reasonable conservative choice but is undocumented in the task spec. Overall the code is well within the spirit of the oracle\u2014short, flat, no unnecessary indirection\u2014but a few small redundancies and the defensive close pattern keep it from a top score.\",\n  \"strengths\": [\n    \"Minimal footprint: ~50 lines, no unnecessary classes or abstractions\",\n    \"Flat control flow with no nested helpers or decorators\",\n    \"Explicit state representation (deque of tuples + integer counter) is easy to reason about locally\",\n    \"now= injection is correctly handled for testability\",\n    \"evict_idle logic is straightforward and correct\"\n  ],\n  \"weaknesses\": [\n    \"Dead code in acquire: `len(self._idle)` is always 0 at the total-check line since idle was already checked and popped\",\n    \"Defensive `getattr(conn, 'close', None)` pattern adds complexity not required by the spec\",\n    \"Class-level docstring restates the method names rather than adding value\",\n    \"RuntimeError on exhaustion is an undocumented design decision that may conflict with caller expectations\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Minimal footprint: ~50 lines, no unnecessary classes or abstractions",
+      "Flat control flow with no nested helpers or decorators",
+      "Explicit state representation (deque of tuples + integer counter) is easy to reason about locally",
+      "now= injection is correctly handled for testability",
+      "evict_idle logic is straightforward and correct"
+    ],
+    "weaknesses": [
+      "Dead code in acquire: `len(self._idle)` is always 0 at the total-check line since idle was already checked and popped",
+      "Defensive `getattr(conn, 'close', None)` pattern adds complexity not required by the spec",
+      "Class-level docstring restates the method names rather than adding value",
+      "RuntimeError on exhaustion is an undocumented design decision that may conflict with caller expectations"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.456,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.2,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 4,
+    "loc": 52,
+    "maintainability_index": 70.816,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_karpathy_generation"
+}

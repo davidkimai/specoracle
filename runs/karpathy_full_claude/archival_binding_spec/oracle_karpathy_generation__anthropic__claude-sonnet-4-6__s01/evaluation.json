@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is an exemplary realization of the Archival Binder Spec R-04. It uses exactly one public function, employs `sections_ledger` as the cross-iteration dictionary name, stages parsing into five clearly labeled and visually separated steps rather than compressing logic into one-liners, preserves insertion order via plain `dict`, and raises `ValueError` messages that explicitly name the archival field being rejected ('section', 'key', 'address', 'line'). The docstring is thorough without being excessive, and the code is locally auditable at a glance with no hidden indirection or architectural slop.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is an exemplary realization of the Archival Binder Spec R-04. It uses exactly one public function, employs `sections_ledger` as the cross-iteration dictionary name, stages parsing into five clearly labeled and visually separated steps rather than compressing logic into one-liners, preserves insertion order via plain `dict`, and raises `ValueError` messages that explicitly name the archival field being rejected ('section', 'key', 'address', 'line'). The docstring is thorough without being excessive, and the code is locally auditable at a glance with no hidden indirection or architectural slop.\",\n  \"strengths\": [\n    \"Exactly one public function as required by the spec\",\n    \"`sections_ledger` naming convention followed precisely for the cross-loop dict\",\n    \"Five visibly staged parsing steps with clear inline comments separating concerns\",\n    \"Error messages explicitly name the archival field being rejected\",\n    \"Insertion order preserved naturally using plain dict (Python 3.7+)\",\n    \"Whitespace stripping applied correctly at each boundary (section, key, value)\",\n    \"Handles edge cases: missing '=', missing '.', empty section, empty key\"\n  ],\n  \"weaknesses\": [\n    \"Minor: the inner key dict could also be named with a `_ledger` suffix for full consistency, though the spec only mandates it for dicts surviving across loop iterations and the inner dict is section-scoped\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Exactly one public function as required by the spec",
+      "`sections_ledger` naming convention followed precisely for the cross-loop dict",
+      "Five visibly staged parsing steps with clear inline comments separating concerns",
+      "Error messages explicitly name the archival field being rejected",
+      "Insertion order preserved naturally using plain dict (Python 3.7+)",
+      "Whitespace stripping applied correctly at each boundary (section, key, value)",
+      "Handles edge cases: missing '=', missing '.', empty section, empty key"
+    ],
+    "weaknesses": [
+      "Minor: the inner key dict could also be named with a `_ledger` suffix for full consistency, though the spec only mandates it for dicts surviving across loop iterations and the inner dict is section-scoped"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.395,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 63,
+    "maintainability_index": 82.905,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_karpathy_generation"
+}

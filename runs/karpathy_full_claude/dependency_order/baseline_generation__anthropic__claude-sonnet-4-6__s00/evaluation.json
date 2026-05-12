@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a clean Kahn's algorithm approach with good naming and explicit data movement. However, it has some structural issues: the queue is used inconsistently (populated initially sorted, then cleared and rebuilt from a separate `next_level` list, making the deque essentially redundant \u2014 a plain list would suffice and be clearer). The double-sorting (once into `current_batch`, once into `next_level`) is slightly redundant since `current_batch` is already sorted from the queue. The docstring and module-level comment add bulk without much value for a small utility. The `next_level` intermediate list and the `queue.clear()` pattern obscures what is essentially a BFS level-order traversal; extracting a `build_graph` helper would improve local auditability. Overall it's readable and correct but carries mild architectural noise that a simpler, flatter implementation would avoid.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a clean Kahn's algorithm approach with good naming and explicit data movement. However, it has some structural issues: the queue is used inconsistently (populated initially sorted, then cleared and rebuilt from a separate `next_level` list, making the deque essentially redundant \u2014 a plain list would suffice and be clearer). The double-sorting (once into `current_batch`, once into `next_level`) is slightly redundant since `current_batch` is already sorted from the queue. The docstring and module-level comment add bulk without much value for a small utility. The `next_level` intermediate list and the `queue.clear()` pattern obscures what is essentially a BFS level-order traversal; extracting a `build_graph` helper would improve local auditability. Overall it's readable and correct but carries mild architectural noise that a simpler, flatter implementation would avoid.\",\n  \"strengths\": [\n    \"Correct Kahn's algorithm with cycle detection via processed_count check\",\n    \"Explicit construction of all_nodes including dependency-only tasks\",\n    \"Good variable naming (in_degree, dependents, current_batch)\",\n    \"No mutation of input dependencies dict\",\n    \"Clear ValueError with descriptive message\"\n  ],\n  \"weaknesses\": [\n    \"deque is used but then immediately cleared and rebuilt, making it functionally a list \u2014 the deque abstraction adds confusion without benefit\",\n    \"next_level intermediate list is unnecessary; nodes could be collected directly\",\n    \"Double sorting: queue is pre-sorted but current_batch is sorted again, and next_level is also sorted before enqueueing\",\n    \"Module docstring and function docstring are verbose for a small utility\",\n    \"Monolithic function; a small build_graph helper would improve local auditability per the structural spec\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct Kahn's algorithm with cycle detection via processed_count check",
+      "Explicit construction of all_nodes including dependency-only tasks",
+      "Good variable naming (in_degree, dependents, current_batch)",
+      "No mutation of input dependencies dict",
+      "Clear ValueError with descriptive message"
+    ],
+    "weaknesses": [
+      "deque is used but then immediately cleared and rebuilt, making it functionally a list \u2014 the deque abstraction adds confusion without benefit",
+      "next_level intermediate list is unnecessary; nodes could be collected directly",
+      "Double sorting: queue is pre-sorted but current_batch is sorted again, and next_level is also sorted before enqueueing",
+      "Module docstring and function docstring are verbose for a small utility",
+      "Monolithic function; a small build_graph helper would improve local auditability per the structural spec"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.435,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 50,
+    "maintainability_index": 79.875,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

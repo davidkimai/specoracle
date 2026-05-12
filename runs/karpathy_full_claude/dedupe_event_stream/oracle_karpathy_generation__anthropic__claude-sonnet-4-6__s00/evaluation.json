@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the problem specification without any unnecessary abstractions or speculative features. It uses a single pass with a dictionary for O(n) time complexity, handles malformed events explicitly with early continues, and preserves insertion order of retained events. The logic is flat, locally auditable, and every line serves a clear purpose. The only minor concern is that updating `seen[composite_key]` to the new timestamp when a non-duplicate is found means the window rolls forward from the last kept event rather than strictly from the first kept event \u2014 but this matches 'rolling timestamp window' semantics and is the correct interpretation. The code is essentially as short as it can be while remaining explicit and readable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the problem specification without any unnecessary abstractions or speculative features. It uses a single pass with a dictionary for O(n) time complexity, handles malformed events explicitly with early continues, and preserves insertion order of retained events. The logic is flat, locally auditable, and every line serves a clear purpose. The only minor concern is that updating `seen[composite_key]` to the new timestamp when a non-duplicate is found means the window rolls forward from the last kept event rather than strictly from the first kept event \u2014 but this matches 'rolling timestamp window' semantics and is the correct interpretation. The code is essentially as short as it can be while remaining explicit and readable.\",\n  \"strengths\": [\n    \"Minimal code with no unnecessary abstractions or helper functions\",\n    \"Single linear pass \u2014 no nested loops or redundant data structures\",\n    \"Explicit malformed-event checks with clear early-continue guards\",\n    \"Composite key construction is straightforward and readable\",\n    \"Correctly implements rolling window by updating seen timestamp on each kept event\"\n  ],\n  \"weaknesses\": [\n    \"No inline comments explaining the rolling-window update logic, which could cause a reader to question whether updating seen[composite_key] is intentional\",\n    \"Boolean isinstance check doesn't guard against bool subclass of int (minor edge case)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no unnecessary abstractions or helper functions",
+      "Single linear pass \u2014 no nested loops or redundant data structures",
+      "Explicit malformed-event checks with clear early-continue guards",
+      "Composite key construction is straightforward and readable",
+      "Correctly implements rolling window by updating seen timestamp on each kept event"
+    ],
+    "weaknesses": [
+      "No inline comments explaining the rolling-window update logic, which could cause a reader to question whether updating seen[composite_key] is intentional",
+      "Boolean isinstance check doesn't guard against bool subclass of int (minor edge case)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.482,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 17,
+    "maintainability_index": 58.497,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dedupe_event_stream",
+  "variant": "oracle_karpathy_generation"
+}

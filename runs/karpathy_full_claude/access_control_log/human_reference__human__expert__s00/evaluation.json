@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision in a single, readable expression, unconditionally appends a complete log record containing all three required fields (role, permission, allowed) before returning, and returns the boolean result. There is no branching that could bypass the log write, no unnecessary abstraction, no hidden state, and no architectural complexity. The deny-by-default behavior is correctly achieved via `matrix.get(role, set())`. The code is flat, explicit, locally auditable in under five seconds, and perfectly aligned with the Zen of Python.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of the Zero-Trust Audit Principle ZT-2. It computes the access decision in a single, readable expression, unconditionally appends a complete log record containing all three required fields (role, permission, allowed) before returning, and returns the boolean result. There is no branching that could bypass the log write, no unnecessary abstraction, no hidden state, and no architectural complexity. The deny-by-default behavior is correctly achieved via `matrix.get(role, set())`. The code is flat, explicit, locally auditable in under five seconds, and perfectly aligned with the Zen of Python.\",\n  \"strengths\": [\n    \"Single unconditional log.append guarantees ZT-2 compliance with no bypass path\",\n    \"Deny-by-default correctly implemented via empty-set fallback\",\n    \"All three required log fields (role, permission, allowed) are present\",\n    \"Flat, linear structure with zero unnecessary abstraction or indirection\",\n    \"Readable and locally auditable at a glance\"\n  ],\n  \"weaknesses\": [\n    \"No weaknesses of note; the implementation is minimal and correct\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single unconditional log.append guarantees ZT-2 compliance with no bypass path",
+      "Deny-by-default correctly implemented via empty-set fallback",
+      "All three required log fields (role, permission, allowed) are present",
+      "Flat, linear structure with zero unnecessary abstraction or indirection",
+      "Readable and locally auditable at a glance"
+    ],
+    "weaknesses": [
+      "No weaknesses of note; the implementation is minimal and correct"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.948,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 5,
+    "maintainability_index": 78.15,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "human_reference"
+}

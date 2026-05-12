@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with clear variable names and explicit data movement. However, it has several structural issues that reduce its score: the `from collections import defaultdict` import is buried inside the function rather than at the module top level, which is a minor but real readability issue. The `used_b` set tracking indices is a code smell\u2014since B events are sorted and consumed greedily, a pointer/index approach or simply popping matched B events would be cleaner and more explicit. The nested loop with `continue` guards is acceptable but the `used_b` set adds hidden bookkeeping complexity that a simpler two-pointer or filtered-list approach would avoid. The docstring is verbose (NumPy style for a small utility), adding bulk without proportional value. There are no input validation guards (e.g., missing keys raise unhelpful KeyErrors rather than clear errors). The overall structure is one monolithic function with no small pure helpers extracted, contrary to the stated preference. The code is auditable but not as sparse or flat as the oracle demands.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with clear variable names and explicit data movement. However, it has several structural issues that reduce its score: the `from collections import defaultdict` import is buried inside the function rather than at the module top level, which is a minor but real readability issue. The `used_b` set tracking indices is a code smell\u2014since B events are sorted and consumed greedily, a pointer/index approach or simply popping matched B events would be cleaner and more explicit. The nested loop with `continue` guards is acceptable but the `used_b` set adds hidden bookkeeping complexity that a simpler two-pointer or filtered-list approach would avoid. The docstring is verbose (NumPy style for a small utility), adding bulk without proportional value. There are no input validation guards (e.g., missing keys raise unhelpful KeyErrors rather than clear errors). The overall structure is one monolithic function with no small pure helpers extracted, contrary to the stated preference. The code is auditable but not as sparse or flat as the oracle demands.\",\n  \"strengths\": [\n    \"Clear, descriptive variable names throughout\",\n    \"Explicit grouping and sorting steps make data flow easy to follow\",\n    \"Correct greedy matching: each A and B used at most once\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"Import buried inside function body instead of module top level\",\n    \"No input validation; missing keys produce unhelpful KeyErrors\",\n    \"used_b index-set bookkeeping is unnecessarily complex; a pointer or list-slice approach would be simpler\",\n    \"Single monolithic function with no extracted pure helpers\",\n    \"Overly verbose NumPy-style docstring for a small utility\",\n    \"Iterating over all B events for each A event with index tracking is O(n\u00b2) and harder to audit than a two-pointer approach\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear, descriptive variable names throughout",
+      "Explicit grouping and sorting steps make data flow easy to follow",
+      "Correct greedy matching: each A and B used at most once",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "Import buried inside function body instead of module top level",
+      "No input validation; missing keys produce unhelpful KeyErrors",
+      "used_b index-set bookkeeping is unnecessarily complex; a pointer or list-slice approach would be simpler",
+      "Single monolithic function with no extracted pure helpers",
+      "Overly verbose NumPy-style docstring for a small utility",
+      "Iterating over all B events for each A event with index tracking is O(n\u00b2) and harder to audit than a two-pointer approach"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.47,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n>       pairs = correlate_events(events, within=5)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsolution.py:41: in correlate_events\n    sessions[session_id].sort(key=lambda e: e[\"timestamp\"])\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ne = {'session_id': 's', 'ts': 1, 'type': 'A'}\n\n>   sessions[session_id].sort(key=lambda e: e[\"timestamp\"])\n                                            ^^^^^^^^^^^^^^\nE   KeyError: 'timestamp'\n\nsolution.py:41: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - KeyError: 't...\n1 failed in 0.11s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 57,
+    "maintainability_index": 75.081,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "baseline_generation"
+}

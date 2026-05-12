@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. The `_evict` helper cleanly separates the pruning concern from the allow logic, control flow is shallow with no deep nesting, data movement is visible (the slice reassignment is explicit), and errors are raised with clear messages. The use of `bisect` for sorted insertion and binary-search eviction is the right standard-library choice rather than clever metaprogramming. The only minor quibbles are that `_evict` accesses `self._records[key]` via `defaultdict` side-effect (creating an empty list for unseen keys even during eviction), and `snapshot` uses `.get` inconsistently with `_evict`'s direct access \u2014 a small asymmetry. The docstring on `_evict` slightly misquotes the parameter name (`window_seconds` vs `self._window`), but overall the code is sparse, auditable, and straightforward.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. The `_evict` helper cleanly separates the pruning concern from the allow logic, control flow is shallow with no deep nesting, data movement is visible (the slice reassignment is explicit), and errors are raised with clear messages. The use of `bisect` for sorted insertion and binary-search eviction is the right standard-library choice rather than clever metaprogramming. The only minor quibbles are that `_evict` accesses `self._records[key]` via `defaultdict` side-effect (creating an empty list for unseen keys even during eviction), and `snapshot` uses `.get` inconsistently with `_evict`'s direct access \u2014 a small asymmetry. The docstring on `_evict` slightly misquotes the parameter name (`window_seconds` vs `self._window`), but overall the code is sparse, auditable, and straightforward.\",\n  \"strengths\": [\n    \"Small, focused `_evict` helper keeps `allow` readable and flat\",\n    \"Explicit slice reassignment makes data mutation visible rather than hidden\",\n    \"Clear ValueError messages for invalid constructor arguments\",\n    \"Correct use of `bisect.bisect_right` and `bisect.insort` \u2014 standard library, no cleverness\",\n    \"Snapshot returns a copy, preventing external mutation of internal state\"\n  ],\n  \"weaknesses\": [\n    \"`_evict` triggers defaultdict key creation for keys that have never been seen, a minor hidden side-effect\",\n    \"`snapshot` uses `.get(key, [])` while `allow`/`_evict` use direct defaultdict access \u2014 slight inconsistency\",\n    \"Docstring on `_evict` references `window_seconds` parameter name that doesn't exist in the method signature\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, focused `_evict` helper keeps `allow` readable and flat",
+      "Explicit slice reassignment makes data mutation visible rather than hidden",
+      "Clear ValueError messages for invalid constructor arguments",
+      "Correct use of `bisect.bisect_right` and `bisect.insort` \u2014 standard library, no cleverness",
+      "Snapshot returns a copy, preventing external mutation of internal state"
+    ],
+    "weaknesses": [
+      "`_evict` triggers defaultdict key creation for keys that have never been seen, a minor hidden side-effect",
+      "`snapshot` uses `.get(key, [])` while `allow`/`_evict` use direct defaultdict access \u2014 slight inconsistency",
+      "Docstring on `_evict` references `window_seconds` parameter name that doesn't exist in the method signature"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.659,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 44,
+    "maintainability_index": 82.53,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

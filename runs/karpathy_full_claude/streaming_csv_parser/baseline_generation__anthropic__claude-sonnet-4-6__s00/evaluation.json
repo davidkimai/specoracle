@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is concise and leverages the standard library well, but it misuses `csv.DictReader` in a subtle way: `DictReader` reads the header from the first line of the iterable automatically, which aligns with the task, but the spec says the header is comma-separated and `DictReader` respects full CSV quoting/escaping for headers too \u2014 that's fine. The main structural issue is that `DictReader` does not raise a clear error for mismatched row lengths (it silently fills missing values with `None` or truncates extras), violating the 'raise clear errors for invalid inputs' constraint. The filtering generator is clean and explicit, streaming is preserved, and the code is sparse and auditable. However, the docstring is over-verbose for such a small function, and there's no validation that a header was actually found (empty input silently yields nothing rather than raising). The approach is correct and idiomatic but slightly under-specified relative to the operational constraints around error handling.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is concise and leverages the standard library well, but it misuses `csv.DictReader` in a subtle way: `DictReader` reads the header from the first line of the iterable automatically, which aligns with the task, but the spec says the header is comma-separated and `DictReader` respects full CSV quoting/escaping for headers too \u2014 that's fine. The main structural issue is that `DictReader` does not raise a clear error for mismatched row lengths (it silently fills missing values with `None` or truncates extras), violating the 'raise clear errors for invalid inputs' constraint. The filtering generator is clean and explicit, streaming is preserved, and the code is sparse and auditable. However, the docstring is over-verbose for such a small function, and there's no validation that a header was actually found (empty input silently yields nothing rather than raising). The approach is correct and idiomatic but slightly under-specified relative to the operational constraints around error handling.\",\n  \"strengths\": [\n    \"Streaming behavior is fully preserved via a generator expression and `yield from`\",\n    \"Delegates CSV parsing to the standard library, avoiding reinvention\",\n    \"Code is sparse and locally auditable in a single glance\",\n    \"Filtering non-empty lines is explicit and clean\"\n  ],\n  \"weaknesses\": [\n    \"No clear error raised for mismatched row/header lengths; `DictReader` silently uses `None` for missing fields\",\n    \"No error raised when input is entirely empty (no header found)\",\n    \"Docstring is disproportionately long relative to the implementation size\",\n    \"Relies on `DictReader`'s implicit header-reading behavior rather than making data movement explicit as the spec suggests\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Streaming behavior is fully preserved via a generator expression and `yield from`",
+      "Delegates CSV parsing to the standard library, avoiding reinvention",
+      "Code is sparse and locally auditable in a single glance",
+      "Filtering non-empty lines is explicit and clean"
+    ],
+    "weaknesses": [
+      "No clear error raised for mismatched row/header lengths; `DictReader` silently uses `None` for missing fields",
+      "No error raised when input is entirely empty (no header found)",
+      "Docstring is disproportionately long relative to the implementation size",
+      "Relies on `DictReader`'s implicit header-reading behavior rather than making data movement explicit as the spec suggests"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.474,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "baseline_generation"
+}

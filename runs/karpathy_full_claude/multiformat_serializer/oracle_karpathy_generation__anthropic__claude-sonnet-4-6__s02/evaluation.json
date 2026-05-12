@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps each format to its handler with no unnecessary abstraction. It uses stdlib tools (json, csv, io) appropriately, handles TOML primitives correctly including the bool-before-int ordering (critical since bool is a subclass of int in Python), and raises a clear ValueError for unsupported formats. The flat if/elif chain is the right structure for a small, closed set of cases. The only minor issues are the lack of a trailing newline for TOML output (TOML files conventionally end with a newline) and the CSV output includes a trailing newline from csv.DictWriter which may or may not be desired, but neither constitutes a functional defect given the spec's silence on these details.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps each format to its handler with no unnecessary abstraction. It uses stdlib tools (json, csv, io) appropriately, handles TOML primitives correctly including the bool-before-int ordering (critical since bool is a subclass of int in Python), and raises a clear ValueError for unsupported formats. The flat if/elif chain is the right structure for a small, closed set of cases. The only minor issues are the lack of a trailing newline for TOML output (TOML files conventionally end with a newline) and the CSV output includes a trailing newline from csv.DictWriter which may or may not be desired, but neither constitutes a functional defect given the spec's silence on these details.\",\n  \"strengths\": [\n    \"Minimal code with no speculative abstractions or unnecessary indirection\",\n    \"Correct bool-before-int isinstance check for TOML serialization\",\n    \"Uses stdlib csv.DictWriter properly for header + one row\",\n    \"Clear ValueError for unsupported formats\",\n    \"TOML string escaping handles backslash and quote correctly\"\n  ],\n  \"weaknesses\": [\n    \"TOML output lacks a trailing newline, which is a minor convention deviation\",\n    \"No handling of None or other primitive types in TOML (spec says 'primitive values' but doesn't clarify None)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative abstractions or unnecessary indirection",
+      "Correct bool-before-int isinstance check for TOML serialization",
+      "Uses stdlib csv.DictWriter properly for header + one row",
+      "Clear ValueError for unsupported formats",
+      "TOML string escaping handles backslash and quote correctly"
+    ],
+    "weaknesses": [
+      "TOML output lacks a trailing newline, which is a minor convention deviation",
+      "No handling of None or other primitive types in TOML (spec says 'primitive values' but doesn't clarify None)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.754,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______________________ test_serializes_supported_formats _______________________\n\n    def test_serializes_supported_formats():\n        assert serialize_record({'b': 2, 'a': 1}, 'json') == '{\"a\": 1, \"b\": 2}'\n>       assert serialize_record({'a': 1, 'b': 2}, 'csv') == 'a,b\\n1,2'\nE       AssertionError: assert 'a,b\\r\\n1,2\\r\\n' == 'a,b\\n1,2'\nE         \nE         - a,b\nE         + a,b\nE         ?    +\nE         - 1,2\nE         + 1,2\nE         ?    ++\n\ntest_solution.py:6: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_serializes_supported_formats - AssertionError: ...\n1 failed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 25,
+    "maintainability_index": 59.186,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "multiformat_serializer",
+  "variant": "oracle_karpathy_generation"
+}

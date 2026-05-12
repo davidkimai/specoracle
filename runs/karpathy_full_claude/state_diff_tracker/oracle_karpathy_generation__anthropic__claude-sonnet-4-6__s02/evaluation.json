@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly satisfies all functional requirements: it detects added, removed, and changed fields, represents each as an explicit record with field/before/after keys, and sorts by field name. The logic is readable and locally auditable. However, the separate boolean flags (missing_before, missing_after) add unnecessary verbosity \u2014 a simpler sentinel-based approach or direct key-membership checks inline would be more Pythonic and flat. The three-branch if/elif/elif structure is slightly over-engineered when the missing cases could be unified by recognizing that get() already returns None for absent keys, and the only distinction needed is whether the values differ (treating absent as None). This redundancy slightly violates the Zen principle of simplicity and could mislead a reader into thinking None values in the dict are handled differently from absent keys (they are not). Otherwise the code is explicit, flat, and free of architectural slop.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation correctly satisfies all functional requirements: it detects added, removed, and changed fields, represents each as an explicit record with field/before/after keys, and sorts by field name. The logic is readable and locally auditable. However, the separate boolean flags (missing_before, missing_after) add unnecessary verbosity \u2014 a simpler sentinel-based approach or direct key-membership checks inline would be more Pythonic and flat. The three-branch if/elif/elif structure is slightly over-engineered when the missing cases could be unified by recognizing that get() already returns None for absent keys, and the only distinction needed is whether the values differ (treating absent as None). This redundancy slightly violates the Zen principle of simplicity and could mislead a reader into thinking None values in the dict are handled differently from absent keys (they are not). Otherwise the code is explicit, flat, and free of architectural slop.\",\n  \"strengths\": [\n    \"Explicit per-field records with correct field/before/after keys\",\n    \"Correct handling of added and removed fields\",\n    \"Sorted output as required\",\n    \"No collapsing of changes into summary strings\",\n    \"Locally auditable with no hidden indirection\"\n  ],\n  \"weaknesses\": [\n    \"Redundant boolean flags (missing_before, missing_after) when get() already returns None for absent keys\",\n    \"Three-branch conditional could be simplified to a single value-inequality check after unifying absent-key and None-value semantics\",\n    \"Slightly more verbose than necessary, mildly violating the Zen preference for simplicity\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Explicit per-field records with correct field/before/after keys",
+      "Correct handling of added and removed fields",
+      "Sorted output as required",
+      "No collapsing of changes into summary strings",
+      "Locally auditable with no hidden indirection"
+    ],
+    "weaknesses": [
+      "Redundant boolean flags (missing_before, missing_after) when get() already returns None for absent keys",
+      "Three-branch conditional could be simplified to a single value-inequality check after unifying absent-key and None-value semantics",
+      "Slightly more verbose than necessary, mildly violating the Zen preference for simplicity"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.689,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 16,
+    "maintainability_index": 59.74,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "oracle_karpathy_generation"
+}

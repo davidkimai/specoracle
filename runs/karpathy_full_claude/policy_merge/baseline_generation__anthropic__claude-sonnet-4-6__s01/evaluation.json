@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden mutation, no speculative abstractions, and no framework-shaped scaffolding. The control flow is straightforward: collect all keys, iterate, apply override logic with guard clauses that keep nesting minimal. The recursive call is natural and self-documenting. The only minor critique is the absence of input validation (e.g., raising TypeError if inputs are not dicts), which the operational constraints suggest should be present, and the key ordering is non-deterministic due to set union (though functionally harmless). Overall this is a textbook realization of the Zen principles for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden mutation, no speculative abstractions, and no framework-shaped scaffolding. The control flow is straightforward: collect all keys, iterate, apply override logic with guard clauses that keep nesting minimal. The recursive call is natural and self-documenting. The only minor critique is the absence of input validation (e.g., raising TypeError if inputs are not dicts), which the operational constraints suggest should be present, and the key ordering is non-deterministic due to set union (though functionally harmless). Overall this is a textbook realization of the Zen principles for this task.\",\n  \"strengths\": [\n    \"No mutation of either input dict\",\n    \"Flat control flow with early-continue guard for None removal\",\n    \"Recursive call is explicit and easy to trace\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names are clear and self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"No input validation \u2014 passing non-dict arguments silently proceeds rather than raising a clear error\",\n    \"Set union loses insertion order for the key iteration (minor, functionally harmless in Python 3.7+ dicts but worth noting)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "No mutation of either input dict",
+      "Flat control flow with early-continue guard for None removal",
+      "Recursive call is explicit and easy to trace",
+      "No speculative abstractions or unused extension points",
+      "Names are clear and self-explanatory"
+    ],
+    "weaknesses": [
+      "No input validation \u2014 passing non-dict arguments silently proceeds rather than raising a clear error",
+      "Set union loses insertion order for the key iteration (minor, functionally harmless in Python 3.7+ dicts but worth noting)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.362,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 61.56,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

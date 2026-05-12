@@ -1,0 +1,51 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of Pythonic clarity and directness. It uses a single loop over the sorted union of keys, explicitly constructs each change record with the required field/before/after structure, handles additions (before=None), removals (after=None), and modifications uniformly, and returns a sorted list. There is no unnecessary abstraction, no helper classes, no collapsed summaries, and no architectural complexity. The code is immediately auditable in under 10 seconds and maps 1:1 to the functional requirements.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of Pythonic clarity and directness. It uses a single loop over the sorted union of keys, explicitly constructs each change record with the required field/before/after structure, handles additions (before=None), removals (after=None), and modifications uniformly, and returns a sorted list. There is no unnecessary abstraction, no helper classes, no collapsed summaries, and no architectural complexity. The code is immediately auditable in under 10 seconds and maps 1:1 to the functional requirements.\",\n  \"strengths\": [\n    \"Minimal and flat \u2014 single function, single loop, no unnecessary abstractions\",\n    \"Explicit record construction with all three required keys (field, before, after)\",\n    \"Sorting is done at the iteration level via sorted(), not as a post-processing step\",\n    \"Handles all three cases (added, removed, modified) uniformly with .get() defaulting to None\",\n    \"Fully readable and locally auditable with no hidden state or side effects\"\n  ],\n  \"weaknesses\": [\n    \"Using None to represent 'field not present' is implicit; a sentinel or explicit key could distinguish missing from None-valued fields, but this is a minor semantic edge case not required by the spec\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal and flat \u2014 single function, single loop, no unnecessary abstractions",
+      "Explicit record construction with all three required keys (field, before, after)",
+      "Sorting is done at the iteration level via sorted(), not as a post-processing step",
+      "Handles all three cases (added, removed, modified) uniformly with .get() defaulting to None",
+      "Fully readable and locally auditable with no hidden state or side effects"
+    ],
+    "weaknesses": [
+      "Using None to represent 'field not present' is implicit; a sentinel or explicit key could distinguish missing from None-valued fields, but this is a minor semantic edge case not required by the spec"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.085,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 69.446,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "human_reference"
+}

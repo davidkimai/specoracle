@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, flat, explicit realization of the spec. It uses guard clauses to keep nesting shallow, raises NotImplementedError with clear messages for every unspecified path, avoids speculative abstractions, and makes data movement fully explicit. The only minor quibble is the upfront isinstance check for non-dict payloads\u2014the type annotation already signals dict, and raising NotImplementedError (rather than TypeError) for a wrong-type argument is a mild semantic mismatch, but it is defensible given the 'raise clear errors' constraint and the underspecified nature of the task. Everything else\u2014naming, structure, docstring, absence of unused extension points\u2014is exemplary.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, flat, explicit realization of the spec. It uses guard clauses to keep nesting shallow, raises NotImplementedError with clear messages for every unspecified path, avoids speculative abstractions, and makes data movement fully explicit. The only minor quibble is the upfront isinstance check for non-dict payloads\u2014the type annotation already signals dict, and raising NotImplementedError (rather than TypeError) for a wrong-type argument is a mild semantic mismatch, but it is defensible given the 'raise clear errors' constraint and the underspecified nature of the task. Everything else\u2014naming, structure, docstring, absence of unused extension points\u2014is exemplary.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses; no deep nesting\",\n    \"Every unspecified path raises NotImplementedError with an informative message\",\n    \"No speculative abstractions or unused extension points\",\n    \"Data movement is fully explicit; no hidden state or mutation\",\n    \"Docstring concisely documents the only specified behavior\"\n  ],\n  \"weaknesses\": [\n    \"Raising NotImplementedError for a non-dict argument is semantically arguable; TypeError would be more conventional for a wrong-type input\",\n    \"The isinstance guard adds a small amount of speculative handling for a case the type annotation already rules out\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses; no deep nesting",
+      "Every unspecified path raises NotImplementedError with an informative message",
+      "No speculative abstractions or unused extension points",
+      "Data movement is fully explicit; no hidden state or mutation",
+      "Docstring concisely documents the only specified behavior"
+    ],
+    "weaknesses": [
+      "Raising NotImplementedError for a non-dict argument is semantically arguable; TypeError would be more conventional for a wrong-type input",
+      "The isinstance guard adds a small amount of speculative handling for a case the type annotation already rules out"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.462,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 22,
+    "maintainability_index": 96.872,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "baseline_generation"
+}

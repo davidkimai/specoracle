@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit throughout. Data movement is visible: the lock scope is minimal and clearly bounded, connections are closed outside the lock to avoid blocking, and the idle deque entries carry their timestamp explicitly rather than through hidden side-channels. The three public methods map directly to the three stated requirements with no speculative extras. The `_close` static helper is a small, pure, locally auditable function. Naming is self-explanatory (`idle_since`, `cutoff`, `fresh`, `to_close`). The only mild concerns are the `_close` silently swallowing exceptions (a deliberate but debatable choice that could mask bugs), the monitoring properties (`idle_count`, `max_size`, `__repr__`) which are minor speculative additions not required by the spec, and the docstrings being somewhat verbose for what is otherwise a sparse implementation\u2014but none of these rise to architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit throughout. Data movement is visible: the lock scope is minimal and clearly bounded, connections are closed outside the lock to avoid blocking, and the idle deque entries carry their timestamp explicitly rather than through hidden side-channels. The three public methods map directly to the three stated requirements with no speculative extras. The `_close` static helper is a small, pure, locally auditable function. Naming is self-explanatory (`idle_since`, `cutoff`, `fresh`, `to_close`). The only mild concerns are the `_close` silently swallowing exceptions (a deliberate but debatable choice that could mask bugs), the monitoring properties (`idle_count`, `max_size`, `__repr__`) which are minor speculative additions not required by the spec, and the docstrings being somewhat verbose for what is otherwise a sparse implementation\u2014but none of these rise to architectural slop.\",\n  \"strengths\": [\n    \"Lock scope is tight and consistent; slow operations (factory call, close) happen outside the lock\",\n    \"LIFO eviction strategy is explicitly documented and architecturally sound\",\n    \"Small, pure `_close` static helper keeps error-handling logic isolated\",\n    \"Guard clause on `max_size < 0` raises a clear, immediate ValueError\",\n    \"Data movement is explicit: timestamps stored inline with connections, fresh deque rebuilt transparently in evict_idle\",\n    \"No metaprogramming, no framework-shaped abstractions, no unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"`_close` silently swallows all exceptions, which can hide real bugs in production\",\n    \"`idle_count`, `max_size` property, and `__repr__` are speculative additions not required by the spec\",\n    \"Docstrings are verbose relative to the otherwise sparse code style\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Lock scope is tight and consistent; slow operations (factory call, close) happen outside the lock",
+      "LIFO eviction strategy is explicitly documented and architecturally sound",
+      "Small, pure `_close` static helper keeps error-handling logic isolated",
+      "Guard clause on `max_size < 0` raises a clear, immediate ValueError",
+      "Data movement is explicit: timestamps stored inline with connections, fresh deque rebuilt transparently in evict_idle",
+      "No metaprogramming, no framework-shaped abstractions, no unused extension points"
+    ],
+    "weaknesses": [
+      "`_close` silently swallows all exceptions, which can hide real bugs in production",
+      "`idle_count`, `max_size` property, and `__repr__` are speculative additions not required by the spec",
+      "Docstrings are verbose relative to the otherwise sparse code style"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.639,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.111,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 8,
+    "loc": 115,
+    "maintainability_index": 70.768,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "baseline_generation"
+}

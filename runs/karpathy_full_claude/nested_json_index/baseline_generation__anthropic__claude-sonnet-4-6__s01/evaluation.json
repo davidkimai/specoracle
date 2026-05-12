@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit guard clauses that collapse the filtering logic into a single compound condition. It avoids mutation of input, uses ordinary dict operations, and makes data movement transparent. The bool exclusion for amount is a correct and non-obvious edge case handled explicitly. The only mild weaknesses are that the monolithic function could benefit from a small `is_valid_purchase` helper to separate filtering from accumulation, and using `setdefault` or `defaultdict` would reduce the two-branch initialization pattern, but neither omission rises to the level of architectural slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit guard clauses that collapse the filtering logic into a single compound condition. It avoids mutation of input, uses ordinary dict operations, and makes data movement transparent. The bool exclusion for amount is a correct and non-obvious edge case handled explicitly. The only mild weaknesses are that the monolithic function could benefit from a small `is_valid_purchase` helper to separate filtering from accumulation, and using `setdefault` or `defaultdict` would reduce the two-branch initialization pattern, but neither omission rises to the level of architectural slop.\",\n  \"strengths\": [\n    \"Flat control flow with a single loop and one compound guard condition\",\n    \"Explicit bool exclusion for amount prevents silent misclassification\",\n    \"No mutation of input events or the input list\",\n    \"Clear, self-explanatory variable names\",\n    \"Type annotations present and accurate\",\n    \"Correct handling of missing keys via .get() without raising\"\n  ],\n  \"weaknesses\": [\n    \"Monolithic function mixes validation logic and accumulation; a small `is_valid_purchase(event)` helper would improve auditability\",\n    \"Manual `if user_id not in result` initialization could be replaced with `setdefault` or `defaultdict` for less boilerplate\",\n    \"No input-level type check on `events` itself (e.g., if a non-list is passed, it silently iterates or raises a confusing error)\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single loop and one compound guard condition",
+      "Explicit bool exclusion for amount prevents silent misclassification",
+      "No mutation of input events or the input list",
+      "Clear, self-explanatory variable names",
+      "Type annotations present and accurate",
+      "Correct handling of missing keys via .get() without raising"
+    ],
+    "weaknesses": [
+      "Monolithic function mixes validation logic and accumulation; a small `is_valid_purchase(event)` helper would improve auditability",
+      "Manual `if user_id not in result` initialization could be replaced with `setdefault` or `defaultdict` for less boilerplate",
+      "No input-level type check on `events` itself (e.g., if a non-list is passed, it silently iterates or raises a confusing error)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.428,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 20,
+    "maintainability_index": 58.725,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "nested_json_index",
+  "variant": "baseline_generation"
+}

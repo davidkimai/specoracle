@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and mostly readable, with clear validation, explicit data movement, and sensible naming. However, it has several structural issues that reduce its score against the Zen oracle: using `asyncio.ensure_future` (deprecated idiom) instead of `asyncio.create_task` is a minor but real slop; using `asyncio.wait` with manual exception re-raising is more complex than `asyncio.gather` which handles ordering and exception propagation more directly and idiomatically; the `run_batch` inner function mutates an outer `results` list (hidden mutation) rather than returning a value; the pre-allocated `results = [None] * len(batches)` combined with index-based mutation is less explicit than letting `gather` return ordered results naturally; the comment about cancelling pending tasks ('shouldn't happen') signals speculative defensive code; and the docstring is over-engineered for a small utility. A simpler architecture using `asyncio.gather` with the semaphore inside a helper would be flatter, avoid hidden mutation, and be easier to audit locally.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and mostly readable, with clear validation, explicit data movement, and sensible naming. However, it has several structural issues that reduce its score against the Zen oracle: using `asyncio.ensure_future` (deprecated idiom) instead of `asyncio.create_task` is a minor but real slop; using `asyncio.wait` with manual exception re-raising is more complex than `asyncio.gather` which handles ordering and exception propagation more directly and idiomatically; the `run_batch` inner function mutates an outer `results` list (hidden mutation) rather than returning a value; the pre-allocated `results = [None] * len(batches)` combined with index-based mutation is less explicit than letting `gather` return ordered results naturally; the comment about cancelling pending tasks ('shouldn't happen') signals speculative defensive code; and the docstring is over-engineered for a small utility. A simpler architecture using `asyncio.gather` with the semaphore inside a helper would be flatter, avoid hidden mutation, and be easier to audit locally.\",\n  \"strengths\": [\n    \"Clear, early validation with descriptive error messages\",\n    \"Explicit batch construction with a readable list comprehension\",\n    \"Semaphore correctly bounds concurrency\",\n    \"Handles empty items list with an early return\",\n    \"Type annotations aid readability\"\n  ],\n  \"weaknesses\": [\n    \"Uses `asyncio.ensure_future` instead of the preferred `asyncio.create_task`\",\n    \"Mutates outer `results` list from inner coroutine (hidden mutation) instead of returning values through `gather`\",\n    \"Manual `asyncio.wait` + exception loop is more complex than `asyncio.gather(return_exceptions=False)`\",\n    \"Speculative dead-code comment about cancelling pending tasks that can never exist under ALL_COMPLETED\",\n    \"Over-engineered NumPy-style docstring for a small utility function\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear, early validation with descriptive error messages",
+      "Explicit batch construction with a readable list comprehension",
+      "Semaphore correctly bounds concurrency",
+      "Handles empty items list with an early return",
+      "Type annotations aid readability"
+    ],
+    "weaknesses": [
+      "Uses `asyncio.ensure_future` instead of the preferred `asyncio.create_task`",
+      "Mutates outer `results` list from inner coroutine (hidden mutation) instead of returning values through `gather`",
+      "Manual `asyncio.wait` + exception loop is more complex than `asyncio.gather(return_exceptions=False)`",
+      "Speculative dead-code comment about cancelling pending tasks that can never exist under ALL_COMPLETED",
+      "Over-engineered NumPy-style docstring for a small utility function"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.616,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 64,
+    "maintainability_index": 82.081,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "baseline_generation"
+}

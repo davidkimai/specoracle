@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State is represented via a proper Enum and exposed through a property, satisfying RCS-5's inspectability requirement. Configuration values are stored as named attributes, not magic constants. Half-open transitions are handled correctly: success closes the breaker, failure reopens it. The `_check_recovery` helper keeps the state machine logic flat and readable. The `now` injection point enables deterministic testing. Minor quibbles: resetting `_failure_count` on every successful closed call is a reasonable design choice but slightly diverges from typical circuit breaker semantics where only the open transition resets the counter; however, it doesn't break correctness. The code is locally auditable with no hidden complexity or architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State is represented via a proper Enum and exposed through a property, satisfying RCS-5's inspectability requirement. Configuration values are stored as named attributes, not magic constants. Half-open transitions are handled correctly: success closes the breaker, failure reopens it. The `_check_recovery` helper keeps the state machine logic flat and readable. The `now` injection point enables deterministic testing. Minor quibbles: resetting `_failure_count` on every successful closed call is a reasonable design choice but slightly diverges from typical circuit breaker semantics where only the open transition resets the counter; however, it doesn't break correctness. The code is locally auditable with no hidden complexity or architectural slop.\",\n  \"strengths\": [\n    \"Explicit Enum-based state machine with inspectable `state` property\",\n    \"Named configuration attributes (`_failure_threshold`, `_recovery_timeout`) \u2014 no magic constants\",\n    \"Correct half-open trial logic: success \u2192 CLOSED, failure \u2192 OPEN\",\n    \"Injected `now` callable enables deterministic testing\",\n    \"Flat, readable structure with small, focused helper methods\"\n  ],\n  \"weaknesses\": [\n    \"Resetting `_failure_count` on every successful CLOSED call may mask intermittent failures in some interpretations of circuit breaker semantics\",\n    \"No public method to manually reset or inspect failure count, limiting observability slightly\",\n    \"HALF_OPEN failure path resets `_failure_count` implicitly via `_transition_to_open` without explicitly zeroing it, which could cause subtle bugs if threshold logic is later extended\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit Enum-based state machine with inspectable `state` property",
+      "Named configuration attributes (`_failure_threshold`, `_recovery_timeout`) \u2014 no magic constants",
+      "Correct half-open trial logic: success \u2192 CLOSED, failure \u2192 OPEN",
+      "Injected `now` callable enables deterministic testing",
+      "Flat, readable structure with small, focused helper methods"
+    ],
+    "weaknesses": [
+      "Resetting `_failure_count` on every successful CLOSED call may mask intermittent failures in some interpretations of circuit breaker semantics",
+      "No public method to manually reset or inspect failure count, limiting observability slightly",
+      "HALF_OPEN failure path resets `_failure_count` implicitly via `_transition_to_open` without explicitly zeroing it, which could cause subtle bugs if threshold logic is later extended"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.673,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert <_State.OPEN: 2> == 'open'\nE        +  where <_State.OPEN: 2> = <solution.CircuitBreaker object at 0xffffa0180110>.state\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 2.714,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 5,
+    "loc": 50,
+    "maintainability_index": 64.065,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

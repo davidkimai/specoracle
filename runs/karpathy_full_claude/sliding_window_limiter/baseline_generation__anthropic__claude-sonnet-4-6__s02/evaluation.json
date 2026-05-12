@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It correctly separates eviction into a small pure helper, uses standard-library bisect for sorted insertion, and raises clear ValueError messages with repr of the bad input. Data movement is explicit (no hidden mutation beyond the intentional store), names are self-explanatory, and there are no speculative abstractions or unused extension points. The only minor issues are the docstring module header (mild ceremony) and the snapshot docstring note about not evicting, which is a reasonable design choice but could be seen as a subtle semantic gap if callers expect a consistent view\u2014though the spec doesn't require eviction on snapshot. Overall this is a textbook example of the Zen-aligned approach.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It correctly separates eviction into a small pure helper, uses standard-library bisect for sorted insertion, and raises clear ValueError messages with repr of the bad input. Data movement is explicit (no hidden mutation beyond the intentional store), names are self-explanatory, and there are no speculative abstractions or unused extension points. The only minor issues are the docstring module header (mild ceremony) and the snapshot docstring note about not evicting, which is a reasonable design choice but could be seen as a subtle semantic gap if callers expect a consistent view\u2014though the spec doesn't require eviction on snapshot. Overall this is a textbook example of the Zen-aligned approach.\",\n  \"strengths\": [\n    \"_evict is a focused helper that collapses one responsibility cleanly\",\n    \"bisect.bisect_right and bisect.insort keep the list sorted without manual loops\",\n    \"ValueError messages include repr of the bad value, aiding debugging\",\n    \"defaultdict(list) avoids boilerplate key-existence checks\",\n    \"No speculative abstractions, no framework-shaped code, no unused hooks\",\n    \"Control flow is flat; guard clauses in __init__ fail fast\"\n  ],\n  \"weaknesses\": [\n    \"snapshot does not evict stale entries, which may surprise callers expecting a window-consistent view (spec is silent but the asymmetry is worth noting)\",\n    \"Module-level docstring and verbose NumPy-style class docstring add minor ceremony for a small utility class\",\n    \"Using defaultdict means snapshot on an unknown key silently creates an empty list entry in _store\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "_evict is a focused helper that collapses one responsibility cleanly",
+      "bisect.bisect_right and bisect.insort keep the list sorted without manual loops",
+      "ValueError messages include repr of the bad value, aiding debugging",
+      "defaultdict(list) avoids boilerplate key-existence checks",
+      "No speculative abstractions, no framework-shaped code, no unused hooks",
+      "Control flow is flat; guard clauses in __init__ fail fast"
+    ],
+    "weaknesses": [
+      "snapshot does not evict stale entries, which may surprise callers expecting a window-consistent view (spec is silent but the asymmetry is worth noting)",
+      "Module-level docstring and verbose NumPy-style class docstring add minor ceremony for a small utility class",
+      "Using defaultdict means snapshot on an unknown key silently creates an empty list entry in _store"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.32,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 58,
+    "maintainability_index": 78.433,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

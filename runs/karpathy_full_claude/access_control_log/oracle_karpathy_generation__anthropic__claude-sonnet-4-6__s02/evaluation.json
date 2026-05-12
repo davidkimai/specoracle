@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook realization of ZT-2: it computes the decision in one clear expression, unconditionally appends a complete log record (role, permission, allowed) before any return path, and then returns the boolean. There are no short-circuit returns, no branching that could skip the log, no hidden state, and no unnecessary abstraction. The code is flat, explicit, locally auditable in under 10 lines of logic, and the docstring accurately describes the contract. Deny-by-default is achieved cleanly via `matrix.get(role, set())`.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook realization of ZT-2: it computes the decision in one clear expression, unconditionally appends a complete log record (role, permission, allowed) before any return path, and then returns the boolean. There are no short-circuit returns, no branching that could skip the log, no hidden state, and no unnecessary abstraction. The code is flat, explicit, locally auditable in under 10 lines of logic, and the docstring accurately describes the contract. Deny-by-default is achieved cleanly via `matrix.get(role, set())`.\",\n  \"strengths\": [\n    \"Single, unconditional log.append guarantees ZT-2 compliance with no bypass risk\",\n    \"Deny-by-default implemented idiomatically with matrix.get(role, set())\",\n    \"Log record contains exactly the three required fields and nothing extraneous\",\n    \"No unnecessary abstraction, classes, or indirection \u2014 pure function\",\n    \"Type annotations and docstring are accurate and informative without being verbose\"\n  ],\n  \"weaknesses\": [\n    \"Minor: the docstring is slightly longer than needed for such a simple function, but this is a style preference rather than a structural flaw\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single, unconditional log.append guarantees ZT-2 compliance with no bypass risk",
+      "Deny-by-default implemented idiomatically with matrix.get(role, set())",
+      "Log record contains exactly the three required fields and nothing extraneous",
+      "No unnecessary abstraction, classes, or indirection \u2014 pure function",
+      "Type annotations and docstring are accurate and informative without being verbose"
+    ],
+    "weaknesses": [
+      "Minor: the docstring is slightly longer than needed for such a simple function, but this is a style preference rather than a structural flaw"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Zero-Trust Audit Principle ZT-2:\n- Every access attempt must be logged before returning, whether allowed or denied.\n- No short-circuit return may bypass the log write.\n- Log records must include role, permission, and allowed.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.449,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 36,
+    "maintainability_index": 94.034,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "access_control_log",
+  "variant": "oracle_karpathy_generation"
+}

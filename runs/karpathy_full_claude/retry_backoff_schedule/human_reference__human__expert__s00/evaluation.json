@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. Validation is handled upfront with a single guard clause, control flow is linear with no deep nesting, data movement is transparent (no hidden mutation), and the naming is clear and self-explanatory. The loop is straightforward and easy to audit locally. The only minor quibble is that the error message 'invalid backoff parameters' could be slightly more specific (e.g., distinguishing which parameter is invalid), but this is a trivial concern. There are no speculative abstractions, no unnecessary helpers, and no framework-shaped code \u2014 it does exactly what is required and nothing more.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. Validation is handled upfront with a single guard clause, control flow is linear with no deep nesting, data movement is transparent (no hidden mutation), and the naming is clear and self-explanatory. The loop is straightforward and easy to audit locally. The only minor quibble is that the error message 'invalid backoff parameters' could be slightly more specific (e.g., distinguishing which parameter is invalid), but this is a trivial concern. There are no speculative abstractions, no unnecessary helpers, and no framework-shaped code \u2014 it does exactly what is required and nothing more.\",\n  \"strengths\": [\n    \"Single guard clause handles all validation upfront, keeping the happy path flat\",\n    \"Explicit, readable loop with no hidden state or side effects\",\n    \"Minimal and purposeful \u2014 no unused extension points or over-engineering\",\n    \"Variable names (delay, schedule, cap_seconds) clearly communicate intent\",\n    \"Correct use of min() to apply the cap cleanly\"\n  ],\n  \"weaknesses\": [\n    \"Error message could be more specific about which parameter is invalid\",\n    \"Could optionally use a list comprehension or itertools.accumulate for a more declarative style, though the imperative loop is perfectly readable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single guard clause handles all validation upfront, keeping the happy path flat",
+      "Explicit, readable loop with no hidden state or side effects",
+      "Minimal and purposeful \u2014 no unused extension points or over-engineering",
+      "Variable names (delay, schedule, cap_seconds) clearly communicate intent",
+      "Correct use of min() to apply the cap cleanly"
+    ],
+    "weaknesses": [
+      "Error message could be more specific about which parameter is invalid",
+      "Could optionally use a list comprehension or itertools.accumulate for a more declarative style, though the imperative loop is perfectly readable"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.654,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 66.101,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "human_reference"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the specification without any speculative abstractions or unnecessary complexity. It handles all edge cases (malformed items, non-positive case_pack, missing/non-positive velocity, on_hand >= target) in a straightforward linear pass, uses math.ceil correctly for rounding up to nearest case_pack multiple, and sorts by sku at the end. The isinstance check on case_pack is slightly more defensive than strictly required by the spec (which only mentions non-positive case_pack), but it's a conservative interpretation that prevents float/string edge cases from causing silent errors rather than being caught by the KeyError/TypeError handler. The code is flat, readable, locally auditable, and about as short as it can be while remaining explicit.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the specification without any speculative abstractions or unnecessary complexity. It handles all edge cases (malformed items, non-positive case_pack, missing/non-positive velocity, on_hand >= target) in a straightforward linear pass, uses math.ceil correctly for rounding up to nearest case_pack multiple, and sorts by sku at the end. The isinstance check on case_pack is slightly more defensive than strictly required by the spec (which only mentions non-positive case_pack), but it's a conservative interpretation that prevents float/string edge cases from causing silent errors rather than being caught by the KeyError/TypeError handler. The code is flat, readable, locally auditable, and about as short as it can be while remaining explicit.\",\n  \"strengths\": [\n    \"Minimal and direct: no helper functions, classes, or abstractions for single-use logic\",\n    \"Explicit field extraction with a single try/except covering malformed items cleanly\",\n    \"Correct ceil-based rounding to nearest case_pack multiple\",\n    \"Sort at the end is simple and correct\",\n    \"int() cast on reorder_quantity handles float case_pack gracefully\"\n  ],\n  \"weaknesses\": [\n    \"isinstance check on case_pack goes slightly beyond the spec's stated requirements, adding a small amount of unasked-for defensiveness\",\n    \"velocity variable name is slightly redundant given sales_velocity context, though not a real issue\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal and direct: no helper functions, classes, or abstractions for single-use logic",
+      "Explicit field extraction with a single try/except covering malformed items cleanly",
+      "Correct ceil-based rounding to nearest case_pack multiple",
+      "Sort at the end is simple and correct",
+      "int() cast on reorder_quantity handles float case_pack gracefully"
+    ],
+    "weaknesses": [
+      "isinstance check on case_pack goes slightly beyond the spec's stated requirements, adding a small amount of unasked-for defensiveness",
+      "velocity variable name is slightly redundant given sales_velocity context, though not a real issue"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.495,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 22,
+    "maintainability_index": 55.134,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_karpathy_generation"
+}

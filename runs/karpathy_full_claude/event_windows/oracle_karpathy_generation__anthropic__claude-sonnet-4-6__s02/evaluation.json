@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and minimal. It correctly validates window_size, skips malformed events, groups into windows using floor division, and returns sorted results. The use of defaultdict is appropriate and avoids redundant initialization. The only minor issues are the unnecessary `import math` when `ts // window_size` (integer floor division) would be simpler and more idiomatic for integer inputs, and the lambda in defaultdict adds slight indirection compared to a plain dict with setdefault or direct key initialization. The explicit field construction in the output loop is clear and auditable. Overall, this is a straightforward, readable solution with no speculative abstractions or unnecessary complexity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, direct, and minimal. It correctly validates window_size, skips malformed events, groups into windows using floor division, and returns sorted results. The use of defaultdict is appropriate and avoids redundant initialization. The only minor issues are the unnecessary `import math` when `ts // window_size` (integer floor division) would be simpler and more idiomatic for integer inputs, and the lambda in defaultdict adds slight indirection compared to a plain dict with setdefault or direct key initialization. The explicit field construction in the output loop is clear and auditable. Overall, this is a straightforward, readable solution with no speculative abstractions or unnecessary complexity.\",\n  \"strengths\": [\n    \"Minimal and focused \u2014 no unnecessary abstractions or features\",\n    \"Explicit malformed-event filtering with clear isinstance checks\",\n    \"Sorted output construction is readable and correct\",\n    \"defaultdict usage reduces boilerplate without obscuring intent\"\n  ],\n  \"weaknesses\": [\n    \"Uses `math.floor(ts / window_size)` instead of the simpler integer floor division `ts // window_size` for integer inputs\",\n    \"Unnecessary `import math` for a task that only needs integer arithmetic\",\n    \"lambda in defaultdict is slightly more complex than needed; a simple dict with direct key access would be equally clear\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal and focused \u2014 no unnecessary abstractions or features",
+      "Explicit malformed-event filtering with clear isinstance checks",
+      "Sorted output construction is readable and correct",
+      "defaultdict usage reduces boilerplate without obscuring intent"
+    ],
+    "weaknesses": [
+      "Uses `math.floor(ts / window_size)` instead of the simpler integer floor division `ts // window_size` for integer inputs",
+      "Unnecessary `import math` for a task that only needs integer arithmetic",
+      "lambda in defaultdict is slightly more complex than needed; a simple dict with direct key access would be equally clear"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.486,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 27,
+    "maintainability_index": 52.993,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_karpathy_generation"
+}

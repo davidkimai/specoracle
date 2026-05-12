@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses a local lookup table named `severity_bonus` (ending in the spirit of `_table` though not exactly `_table`), avoids classes, preserves order, uses explicit string status codes, and keeps logic flat with a single loop. The naming convention misses the spec's preference for `_table` suffix by one word, and the fallback chain `rules.get(service, rules.get('default', {}))` is slightly nested rather than a two-step explicit lookup, but these are minor. Comments are present but lean on prose rather than the spec's preference for 'short explicit strings' as branch reasons. Overall the code is locally auditable, structurally sound, and closely aligned with the informal oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses a local lookup table named `severity_bonus` (ending in the spirit of `_table` though not exactly `_table`), avoids classes, preserves order, uses explicit string status codes, and keeps logic flat with a single loop. The naming convention misses the spec's preference for `_table` suffix by one word, and the fallback chain `rules.get(service, rules.get('default', {}))` is slightly nested rather than a two-step explicit lookup, but these are minor. Comments are present but lean on prose rather than the spec's preference for 'short explicit strings' as branch reasons. Overall the code is locally auditable, structurally sound, and closely aligned with the informal oracle.\",\n  \"strengths\": [\n    \"Uses a named lookup dict (`severity_bonus`) for severity bonuses, close to the `_table` convention\",\n    \"No classes introduced; single-pass loop is flat and readable\",\n    \"Stable string `status_code: 'routed'` never uses booleans\",\n    \"Ticket order preserved via sequential append\",\n    \"Explicit field extraction with clear skip logic\"\n  ],\n  \"weaknesses\": [\n    \"Lookup dict named `severity_bonus` rather than `severity_bonus_table` as the spec prefers\",\n    \"Fallback rule lookup uses nested `.get()` chain instead of a two-step explicit lookup that would be more readable\",\n    \"Branch skip reason is in a comment rather than as an explicit inline string or label as the spec suggests\",\n    \"No guard or error if `rules` lacks a `default` key, silently produces empty queue/priority\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses a named lookup dict (`severity_bonus`) for severity bonuses, close to the `_table` convention",
+      "No classes introduced; single-pass loop is flat and readable",
+      "Stable string `status_code: 'routed'` never uses booleans",
+      "Ticket order preserved via sequential append",
+      "Explicit field extraction with clear skip logic"
+    ],
+    "weaknesses": [
+      "Lookup dict named `severity_bonus` rather than `severity_bonus_table` as the spec prefers",
+      "Fallback rule lookup uses nested `.get()` chain instead of a two-step explicit lookup that would be more readable",
+      "Branch skip reason is in a comment rather than as an explicit inline string or label as the spec suggests",
+      "No guard or error if `rules` lacks a `default` key, silently produces empty queue/priority"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.457,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 39,
+    "maintainability_index": 87.807,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "baseline_generation"
+}

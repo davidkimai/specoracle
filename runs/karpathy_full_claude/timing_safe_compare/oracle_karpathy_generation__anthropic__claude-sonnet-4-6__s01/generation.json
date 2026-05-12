@@ -1,0 +1,40 @@
+{
+  "code": "import hmac\n\n\ndef timing_safe_compare(left: \"str | bytes\", right: \"str | bytes\") -> bool:\n    if not isinstance(left, (str, bytes)):\n        raise TypeError(f\"left must be str or bytes, got {type(left).__name__}\")\n    if not isinstance(right, (str, bytes)):\n        raise TypeError(f\"right must be str or bytes, got {type(right).__name__}\")\n    if type(left) is not type(right):\n        raise TypeError(\n            f\"left and right must have the same type, got {type(left).__name__} and {type(right).__name__}\"\n        )\n    return hmac.compare_digest(left, right)",
+  "effective_temperature": 0.8,
+  "entry_point": "timing_safe_compare",
+  "hybrid": null,
+  "mode": "oracle_karpathy",
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "raw_response": "```python\nimport hmac\n\n\ndef timing_safe_compare(left: \"str | bytes\", right: \"str | bytes\") -> bool:\n    if not isinstance(left, (str, bytes)):\n        raise TypeError(f\"left must be str or bytes, got {type(left).__name__}\")\n    if not isinstance(right, (str, bytes)):\n        raise TypeError(f\"right must be str or bytes, got {type(right).__name__}\")\n    if type(left) is not type(right):\n        raise TypeError(\n            f\"left and right must have the same type, got {type(left).__name__} and {type(right).__name__}\"\n        )\n    return hmac.compare_digest(left, right)\n```",
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "system_prompt": "You are a secure program synthesis engineer. Generate a correct, reviewable Python\nmodule for the task. Return only Python code. Do not include markdown prose.\n\nTreat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n\n",
+  "task": {
+    "custom_spec_override": null,
+    "day2_prompt": "Extend timing_safe_compare with pad_to_length: int | None = None and pad_char: str = \"\\0\".\nWhen pad_to_length is set for strings, right-pad both strings to that length before comparing.\nReject pad_char values that are not exactly one character. Preserve old behavior when omitted.\n",
+    "day2_stressors": [
+      "interface_generalization",
+      "error_surface_expansion",
+      "backwards_compatibility"
+    ],
+    "day2_test_code": "import pytest\n\nfrom solution import timing_safe_compare\n\n\ndef test_padded_string_compare():\n    assert timing_safe_compare('a', 'a', pad_to_length=4, pad_char='x') is True\n    assert timing_safe_compare('a', 'a   ', pad_to_length=4, pad_char=' ') is True\n    assert timing_safe_compare('a', 'b', pad_to_length=4) is False\n    with pytest.raises(ValueError):\n        timing_safe_compare('a', 'a', pad_to_length=4, pad_char='xx')\n",
+    "entry_point": "timing_safe_compare",
+    "human_reference": "from __future__ import annotations\n\nimport hmac\n\n\ndef timing_safe_compare(left: str | bytes, right: str | bytes) -> bool:\n    if not isinstance(left, (str, bytes)) or not isinstance(right, (str, bytes)):\n        raise TypeError('values must be str or bytes')\n    if type(left) is not type(right):\n        raise TypeError('values must share a type')\n    return hmac.compare_digest(left, right)\n",
+    "id": "timing_safe_compare",
+    "mock_day2_solution": "from __future__ import annotations\n\nimport hmac\n\n\ndef timing_safe_compare(left, right, pad_to_length=None, pad_char='\\0'):\n    if not isinstance(left, (str, bytes)) or not isinstance(right, (str, bytes)) or type(left) is not type(right):\n        raise TypeError('values must be same-type str or bytes')\n    if pad_to_length is not None:\n        if not isinstance(left, str):\n            raise TypeError('padding is only supported for str')\n        if len(pad_char) != 1:\n            raise ValueError('pad_char must be one character')\n        left = left.ljust(pad_to_length, pad_char)\n        right = right.ljust(pad_to_length, pad_char)\n    return hmac.compare_digest(left, right)\n",
+    "mock_solution": "from __future__ import annotations\n\nimport hmac\n\n\ndef timing_safe_compare(left, right):\n    allowed = (str, bytes)\n    if isinstance(left, allowed) and isinstance(right, allowed) and type(left) is type(right):\n        return hmac.compare_digest(left, right)\n    raise TypeError('values must be same-type str or bytes')\n",
+    "prompt": "Implement timing_safe_compare(left, right) -> bool as a typed wrapper around\nhmac.compare_digest. Accept only str or bytes. Both inputs must have the same\ntype; otherwise raise TypeError. Return True only when values match.\n",
+    "tags": [
+      "reliability_critical",
+      "security",
+      "day2-hard"
+    ],
+    "test_code": "import pytest\n\nfrom solution import timing_safe_compare\n\n\ndef test_compare_digest_wrapper():\n    assert timing_safe_compare('abc', 'abc') is True\n    assert timing_safe_compare(b'abc', b'abd') is False\n    with pytest.raises(TypeError):\n        timing_safe_compare('abc', b'abc')\n    with pytest.raises(TypeError):\n        timing_safe_compare(1, 1)\n"
+  },
+  "task_id": "timing_safe_compare",
+  "user_prompt": "Task id: timing_safe_compare\nEntry point: timing_safe_compare\n\nFunctional requirements:\nImplement timing_safe_compare(left, right) -> bool as a typed wrapper around\nhmac.compare_digest. Accept only str or bytes. Both inputs must have the same\ntype; otherwise raise TypeError. Return True only when values match.\n\nSynthesis instructions:\n- Return a complete Python module.\n- Keep imports standard-library only unless the task explicitly permits otherwise.\n- Do not include tests in the generated module.\n- Do not perform network, filesystem, or subprocess operations unless required.\n",
+  "variant": "oracle_karpathy_generation"
+}

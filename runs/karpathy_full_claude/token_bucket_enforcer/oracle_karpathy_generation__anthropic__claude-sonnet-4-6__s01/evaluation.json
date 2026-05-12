@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of minimal, correct, readable code. It uses exactly the fields needed, no more. The `allow` method is a single flat block with no branching complexity beyond the necessary conditional. The injectable `now` parameter is handled cleanly with a sensible default. State updates are explicit and local. There are no abstractions, no speculative features, no dead code, and no style noise. The contract is immediately auditable in under 15 lines.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of minimal, correct, readable code. It uses exactly the fields needed, no more. The `allow` method is a single flat block with no branching complexity beyond the necessary conditional. The injectable `now` parameter is handled cleanly with a sensible default. State updates are explicit and local. There are no abstractions, no speculative features, no dead code, and no style noise. The contract is immediately auditable in under 15 lines.\",\n  \"strengths\": [\n    \"Minimal field set: only capacity, refill_rate, now callable, token count, and last timestamp\",\n    \"Injectable clock via `now` kwarg enables deterministic testing without mocking\",\n    \"Single flat method body with no helper functions or unnecessary abstraction\",\n    \"Correct token clamping with `min(capacity, ...)` prevents overflow\",\n    \"Uses `float(capacity)` to avoid integer arithmetic issues in refill calculation\",\n    \"Defaults to `time.monotonic` which is the correct clock for rate limiting\"\n  ],\n  \"weaknesses\": [\n    \"No explicit guard against negative cost values, though not required by spec\",\n    \"No docstring or inline comment explaining the token bucket algorithm, which could aid auditability for unfamiliar readers\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal field set: only capacity, refill_rate, now callable, token count, and last timestamp",
+      "Injectable clock via `now` kwarg enables deterministic testing without mocking",
+      "Single flat method body with no helper functions or unnecessary abstraction",
+      "Correct token clamping with `min(capacity, ...)` prevents overflow",
+      "Uses `float(capacity)` to avoid integer arithmetic issues in refill calculation",
+      "Defaults to `time.monotonic` which is the correct clock for rate limiting"
+    ],
+    "weaknesses": [
+      "No explicit guard against negative cost values, though not required by spec",
+      "No docstring or inline comment explaining the token bucket algorithm, which could aid auditability for unfamiliar readers"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.417,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 17,
+    "maintainability_index": 59.632,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "oracle_karpathy_generation"
+}

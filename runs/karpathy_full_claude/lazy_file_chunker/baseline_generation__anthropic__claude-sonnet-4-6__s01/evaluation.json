@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the task requirements. The guard clause at the top is explicit and raises a clear error. The read-loop is flat, readable, and avoids reading the whole file at once. The only minor quibble is the `isinstance(chunk_size, int)` check, which is slightly over-engineered \u2014 the spec says 'reject non-positive chunk sizes', so a simple `chunk_size <= 0` guard would suffice and be more Pythonic (duck-typing friendly), since a float like 1024.0 would be unnecessarily rejected. Otherwise the code is sparse, auditable, uses no speculative abstractions, and is exactly as complex as the task demands.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the task requirements. The guard clause at the top is explicit and raises a clear error. The read-loop is flat, readable, and avoids reading the whole file at once. The only minor quibble is the `isinstance(chunk_size, int)` check, which is slightly over-engineered \u2014 the spec says 'reject non-positive chunk sizes', so a simple `chunk_size <= 0` guard would suffice and be more Pythonic (duck-typing friendly), since a float like 1024.0 would be unnecessarily rejected. Otherwise the code is sparse, auditable, uses no speculative abstractions, and is exactly as complex as the task demands.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause and a simple while-break loop\",\n    \"Explicit error message with the offending value included\",\n    \"No hidden state, no unnecessary abstractions, no framework-shaped scaffolding\",\n    \"Docstring is informative without being excessive\",\n    \"Correctly yields only non-empty chunks without special-casing EOF\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(chunk_size, int) check is overly strict and un-Pythonic; a plain `chunk_size <= 0` guard would be sufficient and more duck-type friendly\",\n    \"Minor: the docstring format (Sphinx-style) is slightly heavier than needed for a small utility function\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause and a simple while-break loop",
+      "Explicit error message with the offending value included",
+      "No hidden state, no unnecessary abstractions, no framework-shaped scaffolding",
+      "Docstring is informative without being excessive",
+      "Correctly yields only non-empty chunks without special-casing EOF"
+    ],
+    "weaknesses": [
+      "isinstance(chunk_size, int) check is overly strict and un-Pythonic; a plain `chunk_size <= 0` guard would be sufficient and more duck-type friendly",
+      "Minor: the docstring format (Sphinx-style) is slightly heavier than needed for a small utility function"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.5,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 15,
+    "maintainability_index": 95.289,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "baseline_generation"
+}

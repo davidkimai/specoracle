@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows RAT-9's requirements: it validates the presence of both `source_system` and `actor_id` before accepting any record, raises explicit errors rather than silently inventing values, names the sequence field explicitly before insertion, and builds records with a monotonic sequence starting at 1. The code is flat, readable, and locally auditable with no hidden logic or architectural complexity. The only minor structural quibble is that placing `sequence` first in the record via explicit key assignment before the spread of event fields is slightly cleaner than relying on dict unpacking order, but Python 3.7+ guarantees insertion order so this is functionally correct. The extra `TypeError` guard for non-list input and non-dict events goes slightly beyond the spec but is defensively sound rather than harmful.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows RAT-9's requirements: it validates the presence of both `source_system` and `actor_id` before accepting any record, raises explicit errors rather than silently inventing values, names the sequence field explicitly before insertion, and builds records with a monotonic sequence starting at 1. The code is flat, readable, and locally auditable with no hidden logic or architectural complexity. The only minor structural quibble is that placing `sequence` first in the record via explicit key assignment before the spread of event fields is slightly cleaner than relying on dict unpacking order, but Python 3.7+ guarantees insertion order so this is functionally correct. The extra `TypeError` guard for non-list input and non-dict events goes slightly beyond the spec but is defensively sound rather than harmful.\",\n  \"strengths\": [\n    \"Explicit rejection of events missing source_system or actor_id with clear error messages\",\n    \"Monotonic sequence starting at 1, named explicitly before record construction\",\n    \"Flat, single-loop structure with no hidden indirection or abstraction layers\",\n    \"Preserves all original event fields without silently mutating or inventing values\",\n    \"Type guards for non-list and non-dict inputs add robustness without obscuring intent\"\n  ],\n  \"weaknesses\": [\n    \"Using `**event` spread after `sequence` key relies on dict ordering guarantees; an explicit field-by-field record construction would be more auditable per RAT-9's 'named explicitly' directive\",\n    \"The `missing_fields` list comprehension, while readable, is a minor stylistic indirection compared to two direct `if field not in event` checks\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit rejection of events missing source_system or actor_id with clear error messages",
+      "Monotonic sequence starting at 1, named explicitly before record construction",
+      "Flat, single-loop structure with no hidden indirection or abstraction layers",
+      "Preserves all original event fields without silently mutating or inventing values",
+      "Type guards for non-list and non-dict inputs add robustness without obscuring intent"
+    ],
+    "weaknesses": [
+      "Using `**event` spread after `sequence` key relies on dict ordering guarantees; an explicit field-by-field record construction would be more auditable per RAT-9's 'named explicitly' directive",
+      "The `missing_fields` list comprehension, while readable, is a minor stylistic indirection compared to two direct `if field not in event` checks"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.652,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 48,
+    "maintainability_index": 89.242,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "baseline_generation"
+}

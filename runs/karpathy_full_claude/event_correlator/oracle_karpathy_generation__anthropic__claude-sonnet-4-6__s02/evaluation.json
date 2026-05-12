@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple. It groups events by session, sorts them, and uses a straightforward nested loop with a used-set to pair A\u2192B events. The docstring is somewhat verbose for what is essentially a simple pairing function, and the `used_b` set tracking indices adds a small layer of indirection that could be avoided by simply popping matched B events or using a pointer. The nested loop over b_events with an index-based exclusion set is slightly awkward\u2014a cleaner approach would maintain a deque or pointer into b_events since both lists are already sorted, allowing O(n) matching per session instead of O(n\u00b2). However, for typical event volumes this is not a practical concern. The code is flat, explicit, has no speculative abstractions, and is locally auditable. The assumption that each B event can only be used once is stated but not specified in the task, which is a reasonable conservative interpretation. Overall, minor structural inefficiency and docstring verbosity prevent a higher score.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple. It groups events by session, sorts them, and uses a straightforward nested loop with a used-set to pair A\u2192B events. The docstring is somewhat verbose for what is essentially a simple pairing function, and the `used_b` set tracking indices adds a small layer of indirection that could be avoided by simply popping matched B events or using a pointer. The nested loop over b_events with an index-based exclusion set is slightly awkward\u2014a cleaner approach would maintain a deque or pointer into b_events since both lists are already sorted, allowing O(n) matching per session instead of O(n\u00b2). However, for typical event volumes this is not a practical concern. The code is flat, explicit, has no speculative abstractions, and is locally auditable. The assumption that each B event can only be used once is stated but not specified in the task, which is a reasonable conservative interpretation. Overall, minor structural inefficiency and docstring verbosity prevent a higher score.\",\n  \"strengths\": [\n    \"Flat, readable structure with no unnecessary abstractions\",\n    \"Explicit sorting and filtering steps are easy to audit\",\n    \"Correctly handles the 'first later B' semantics with the used_b set\",\n    \"No speculative features or configurability beyond what was asked\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is overly verbose for a simple function\u2014adds noise without proportional value\",\n    \"Index-based used_b set is slightly awkward; a pointer or list consumption would be cleaner given sorted inputs\",\n    \"O(n\u00b2) per session matching when O(n) is achievable with a two-pointer approach on sorted lists\",\n    \"Assumption about B-event exclusivity (each B used at most once) is not in the spec and is stated without flagging the ambiguity to the caller\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat, readable structure with no unnecessary abstractions",
+      "Explicit sorting and filtering steps are easy to audit",
+      "Correctly handles the 'first later B' semantics with the used_b set",
+      "No speculative features or configurability beyond what was asked"
+    ],
+    "weaknesses": [
+      "Docstring is overly verbose for a simple function\u2014adds noise without proportional value",
+      "Index-based used_b set is slightly awkward; a pointer or list consumption would be cleaner given sorted inputs",
+      "O(n\u00b2) per session matching when O(n) is achievable with a two-pointer approach on sorted lists",
+      "Assumption about B-event exclusivity (each B used at most once) is not in the spec and is stated without flagging the ambiguity to the caller"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.567,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n>       pairs = correlate_events(events, within=5)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsolution.py:25: in correlate_events\n    sorted_events = sorted(session_events, key=lambda e: e['timestamp'])\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ne = {'session_id': 's', 'ts': 1, 'type': 'A'}\n\n>   sorted_events = sorted(session_events, key=lambda e: e['timestamp'])\n                                                         ^^^^^^^^^^^^^^\nE   KeyError: 'timestamp'\n\nsolution.py:25: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - KeyError: 't...\n1 failed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 84.489,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "oracle_karpathy_generation"
+}

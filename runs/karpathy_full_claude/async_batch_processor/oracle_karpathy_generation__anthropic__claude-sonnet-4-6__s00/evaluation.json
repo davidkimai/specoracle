@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the stated problem without any speculative abstractions or unnecessary complexity. It correctly validates inputs, splits items into batches, uses a semaphore to enforce concurrency limits, preserves batch order via index-based result storage, and flattens results at the end. The use of asyncio.gather with a semaphore-guarded inner coroutine is the canonical, idiomatic pattern for this exact problem. The code is locally auditable in one read, has no dead code, no over-engineering, and matches the functional contract precisely. The only minor quibble is that `results = [None] * len(batches)` with mutation inside a closure is slightly less explicit than alternatives (e.g., returning from gather directly), but it is a well-understood pattern and avoids reordering complexity.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the stated problem without any speculative abstractions or unnecessary complexity. It correctly validates inputs, splits items into batches, uses a semaphore to enforce concurrency limits, preserves batch order via index-based result storage, and flattens results at the end. The use of asyncio.gather with a semaphore-guarded inner coroutine is the canonical, idiomatic pattern for this exact problem. The code is locally auditable in one read, has no dead code, no over-engineering, and matches the functional contract precisely. The only minor quibble is that `results = [None] * len(batches)` with mutation inside a closure is slightly less explicit than alternatives (e.g., returning from gather directly), but it is a well-understood pattern and avoids reordering complexity.\",\n  \"strengths\": [\n    \"Minimal code with no speculative features or unused abstractions\",\n    \"Correct semaphore-based concurrency limiting using idiomatic asyncio patterns\",\n    \"Order preservation via index-based assignment is simple and correct\",\n    \"Input validation is explicit and early\",\n    \"Flat structure with no unnecessary class or helper abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Mutable closure over `results` list is slightly less explicit than collecting return values directly from gather\",\n    \"No handling of empty `items` list (though it works correctly by accident \u2014 gather over empty sequence returns [])\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative features or unused abstractions",
+      "Correct semaphore-based concurrency limiting using idiomatic asyncio patterns",
+      "Order preservation via index-based assignment is simple and correct",
+      "Input validation is explicit and early",
+      "Flat structure with no unnecessary class or helper abstractions"
+    ],
+    "weaknesses": [
+      "Mutable closure over `results` list is slightly less explicit than collecting return values directly from gather",
+      "No handling of empty `items` list (though it works correctly by accident \u2014 gather over empty sequence returns [])"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.491,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.19s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 15,
+    "maintainability_index": 61.727,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_batch_processor",
+  "variant": "oracle_karpathy_generation"
+}

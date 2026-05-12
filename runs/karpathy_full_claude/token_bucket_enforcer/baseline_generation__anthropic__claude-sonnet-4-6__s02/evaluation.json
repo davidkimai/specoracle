@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. Input validation raises clear errors, the refill logic is extracted into a small pure helper, control flow is flat with guard clauses, and data movement is explicit with no hidden global state. The `now` injectable makes testing straightforward. Minor concerns: the `available_tokens` property has a side effect (calls `_refill()`), which is surprising for a property and violates the principle of least astonishment; the docstrings are verbose for what is essentially a simple class; and the two read-only properties (`capacity`, `refill_rate`) are speculative extension points that add surface area without being required by the task. The `_refill` method could also update `_last_refill` unconditionally (even when elapsed <= 0) to avoid a subtle edge case with non-monotonic clocks, though this is minor. Overall the architecture is sound, readable, and locally auditable with no framework-shaped bloat.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. Input validation raises clear errors, the refill logic is extracted into a small pure helper, control flow is flat with guard clauses, and data movement is explicit with no hidden global state. The `now` injectable makes testing straightforward. Minor concerns: the `available_tokens` property has a side effect (calls `_refill()`), which is surprising for a property and violates the principle of least astonishment; the docstrings are verbose for what is essentially a simple class; and the two read-only properties (`capacity`, `refill_rate`) are speculative extension points that add surface area without being required by the task. The `_refill` method could also update `_last_refill` unconditionally (even when elapsed <= 0) to avoid a subtle edge case with non-monotonic clocks, though this is minor. Overall the architecture is sound, readable, and locally auditable with no framework-shaped bloat.\",\n  \"strengths\": [\n    \"Clear input validation with descriptive error messages\",\n    \"Refill logic cleanly extracted into a small helper method\",\n    \"Flat control flow with guard clauses in allow()\",\n    \"Injectable `now` callable makes the class trivially testable\",\n    \"No hidden mutation or implicit global state\"\n  ],\n  \"weaknesses\": [\n    \"`available_tokens` property has a side effect (triggers refill), violating property semantics\",\n    \"Read-only `capacity` and `refill_rate` properties are speculative and unused by the task\",\n    \"Docstrings are overly verbose for a simple utility class\",\n    \"`_last_refill` is not updated when elapsed <= 0, which could cause subtle issues with non-monotonic time sources\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear input validation with descriptive error messages",
+      "Refill logic cleanly extracted into a small helper method",
+      "Flat control flow with guard clauses in allow()",
+      "Injectable `now` callable makes the class trivially testable",
+      "No hidden mutation or implicit global state"
+    ],
+    "weaknesses": [
+      "`available_tokens` property has a side effect (triggers refill), violating property semantics",
+      "Read-only `capacity` and `refill_rate` properties are speculative and unused by the task",
+      "Docstrings are overly verbose for a simple utility class",
+      "`_last_refill` is not updated when elapsed <= 0, which could cause subtle issues with non-monotonic time sources"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.482,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.143,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 6,
+    "loc": 63,
+    "maintainability_index": 76.959,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "token_bucket_enforcer",
+  "variant": "baseline_generation"
+}

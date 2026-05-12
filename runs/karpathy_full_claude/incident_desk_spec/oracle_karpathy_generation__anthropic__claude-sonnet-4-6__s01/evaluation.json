@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Spec N-9: it uses a named lookup table (`severity_boost_table`) with the required `_table` suffix, a named tuple for required fields (`required_fields_table`), an explicit string constant `STATUS_ROUTED` instead of a bare boolean or magic string, no classes, single-pass iteration preserving order, and flat readable branching. The fallback chain `rules.get(service) or rules.get('default') or {}` is slightly implicit but acceptable. The only minor issues are that `required_fields_table` is a tuple rather than a dict/set (naming is slightly misleading but harmless), and the missing-field check uses `is None or == ''` which is slightly more permissive than a strict presence check (a field with value `0` or `False` would pass, but `''` would be skipped \u2014 edge case). Overall the code is clean, auditable, and structurally aligned with the spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Spec N-9: it uses a named lookup table (`severity_boost_table`) with the required `_table` suffix, a named tuple for required fields (`required_fields_table`), an explicit string constant `STATUS_ROUTED` instead of a bare boolean or magic string, no classes, single-pass iteration preserving order, and flat readable branching. The fallback chain `rules.get(service) or rules.get('default') or {}` is slightly implicit but acceptable. The only minor issues are that `required_fields_table` is a tuple rather than a dict/set (naming is slightly misleading but harmless), and the missing-field check uses `is None or == ''` which is slightly more permissive than a strict presence check (a field with value `0` or `False` would pass, but `''` would be skipped \u2014 edge case). Overall the code is clean, auditable, and structurally aligned with the spec.\",\n  \"strengths\": [\n    \"Uses `severity_boost_table` with the spec-mandated `_table` suffix\",\n    \"Explicit `STATUS_ROUTED` constant \u2014 never a boolean\",\n    \"No classes introduced for single-pass routing\",\n    \"Flat, readable loop with short, clear variable names\",\n    \"Preserves ticket order naturally via sequential append\",\n    \"Handles missing `default` rule gracefully with `or {}`\"\n  ],\n  \"weaknesses\": [\n    \"`required_fields_table` is a tuple, not a table-like structure \u2014 naming is slightly misleading\",\n    \"Empty-string check (`== ''`) on required fields is an undocumented policy decision not mentioned in spec\",\n    \"Fallback chain `rules.get(service) or rules.get('default')` silently swallows a service rule that maps to a falsy value (unlikely but subtle)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `severity_boost_table` with the spec-mandated `_table` suffix",
+      "Explicit `STATUS_ROUTED` constant \u2014 never a boolean",
+      "No classes introduced for single-pass routing",
+      "Flat, readable loop with short, clear variable names",
+      "Preserves ticket order naturally via sequential append",
+      "Handles missing `default` rule gracefully with `or {}`"
+    ],
+    "weaknesses": [
+      "`required_fields_table` is a tuple, not a table-like structure \u2014 naming is slightly misleading",
+      "Empty-string check (`== ''`) on required fields is an undocumented policy decision not mentioned in spec",
+      "Fallback chain `rules.get(service) or rules.get('default')` silently swallows a service rule that maps to a falsy value (unlikely but subtle)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.588,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 75.017,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_karpathy_generation"
+}

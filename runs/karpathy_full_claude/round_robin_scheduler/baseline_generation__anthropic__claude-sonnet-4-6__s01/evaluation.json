@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It extracts enabled workers in a single comprehension, raises a clear ValueError immediately, and builds results with a straightforward loop \u2014 no hidden state, no mutation of inputs, no speculative abstractions. The only minor quibble is that the logic could marginally benefit from using itertools.cycle to make the round-robin intent more self-documenting, but the modulo approach is equally readable and arguably simpler for a maintainer to audit locally. Overall this is a near-ideal realization of the Zen principles for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It extracts enabled workers in a single comprehension, raises a clear ValueError immediately, and builds results with a straightforward loop \u2014 no hidden state, no mutation of inputs, no speculative abstractions. The only minor quibble is that the logic could marginally benefit from using itertools.cycle to make the round-robin intent more self-documenting, but the modulo approach is equally readable and arguably simpler for a maintainer to audit locally. Overall this is a near-ideal realization of the Zen principles for this task.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause for the error case\",\n    \"No mutation of input data\",\n    \"Explicit data movement: enabled list built first, then results assembled\",\n    \"Clear, descriptive variable names (enabled, worker, result)\",\n    \"Minimal and sufficient \u2014 no unused extension points or framework-shaped scaffolding\"\n  ],\n  \"weaknesses\": [\n    \"itertools.cycle would more explicitly communicate round-robin intent, though the modulo approach is still clear\",\n    \"The error message could omit the trailing period for consistency with Python stdlib conventions, a very minor nit\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause for the error case",
+      "No mutation of input data",
+      "Explicit data movement: enabled list built first, then results assembled",
+      "Clear, descriptive variable names (enabled, worker, result)",
+      "Minimal and sufficient \u2014 no unused extension points or framework-shaped scaffolding"
+    ],
+    "weaknesses": [
+      "itertools.cycle would more explicitly communicate round-robin intent, though the modulo approach is still clear",
+      "The error message could omit the trailing period for consistency with Python stdlib conventions, a very minor nit"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.446,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 70.058,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

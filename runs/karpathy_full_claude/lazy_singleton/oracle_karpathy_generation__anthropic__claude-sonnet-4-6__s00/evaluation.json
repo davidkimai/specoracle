@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook double-checked locking singleton \u2014 the minimum correct solution for thread-safe lazy initialization in Python. It uses exactly the right primitives (threading.Lock, double-checked None guard), has no speculative abstractions, no extra methods, no unnecessary configurability, and the code is immediately auditable in under 10 seconds. Every line earns its place.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook double-checked locking singleton \u2014 the minimum correct solution for thread-safe lazy initialization in Python. It uses exactly the right primitives (threading.Lock, double-checked None guard), has no speculative abstractions, no extra methods, no unnecessary configurability, and the code is immediately auditable in under 10 seconds. Every line earns its place.\",\n  \"strengths\": [\n    \"Double-checked locking avoids lock contention on the hot path after initialization\",\n    \"Minimal state: only three instance variables, all necessary\",\n    \"No inheritance, no metaclass magic, no decorators \u2014 pure composition\",\n    \"Immediately readable and locally auditable with zero context needed\",\n    \"Correct thread safety without over-engineering (e.g., no unnecessary RLock or event primitives)\"\n  ],\n  \"weaknesses\": [\n    \"In CPython the GIL provides some protection, but the double-checked pattern is still the correct portable approach \u2014 no real weakness here\",\n    \"Does not handle factory exceptions (e.g., partial initialization leaving _instance as None on retry), but this is an edge case not required by the spec\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Double-checked locking avoids lock contention on the hot path after initialization",
+      "Minimal state: only three instance variables, all necessary",
+      "No inheritance, no metaclass magic, no decorators \u2014 pure composition",
+      "Immediately readable and locally auditable with zero context needed",
+      "Correct thread safety without over-engineering (e.g., no unnecessary RLock or event primitives)"
+    ],
+    "weaknesses": [
+      "In CPython the GIL provides some protection, but the double-checked pattern is still the correct portable approach \u2014 no real weakness here",
+      "Does not handle factory exceptions (e.g., partial initialization leaving _instance as None on retry), but this is an edge case not required by the spec"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.7,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 12,
+    "maintainability_index": 68.937,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "oracle_karpathy_generation"
+}

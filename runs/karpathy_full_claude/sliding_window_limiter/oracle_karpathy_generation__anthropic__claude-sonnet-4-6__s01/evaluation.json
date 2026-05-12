@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, correct, and direct. It uses exactly the right data structures (deque for O(1) front-removal, defaultdict to avoid key-existence boilerplate), validates inputs with a single guard clause, and implements the half-open window semantics precisely with `<= cutoff`. The allow/snapshot methods are short, flat, and locally auditable with no speculative abstractions or unnecessary configurability. The only marginal issue is that `snapshot` does not prune stale timestamps before returning, which could expose already-expired entries if `allow` hasn't been called recently for that key \u2014 a minor semantic ambiguity \u2014 and the type hint `list` instead of `list[int]` is a trivial inconsistency with the spec signature.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, correct, and direct. It uses exactly the right data structures (deque for O(1) front-removal, defaultdict to avoid key-existence boilerplate), validates inputs with a single guard clause, and implements the half-open window semantics precisely with `<= cutoff`. The allow/snapshot methods are short, flat, and locally auditable with no speculative abstractions or unnecessary configurability. The only marginal issue is that `snapshot` does not prune stale timestamps before returning, which could expose already-expired entries if `allow` hasn't been called recently for that key \u2014 a minor semantic ambiguity \u2014 and the type hint `list` instead of `list[int]` is a trivial inconsistency with the spec signature.\",\n  \"strengths\": [\n    \"Minimal code \u2014 no unnecessary abstractions, classes, or helpers\",\n    \"Correct half-open window boundary using `<= cutoff`\",\n    \"defaultdict(deque) eliminates boilerplate key initialization\",\n    \"Single, clear ValueError guard with descriptive message\",\n    \"O(1) amortized eviction via deque popleft\"\n  ],\n  \"weaknesses\": [\n    \"snapshot() does not prune stale timestamps before returning, potentially exposing expired entries\",\n    \"Return type hint is `list` rather than `list[int]` as specified in the interface\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 no unnecessary abstractions, classes, or helpers",
+      "Correct half-open window boundary using `<= cutoff`",
+      "defaultdict(deque) eliminates boilerplate key initialization",
+      "Single, clear ValueError guard with descriptive message",
+      "O(1) amortized eviction via deque popleft"
+    ],
+    "weaknesses": [
+      "snapshot() does not prune stale timestamps before returning, potentially exposing expired entries",
+      "Return type hint is `list` rather than `list[int]` as specified in the interface"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.366,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 3,
+    "loc": 19,
+    "maintainability_index": 56.809,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_karpathy_generation"
+}

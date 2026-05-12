@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with visibly staged parsing (separate steps for stripping, finding '=', splitting lhs, extracting section/key) and explicit error messages that name the problematic field. However, it fails the spec's explicit naming convention: the surviving cross-iteration dictionary is named `result` rather than something ending in `_ledger` (e.g., `bindings_ledger`), which is a direct violation of R-04's naming rule. The inner dicts also lack the `_ledger` suffix. There is only one public function, order is preserved via dict insertion order, and errors are descriptive \u2014 these are all positives. The parsing is staged but could be slightly more explicit (e.g., named intermediate variables for lhs splitting). Overall it's clean and flat but misses the archival naming convention that the spec explicitly mandates.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with visibly staged parsing (separate steps for stripping, finding '=', splitting lhs, extracting section/key) and explicit error messages that name the problematic field. However, it fails the spec's explicit naming convention: the surviving cross-iteration dictionary is named `result` rather than something ending in `_ledger` (e.g., `bindings_ledger`), which is a direct violation of R-04's naming rule. The inner dicts also lack the `_ledger` suffix. There is only one public function, order is preserved via dict insertion order, and errors are descriptive \u2014 these are all positives. The parsing is staged but could be slightly more explicit (e.g., named intermediate variables for lhs splitting). Overall it's clean and flat but misses the archival naming convention that the spec explicitly mandates.\",\n  \"strengths\": [\n    \"Single public function as required\",\n    \"Visibly staged parsing with separate steps for each concern\",\n    \"Error messages name the archival field being rejected\",\n    \"Insertion order preserved naturally via dict\",\n    \"Correct handling of all edge cases (comments, empty lines, missing '=', missing '.', empty section/key)\"\n  ],\n  \"weaknesses\": [\n    \"Surviving cross-iteration dictionary named `result` instead of a `_ledger`-suffixed name as explicitly required by R-04\",\n    \"Inner section dictionaries also lack `_ledger` suffix\",\n    \"Minor: `lhs` variable name is somewhat cryptic; a more descriptive name like `section_key` would improve readability\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Single public function as required",
+      "Visibly staged parsing with separate steps for each concern",
+      "Error messages name the archival field being rejected",
+      "Insertion order preserved naturally via dict",
+      "Correct handling of all edge cases (comments, empty lines, missing '=', missing '.', empty section/key)"
+    ],
+    "weaknesses": [
+      "Surviving cross-iteration dictionary named `result` instead of a `_ledger`-suffixed name as explicitly required by R-04",
+      "Inner section dictionaries also lack `_ledger` suffix",
+      "Minor: `lhs` variable name is somewhat cryptic; a more descriptive name like `section_key` would improve readability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.477,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 24,
+    "maintainability_index": 53.009,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4 doctrine: direction validation is performed before any accumulation, debit and credit are accumulated into separate named keys ('debit' and 'credit') rather than computed inline, and the balance arithmetic is deferred to a clean post-loop pass entirely separate from the directional logic. The code is flat, explicit, and locally auditable with no clever tricks. The minor imperfection is that 'balance' is initialized to 0.0 in the account bucket and then overwritten in the second pass, which is slightly redundant but harmless and actually reinforces separation of concerns. Field validation is thorough and error messages are informative.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4 doctrine: direction validation is performed before any accumulation, debit and credit are accumulated into separate named keys ('debit' and 'credit') rather than computed inline, and the balance arithmetic is deferred to a clean post-loop pass entirely separate from the directional logic. The code is flat, explicit, and locally auditable with no clever tricks. The minor imperfection is that 'balance' is initialized to 0.0 in the account bucket and then overwritten in the second pass, which is slightly redundant but harmless and actually reinforces separation of concerns. Field validation is thorough and error messages are informative.\",\n  \"strengths\": [\n    \"Direction validation is fully resolved before any monetary accumulation occurs, satisfying TR-4's tagging requirement\",\n    \"Debit and credit totals are maintained in separate, explicitly named accumulators with no inline arithmetic inside the direction conditional\",\n    \"Balance computation is isolated in a dedicated post-loop pass, keeping monetary direction logic and arithmetic cleanly separated\",\n    \"Flat control flow with no nested conditionals or lambdas; easy to audit line by line\",\n    \"Comprehensive docstring and informative error messages including entry index\"\n  ],\n  \"weaknesses\": [\n    \"Initializing 'balance' to 0.0 in the bucket and then unconditionally overwriting it is mildly redundant\",\n    \"Using result[account][direction] += amount relies on the direction string as a dict key, which is implicit rather than explicit named accumulator assignment (minor style concern)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Direction validation is fully resolved before any monetary accumulation occurs, satisfying TR-4's tagging requirement",
+      "Debit and credit totals are maintained in separate, explicitly named accumulators with no inline arithmetic inside the direction conditional",
+      "Balance computation is isolated in a dedicated post-loop pass, keeping monetary direction logic and arithmetic cleanly separated",
+      "Flat control flow with no nested conditionals or lambdas; easy to audit line by line",
+      "Comprehensive docstring and informative error messages including entry index"
+    ],
+    "weaknesses": [
+      "Initializing 'balance' to 0.0 in the bucket and then unconditionally overwriting it is mildly redundant",
+      "Using result[account][direction] += amount relies on the direction string as a dict key, which is implicit rather than explicit named accumulator assignment (minor style concern)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.561,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 55,
+    "maintainability_index": 77.841,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

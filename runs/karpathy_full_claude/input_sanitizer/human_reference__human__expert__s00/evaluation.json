@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit data movement through a simple loop. The guard clauses keep nesting minimal and each condition is easy to audit locally. The deduplication via a `seen` set is straightforward. One minor concern is that `field.replace('_', '').isalnum()` is a slightly indirect way to check alphanumeric-plus-underscore (a regex like `re.fullmatch(r'\\w+', field)` or `all(c.isalnum() or c == '_' for c in field)` would be more explicit), and there's no input validation (e.g., raising on non-list/non-set inputs or non-string elements), but the overall structure is admirably simple and sparse with no speculative abstractions or unnecessary complexity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit data movement through a simple loop. The guard clauses keep nesting minimal and each condition is easy to audit locally. The deduplication via a `seen` set is straightforward. One minor concern is that `field.replace('_', '').isalnum()` is a slightly indirect way to check alphanumeric-plus-underscore (a regex like `re.fullmatch(r'\\\\w+', field)` or `all(c.isalnum() or c == '_' for c in field)` would be more explicit), and there's no input validation (e.g., raising on non-list/non-set inputs or non-string elements), but the overall structure is admirably simple and sparse with no speculative abstractions or unnecessary complexity.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses instead of nested conditionals\",\n    \"Explicit data movement: clean list and seen set are clearly maintained\",\n    \"No hidden mutation or global state\",\n    \"Small and locally auditable \u2014 behavior is obvious at a glance\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"The alphanumeric+underscore check via `.replace('_', '').isalnum()` is indirect and slightly opaque compared to a regex or explicit character check\",\n    \"No input validation or clear errors for invalid inputs (e.g., non-string elements in fields)\",\n    \"Empty string edge case: `''.replace('_','').isalnum()` returns False, which is correct but not obviously intentional\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses instead of nested conditionals",
+      "Explicit data movement: clean list and seen set are clearly maintained",
+      "No hidden mutation or global state",
+      "Small and locally auditable \u2014 behavior is obvious at a glance",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "The alphanumeric+underscore check via `.replace('_', '').isalnum()` is indirect and slightly opaque compared to a regex or explicit character check",
+      "No input validation or clear errors for invalid inputs (e.g., non-string elements in fields)",
+      "Empty string edge case: `''.replace('_','').isalnum()` returns False, which is correct but not obviously intentional"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.836,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 63.598,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "input_sanitizer",
+  "variant": "human_reference"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly separates debit and credit into named accumulators and validates directions before accumulation, satisfying the core TR-4 requirements. However, the technique used to avoid 'inline arithmetic inside conditionals' is itself a code smell: multiplying `amount * is_debit` and `amount * is_credit` (boolean-as-integer multiplication) is an implicit, non-obvious trick that trades one clarity problem for another. The Zen of Python favors explicit over implicit, and `if direction == 'debit': debit_totals[account] += amount` would be far more readable and auditable than boolean multiplication. The use of `defaultdict` would also eliminate the repetitive manual initialization guards. The docstring and structure are otherwise clean, naming is good, and the balance formula is clearly expressed in a named variable.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation correctly separates debit and credit into named accumulators and validates directions before accumulation, satisfying the core TR-4 requirements. However, the technique used to avoid 'inline arithmetic inside conditionals' is itself a code smell: multiplying `amount * is_debit` and `amount * is_credit` (boolean-as-integer multiplication) is an implicit, non-obvious trick that trades one clarity problem for another. The Zen of Python favors explicit over implicit, and `if direction == 'debit': debit_totals[account] += amount` would be far more readable and auditable than boolean multiplication. The use of `defaultdict` would also eliminate the repetitive manual initialization guards. The docstring and structure are otherwise clean, naming is good, and the balance formula is clearly expressed in a named variable.\",\n  \"strengths\": [\n    \"Strictly separate named accumulators for debit and credit satisfy TR-4's core structural requirement\",\n    \"Direction validation occurs before any accumulation, preventing corrupt state\",\n    \"Balance computed in a clearly named variable `net_balance` rather than inline\",\n    \"VALID_DIRECTIONS constant is explicit and reusable\",\n    \"Good docstring with clear contract description\"\n  ],\n  \"weaknesses\": [\n    \"Boolean-integer multiplication (`amount * is_debit`) is implicit and obscure \u2014 worse than a simple if/elif branch\",\n    \"Manual account initialization with repeated `if account not in` guards is verbose; `defaultdict(float)` would be cleaner\",\n    \"The `is_debit`/`is_credit` boolean variables add indirection without clarity benefit\",\n    \"Since both accumulators are always initialized together, the `set union` and `.get(..., 0.0)` in the result phase are unnecessary complexity\",\n    \"After validation confirms direction is in VALID_DIRECTIONS, the code still computes both booleans redundantly rather than branching cleanly\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Strictly separate named accumulators for debit and credit satisfy TR-4's core structural requirement",
+      "Direction validation occurs before any accumulation, preventing corrupt state",
+      "Balance computed in a clearly named variable `net_balance` rather than inline",
+      "VALID_DIRECTIONS constant is explicit and reusable",
+      "Good docstring with clear contract description"
+    ],
+    "weaknesses": [
+      "Boolean-integer multiplication (`amount * is_debit`) is implicit and obscure \u2014 worse than a simple if/elif branch",
+      "Manual account initialization with repeated `if account not in` guards is verbose; `defaultdict(float)` would be cleaner",
+      "The `is_debit`/`is_credit` boolean variables add indirection without clarity benefit",
+      "Since both accumulators are always initialized together, the `set union` and `.get(..., 0.0)` in the result phase are unnecessary complexity",
+      "After validation confirms direction is in VALID_DIRECTIONS, the code still computes both booleans redundantly rather than branching cleanly"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.503,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 56,
+    "maintainability_index": 79.91,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

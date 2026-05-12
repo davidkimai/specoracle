@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit state transitions through a named `state` attribute satisfying RCS-5's inspectability requirement. Configuration values are named (`failure_threshold`, `recovery_timeout`) rather than magic constants. Half-open trials correctly reopen on failure and close on success. The logic is locally auditable in a single `call` method without deep nesting or abstraction layers. Minor weaknesses include the failure counter not being reset when transitioning to half-open (so a half-open failure increments an already-at-threshold counter, which is harmless but slightly misleading), and the `or` condition `self.failures >= self.failure_threshold or self.state == 'half_open'` conflates two distinct transition reasons in one branch rather than separating them for clarity. The input validation rejecting zero values is a reasonable defensive choice. Overall the code is Pythonically straightforward with good structural quality.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit state transitions through a named `state` attribute satisfying RCS-5's inspectability requirement. Configuration values are named (`failure_threshold`, `recovery_timeout`) rather than magic constants. Half-open trials correctly reopen on failure and close on success. The logic is locally auditable in a single `call` method without deep nesting or abstraction layers. Minor weaknesses include the failure counter not being reset when transitioning to half-open (so a half-open failure increments an already-at-threshold counter, which is harmless but slightly misleading), and the `or` condition `self.failures >= self.failure_threshold or self.state == 'half_open'` conflates two distinct transition reasons in one branch rather than separating them for clarity. The input validation rejecting zero values is a reasonable defensive choice. Overall the code is Pythonically straightforward with good structural quality.\",\n  \"strengths\": [\n    \"Explicit `state` attribute with clear string values ('closed', 'open', 'half_open') satisfies RCS-5 inspectability\",\n    \"Named configuration attributes rather than magic constants\",\n    \"Flat, single-method control flow with no unnecessary abstraction\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Injectable `now` clock enables deterministic testing\"\n  ],\n  \"weaknesses\": [\n    \"Failure counter is not reset when entering half-open state, leaving it in a slightly inconsistent state\",\n    \"The combined condition `failures >= threshold or state == 'half_open'` mixes two distinct transition reasons, reducing readability\",\n    \"No docstring or inline comments explaining the state machine transitions\",\n    \"Rejects `failure_threshold=0` or `recovery_timeout=0` with ValueError but the spec doesn't mandate this guard\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit `state` attribute with clear string values ('closed', 'open', 'half_open') satisfies RCS-5 inspectability",
+      "Named configuration attributes rather than magic constants",
+      "Flat, single-method control flow with no unnecessary abstraction",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Injectable `now` clock enables deterministic testing"
+    ],
+    "weaknesses": [
+      "Failure counter is not reset when entering half-open state, leaving it in a slightly inconsistent state",
+      "The combined condition `failures >= threshold or state == 'half_open'` mixes two distinct transition reasons, reducing readability",
+      "No docstring or inline comments explaining the state machine transitions",
+      "Rejects `failure_threshold=0` or `recovery_timeout=0` with ValueError but the spec doesn't mandate this guard"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.111,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 2,
+    "loc": 28,
+    "maintainability_index": 51.613,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "human_reference"
+}

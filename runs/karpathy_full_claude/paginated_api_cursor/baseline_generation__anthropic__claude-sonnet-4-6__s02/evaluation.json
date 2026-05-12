@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and correct. The control flow is a single while-True loop with an early break, which is idiomatic and easy to audit locally. Data movement is explicit: items are extended into a local list, cursor is updated in place, and nothing is hidden. The type annotations are thorough but arguably verbose for such a small function\u2014the full Callable/Coroutine generic spelling adds noise without aiding comprehension at this scale. The docstring is generous to the point of slight over-documentation for a ~10-line function. There are no speculative abstractions, no framework-shaped code, and no unused extension points. A minor Zen concern: the while-True/break pattern is slightly less readable than a do-while equivalent expressed as `cursor = start_cursor; items, cursor = await fetch_page(cursor); ...` style, but it remains clear. Overall this is a solid, maintainable implementation with only minor cosmetic excess.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and correct. The control flow is a single while-True loop with an early break, which is idiomatic and easy to audit locally. Data movement is explicit: items are extended into a local list, cursor is updated in place, and nothing is hidden. The type annotations are thorough but arguably verbose for such a small function\u2014the full Callable/Coroutine generic spelling adds noise without aiding comprehension at this scale. The docstring is generous to the point of slight over-documentation for a ~10-line function. There are no speculative abstractions, no framework-shaped code, and no unused extension points. A minor Zen concern: the while-True/break pattern is slightly less readable than a do-while equivalent expressed as `cursor = start_cursor; items, cursor = await fetch_page(cursor); ...` style, but it remains clear. Overall this is a solid, maintainable implementation with only minor cosmetic excess.\",\n  \"strengths\": [\n    \"Flat, single-loop control flow with no deep nesting\",\n    \"Explicit data movement: local accumulator, explicit cursor update\",\n    \"No hidden state, no global mutation, no speculative abstractions\",\n    \"Correct handling of start_cursor and termination on next_cursor is None\",\n    \"Ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"Type annotations are overly verbose (full Callable/Coroutine spelling) for a small helper\",\n    \"Docstring length is disproportionate to the function's simplicity\",\n    \"while-True/break is slightly less self-documenting than a condition-driven loop\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-loop control flow with no deep nesting",
+      "Explicit data movement: local accumulator, explicit cursor update",
+      "No hidden state, no global mutation, no speculative abstractions",
+      "Correct handling of start_cursor and termination on next_cursor is None",
+      "Ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "Type annotations are overly verbose (full Callable/Coroutine spelling) for a small helper",
+      "Docstring length is disproportionate to the function's simplicity",
+      "while-True/break is slightly less self-documenting than a condition-driven loop"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.584,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.12s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 93.11,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "baseline_generation"
+}

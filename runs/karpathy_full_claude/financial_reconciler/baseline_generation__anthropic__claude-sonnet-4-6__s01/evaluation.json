@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows TR-4's doctrine: direction validation is cleanly separated from accumulation, debits and credits are accumulated into named sub-keys ('debit' and 'credit') rather than collapsed inline, and the balance computation is deferred to a final explicit pass over the results rather than being embedded in the conditional branch that decides direction. The code is flat, readable, and locally auditable with no hidden control flow. The only minor structural quibble is that `result[account][direction] += amount` uses the direction string as a dict key to dispatch accumulation, which is elegant but slightly implicit compared to an explicit `if direction == 'debit': ... elif direction == 'credit': ...` split into named accumulators \u2014 however, since direction has already been validated against the two-element set, this is safe and arguably cleaner. The extra validations (missing keys, type check, negative amounts) go beyond the stated requirements but are additive and non-harmful.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows TR-4's doctrine: direction validation is cleanly separated from accumulation, debits and credits are accumulated into named sub-keys ('debit' and 'credit') rather than collapsed inline, and the balance computation is deferred to a final explicit pass over the results rather than being embedded in the conditional branch that decides direction. The code is flat, readable, and locally auditable with no hidden control flow. The only minor structural quibble is that `result[account][direction] += amount` uses the direction string as a dict key to dispatch accumulation, which is elegant but slightly implicit compared to an explicit `if direction == 'debit': ... elif direction == 'credit': ...` split into named accumulators \u2014 however, since direction has already been validated against the two-element set, this is safe and arguably cleaner. The extra validations (missing keys, type check, negative amounts) go beyond the stated requirements but are additive and non-harmful.\",\n  \"strengths\": [\n    \"Debit and credit totals accumulate into separate named keys, satisfying TR-4's named-accumulator requirement\",\n    \"Balance arithmetic is isolated in a dedicated final loop, not mixed into the direction-dispatch logic\",\n    \"Direction validation is fully resolved before any monetary mutation occurs\",\n    \"Code is flat, readable, and free of nested conditionals or clever one-liners that obscure intent\",\n    \"Docstring clearly documents parameters, return shape, and exceptions\"\n  ],\n  \"weaknesses\": [\n    \"Using `result[account][direction] += amount` implicitly merges the dispatch and accumulation steps; an explicit if/elif would make the two accumulators more visually distinct per TR-4's spirit\",\n    \"Initialising 'balance' to 0.0 in the bucket and then overwriting it later is a minor redundancy\",\n    \"Extra validations (negative amounts, type checks) are undocumented in the task spec and could mask legitimate use-cases silently\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Debit and credit totals accumulate into separate named keys, satisfying TR-4's named-accumulator requirement",
+      "Balance arithmetic is isolated in a dedicated final loop, not mixed into the direction-dispatch logic",
+      "Direction validation is fully resolved before any monetary mutation occurs",
+      "Code is flat, readable, and free of nested conditionals or clever one-liners that obscure intent",
+      "Docstring clearly documents parameters, return shape, and exceptions"
+    ],
+    "weaknesses": [
+      "Using `result[account][direction] += amount` implicitly merges the dispatch and accumulation steps; an explicit if/elif would make the two accumulators more visually distinct per TR-4's spirit",
+      "Initialising 'balance' to 0.0 in the bucket and then overwriting it later is a minor redundancy",
+      "Extra validations (negative amounts, type checks) are undocumented in the task spec and could mask legitimate use-cases silently"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.503,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.18s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 67,
+    "maintainability_index": 79.367,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "baseline_generation"
+}

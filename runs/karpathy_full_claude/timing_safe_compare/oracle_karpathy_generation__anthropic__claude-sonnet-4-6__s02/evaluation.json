@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the stated problem. It checks type equality first (catching mismatched types), then validates that the type is acceptable (str or bytes), and delegates to hmac.compare_digest. The order of checks is logical and the error messages are informative without being verbose. The only minor quibble is that the type annotation uses a string literal 'str | bytes' for compatibility rather than a Union type, which is a reasonable conservative choice. No unnecessary abstractions, no speculative features, and the code is locally auditable in a single glance.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the stated problem. It checks type equality first (catching mismatched types), then validates that the type is acceptable (str or bytes), and delegates to hmac.compare_digest. The order of checks is logical and the error messages are informative without being verbose. The only minor quibble is that the type annotation uses a string literal 'str | bytes' for compatibility rather than a Union type, which is a reasonable conservative choice. No unnecessary abstractions, no speculative features, and the code is locally auditable in a single glance.\",\n  \"strengths\": [\n    \"Minimal code that exactly satisfies the requirements\",\n    \"Correct check ordering: same-type check before valid-type check avoids leaking type info unnecessarily\",\n    \"Clear, informative error messages without being excessive\",\n    \"Direct delegation to hmac.compare_digest with no wrapper overhead\"\n  ],\n  \"weaknesses\": [\n    \"String-form type annotation 'str | bytes' is slightly awkward; could use Union[str, bytes] or require Python 3.10+ for the pipe syntax directly\",\n    \"The second isinstance check is unreachable if both inputs are the same non-str/bytes type \u2014 but this is a negligible edge case and the guard is still correct\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code that exactly satisfies the requirements",
+      "Correct check ordering: same-type check before valid-type check avoids leaking type info unnecessarily",
+      "Clear, informative error messages without being excessive",
+      "Direct delegation to hmac.compare_digest with no wrapper overhead"
+    ],
+    "weaknesses": [
+      "String-form type annotation 'str | bytes' is slightly awkward; could use Union[str, bytes] or require Python 3.10+ for the pipe syntax directly",
+      "The second isinstance check is unreachable if both inputs are the same non-str/bytes type \u2014 but this is a negligible edge case and the guard is still correct"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.552,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 73.706,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "oracle_karpathy_generation"
+}

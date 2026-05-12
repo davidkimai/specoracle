@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a single linear pass with early-continue guards that keep nesting flat, validates all three fields explicitly (kind, user_id, amount) with correct type checks including the bool-subclass-of-int edge case handled implicitly by isinstance(amount, int) which does pass for bools\u2014a minor concern\u2014and never mutates input. The defaultdict pattern was deliberately avoided in favor of an explicit key-existence check, which is slightly more verbose but perfectly readable and locally auditable. No speculative features, no helper functions, no classes, no imports. The only marginal weakness is that isinstance(amount, int) will accept bool values (True/False) as valid amounts since bool is a subclass of int, which could be considered a subtle correctness gap depending on interpretation, but the spec only says 'amount is an integer' so this is defensible.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a single linear pass with early-continue guards that keep nesting flat, validates all three fields explicitly (kind, user_id, amount) with correct type checks including the bool-subclass-of-int edge case handled implicitly by isinstance(amount, int) which does pass for bools\u2014a minor concern\u2014and never mutates input. The defaultdict pattern was deliberately avoided in favor of an explicit key-existence check, which is slightly more verbose but perfectly readable and locally auditable. No speculative features, no helper functions, no classes, no imports. The only marginal weakness is that isinstance(amount, int) will accept bool values (True/False) as valid amounts since bool is a subclass of int, which could be considered a subtle correctness gap depending on interpretation, but the spec only says 'amount is an integer' so this is defensible.\",\n  \"strengths\": [\n    \"Single-pass linear algorithm with no unnecessary complexity\",\n    \"Flat structure with early-continue guards avoids deep nesting\",\n    \"Explicit type and emptiness checks match the spec precisely\",\n    \"No mutation of input events or the input list\",\n    \"No imports, no abstractions, no speculative flexibility\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(amount, int) accepts bool values (True/False) since bool subclasses int, which may be unintended\",\n    \"Explicit key-existence check is slightly more verbose than defaultdict, though not a real flaw\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single-pass linear algorithm with no unnecessary complexity",
+      "Flat structure with early-continue guards avoids deep nesting",
+      "Explicit type and emptiness checks match the spec precisely",
+      "No mutation of input events or the input list",
+      "No imports, no abstractions, no speculative flexibility"
+    ],
+    "weaknesses": [
+      "isinstance(amount, int) accepts bool values (True/False) since bool subclasses int, which may be unintended",
+      "Explicit key-existence check is slightly more verbose than defaultdict, though not a real flaw"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.412,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 16,
+    "maintainability_index": 58.678,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "nested_json_index",
+  "variant": "oracle_karpathy_generation"
+}

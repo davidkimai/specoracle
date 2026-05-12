@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, explicit, and flat realization of CD-7 requirements. It collects all validation errors before raising, names every failing field in the error message, and returns a clean dict only after all fields pass. The walrus-operator sentinel pattern is slightly clever but readable, and the explicit bool-subclass rejection for age is a thoughtful edge case. The code is locally auditable with no hidden control flow, no unnecessary abstraction layers, and clear section comments. Minor quibbles: using `_MISSING := object()` inside the function body means a new sentinel object is created on every call and reused across the three checks (which works but is subtly fragile if the pattern were extended), and `patient_id.strip()` in the output silently normalizes whitespace without documenting that behavior as a deliberate design choice. The `break` on the first bad symptoms element is a reasonable tradeoff and is commented. Overall this is a high-quality, auditable, CD-7-compliant implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, explicit, and flat realization of CD-7 requirements. It collects all validation errors before raising, names every failing field in the error message, and returns a clean dict only after all fields pass. The walrus-operator sentinel pattern is slightly clever but readable, and the explicit bool-subclass rejection for age is a thoughtful edge case. The code is locally auditable with no hidden control flow, no unnecessary abstraction layers, and clear section comments. Minor quibbles: using `_MISSING := object()` inside the function body means a new sentinel object is created on every call and reused across the three checks (which works but is subtly fragile if the pattern were extended), and `patient_id.strip()` in the output silently normalizes whitespace without documenting that behavior as a deliberate design choice. The `break` on the first bad symptoms element is a reasonable tradeoff and is commented. Overall this is a high-quality, auditable, CD-7-compliant implementation.\",\n  \"strengths\": [\n    \"Collects all errors before raising, fully satisfying the 'no partial validation' CD-7 requirement\",\n    \"Every error message explicitly names the failing field\",\n    \"Explicit bool rejection prevents silent int-subclass acceptance\",\n    \"Flat, linear structure with no unnecessary abstraction or indirection\",\n    \"Returns a clean copy of symptoms list, preventing mutation of caller's data\",\n    \"Docstring accurately describes behavior including the raise semantics\"\n  ],\n  \"weaknesses\": [\n    \"Walrus-operator sentinel `_MISSING := object()` is reused across three separate `.get()` calls but is only defined once in the first call, which is subtle and could confuse readers\",\n    \"Silent `patient_id.strip()` normalization in the output is undocumented as a deliberate policy\",\n    \"Breaking on the first bad symptoms element is inconsistent with collecting all other field errors (minor inconsistency in error reporting depth)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Collects all errors before raising, fully satisfying the 'no partial validation' CD-7 requirement",
+      "Every error message explicitly names the failing field",
+      "Explicit bool rejection prevents silent int-subclass acceptance",
+      "Flat, linear structure with no unnecessary abstraction or indirection",
+      "Returns a clean copy of symptoms list, preventing mutation of caller's data",
+      "Docstring accurately describes behavior including the raise semantics"
+    ],
+    "weaknesses": [
+      "Walrus-operator sentinel `_MISSING := object()` is reused across three separate `.get()` calls but is only defined once in the first call, which is subtle and could confuse readers",
+      "Silent `patient_id.strip()` normalization in the output is undocumented as a deliberate policy",
+      "Breaking on the first bad symptoms element is inconsistent with collecting all other field errors (minor inconsistency in error reporting depth)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.407,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 78.896,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_karpathy_generation"
+}

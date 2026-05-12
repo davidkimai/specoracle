@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, direct, and uses exactly the right standard-library construct (OrderedDict) for LRU tracking without any speculative abstraction. Control flow is flat, data movement is explicit, validation raises a clear error, and the injectable `now` clock makes testing straightforward. The only minor imperfection is that `set` calls `move_to_end` redundantly after assignment (assigning to an existing key in an OrderedDict already moves it to the end in Python 3.7+, though for a new key it is a no-op, so it is harmless but slightly noisy). Everything else\u2014naming, structure, absence of hidden state, and local auditability\u2014aligns well with the Zen oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, direct, and uses exactly the right standard-library construct (OrderedDict) for LRU tracking without any speculative abstraction. Control flow is flat, data movement is explicit, validation raises a clear error, and the injectable `now` clock makes testing straightforward. The only minor imperfection is that `set` calls `move_to_end` redundantly after assignment (assigning to an existing key in an OrderedDict already moves it to the end in Python 3.7+, though for a new key it is a no-op, so it is harmless but slightly noisy). Everything else\u2014naming, structure, absence of hidden state, and local auditability\u2014aligns well with the Zen oracle.\",\n  \"strengths\": [\n    \"Uses OrderedDict naturally for LRU without reinventing the wheel\",\n    \"Injectable `now` parameter makes the clock explicit and testable\",\n    \"Clear ValueError for invalid construction arguments\",\n    \"Flat control flow with guard clauses in `get`\",\n    \"No speculative abstractions or unused extension points\",\n    \"Data movement (eviction, expiry deletion, LRU promotion) is all explicit and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Redundant `move_to_end` call in `set` after direct key assignment (assignment already moves to end for existing keys in CPython's OrderedDict)\",\n    \"Type annotations import `Callable` from `collections.abc` but also uses `Any` from `typing`; minor inconsistency in annotation style\",\n    \"No docstring or comment explaining the LRU eviction strategy, which would aid a first-time reader\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses OrderedDict naturally for LRU without reinventing the wheel",
+      "Injectable `now` parameter makes the clock explicit and testable",
+      "Clear ValueError for invalid construction arguments",
+      "Flat control flow with guard clauses in `get`",
+      "No speculative abstractions or unused extension points",
+      "Data movement (eviction, expiry deletion, LRU promotion) is all explicit and locally auditable"
+    ],
+    "weaknesses": [
+      "Redundant `move_to_end` call in `set` after direct key assignment (assignment already moves to end for existing keys in CPython's OrderedDict)",
+      "Type annotations import `Callable` from `collections.abc` but also uses `Any` from `typing`; minor inconsistency in annotation style",
+      "No docstring or comment explaining the LRU eviction strategy, which would aid a first-time reader"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.608,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.25,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 28,
+    "maintainability_index": 52.639,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "human_reference"
+}

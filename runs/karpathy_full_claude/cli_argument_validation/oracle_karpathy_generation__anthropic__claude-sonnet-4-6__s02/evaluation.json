@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a simple while-loop with explicit flag dispatch, validates all required constraints, raises ValueError with informative messages, and returns the correct shape. The code is flat, readable, and locally auditable \u2014 every branch is visible at a glance. The only minor structural quibble is that the `argv[i+1].startswith('--')` heuristic for detecting missing values could misclassify a legitimate path or value starting with '--', but this is a reasonable conservative interpretation for a CLI parser and is consistent across all three value-taking flags. No speculative abstractions, no over-engineering, no unnecessary helpers \u2014 exactly the minimum code needed.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a simple while-loop with explicit flag dispatch, validates all required constraints, raises ValueError with informative messages, and returns the correct shape. The code is flat, readable, and locally auditable \u2014 every branch is visible at a glance. The only minor structural quibble is that the `argv[i+1].startswith('--')` heuristic for detecting missing values could misclassify a legitimate path or value starting with '--', but this is a reasonable conservative interpretation for a CLI parser and is consistent across all three value-taking flags. No speculative abstractions, no over-engineering, no unnecessary helpers \u2014 exactly the minimum code needed.\",\n  \"strengths\": [\n    \"Flat, single-function implementation with no unnecessary abstractions\",\n    \"Explicit known_flags set makes extension visible but isn't over-engineered\",\n    \"All validation cases (missing required, unknown flags, missing values, invalid values) are handled\",\n    \"Clear, testable contract with informative error messages\",\n    \"Correct default values and return type\"\n  ],\n  \"weaknesses\": [\n    \"The `argv[i+1].startswith('--')` check to detect missing values could incorrectly reject a valid path like '--my-file.txt', though this is a minor and common trade-off\",\n    \"No explicit handling if the same flag is provided twice (last-write-wins silently), which could be considered a missing validation\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-function implementation with no unnecessary abstractions",
+      "Explicit known_flags set makes extension visible but isn't over-engineered",
+      "All validation cases (missing required, unknown flags, missing values, invalid values) are handled",
+      "Clear, testable contract with informative error messages",
+      "Correct default values and return type"
+    ],
+    "weaknesses": [
+      "The `argv[i+1].startswith('--')` check to detect missing values could incorrectly reject a valid path like '--my-file.txt', though this is a minor and common trade-off",
+      "No explicit handling if the same flag is provided twice (last-write-wins silently), which could be considered a missing validation"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.328,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 18.0,
+    "cyclomatic_complexity_max": 18,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 1,
+    "loc": 46,
+    "maintainability_index": 43.583,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and uses the standard Kahn's algorithm approach with minimal abstractions. It correctly handles implicit dependency-only nodes, detects cycles, and returns alphabetically sorted batches. The code is readable and appropriately sized for the task. However, there's a minor inefficiency/redundancy: the queue is initialized with `sorted(...)` but then immediately converted to a sorted `batch = sorted(queue)` \u2014 the initial sort is wasted since `queue.clear()` is called right after. The pattern of using a deque as a staging area only to immediately call `sorted(queue)` and then `queue.clear()` is slightly awkward; a simpler approach would use a plain list for the current batch candidates. The `next_batch` set with `queue.extend(sorted(next_batch))` pattern works but adds a small layer of indirection. Overall the logic is sound and the code is concise enough, but the queue management has a structural oddity that slightly obscures the algorithm's intent.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, correct, and uses the standard Kahn's algorithm approach with minimal abstractions. It correctly handles implicit dependency-only nodes, detects cycles, and returns alphabetically sorted batches. The code is readable and appropriately sized for the task. However, there's a minor inefficiency/redundancy: the queue is initialized with `sorted(...)` but then immediately converted to a sorted `batch = sorted(queue)` \u2014 the initial sort is wasted since `queue.clear()` is called right after. The pattern of using a deque as a staging area only to immediately call `sorted(queue)` and then `queue.clear()` is slightly awkward; a simpler approach would use a plain list for the current batch candidates. The `next_batch` set with `queue.extend(sorted(next_batch))` pattern works but adds a small layer of indirection. Overall the logic is sound and the code is concise enough, but the queue management has a structural oddity that slightly obscures the algorithm's intent.\",\n  \"strengths\": [\n    \"Correct Kahn's algorithm implementation with cycle detection\",\n    \"Properly includes implicit dependency-only nodes without mutating input\",\n    \"Minimal dependencies (only collections.deque from stdlib)\",\n    \"Appropriately sized \u2014 no over-engineering or speculative abstractions\",\n    \"Clear variable naming (in_degree, dependents, next_batch)\"\n  ],\n  \"weaknesses\": [\n    \"Initial `sorted()` on queue construction is wasted since queue is immediately cleared in the loop\",\n    \"Using deque as a staging area only to call sorted(queue)+clear() is awkward; a plain list of current-level nodes would be cleaner\",\n    \"The `next_batch` set + `queue.extend(sorted(...))` pattern adds unnecessary indirection for what is essentially just collecting the next batch\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct Kahn's algorithm implementation with cycle detection",
+      "Properly includes implicit dependency-only nodes without mutating input",
+      "Minimal dependencies (only collections.deque from stdlib)",
+      "Appropriately sized \u2014 no over-engineering or speculative abstractions",
+      "Clear variable naming (in_degree, dependents, next_batch)"
+    ],
+    "weaknesses": [
+      "Initial `sorted()` on queue construction is wasted since queue is immediately cleared in the loop",
+      "Using deque as a staging area only to call sorted(queue)+clear() is awkward; a plain list of current-level nodes would be cleaner",
+      "The `next_batch` set + `queue.extend(sorted(...))` pattern adds unnecessary indirection for what is essentially just collecting the next batch"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.393,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 73.296,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the task requirements without speculative abstractions. State is explicit (`_resources` list), control flow is flat, data movement is visible, and the reverse-close logic is straightforward. The error-handling choice to collect all errors but raise only the first is a reasonable and auditable policy. Minor quibble: silently swallowing subsequent errors after the first could surprise callers, and `return False` is redundant (implicit None is falsy), but neither is a meaningful flaw. The code is sparse enough to audit in one pass and uses only standard constructs.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the task requirements without speculative abstractions. State is explicit (`_resources` list), control flow is flat, data movement is visible, and the reverse-close logic is straightforward. The error-handling choice to collect all errors but raise only the first is a reasonable and auditable policy. Minor quibble: silently swallowing subsequent errors after the first could surprise callers, and `return False` is redundant (implicit None is falsy), but neither is a meaningful flaw. The code is sparse enough to audit in one pass and uses only standard constructs.\",\n  \"strengths\": [\n    \"Minimal state: single list, no hidden mutation\",\n    \"Explicit reverse iteration with `reversed()`\",\n    \"Clears resources after exit, preventing double-close on reuse\",\n    \"No metaprogramming or framework-shaped scaffolding\",\n    \"Names are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Subsequent close errors are silently discarded; could use ExceptionGroup or chaining\",\n    \"`return False` is redundant noise (implicit None suffices)\",\n    \"No validation that the acquired resource has a `.close()` method at acquire-time\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal state: single list, no hidden mutation",
+      "Explicit reverse iteration with `reversed()`",
+      "Clears resources after exit, preventing double-close on reuse",
+      "No metaprogramming or framework-shaped scaffolding",
+      "Names are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "Subsequent close errors are silently discarded; could use ExceptionGroup or chaining",
+      "`return False` is redundant noise (implicit None suffices)",
+      "No validation that the acquired resource has a `.close()` method at acquire-time"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.406,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 4,
+    "loc": 19,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "resource_scope",
+  "variant": "baseline_generation"
+}

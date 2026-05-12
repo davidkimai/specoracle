@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is nearly optimal: it uses the standard library's csv.DictReader which handles header parsing and row-to-dict mapping correctly, filters empty lines with a generator expression to preserve streaming, and yields lazily via `yield from`. The code is minimal, correct, and directly maps the problem to the right abstraction without any speculative complexity. The only minor issue is the verbose comment block that partially contradicts itself and adds noise without adding clarity\u2014a single short comment or none at all would be cleaner per the simplicity-first guideline.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is nearly optimal: it uses the standard library's csv.DictReader which handles header parsing and row-to-dict mapping correctly, filters empty lines with a generator expression to preserve streaming, and yields lazily via `yield from`. The code is minimal, correct, and directly maps the problem to the right abstraction without any speculative complexity. The only minor issue is the verbose comment block that partially contradicts itself and adds noise without adding clarity\u2014a single short comment or none at all would be cleaner per the simplicity-first guideline.\",\n  \"strengths\": [\n    \"Uses csv.DictReader, the exact right stdlib tool for this task\",\n    \"Preserves streaming: generator expression for filtering, yield from for lazy iteration\",\n    \"No unnecessary abstractions, classes, or configurability\",\n    \"Correct handling of empty-line filtering before header detection\"\n  ],\n  \"weaknesses\": [\n    \"Comment block is verbose and partially self-contradictory, adding noise rather than clarity\",\n    \"csv.DictReader returns OrderedDict (Python <3.8) or dict; values are strings by default, which is correct, but this assumption is implicit rather than stated\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses csv.DictReader, the exact right stdlib tool for this task",
+      "Preserves streaming: generator expression for filtering, yield from for lazy iteration",
+      "No unnecessary abstractions, classes, or configurability",
+      "Correct handling of empty-line filtering before header detection"
+    ],
+    "weaknesses": [
+      "Comment block is verbose and partially self-contradictory, adding noise rather than clarity",
+      "csv.DictReader returns OrderedDict (Python <3.8) or dict; values are strings by default, which is correct, but this assumption is implicit rather than stated"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.513,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_karpathy_generation"
+}

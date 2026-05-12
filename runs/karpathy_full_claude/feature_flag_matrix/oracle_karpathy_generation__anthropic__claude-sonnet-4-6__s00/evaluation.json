@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of the Karpathy guidelines applied correctly: it solves exactly the stated problem in the minimum number of lines with no unnecessary abstractions, no speculative features, and no mutations of inputs. The logic is flat, linear, and locally auditable in a single read-through. Each step maps directly to a requirement: copy defaults, apply segment overrides in order (skipping unknowns), apply user overrides. The type hints are appropriately relaxed (dict rather than dict[str, bool]) which is a minor but acceptable simplification. There is nothing to remove and nothing missing.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of the Karpathy guidelines applied correctly: it solves exactly the stated problem in the minimum number of lines with no unnecessary abstractions, no speculative features, and no mutations of inputs. The logic is flat, linear, and locally auditable in a single read-through. Each step maps directly to a requirement: copy defaults, apply segment overrides in order (skipping unknowns), apply user overrides. The type hints are appropriately relaxed (dict rather than dict[str, bool]) which is a minor but acceptable simplification. There is nothing to remove and nothing missing.\",\n  \"strengths\": [\n    \"Minimal: 4 lines of logic cover all requirements exactly\",\n    \"No mutation of inputs \u2014 starts with dict(defaults) copy\",\n    \"Correct ordering: segments in user-listed order, then overrides last\",\n    \"Unknown segments silently ignored via 'if seg in segments' guard\",\n    \"Flat, readable, zero abstraction overhead\"\n  ],\n  \"weaknesses\": [\n    \"Type annotations use bare dict instead of dict[str, bool] as specified in the signature, though this is cosmetic and does not affect correctness\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal: 4 lines of logic cover all requirements exactly",
+      "No mutation of inputs \u2014 starts with dict(defaults) copy",
+      "Correct ordering: segments in user-listed order, then overrides last",
+      "Unknown segments silently ignored via 'if seg in segments' guard",
+      "Flat, readable, zero abstraction overhead"
+    ],
+    "weaknesses": [
+      "Type annotations use bare dict instead of dict[str, bool] as specified in the signature, though this is cosmetic and does not affect correctness"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.486,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 7,
+    "maintainability_index": 76.42,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "oracle_karpathy_generation"
+}

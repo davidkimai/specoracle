@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of minimal, correct, readable async iteration. It uses exactly the right primitives: a single accumulator list, a cursor variable initialized from the parameter, a while-True loop with a break on termination condition, and extend for batch appending. There are no unnecessary abstractions, no speculative features, no helper functions, no type annotations beyond what's needed, and no dead code. The loop structure is flat and the control flow is immediately auditable in one pass. It precisely matches the functional contract and nothing more.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of minimal, correct, readable async iteration. It uses exactly the right primitives: a single accumulator list, a cursor variable initialized from the parameter, a while-True loop with a break on termination condition, and extend for batch appending. There are no unnecessary abstractions, no speculative features, no helper functions, no type annotations beyond what's needed, and no dead code. The loop structure is flat and the control flow is immediately auditable in one pass. It precisely matches the functional contract and nothing more.\",\n  \"strengths\": [\n    \"Minimal line count with zero redundancy\",\n    \"Flat single-loop structure with no nested abstractions\",\n    \"Correct cursor threading: start_cursor passed to first call, then updated each iteration\",\n    \"Uses extend (not append) correctly for batch items\",\n    \"Termination condition is explicit and placed at the natural decision point after fetching\"\n  ],\n  \"weaknesses\": [\n    \"No weaknesses of note for this scope\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal line count with zero redundancy",
+      "Flat single-loop structure with no nested abstractions",
+      "Correct cursor threading: start_cursor passed to first call, then updated each iteration",
+      "Uses extend (not append) correctly for batch items",
+      "Termination condition is explicit and placed at the natural decision point after fetching"
+    ],
+    "weaknesses": [
+      "No weaknesses of note for this scope"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.576,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.15s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 10,
+    "maintainability_index": 73.041,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "paginated_api_cursor",
+  "variant": "oracle_karpathy_generation"
+}

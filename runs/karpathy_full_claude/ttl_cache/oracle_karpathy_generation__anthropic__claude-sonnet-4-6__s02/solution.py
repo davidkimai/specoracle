@@ -1,0 +1,28 @@
+import time
+from collections import OrderedDict
+
+
+class TTLCache:
+    def __init__(self, max_size: int, ttl_seconds: float, *, now=None):
+        self._max_size = max_size
+        self._ttl = ttl_seconds
+        self._now = now if now is not None else time.monotonic
+        self._store = OrderedDict()  # key -> (value, expiry)
+
+    def set(self, key, value):
+        expiry = self._now() + self._ttl
+        if key in self._store:
+            del self._store[key]
+        self._store[key] = (value, expiry)
+        while len(self._store) > self._max_size:
+            self._store.popitem(last=False)
+
+    def get(self, key):
+        if key not in self._store:
+            return None
+        value, expiry = self._store[key]
+        if self._now() >= expiry:
+            del self._store[key]
+            return None
+        self._store.move_to_end(key)
+        return value

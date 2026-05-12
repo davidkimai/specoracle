@@ -71,6 +71,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "generate":
         tasks = load_tasks(Path(args.dataset), limit=args.limit)
+        tasks = _apply_oracle_skill(tasks, getattr(args, "oracle_skill", None))
         settings = _settings_from_args(args, role="generator")
         client = build_llm_client(settings)
         generator = SpecOracleGenerator(client, settings)
@@ -121,6 +122,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run":
         tasks = load_tasks(Path(args.dataset), limit=args.limit)
+        tasks = _apply_oracle_skill(tasks, getattr(args, "oracle_skill", None))
         settings = _settings_from_args(args, role="generator")
         client = build_llm_client(settings)
         generator = SpecOracleGenerator(client, settings)
@@ -303,7 +305,7 @@ def _add_generation_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--modes",
         nargs="+",
-        choices=("baseline", "oracle", "neutral_style", "hybrid"),
+        choices=("baseline", "oracle", "oracle_karpathy", "neutral_style", "hybrid"),
         default=["baseline", "oracle"],
         help="generation modes to run",
     )
@@ -314,6 +316,15 @@ def _add_generation_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--hybrid-max-retries", type=int, default=3)
     parser.add_argument("--hybrid-require-pytest", dest="hybrid_require_pytest", action="store_true", default=True)
     parser.add_argument("--no-hybrid-require-pytest", dest="hybrid_require_pytest", action="store_false")
+    parser.add_argument(
+        "--oracle-skill",
+        type=str,
+        default=None,
+        help=(
+            "Path to an Agent Skills SKILL.md to use as the oracle. "
+            "See https://developers.openai.com/codex/skills"
+        ),
+    )
 
 
 def _add_evaluation_args(parser: argparse.ArgumentParser) -> None:
@@ -339,6 +350,20 @@ def load_tasks(path: Path, *, limit: int | None = None) -> list[Task]:
 
     tasks = [Task.from_mapping(payload) for payload in payloads]
     return tasks[:limit] if limit is not None else tasks
+
+
+def _apply_oracle_skill(tasks: list[Task], oracle_skill: str | None) -> list[Task]:
+    if not oracle_skill:
+        return tasks
+
+    from specoracle.skills import load_skill_oracle
+
+    skill_name, skill_body = load_skill_oracle(oracle_skill)
+    print(f"Loaded oracle skill: {skill_name}")
+    return [
+        Task.from_mapping({**task.to_mapping(), "custom_spec_override": skill_body})
+        for task in tasks
+    ]
 
 
 def _load_task_file(path: Path) -> list[dict[str, Any]]:
@@ -1153,7 +1178,7 @@ def _as_provider(value: str) -> Provider:
 
 
 def _as_generation_mode(value: str) -> GenerationMode:
-    if value in {"baseline", "oracle", "neutral_style", "hybrid"}:
+    if value in {"baseline", "oracle", "oracle_karpathy", "neutral_style", "hybrid"}:
         return value  # type: ignore[return-value]
     raise ValueError(f"unknown generation mode: {value}")
 

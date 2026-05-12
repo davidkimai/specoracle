@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the stated requirements without any speculative abstraction. It uses a simple list-per-key approach with a list comprehension for eviction, which is easy to audit locally. The constructor validation is explicit and the error message is clear. The `allow` method correctly implements the half-open window (t > cutoff means t > timestamp - window_seconds, i.e., t is in (timestamp - window_seconds, timestamp]), and records only on success. The `snapshot` method returns a defensive copy. The only minor inefficiency is that `self._store[key] = retained` is written twice (once on success, once on failure), which could be collapsed, but this is a trivial readability trade-off rather than architectural slop. Overall, this is close to the minimum viable correct implementation with no unnecessary features, abstractions, or complexity.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the stated requirements without any speculative abstraction. It uses a simple list-per-key approach with a list comprehension for eviction, which is easy to audit locally. The constructor validation is explicit and the error message is clear. The `allow` method correctly implements the half-open window (t > cutoff means t > timestamp - window_seconds, i.e., t is in (timestamp - window_seconds, timestamp]), and records only on success. The `snapshot` method returns a defensive copy. The only minor inefficiency is that `self._store[key] = retained` is written twice (once on success, once on failure), which could be collapsed, but this is a trivial readability trade-off rather than architectural slop. Overall, this is close to the minimum viable correct implementation with no unnecessary features, abstractions, or complexity.\",\n  \"strengths\": [\n    \"Minimal code with no speculative features or abstractions\",\n    \"Correct half-open window semantics (t > cutoff)\",\n    \"Explicit ValueError with clear message\",\n    \"Defensive copy in snapshot prevents external mutation\",\n    \"Uses defaultdict appropriately to avoid key-existence boilerplate\"\n  ],\n  \"weaknesses\": [\n    \"Redundant double assignment of self._store[key] = retained in both branches; could assign once before the conditional\",\n    \"No type annotation on snapshot return (uses bare `list` instead of `list[int]`), minor inconsistency with the spec\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative features or abstractions",
+      "Correct half-open window semantics (t > cutoff)",
+      "Explicit ValueError with clear message",
+      "Defensive copy in snapshot prevents external mutation",
+      "Uses defaultdict appropriately to avoid key-existence boilerplate"
+    ],
+    "weaknesses": [
+      "Redundant double assignment of self._store[key] = retained in both branches; could assign once before the conditional",
+      "No type annotation on snapshot return (uses bare `list` instead of `list[int]`), minor inconsistency with the spec"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.43,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 3,
+    "loc": 21,
+    "maintainability_index": 70.472,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_karpathy_generation"
+}

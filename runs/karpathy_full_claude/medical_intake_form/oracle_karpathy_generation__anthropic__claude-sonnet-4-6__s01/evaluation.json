@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, explicit, and flat realization of CD-7 requirements. It collects all validation errors before raising, names every failing field clearly, and returns only after all fields pass \u2014 directly matching the spec. The code is locally auditable with no hidden control flow, no unnecessary abstraction layers, and no architectural slop. The bool-subclass guard for age is a thoughtful edge-case handling. The docstring is thorough without being excessive. Minor weaknesses include stripping patient_id in the output (a silent normalization not mentioned in the spec) and raising TypeError separately from ValueError for a non-dict payload (the spec only mentions ValueError), but these are minor deviations that don't compromise the structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, explicit, and flat realization of CD-7 requirements. It collects all validation errors before raising, names every failing field clearly, and returns only after all fields pass \u2014 directly matching the spec. The code is locally auditable with no hidden control flow, no unnecessary abstraction layers, and no architectural slop. The bool-subclass guard for age is a thoughtful edge-case handling. The docstring is thorough without being excessive. Minor weaknesses include stripping patient_id in the output (a silent normalization not mentioned in the spec) and raising TypeError separately from ValueError for a non-dict payload (the spec only mentions ValueError), but these are minor deviations that don't compromise the structural quality.\",\n  \"strengths\": [\n    \"Collects all errors before raising \u2014 fully CD-7 compliant partial-validation prevention\",\n    \"Every error message explicitly names the failing field\",\n    \"Flat, readable structure with no unnecessary abstraction or indirection\",\n    \"Explicit bool rejection for age prevents a common Python gotcha\",\n    \"Returns a clean copy of only the validated required fields\",\n    \"Per-element validation of symptoms list with index reporting\"\n  ],\n  \"weaknesses\": [\n    \"Silent normalization: patient_id is stripped in output but spec doesn't mention this transformation\",\n    \"TypeError raised for non-dict payload instead of ValueError, inconsistent with spec's error contract\",\n    \"Docstring length is slightly over-engineered for a small utility function\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Collects all errors before raising \u2014 fully CD-7 compliant partial-validation prevention",
+      "Every error message explicitly names the failing field",
+      "Flat, readable structure with no unnecessary abstraction or indirection",
+      "Explicit bool rejection for age prevents a common Python gotcha",
+      "Returns a clean copy of only the validated required fields",
+      "Per-element validation of symptoms list with index reporting"
+    ],
+    "weaknesses": [
+      "Silent normalization: patient_id is stripped in output but spec doesn't mention this transformation",
+      "TypeError raised for non-dict payload instead of ValueError, inconsistent with spec's error contract",
+      "Docstring length is slightly over-engineered for a small utility function"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.582,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.14s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 81,
+    "maintainability_index": 78.787,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_karpathy_generation"
+}

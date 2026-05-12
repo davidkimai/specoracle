@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and structurally sound. It uses a sliding-window deque approach which is the natural fit for this problem, keeps all state explicit in instance variables, raises a clear ValueError for invalid input, and delegates time to an injected callable with a sensible default. Control flow is flat with a single guard clause pattern. The `acquire` method is easy to audit locally in one read. The only minor quibble is that the `while` loop for eviction could be expressed as a helper or comment to make the intent slightly more explicit, but it's short enough that it doesn't hurt readability. No speculative abstractions, no hidden state, no framework-shaped code \u2014 this is exactly what the Zen oracle would endorse.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and structurally sound. It uses a sliding-window deque approach which is the natural fit for this problem, keeps all state explicit in instance variables, raises a clear ValueError for invalid input, and delegates time to an injected callable with a sensible default. Control flow is flat with a single guard clause pattern. The `acquire` method is easy to audit locally in one read. The only minor quibble is that the `while` loop for eviction could be expressed as a helper or comment to make the intent slightly more explicit, but it's short enough that it doesn't hurt readability. No speculative abstractions, no hidden state, no framework-shaped code \u2014 this is exactly what the Zen oracle would endorse.\",\n  \"strengths\": [\n    \"Minimal and correct sliding-window implementation using deque\",\n    \"Explicit dependency injection for `now` callable enables deterministic testing\",\n    \"Clear ValueError with descriptive message for invalid rate\",\n    \"Flat control flow with no unnecessary nesting\",\n    \"All state is visible and locally auditable in the class body\",\n    \"No unused extension points or speculative abstractions\"\n  ],\n  \"weaknesses\": [\n    \"The eviction loop could benefit from a one-line comment explaining the window boundary condition\",\n    \"Type annotation uses `Callable` from typing rather than the built-in `collections.abc.Callable` (minor style point for modern Python)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal and correct sliding-window implementation using deque",
+      "Explicit dependency injection for `now` callable enables deterministic testing",
+      "Clear ValueError with descriptive message for invalid rate",
+      "Flat control flow with no unnecessary nesting",
+      "All state is visible and locally auditable in the class body",
+      "No unused extension points or speculative abstractions"
+    ],
+    "weaknesses": [
+      "The eviction loop could benefit from a one-line comment explaining the window boundary condition",
+      "Type annotation uses `Callable` from typing rather than the built-in `collections.abc.Callable` (minor style point for modern Python)"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 2.282,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.15s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 19,
+    "maintainability_index": 57.473,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "human_reference"
+}

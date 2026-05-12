@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable with visibly staged parsing steps, but it fails to follow several explicit structural requirements from the Archival Binder Spec R-04. Most notably, the accumulator dictionary is named `result` rather than something ending in `_ledger` as the spec mandates for dictionaries that survive across loop iterations. The error messages do reference the problematic line content but don't consistently 'name the archival field being rejected' in a structured way (e.g., naming the section or key field by its archival identity). The parsing is staged and flat, which is good, and there is exactly one public function. The code is locally auditable and preserves insertion order via plain dict (Python 3.7+). The main deductions are for the naming convention violation (`result` vs `*_ledger`) and the error message style not fully matching the 'name the archival field' requirement.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable with visibly staged parsing steps, but it fails to follow several explicit structural requirements from the Archival Binder Spec R-04. Most notably, the accumulator dictionary is named `result` rather than something ending in `_ledger` as the spec mandates for dictionaries that survive across loop iterations. The error messages do reference the problematic line content but don't consistently 'name the archival field being rejected' in a structured way (e.g., naming the section or key field by its archival identity). The parsing is staged and flat, which is good, and there is exactly one public function. The code is locally auditable and preserves insertion order via plain dict (Python 3.7+). The main deductions are for the naming convention violation (`result` vs `*_ledger`) and the error message style not fully matching the 'name the archival field' requirement.\",\n  \"strengths\": [\n    \"Exactly one public function as required\",\n    \"Visibly staged parsing: strip, skip, partition lhs/rhs, then partition section/key \u2014 no compressed one-liners\",\n    \"Preserves insertion order using plain dict\",\n    \"Raises ValueError for all required malformed cases with line number context\",\n    \"Flat control flow with no unnecessary nesting\"\n  ],\n  \"weaknesses\": [\n    \"Accumulator dictionary named `result` instead of a name ending in `_ledger` as explicitly required by the spec\",\n    \"Error messages reference raw line content but don't clearly 'name the archival field being rejected' (e.g., field name like 'section' or 'key' could be more explicitly labeled as an archival field identifier)\",\n    \"Inner dict initialization uses an if-not-in guard rather than setdefault, a minor style inconsistency but not a spec violation\",\n    \"No docstring or type annotation on return value beyond the inline annotation, reducing auditability slightly\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Exactly one public function as required",
+      "Visibly staged parsing: strip, skip, partition lhs/rhs, then partition section/key \u2014 no compressed one-liners",
+      "Preserves insertion order using plain dict",
+      "Raises ValueError for all required malformed cases with line number context",
+      "Flat control flow with no unnecessary nesting"
+    ],
+    "weaknesses": [
+      "Accumulator dictionary named `result` instead of a name ending in `_ledger` as explicitly required by the spec",
+      "Error messages reference raw line content but don't clearly 'name the archival field being rejected' (e.g., field name like 'section' or 'key' could be more explicitly labeled as an archival field identifier)",
+      "Inner dict initialization uses an if-not-in guard rather than setdefault, a minor style inconsistency but not a spec violation",
+      "No docstring or type annotation on return value beyond the inline annotation, reducing auditability slightly"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.424,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________ test_parse_bindings_rejects_bad_lines _____________________\n\n    def test_parse_bindings_rejects_bad_lines():\n        with pytest.raises(ValueError, match=\"line\"):\n>           parse_bindings([\"missing\"])\n\ntest_solution.py:21: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nlines = ['missing']\n\n    def parse_bindings(lines: list[str]) -> dict[str, dict[str, str]]:\n        result: dict[str, dict[str, str]] = {}\n        for lineno, raw_line in enumerate(lines, start=1):\n            line = raw_line.strip()\n            if not line or line.startswith('#'):\n                continue\n            if '=' not in line:\n>               raise ValueError(\n                    f\"Line {lineno}: malformed binding (missing '='): {raw_line!r}\"\n                )\nE               ValueError: Line 1: malformed binding (missing '='): 'missing'\n\nsolution.py:8: ValueError\n\nDuring handling of the above exception, another exception occurred:\n\n    def test_parse_bindings_rejects_bad_lines():\n>       with pytest.raises(ValueError, match=\"line\"):\nE       AssertionError: Regex pattern did not match.\nE         Expected regex: 'line'\nE         Actual message: \"Line 1: malformed binding (missing '='): 'missing'\"\n\ntest_solution.py:20: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_parse_bindings_rejects_bad_lines - AssertionErr...\n1 failed, 1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 31,
+    "maintainability_index": 56.01,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

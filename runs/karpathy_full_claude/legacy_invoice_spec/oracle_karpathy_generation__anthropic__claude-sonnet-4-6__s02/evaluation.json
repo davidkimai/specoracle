@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-label local variables (filter_status_paid, filter_region_nonempty, filter_amount_is_int) that make the money-qualification logic auditable at a glance, uses the exact legacy keys (bucket_code, item_count, cents_total), stages the work into three visibly named phases with audit-stage comments, avoids clever one-liners in favor of a readable staged audit trail, and does not mutate the input. The only minor imperfections are: the lambda in the sort step is a small cleverness that could have been a named key expression, and inv.get('region', '') is redundant since the isinstance check already guards the .get('region') call, but neither is a meaningful structural flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The candidate implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-label local variables (filter_status_paid, filter_region_nonempty, filter_amount_is_int) that make the money-qualification logic auditable at a glance, uses the exact legacy keys (bucket_code, item_count, cents_total), stages the work into three visibly named phases with audit-stage comments, avoids clever one-liners in favor of a readable staged audit trail, and does not mutate the input. The only minor imperfections are: the lambda in the sort step is a small cleverness that could have been a named key expression, and inv.get('region', '') is redundant since the isinstance check already guards the .get('region') call, but neither is a meaningful structural flaw.\",\n  \"strengths\": [\n    \"Single public function with zero helper functions, exactly as specified\",\n    \"Explicit boolean variable names (filter_status_paid, filter_region_nonempty, filter_amount_is_int) create a visible audit trail for money-qualification decisions\",\n    \"Three clearly labeled audit stages with compliant comments naming each stage\",\n    \"Exact legacy output keys used throughout\",\n    \"Input is never mutated; new dicts are constructed for accumulation\",\n    \"Flat, readable structure with no nested comprehensions or clever flattening\"\n  ],\n  \"weaknesses\": [\n    \"Redundant inv.get('region', '') in the len() check since isinstance already confirms region is a str via inv.get('region')\",\n    \"Lambda in sorted() is a minor cleverness; a named key variable would be more consistent with the explicit-label philosophy\",\n    \"stage3_sorted variable is assigned but immediately returned, adding a trivial extra line that could be seen as noise rather than audit clarity\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function with zero helper functions, exactly as specified",
+      "Explicit boolean variable names (filter_status_paid, filter_region_nonempty, filter_amount_is_int) create a visible audit trail for money-qualification decisions",
+      "Three clearly labeled audit stages with compliant comments naming each stage",
+      "Exact legacy output keys used throughout",
+      "Input is never mutated; new dicts are constructed for accumulation",
+      "Flat, readable structure with no nested comprehensions or clever flattening"
+    ],
+    "weaknesses": [
+      "Redundant inv.get('region', '') in the len() check since isinstance already confirms region is a str via inv.get('region')",
+      "Lambda in sorted() is a minor cleverness; a named key variable would be more consistent with the explicit-label philosophy",
+      "stage3_sorted variable is assigned but immediately returned, adding a trivial extra line that could be seen as noise rather than audit clarity"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.53,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 21,
+    "maintainability_index": 77.5,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_karpathy_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, explicit, and directly maps to the specified contract: exactly one happy path handled, all others raise NotImplementedError. It uses a single flat conditional with no unnecessary abstractions, helper functions, classes, or speculative branches. The use of payload.get('mode') combined with an explicit 'value' in payload check correctly handles the case where 'value' might be None or falsy without over-engineering. The error message includes the payload repr for debuggability without adding complexity. The only marginal concern is that payload.get('mode') silently tolerates a missing 'mode' key rather than being slightly more explicit, but this is a negligible stylistic point that doesn't affect correctness or clarity.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, explicit, and directly maps to the specified contract: exactly one happy path handled, all others raise NotImplementedError. It uses a single flat conditional with no unnecessary abstractions, helper functions, classes, or speculative branches. The use of payload.get('mode') combined with an explicit 'value' in payload check correctly handles the case where 'value' might be None or falsy without over-engineering. The error message includes the payload repr for debuggability without adding complexity. The only marginal concern is that payload.get('mode') silently tolerates a missing 'mode' key rather than being slightly more explicit, but this is a negligible stylistic point that doesn't affect correctness or clarity.\",\n  \"strengths\": [\n    \"Minimum viable implementation \u2014 no excess lines, abstractions, or speculative flexibility\",\n    \"Explicit guard for both 'mode' == 'echo' and presence of 'value' key, correctly handling falsy values\",\n    \"NotImplementedError raised for all unspecified paths as required\",\n    \"Informative error message aids debugging without adding complexity\",\n    \"Single flat conditional \u2014 no nesting, no helper functions, no classes\"\n  ],\n  \"weaknesses\": [\n    \"payload.get('mode') silently swallows missing 'mode' key rather than making the check slightly more explicit (minor)\",\n    \"No docstring or inline comment stating the contract, which would aid local auditability\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimum viable implementation \u2014 no excess lines, abstractions, or speculative flexibility",
+      "Explicit guard for both 'mode' == 'echo' and presence of 'value' key, correctly handling falsy values",
+      "NotImplementedError raised for all unspecified paths as required",
+      "Informative error message aids debugging without adding complexity",
+      "Single flat conditional \u2014 no nesting, no helper functions, no classes"
+    ],
+    "weaknesses": [
+      "payload.get('mode') silently swallows missing 'mode' key rather than making the check slightly more explicit (minor)",
+      "No docstring or inline comment stating the contract, which would aid local auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.471,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 4,
+    "maintainability_index": 76.273,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "oracle_karpathy_generation"
+}

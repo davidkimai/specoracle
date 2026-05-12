@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook double-checked locking pattern \u2014 the minimum correct solution for thread-safe lazy initialization in Python. It is flat, explicit, and contains no speculative abstractions or unnecessary features. Every line is load-bearing: the outer None check avoids lock contention on the hot path, the lock serializes initialization, and the inner None check prevents double initialization. The code is locally auditable in under 10 seconds. The only minor concern is that Python's memory model does not formally guarantee visibility of writes across threads without synchronization, but in CPython the GIL and the lock together make this safe in practice, and this is the idiomatic Python approach.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a textbook double-checked locking pattern \u2014 the minimum correct solution for thread-safe lazy initialization in Python. It is flat, explicit, and contains no speculative abstractions or unnecessary features. Every line is load-bearing: the outer None check avoids lock contention on the hot path, the lock serializes initialization, and the inner None check prevents double initialization. The code is locally auditable in under 10 seconds. The only minor concern is that Python's memory model does not formally guarantee visibility of writes across threads without synchronization, but in CPython the GIL and the lock together make this safe in practice, and this is the idiomatic Python approach.\",\n  \"strengths\": [\n    \"Minimal code \u2014 exactly what the task requires, nothing more\",\n    \"Double-checked locking correctly avoids lock overhead after initialization\",\n    \"Explicit state: _factory, _instance, _lock are all named clearly\",\n    \"No inheritance, metaclasses, decorators, or other unnecessary machinery\",\n    \"Thread-safe under CPython and effectively under any GIL-respecting implementation\"\n  ],\n  \"weaknesses\": [\n    \"Double-checked locking relies on CPython memory model assumptions not guaranteed by the language spec; a comment acknowledging this would improve auditability\",\n    \"No protection if factory raises an exception \u2014 a failed call leaves _instance as None, which may cause repeated factory calls on error (minor, but worth noting)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 exactly what the task requires, nothing more",
+      "Double-checked locking correctly avoids lock overhead after initialization",
+      "Explicit state: _factory, _instance, _lock are all named clearly",
+      "No inheritance, metaclasses, decorators, or other unnecessary machinery",
+      "Thread-safe under CPython and effectively under any GIL-respecting implementation"
+    ],
+    "weaknesses": [
+      "Double-checked locking relies on CPython memory model assumptions not guaranteed by the language spec; a comment acknowledging this would improve auditability",
+      "No protection if factory raises an exception \u2014 a failed call leaves _instance as None, which may cause repeated factory calls on error (minor, but worth noting)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.466,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.333,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 2,
+    "loc": 12,
+    "maintainability_index": 68.937,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_singleton",
+  "variant": "oracle_karpathy_generation"
+}

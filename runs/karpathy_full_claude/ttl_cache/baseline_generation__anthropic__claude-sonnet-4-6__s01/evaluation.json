@@ -1,0 +1,56 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses ordinary standard-library constructs (OrderedDict) appropriately. Control flow is flat, data movement is explicit, names are self-explanatory, and invalid inputs raise clear errors. The separation of `_is_expired`, `_purge_expired`, `set`, and `get` into small focused methods is good. The `_purge_expired` helper is slightly speculative \u2014 it's only called in `set` before eviction, and the full scan adds complexity that isn't strictly needed (LRU eviction alone satisfies the spec). The `__len__` method mutates state as a side effect of a query, which is a mild hidden-mutation smell. The `__contains__` and `clear` methods are reasonable but not required by the spec, adding minor speculative surface area. The docstring is verbose for the class level but not harmful. Overall, this is a solid, auditable implementation with only minor structural imperfections.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and uses ordinary standard-library constructs (OrderedDict) appropriately. Control flow is flat, data movement is explicit, names are self-explanatory, and invalid inputs raise clear errors. The separation of `_is_expired`, `_purge_expired`, `set`, and `get` into small focused methods is good. The `_purge_expired` helper is slightly speculative \u2014 it's only called in `set` before eviction, and the full scan adds complexity that isn't strictly needed (LRU eviction alone satisfies the spec). The `__len__` method mutates state as a side effect of a query, which is a mild hidden-mutation smell. The `__contains__` and `clear` methods are reasonable but not required by the spec, adding minor speculative surface area. The docstring is verbose for the class level but not harmful. Overall, this is a solid, auditable implementation with only minor structural imperfections.\",\n  \"strengths\": [\n    \"Clear, flat control flow with guard clauses in get/set\",\n    \"Explicit data movement via OrderedDict with move_to_end\",\n    \"Input validation raises clear ValueError with descriptive messages\",\n    \"Small, named helpers (_is_expired, _purge_expired) improve local auditability\",\n    \"Injected `now` callable makes time testable without monkey-patching\",\n    \"Uses only standard-library constructs, no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"_purge_expired full scan on every set-when-full is speculative complexity; simple LRU popitem suffices\",\n    \"__len__ triggers side-effecting purge, violating query/command separation\",\n    \"__contains__ and clear are unused extension points not required by the spec\",\n    \"Calling _now() twice in _is_expired vs. at call site can cause subtle time-skew in edge cases\",\n    \"Docstring verbosity (NumPy-style Parameters section) is heavier than the code warrants\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear, flat control flow with guard clauses in get/set",
+      "Explicit data movement via OrderedDict with move_to_end",
+      "Input validation raises clear ValueError with descriptive messages",
+      "Small, named helpers (_is_expired, _purge_expired) improve local auditability",
+      "Injected `now` callable makes time testable without monkey-patching",
+      "Uses only standard-library constructs, no metaprogramming"
+    ],
+    "weaknesses": [
+      "_purge_expired full scan on every set-when-full is speculative complexity; simple LRU popitem suffices",
+      "__len__ triggers side-effecting purge, violating query/command separation",
+      "__contains__ and clear are unused extension points not required by the spec",
+      "Calling _now() twice in _is_expired vs. at call site can cause subtle time-skew in edge cases",
+      "Docstring verbosity (NumPy-style Parameters section) is heavier than the code warrants"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.441,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.444,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 22,
+    "function_count": 8,
+    "loc": 85,
+    "maintainability_index": 73.291,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

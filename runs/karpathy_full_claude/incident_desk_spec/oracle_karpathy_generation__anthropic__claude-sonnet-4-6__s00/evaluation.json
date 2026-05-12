@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Spec N-9: it uses named lookup tables with the required `_table` suffix (`severity_boost_table`, `required_fields_table`), avoids classes for single-pass routing, preserves ticket order via sequential list append, uses an explicit string constant `STATUS_ROUTED` rather than a boolean, and keeps branching logic flat and locally auditable. The required-field check is concise and explicit. Minor quibbles: the `missing_required` intermediate boolean variable adds a tiny layer of indirection that could be inlined, and the nested `rule.get('queue', default_rule.get('queue', 'unassigned'))` in the append is slightly redundant given `default_rule` is already guaranteed to have a `queue` key, but neither issue meaningfully detracts from clarity or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Spec N-9: it uses named lookup tables with the required `_table` suffix (`severity_boost_table`, `required_fields_table`), avoids classes for single-pass routing, preserves ticket order via sequential list append, uses an explicit string constant `STATUS_ROUTED` rather than a boolean, and keeps branching logic flat and locally auditable. The required-field check is concise and explicit. Minor quibbles: the `missing_required` intermediate boolean variable adds a tiny layer of indirection that could be inlined, and the nested `rule.get('queue', default_rule.get('queue', 'unassigned'))` in the append is slightly redundant given `default_rule` is already guaranteed to have a `queue` key, but neither issue meaningfully detracts from clarity or correctness.\",\n  \"strengths\": [\n    \"Uses `_table`-suffixed module-level lookup tables as specified\",\n    \"Explicit string constant STATUS_ROUTED instead of boolean or magic string inline\",\n    \"No classes introduced; pure function with flat single-pass loop\",\n    \"Ticket order preserved naturally via sequential append\",\n    \"Required-field validation is clear and uses a named set for auditability\",\n    \"Default rule fallback is handled cleanly at the top of the function\"\n  ],\n  \"weaknesses\": [\n    \"`missing_required` boolean variable is a minor unnecessary indirection; could be inlined as `if not required_fields_table.issubset(ticket)`\",\n    \"Redundant fallback in `rule.get('queue', default_rule.get('queue', 'unassigned'))` since default_rule already guarantees a queue key\",\n    \"No explicit branch-reason string as the spec hints at ('Keep branch reasons as short explicit strings'), though this is a minor stylistic gap\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `_table`-suffixed module-level lookup tables as specified",
+      "Explicit string constant STATUS_ROUTED instead of boolean or magic string inline",
+      "No classes introduced; pure function with flat single-pass loop",
+      "Ticket order preserved naturally via sequential append",
+      "Required-field validation is clear and uses a named set for auditability",
+      "Default rule fallback is handled cleanly at the top of the function"
+    ],
+    "weaknesses": [
+      "`missing_required` boolean variable is a minor unnecessary indirection; could be inlined as `if not required_fields_table.issubset(ticket)`",
+      "Redundant fallback in `rule.get('queue', default_rule.get('queue', 'unassigned'))` since default_rule already guarantees a queue key",
+      "No explicit branch-reason string as the spec hints at ('Keep branch reasons as short explicit strings'), though this is a minor stylistic gap"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.497,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 30,
+    "maintainability_index": 81.064,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_karpathy_generation"
+}

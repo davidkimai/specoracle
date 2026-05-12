@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly maps to the stated requirements without speculative abstractions. It uses a deque of (conn, timestamp) tuples which is the natural data structure for this problem. The three methods each have a clear, testable contract. The `now` injection for testability is appropriate and not over-engineered. Minor issues: the docstring on the class is slightly redundant given the parameter comments, and the `hasattr(conn, 'close')` guard appears twice (could be a tiny helper, but at this scale it's acceptable). The eviction logic correctly rebuilds the deque rather than mutating in-place. The only mild concern is that `acquire` pops from the left (FIFO) which means the oldest idle connection is reused first \u2014 this is slightly suboptimal for eviction purposes (LIFO/popleft from right would keep recently-used connections warm), but it's a valid design choice and not a correctness issue. Overall this is a tight, readable, auditable implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and directly maps to the stated requirements without speculative abstractions. It uses a deque of (conn, timestamp) tuples which is the natural data structure for this problem. The three methods each have a clear, testable contract. The `now` injection for testability is appropriate and not over-engineered. Minor issues: the docstring on the class is slightly redundant given the parameter comments, and the `hasattr(conn, 'close')` guard appears twice (could be a tiny helper, but at this scale it's acceptable). The eviction logic correctly rebuilds the deque rather than mutating in-place. The only mild concern is that `acquire` pops from the left (FIFO) which means the oldest idle connection is reused first \u2014 this is slightly suboptimal for eviction purposes (LIFO/popleft from right would keep recently-used connections warm), but it's a valid design choice and not a correctness issue. Overall this is a tight, readable, auditable implementation with no architectural slop.\",\n  \"strengths\": [\n    \"Minimal code with no speculative features or unused abstractions\",\n    \"Clean separation of concerns across three well-defined methods\",\n    \"Testable via `now` injection without any mocking framework dependency\",\n    \"Eviction correctly iterates and rebuilds rather than mutating during iteration\",\n    \"Inline comments explain non-obvious design decisions concisely\"\n  ],\n  \"weaknesses\": [\n    \"FIFO acquire (popleft) reuses oldest connections first, slightly suboptimal vs LIFO for keeping connections warm\",\n    \"Duplicated `hasattr(conn, 'close')` guard in both `release` and `evict_idle` \u2014 a one-liner helper would eliminate repetition\",\n    \"Class docstring adds minimal value given the `__init__` parameter comments directly below it\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative features or unused abstractions",
+      "Clean separation of concerns across three well-defined methods",
+      "Testable via `now` injection without any mocking framework dependency",
+      "Eviction correctly iterates and rebuilds rather than mutating during iteration",
+      "Inline comments explain non-obvious design decisions concisely"
+    ],
+    "weaknesses": [
+      "FIFO acquire (popleft) reuses oldest connections first, slightly suboptimal vs LIFO for keeping connections warm",
+      "Duplicated `hasattr(conn, 'close')` guard in both `release` and `evict_idle` \u2014 a one-liner helper would eliminate repetition",
+      "Class docstring adds minimal value given the `__init__` parameter comments directly below it"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.842,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 4,
+    "loc": 37,
+    "maintainability_index": 74.168,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "oracle_karpathy_generation"
+}

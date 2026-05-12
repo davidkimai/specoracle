@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of minimal, correct, and readable thread-safe code. It uses a single lock protecting all mutable state, caches the running total to avoid O(n) summation, raises the correct exception types with clear messages, and exposes no mutable internals. The snapshot filter for nonzero values is correct and concise. There are no speculative abstractions, no unnecessary indirection, and no excess lines\u2014the entire solution is exactly as long as it needs to be.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of minimal, correct, and readable thread-safe code. It uses a single lock protecting all mutable state, caches the running total to avoid O(n) summation, raises the correct exception types with clear messages, and exposes no mutable internals. The snapshot filter for nonzero values is correct and concise. There are no speculative abstractions, no unnecessary indirection, and no excess lines\u2014the entire solution is exactly as long as it needs to be.\",\n  \"strengths\": [\n    \"Single lock covers all shared state consistently\",\n    \"Cached _total avoids iterating counts on every total() call\",\n    \"snapshot() returns a defensive copy with a clean dict comprehension\",\n    \"OverflowError check is pre-increment, preventing off-by-one races\",\n    \"Constructor validation is explicit and minimal\",\n    \"No unnecessary abstractions or helper methods\"\n  ],\n  \"weaknesses\": [\n    \"The v != 0 filter in snapshot is technically unreachable given the current logic (counts only increase), making it dead code\u2014though harmless and arguably defensive\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Single lock covers all shared state consistently",
+      "Cached _total avoids iterating counts on every total() call",
+      "snapshot() returns a defensive copy with a clean dict comprehension",
+      "OverflowError check is pre-increment, preventing off-by-one races",
+      "Constructor validation is explicit and minimal",
+      "No unnecessary abstractions or helper methods"
+    ],
+    "weaknesses": [
+      "The v != 0 filter in snapshot is technically unreachable given the current logic (counts only increase), making it dead code\u2014though harmless and arguably defensive"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.412,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 23,
+    "maintainability_index": 56.177,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_karpathy_generation"
+}

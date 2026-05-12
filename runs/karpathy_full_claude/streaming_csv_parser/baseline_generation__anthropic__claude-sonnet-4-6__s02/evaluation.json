@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate arrives at a functionally reasonable implementation but the path there is deeply problematic from a structural quality standpoint. The file contains a dead first definition of `parse_csv_rows` that ends with `pass` and a `# noqa: F811` suppression comment acknowledging the redefinition \u2014 this is textbook architectural slop and directly violates 'sparse enough that a maintainer can audit behavior locally.' The surviving implementation is otherwise fairly clean: it uses a small helper, keeps control flow flat, and correctly handles streaming. However, the manual field-mapping loop (`for i, header in enumerate(headers)`) duplicates logic already present in `csv.DictReader`, which could have been used directly on the filtered iterator since `DictReader` lazily reads fieldnames on first access \u2014 making the manual reconstruction unnecessary. The docstring duplication across both definitions adds noise. The `non_empty_lines` helper is a reasonable extraction, though `rstrip('\\r\\n')` followed by `stripped.strip()` for the blank-line check is slightly redundant. Overall, the dead code block is a serious structural defect that would immediately fail a code review.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The candidate arrives at a functionally reasonable implementation but the path there is deeply problematic from a structural quality standpoint. The file contains a dead first definition of `parse_csv_rows` that ends with `pass` and a `# noqa: F811` suppression comment acknowledging the redefinition \u2014 this is textbook architectural slop and directly violates 'sparse enough that a maintainer can audit behavior locally.' The surviving implementation is otherwise fairly clean: it uses a small helper, keeps control flow flat, and correctly handles streaming. However, the manual field-mapping loop (`for i, header in enumerate(headers)`) duplicates logic already present in `csv.DictReader`, which could have been used directly on the filtered iterator since `DictReader` lazily reads fieldnames on first access \u2014 making the manual reconstruction unnecessary. The docstring duplication across both definitions adds noise. The `non_empty_lines` helper is a reasonable extraction, though `rstrip('\\\\r\\\\n')` followed by `stripped.strip()` for the blank-line check is slightly redundant. Overall, the dead code block is a serious structural defect that would immediately fail a code review.\",\n  \"strengths\": [\n    \"Small, named helper `non_empty_lines` cleanly separates filtering concern\",\n    \"Flat control flow in the final implementation with a clear guard-clause for empty input\",\n    \"Correct streaming behavior \u2014 input iterable is never materialized\",\n    \"Handles missing fields gracefully with empty-string fill\"\n  ],\n  \"weaknesses\": [\n    \"Dead first definition ending in `pass` with a `# noqa: F811` suppression is severe architectural slop\",\n    \"Manual field-mapping loop reinvents `csv.DictReader`, which could have been used directly on the filtered iterator\",\n    \"Duplicated docstrings across both definitions add noise and maintenance burden\",\n    \"Comment inside dead code block ('We need to reconstruct because DictReader would consume from filtered') reflects a misunderstanding \u2014 DictReader reads fieldnames lazily and would have worked fine\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Small, named helper `non_empty_lines` cleanly separates filtering concern",
+      "Flat control flow in the final implementation with a clear guard-clause for empty input",
+      "Correct streaming behavior \u2014 input iterable is never materialized",
+      "Handles missing fields gracefully with empty-string fill"
+    ],
+    "weaknesses": [
+      "Dead first definition ending in `pass` with a `# noqa: F811` suppression is severe architectural slop",
+      "Manual field-mapping loop reinvents `csv.DictReader`, which could have been used directly on the filtered iterator",
+      "Duplicated docstrings across both definitions add noise and maintenance burden",
+      "Comment inside dead code block ('We need to reconstruct because DictReader would consume from filtered') reflects a misunderstanding \u2014 DictReader reads fieldnames lazily and would have worked fine"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.527,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 4,
+    "loc": 57,
+    "maintainability_index": 85.008,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "baseline_generation"
+}

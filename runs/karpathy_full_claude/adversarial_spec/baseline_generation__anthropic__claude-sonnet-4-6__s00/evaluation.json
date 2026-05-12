@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is clean, readable, and idiomatic Python that correctly implements all required state transitions with a minimal dictionary lookup \u2014 which aligns well with the Zen of Python's preference for simplicity and readability. However, the informal structural spec (Legacy Telemetry Standard LT-11) explicitly requires explicit labeled branch variables named `branch_<state>_<event>` for each transition, favoring auditability over minimizing decision count. The candidate completely ignores this structural requirement, using a single dictionary lookup instead of the mandated explicit local branch variables. While the functional behavior is correct and the code is arguably better Python, it fails to satisfy the stated architectural oracle, which is the primary evaluation criterion here.",
+    "raw_response": "{\n  \"score\": 2,\n  \"rationale\": \"The candidate implementation is clean, readable, and idiomatic Python that correctly implements all required state transitions with a minimal dictionary lookup \u2014 which aligns well with the Zen of Python's preference for simplicity and readability. However, the informal structural spec (Legacy Telemetry Standard LT-11) explicitly requires explicit labeled branch variables named `branch_<state>_<event>` for each transition, favoring auditability over minimizing decision count. The candidate completely ignores this structural requirement, using a single dictionary lookup instead of the mandated explicit local branch variables. While the functional behavior is correct and the code is arguably better Python, it fails to satisfy the stated architectural oracle, which is the primary evaluation criterion here.\",\n  \"strengths\": [\n    \"Correct functional behavior for all four transitions and unknown transition fallback\",\n    \"Highly readable and idiomatic Python using a dictionary lookup\",\n    \"Minimal and flat structure with no unnecessary complexity\"\n  ],\n  \"weaknesses\": [\n    \"Does not define any `branch_<state>_<event>` local variables as required by LT-11\",\n    \"Uses a single dictionary rather than explicit labeled branches, violating the auditability requirement\",\n    \"Completely ignores the structural spec's mandate for explicit per-transition branch labels\"\n  ]\n}",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Correct functional behavior for all four transitions and unknown transition fallback",
+      "Highly readable and idiomatic Python using a dictionary lookup",
+      "Minimal and flat structure with no unnecessary complexity"
+    ],
+    "weaknesses": [
+      "Does not define any `branch_<state>_<event>` local variables as required by LT-11",
+      "Uses a single dictionary rather than explicit labeled branches, violating the auditability requirement",
+      "Completely ignores the structural spec's mandate for explicit per-transition branch labels"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.626,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "baseline_generation"
+}

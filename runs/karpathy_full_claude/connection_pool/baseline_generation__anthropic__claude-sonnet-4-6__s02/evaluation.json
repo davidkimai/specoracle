@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses ordinary standard-library constructs (deque, threading.Lock), keeps control flow flat with guard clauses in acquire(), makes data movement explicit through clear tuple storage of (conn, idle_since), and raises clear errors for exhaustion and invalid max_size. The separation of close-outside-lock in evict_idle is a good practical choice. Minor weaknesses include a subtle accounting bug in release() where closing a connection that was never properly tracked could miscount _total, the informational properties (idle_count, total_count, active_count) are mildly speculative but not harmful, and the docstring volume is somewhat heavy relative to the code density. The release() logic has a correctness issue: when the pool is 'full' of idle connections, it closes the returned conn but decrements _total, yet the conn being released was already counted in _total as an active connection, so the decrement is actually correct \u2014 but this is non-obvious and could confuse maintainers. Overall the architecture is appropriately simple, flat, and auditable with no framework-shaped abstractions or hidden mutation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses ordinary standard-library constructs (deque, threading.Lock), keeps control flow flat with guard clauses in acquire(), makes data movement explicit through clear tuple storage of (conn, idle_since), and raises clear errors for exhaustion and invalid max_size. The separation of close-outside-lock in evict_idle is a good practical choice. Minor weaknesses include a subtle accounting bug in release() where closing a connection that was never properly tracked could miscount _total, the informational properties (idle_count, total_count, active_count) are mildly speculative but not harmful, and the docstring volume is somewhat heavy relative to the code density. The release() logic has a correctness issue: when the pool is 'full' of idle connections, it closes the returned conn but decrements _total, yet the conn being released was already counted in _total as an active connection, so the decrement is actually correct \u2014 but this is non-obvious and could confuse maintainers. Overall the architecture is appropriately simple, flat, and auditable with no framework-shaped abstractions or hidden mutation.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses in acquire()\",\n    \"Explicit data movement: idle connections stored as (conn, timestamp) tuples\",\n    \"Close-outside-lock pattern in evict_idle avoids holding lock during I/O\",\n    \"Clear ValueError for invalid max_size input\",\n    \"Ordinary stdlib constructs only \u2014 no metaprogramming or clever tricks\",\n    \"Names are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"release() silently discards connections when idle pool is 'full' without signaling the caller, which could mask bugs\",\n    \"The three informational properties (idle_count, total_count, active_count) are mildly speculative \u2014 not required by the spec\",\n    \"Docstring volume is disproportionately large relative to the implementation, reducing sparseness\",\n    \"No validation that released conn was actually acquired from this pool, allowing silent misuse\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses in acquire()",
+      "Explicit data movement: idle connections stored as (conn, timestamp) tuples",
+      "Close-outside-lock pattern in evict_idle avoids holding lock during I/O",
+      "Clear ValueError for invalid max_size input",
+      "Ordinary stdlib constructs only \u2014 no metaprogramming or clever tricks",
+      "Names are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "release() silently discards connections when idle pool is 'full' without signaling the caller, which could mask bugs",
+      "The three informational properties (idle_count, total_count, active_count) are mildly speculative \u2014 not required by the spec",
+      "Docstring volume is disproportionately large relative to the implementation, reducing sparseness",
+      "No validation that released conn was actually acquired from this pool, allowing silent misuse"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.446,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.375,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 7,
+    "loc": 120,
+    "maintainability_index": 70.2,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "connection_pool",
+  "variant": "baseline_generation"
+}

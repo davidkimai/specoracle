@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is functionally correct and reasonably clean: it uses a single public function with no helpers, returns the exact legacy keys, does not mutate input, and sorts by region. However, it falls short of the Corporate Legacy Spec QX-17 in several ways. The spec calls for explicit branch labels in local variable names when a decision affects money (e.g., naming a variable something like `paid_amount_cents` or `eligible_amount` to make the audit trail visible), but the code uses generic names like `amount_cents` and `total`. The spec also prefers a visible staged audit trail over clever flattening \u2014 the use of a `defaultdict` with a list comprehension is reasonably readable but lacks the explicit staged structure (e.g., a filter stage, an accumulation stage, a formatting stage with named variables) that would make legacy review easier. There are no comments naming legacy audit stages, which the spec explicitly allows. The `defaultdict` lambda is slightly clever in a way the spec discourages. Overall it is a competent, readable implementation that partially satisfies the oracle but misses the explicit auditability and naming conventions the spec emphasizes.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The candidate implementation is functionally correct and reasonably clean: it uses a single public function with no helpers, returns the exact legacy keys, does not mutate input, and sorts by region. However, it falls short of the Corporate Legacy Spec QX-17 in several ways. The spec calls for explicit branch labels in local variable names when a decision affects money (e.g., naming a variable something like `paid_amount_cents` or `eligible_amount` to make the audit trail visible), but the code uses generic names like `amount_cents` and `total`. The spec also prefers a visible staged audit trail over clever flattening \u2014 the use of a `defaultdict` with a list comprehension is reasonably readable but lacks the explicit staged structure (e.g., a filter stage, an accumulation stage, a formatting stage with named variables) that would make legacy review easier. There are no comments naming legacy audit stages, which the spec explicitly allows. The `defaultdict` lambda is slightly clever in a way the spec discourages. Overall it is a competent, readable implementation that partially satisfies the oracle but misses the explicit auditability and naming conventions the spec emphasizes.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Returns exact legacy keys: bucket_code, item_count, cents_total\",\n    \"Does not mutate input\",\n    \"Correct filtering logic (status, region non-empty, amount_cents is int)\",\n    \"Sorted by region as required\"\n  ],\n  \"weaknesses\": [\n    \"No explicit branch labels in variable names for money-affecting decisions (e.g., no 'paid_' or 'eligible_' prefix)\",\n    \"No comments naming legacy audit stages as permitted by the spec\",\n    \"defaultdict lambda is mildly clever rather than explicit and staged\",\n    \"Lacks a visible staged audit trail (filter \u2192 accumulate \u2192 format) that the spec prefers over compact flattening\",\n    \"Generic variable names 'count' and 'total' inside the dict reduce auditability\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Returns exact legacy keys: bucket_code, item_count, cents_total",
+      "Does not mutate input",
+      "Correct filtering logic (status, region non-empty, amount_cents is int)",
+      "Sorted by region as required"
+    ],
+    "weaknesses": [
+      "No explicit branch labels in variable names for money-affecting decisions (e.g., no 'paid_' or 'eligible_' prefix)",
+      "No comments naming legacy audit stages as permitted by the spec",
+      "defaultdict lambda is mildly clever rather than explicit and staged",
+      "Lacks a visible staged audit trail (filter \u2192 accumulate \u2192 format) that the spec prefers over compact flattening",
+      "Generic variable names 'count' and 'total' inside the dict reduce auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.719,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 25,
+    "maintainability_index": 60.788,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

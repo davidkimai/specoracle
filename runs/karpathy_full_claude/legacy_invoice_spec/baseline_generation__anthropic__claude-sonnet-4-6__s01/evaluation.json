@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean: it uses a single public function with no helpers, returns the exact legacy keys, does not mutate input, and sorts by region. However, it diverges from the Corporate Legacy Spec QX-17 in several ways. The spec calls for 'explicit branch labels in local variable names when a decision affects money' \u2014 the candidate uses generic names like `totals` and `counts` rather than something like `paid_totals` or `eligible_amount_cents`. The spec also prefers 'a visible staged audit trail' over 'clever flattening', yet the candidate collapses filtering and accumulation into a single loop without named audit stages. The comments present do not name legacy audit stages as required \u2014 they are generic validation descriptions. The docstring is verbose and not in the spirit of the terse legacy style. The bool-exclusion guard is correct but undocumented as a named audit decision. Overall the code is solid Python but only partially aligned with the structural oracle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean: it uses a single public function with no helpers, returns the exact legacy keys, does not mutate input, and sorts by region. However, it diverges from the Corporate Legacy Spec QX-17 in several ways. The spec calls for 'explicit branch labels in local variable names when a decision affects money' \u2014 the candidate uses generic names like `totals` and `counts` rather than something like `paid_totals` or `eligible_amount_cents`. The spec also prefers 'a visible staged audit trail' over 'clever flattening', yet the candidate collapses filtering and accumulation into a single loop without named audit stages. The comments present do not name legacy audit stages as required \u2014 they are generic validation descriptions. The docstring is verbose and not in the spirit of the terse legacy style. The bool-exclusion guard is correct but undocumented as a named audit decision. Overall the code is solid Python but only partially aligned with the structural oracle.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Exact legacy keys used: bucket_code, item_count, cents_total\",\n    \"Input is not mutated\",\n    \"Correct bool subclass exclusion for amount_cents\",\n    \"Sorted output by region\"\n  ],\n  \"weaknesses\": [\n    \"Local variable names (totals, counts) lack explicit branch labels tied to the money decision as the spec requires\",\n    \"Comments do not name legacy audit stages \u2014 they describe generic validation logic\",\n    \"No visible staged audit trail; filtering and accumulation are merged into one loop without named phases\",\n    \"Verbose NumPy-style docstring is inconsistent with the terse legacy spec aesthetic\",\n    \"Module-level docstring adds noise without naming a legacy audit stage\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Exact legacy keys used: bucket_code, item_count, cents_total",
+      "Input is not mutated",
+      "Correct bool subclass exclusion for amount_cents",
+      "Sorted output by region"
+    ],
+    "weaknesses": [
+      "Local variable names (totals, counts) lack explicit branch labels tied to the money decision as the spec requires",
+      "Comments do not name legacy audit stages \u2014 they describe generic validation logic",
+      "No visible staged audit trail; filtering and accumulation are merged into one loop without named phases",
+      "Verbose NumPy-style docstring is inconsistent with the terse legacy spec aesthetic",
+      "Module-level docstring adds noise without naming a legacy audit stage"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.441,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 43,
+    "maintainability_index": 84.407,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

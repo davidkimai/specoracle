@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses a straightforward iterative approach with explicit state, flat control flow, and clear error messages. The known_flags/value_flags sets make the dispatch logic auditable at a glance. Guard clauses handle error cases early. The only notable weaknesses are the lack of small pure helpers (the spec suggests extracting helpers like a value-consumer or validator), the slightly redundant elif chain inside the value_flags branch (which could be a small dispatch dict or helper calls), and the docstring is somewhat verbose for what is otherwise a lean implementation. The overall architecture avoids speculative abstractions and framework-shaped code, names are self-explanatory, and data movement is explicit with no hidden mutation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses a straightforward iterative approach with explicit state, flat control flow, and clear error messages. The known_flags/value_flags sets make the dispatch logic auditable at a glance. Guard clauses handle error cases early. The only notable weaknesses are the lack of small pure helpers (the spec suggests extracting helpers like a value-consumer or validator), the slightly redundant elif chain inside the value_flags branch (which could be a small dispatch dict or helper calls), and the docstring is somewhat verbose for what is otherwise a lean implementation. The overall architecture avoids speculative abstractions and framework-shaped code, names are self-explanatory, and data movement is explicit with no hidden mutation.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses for error conditions\",\n    \"Explicit known_flags and value_flags sets make extension and auditing easy\",\n    \"Clear, specific error messages for every failure mode\",\n    \"No hidden mutation or global state; result dict is local and returned explicitly\",\n    \"Ordinary standard-library constructs only, no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"No small pure helpers extracted (e.g., parse_limit, parse_format) as the spec prefers\",\n    \"The elif chain inside the value_flags branch adds a layer of nesting that helpers would flatten\",\n    \"Docstring is verbose relative to the sparse code style the oracle favors\",\n    \"The 'elif token == \\\"--dry-run\\\"' at the end is logically redundant given the known_flags check already ensures only known flags reach that point\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses for error conditions",
+      "Explicit known_flags and value_flags sets make extension and auditing easy",
+      "Clear, specific error messages for every failure mode",
+      "No hidden mutation or global state; result dict is local and returned explicitly",
+      "Ordinary standard-library constructs only, no metaprogramming"
+    ],
+    "weaknesses": [
+      "No small pure helpers extracted (e.g., parse_limit, parse_format) as the spec prefers",
+      "The elif chain inside the value_flags branch adds a layer of nesting that helpers would flatten",
+      "Docstring is verbose relative to the sparse code style the oracle favors",
+      "The 'elif token == \"--dry-run\"' at the end is logically redundant given the known_flags check already ensures only known flags reach that point"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.526,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 15.0,
+    "cyclomatic_complexity_max": 15,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 1,
+    "loc": 72,
+    "maintainability_index": 73.272,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "baseline_generation"
+}

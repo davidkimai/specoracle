@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows RAT-9: required fields are checked explicitly before any record is constructed, sequence numbers are monotonically assigned starting at 1, derived fields (sequence) are named and assigned explicitly before insertion, and no values are silently invented. The code is flat, readable, and locally auditable with no hidden control flow. Minor deductions: the extra None-value check goes slightly beyond the stated spec (which only says 'missing'), and the list-comprehension for missing_fields adds a tiny layer of indirection, but neither constitutes architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows RAT-9: required fields are checked explicitly before any record is constructed, sequence numbers are monotonically assigned starting at 1, derived fields (sequence) are named and assigned explicitly before insertion, and no values are silently invented. The code is flat, readable, and locally auditable with no hidden control flow. Minor deductions: the extra None-value check goes slightly beyond the stated spec (which only says 'missing'), and the list-comprehension for missing_fields adds a tiny layer of indirection, but neither constitutes architectural slop.\",\n  \"strengths\": [\n    \"Explicit rejection of events missing source_system or actor_id with clear ValueError messages\",\n    \"Sequence number named and assigned explicitly before being inserted into the record\",\n    \"Input is shallow-copied so the original events are never mutated\",\n    \"Flat loop structure with no nested helpers or unnecessary abstractions\",\n    \"Type guards for non-list and non-dict inputs add robustness without obscuring logic\"\n  ],\n  \"weaknesses\": [\n    \"None-value rejection is an undocumented extension of the spec; could surprise callers who pass None intentionally\",\n    \"Missing-fields check uses a list comprehension that slightly obscures the simple two-field requirement compared to two direct if-checks\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit rejection of events missing source_system or actor_id with clear ValueError messages",
+      "Sequence number named and assigned explicitly before being inserted into the record",
+      "Input is shallow-copied so the original events are never mutated",
+      "Flat loop structure with no nested helpers or unnecessary abstractions",
+      "Type guards for non-list and non-dict inputs add robustness without obscuring logic"
+    ],
+    "weaknesses": [
+      "None-value rejection is an undocumented extension of the spec; could surprise callers who pass None intentionally",
+      "Missing-fields check uses a list comprehension that slightly obscures the simple two-field requirement compared to two direct if-checks"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.497,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 55,
+    "maintainability_index": 86.508,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "baseline_generation"
+}

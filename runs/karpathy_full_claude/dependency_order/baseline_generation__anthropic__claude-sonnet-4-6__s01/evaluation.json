@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and uses standard-library constructs (deque, Kahn's algorithm) appropriately. Data flow is explicit, there's no hidden mutation of the input, the cycle detection raises a clear ValueError, and the code is locally auditable in a single pass. The main structural critique is that the function is slightly monolithic \u2014 the graph-building phase, the Kahn's BFS phase, and the cycle check could each be a small pure helper, which would improve testability and match the 'small pure helpers' constraint. The docstring and module-level comment add some verbosity without proportional value. The use of `queue.clear()` followed by re-appending is a minor awkwardness compared to simply draining the queue level by level, but it's not harmful. Overall this is a solid, straightforward implementation with minor opportunities for decomposition.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and uses standard-library constructs (deque, Kahn's algorithm) appropriately. Data flow is explicit, there's no hidden mutation of the input, the cycle detection raises a clear ValueError, and the code is locally auditable in a single pass. The main structural critique is that the function is slightly monolithic \u2014 the graph-building phase, the Kahn's BFS phase, and the cycle check could each be a small pure helper, which would improve testability and match the 'small pure helpers' constraint. The docstring and module-level comment add some verbosity without proportional value. The use of `queue.clear()` followed by re-appending is a minor awkwardness compared to simply draining the queue level by level, but it's not harmful. Overall this is a solid, straightforward implementation with minor opportunities for decomposition.\",\n  \"strengths\": [\n    \"Uses Kahn's algorithm \u2014 the canonical, well-understood approach for this problem\",\n    \"Explicit graph construction with no input mutation\",\n    \"Clear ValueError with descriptive message on cycle detection\",\n    \"Sorted batches produced correctly and efficiently\",\n    \"No speculative abstractions or unused extension points\",\n    \"Includes dependency-only nodes as required\"\n  ],\n  \"weaknesses\": [\n    \"Monolithic function; graph building and BFS could be extracted into small pure helpers\",\n    \"Module-level docstring and function docstring are verbose relative to the code's simplicity\",\n    \"queue.clear() + re-append pattern is slightly awkward; a snapshot-and-drain approach would be cleaner\",\n    \"in_degree is mutated in place during BFS, which is fine but could be noted as intentional\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses Kahn's algorithm \u2014 the canonical, well-understood approach for this problem",
+      "Explicit graph construction with no input mutation",
+      "Clear ValueError with descriptive message on cycle detection",
+      "Sorted batches produced correctly and efficiently",
+      "No speculative abstractions or unused extension points",
+      "Includes dependency-only nodes as required"
+    ],
+    "weaknesses": [
+      "Monolithic function; graph building and BFS could be extracted into small pure helpers",
+      "Module-level docstring and function docstring are verbose relative to the code's simplicity",
+      "queue.clear() + re-append pattern is slightly awkward; a snapshot-and-drain approach would be cleaner",
+      "in_degree is mutated in place during BFS, which is fine but could be noted as intentional"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.503,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 46,
+    "maintainability_index": 79.867,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

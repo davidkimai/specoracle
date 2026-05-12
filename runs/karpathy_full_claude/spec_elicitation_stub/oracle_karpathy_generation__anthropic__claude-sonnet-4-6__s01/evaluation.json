@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the Karpathy oracle: it handles exactly the one specified path (echo+value), raises NotImplementedError for everything else, uses no unnecessary abstractions, no speculative branches, no helper functions, and fits in two lines of logic. The guard uses `.get` for safe key access and an explicit `'value' in payload` check, making both conditions auditable at a glance. The error message includes the payload repr for debuggability without over-engineering. Nothing is missing and nothing is excess.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a near-perfect realization of the Karpathy oracle: it handles exactly the one specified path (echo+value), raises NotImplementedError for everything else, uses no unnecessary abstractions, no speculative branches, no helper functions, and fits in two lines of logic. The guard uses `.get` for safe key access and an explicit `'value' in payload` check, making both conditions auditable at a glance. The error message includes the payload repr for debuggability without over-engineering. Nothing is missing and nothing is excess.\",\n  \"strengths\": [\n    \"Minimal: exactly two logical branches, zero dead code\",\n    \"Explicit: both conditions (mode == 'echo' and 'value' in payload) are stated clearly\",\n    \"Correct NotImplementedError for all unspecified paths as required\",\n    \"No abstractions, no classes, no helper functions for single-use logic\",\n    \"Informative error message without over-engineering\"\n  ],\n  \"weaknesses\": [\n    \"Negligible: the f-string in NotImplementedError is a minor luxury, though harmless and arguably useful for debugging\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal: exactly two logical branches, zero dead code",
+      "Explicit: both conditions (mode == 'echo' and 'value' in payload) are stated clearly",
+      "Correct NotImplementedError for all unspecified paths as required",
+      "No abstractions, no classes, no helper functions for single-use logic",
+      "Informative error message without over-engineering"
+    ],
+    "weaknesses": [
+      "Negligible: the f-string in NotImplementedError is a minor luxury, though harmless and arguably useful for debugging"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.739,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 4,
+    "maintainability_index": 76.273,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "oracle_karpathy_generation"
+}

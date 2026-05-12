@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses a sliding-window deque approach which is the natural fit for this problem, keeps control flow flat with a single guard clause, makes data movement explicit (timestamps deque, lock), and raises a clear ValueError for invalid input. The asyncio.Lock is appropriate for async correctness. Minor issues: the boundary condition uses `<=` for eviction which could cause off-by-one edge cases at exactly the window boundary (strictly speaking, timestamps at exactly `current_time - 1.0` should arguably still be in the window), and the typing imports are slightly verbose (Optional/Callable from typing rather than the modern `X | None` syntax, though this is minor). The docstrings are thorough but slightly over-engineered for the task size. Overall this is a well-structured, auditable implementation with no speculative abstractions or hidden state.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses a sliding-window deque approach which is the natural fit for this problem, keeps control flow flat with a single guard clause, makes data movement explicit (timestamps deque, lock), and raises a clear ValueError for invalid input. The asyncio.Lock is appropriate for async correctness. Minor issues: the boundary condition uses `<=` for eviction which could cause off-by-one edge cases at exactly the window boundary (strictly speaking, timestamps at exactly `current_time - 1.0` should arguably still be in the window), and the typing imports are slightly verbose (Optional/Callable from typing rather than the modern `X | None` syntax, though this is minor). The docstrings are thorough but slightly over-engineered for the task size. Overall this is a well-structured, auditable implementation with no speculative abstractions or hidden state.\",\n  \"strengths\": [\n    \"Flat control flow with a single eviction loop and one conditional\",\n    \"Explicit data movement: timestamps deque is the sole mutable state, clearly named\",\n    \"Clear ValueError with informative message for invalid rate\",\n    \"asyncio.Lock correctly serializes concurrent access without hidden global state\",\n    \"now callable injection is clean and defaults sensibly to time.monotonic\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Boundary condition `<= window_start` may incorrectly evict timestamps exactly at the window edge\",\n    \"Uses legacy `Optional[Callable[[], float]]` typing instead of modern `Callable[[], float] | None`\",\n    \"Docstrings are slightly over-engineered relative to the simplicity of the task\",\n    \"Lock acquisition on every call adds overhead even in single-threaded async contexts where contention is rare\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single eviction loop and one conditional",
+      "Explicit data movement: timestamps deque is the sole mutable state, clearly named",
+      "Clear ValueError with informative message for invalid rate",
+      "asyncio.Lock correctly serializes concurrent access without hidden global state",
+      "now callable injection is clean and defaults sensibly to time.monotonic",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Boundary condition `<= window_start` may incorrectly evict timestamps exactly at the window edge",
+      "Uses legacy `Optional[Callable[[], float]]` typing instead of modern `Callable[[], float] | None`",
+      "Docstrings are slightly over-engineered relative to the simplicity of the task",
+      "Lock acquisition on every call adds overhead even in single-threaded async contexts where contention is rare"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.487,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 47,
+    "maintainability_index": 78.117,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "baseline_generation"
+}

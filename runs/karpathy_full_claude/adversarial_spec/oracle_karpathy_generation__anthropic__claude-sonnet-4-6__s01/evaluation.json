@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate faithfully implements the LT-11 requirement of explicit labeled branch variables for every state/event combination, naming them exactly `branch_<state>_<event>` as specified. The four valid transitions are correctly implemented and unknown transitions return the current state. The main structural weakness is the awkward tuple assignment `_ = (...)` used solely to suppress linter warnings about unused variables \u2014 this is a code smell that undermines readability and auditability rather than enhancing it. A cleaner approach would either omit the unused-variable suppression entirely or document why those branches exist without the tuple hack. The docstring and comments are clear and the logic is flat and explicit, which aligns well with Zen of Python principles of explicitness and readability. The exhaustive enumeration of all 12 branches (3 states \u00d7 4 events) is verbose but directly satisfies the 'auditable branch labels' requirement of the spec.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The candidate faithfully implements the LT-11 requirement of explicit labeled branch variables for every state/event combination, naming them exactly `branch_<state>_<event>` as specified. The four valid transitions are correctly implemented and unknown transitions return the current state. The main structural weakness is the awkward tuple assignment `_ = (...)` used solely to suppress linter warnings about unused variables \u2014 this is a code smell that undermines readability and auditability rather than enhancing it. A cleaner approach would either omit the unused-variable suppression entirely or document why those branches exist without the tuple hack. The docstring and comments are clear and the logic is flat and explicit, which aligns well with Zen of Python principles of explicitness and readability. The exhaustive enumeration of all 12 branches (3 states \u00d7 4 events) is verbose but directly satisfies the 'auditable branch labels' requirement of the spec.\",\n  \"strengths\": [\n    \"All 12 branch label variables are explicitly named per LT-11 convention\",\n    \"Four valid transitions are correctly implemented with clear if-branches\",\n    \"Unknown transitions correctly fall through to return current state\",\n    \"Good docstring and inline comments improve auditability\",\n    \"Flat structure with no nested conditionals\"\n  ],\n  \"weaknesses\": [\n    \"The `_ = (...)` tuple to suppress unused-variable warnings is a code smell that hurts readability\",\n    \"Unused branch variables for invalid transitions add noise without functional value\",\n    \"Computing all 12 boolean expressions unconditionally is wasteful when only one state/event pair can match\",\n    \"The spec's 'auditable' intent is partially undermined by the suppression hack rather than a clean design\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "All 12 branch label variables are explicitly named per LT-11 convention",
+      "Four valid transitions are correctly implemented with clear if-branches",
+      "Unknown transitions correctly fall through to return current state",
+      "Good docstring and inline comments improve auditability",
+      "Flat structure with no nested conditionals"
+    ],
+    "weaknesses": [
+      "The `_ = (...)` tuple to suppress unused-variable warnings is a code smell that hurts readability",
+      "Unused branch variables for invalid transitions add noise without functional value",
+      "Computing all 12 boolean expressions unconditionally is wasteful when only one state/event pair can match",
+      "The spec's 'auditable' intent is partially undermined by the suppression hack rather than a clean design"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.556,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 17.0,
+    "cyclomatic_complexity_max": 17,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 1,
+    "loc": 55,
+    "maintainability_index": 76.745,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

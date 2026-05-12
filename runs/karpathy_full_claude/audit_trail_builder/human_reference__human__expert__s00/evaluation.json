@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation correctly satisfies all functional requirements: it validates presence of source_system and actor_id, raises ValueError on missing fields, assigns monotonic sequence numbers starting at 1, and explicitly names all fields in the output record. The logic is flat, readable, and locally auditable with no hidden magic or silent value invention. Minor weaknesses include the overly long single line for the append call (readability suffers slightly), and the use of `event.get('action')` which silently allows action to be None rather than treating it consistently \u2014 though action is not listed as required by the spec. The falsy check `not event.get(...)` could incorrectly reject a legitimate value of 0 or empty string for actor_id/source_system, which is a subtle edge-case flaw against the 'do not silently invent' principle (it rejects rather than invents, but the rejection criterion is slightly wrong). Overall the structure is clean and well-aligned with RAT-9.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation correctly satisfies all functional requirements: it validates presence of source_system and actor_id, raises ValueError on missing fields, assigns monotonic sequence numbers starting at 1, and explicitly names all fields in the output record. The logic is flat, readable, and locally auditable with no hidden magic or silent value invention. Minor weaknesses include the overly long single line for the append call (readability suffers slightly), and the use of `event.get('action')` which silently allows action to be None rather than treating it consistently \u2014 though action is not listed as required by the spec. The falsy check `not event.get(...)` could incorrectly reject a legitimate value of 0 or empty string for actor_id/source_system, which is a subtle edge-case flaw against the 'do not silently invent' principle (it rejects rather than invents, but the rejection criterion is slightly wrong). Overall the structure is clean and well-aligned with RAT-9.\",\n  \"strengths\": [\n    \"Explicit field naming in output record matches RAT-9 derived-fields requirement\",\n    \"Monotonic sequence via enumerate(start=1) is clean and correct\",\n    \"Raises ValueError rather than silently skipping or inventing values\",\n    \"Flat, single-loop structure with no unnecessary abstraction\"\n  ],\n  \"weaknesses\": [\n    \"Falsy check (`not event.get(...)`) would incorrectly reject valid falsy values like '0' or 0 for actor_id/source_system\",\n    \"Long single-line append reduces readability and auditability\",\n    \"action field silently becomes None if absent, which may warrant explicit handling or documentation\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit field naming in output record matches RAT-9 derived-fields requirement",
+      "Monotonic sequence via enumerate(start=1) is clean and correct",
+      "Raises ValueError rather than silently skipping or inventing values",
+      "Flat, single-loop structure with no unnecessary abstraction"
+    ],
+    "weaknesses": [
+      "Falsy check (`not event.get(...)`) would incorrectly reject valid falsy values like '0' or 0 for actor_id/source_system",
+      "Long single-line append reduces readability and auditability",
+      "action field silently becomes None if absent, which may warrant explicit handling or documentation"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Regulatory Audit Trail Standard RAT-9:\n- Every audit record must carry source_system, actor_id, and a monotonic sequence number.\n- Derived fields must be named explicitly before being inserted into a record.\n- Do not silently invent actor or source values; reject records missing either field.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.908,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 69.841,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "audit_trail_builder",
+  "variant": "human_reference"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate faithfully follows the LT-11 structural spec by naming every branch with the required `branch_<state>_<event>` pattern and making each transition explicitly auditable. However, it severely violates the Zen of Python in several ways: it invents 8 spurious 'unknown' transitions (e.g., `branch_idle_stop`, `branch_idle_fail`, `branch_idle_reset`, `branch_running_start`, `branch_running_reset`, `branch_failed_start`, `branch_failed_stop`, `branch_failed_fail`) that are not part of the functional requirements and return the current state redundantly, bloating the code from ~5 meaningful branches to 12 labeled branches and 12 conditional checks. This is architectural slop masquerading as auditability \u2014 the spec says to label valid transitions explicitly, not to enumerate every impossible combination. The fallthrough `return state` already handles unknown transitions, making the 8 extra branches dead weight that adds noise, reduces readability, and obscures the actual state machine logic.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The candidate faithfully follows the LT-11 structural spec by naming every branch with the required `branch_<state>_<event>` pattern and making each transition explicitly auditable. However, it severely violates the Zen of Python in several ways: it invents 8 spurious 'unknown' transitions (e.g., `branch_idle_stop`, `branch_idle_fail`, `branch_idle_reset`, `branch_running_start`, `branch_running_reset`, `branch_failed_start`, `branch_failed_stop`, `branch_failed_fail`) that are not part of the functional requirements and return the current state redundantly, bloating the code from ~5 meaningful branches to 12 labeled branches and 12 conditional checks. This is architectural slop masquerading as auditability \u2014 the spec says to label valid transitions explicitly, not to enumerate every impossible combination. The fallthrough `return state` already handles unknown transitions, making the 8 extra branches dead weight that adds noise, reduces readability, and obscures the actual state machine logic.\",\n  \"strengths\": [\n    \"All required `branch_<state>_<event>` local variable names are present and correctly named per LT-11\",\n    \"All four functional transitions (idle+start\u2192running, running+stop\u2192idle, running+fail\u2192failed, failed+reset\u2192idle) are correctly implemented\",\n    \"Unknown transitions correctly fall through to `return state`\",\n    \"Flat structure with no nesting\"\n  ],\n  \"weaknesses\": [\n    \"Invents 8 non-specified branch variables for invalid/unknown transitions that are already handled by the fallthrough return\",\n    \"Redundant branches (e.g., `branch_idle_stop` returning 'idle') duplicate the fallthrough behavior, violating DRY and obscuring intent\",\n    \"Bloated code size (40+ lines) for a 4-transition state machine \u2014 far from simple or sparse\",\n    \"Returning explicit states for undefined transitions (rather than relying on fallthrough) makes the code harder to audit for correctness of the actual spec\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "All required `branch_<state>_<event>` local variable names are present and correctly named per LT-11",
+      "All four functional transitions (idle+start\u2192running, running+stop\u2192idle, running+fail\u2192failed, failed+reset\u2192idle) are correctly implemented",
+      "Unknown transitions correctly fall through to `return state`",
+      "Flat structure with no nesting"
+    ],
+    "weaknesses": [
+      "Invents 8 non-specified branch variables for invalid/unknown transitions that are already handled by the fallthrough return",
+      "Redundant branches (e.g., `branch_idle_stop` returning 'idle') duplicate the fallthrough behavior, violating DRY and obscuring intent",
+      "Bloated code size (40+ lines) for a 4-transition state machine \u2014 far from simple or sparse",
+      "Returning explicit states for undefined transitions (rather than relying on fallthrough) makes the code harder to audit for correctness of the actual spec"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.376,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 25.0,
+    "cyclomatic_complexity_max": 25,
+    "cyclomatic_complexity_total": 25,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 42.966,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

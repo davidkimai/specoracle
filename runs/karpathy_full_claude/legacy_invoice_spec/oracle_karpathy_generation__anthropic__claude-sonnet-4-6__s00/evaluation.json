@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-labeled local variable names for money-affecting decisions (filter_region_ok, filter_status_ok, filter_amount_ok, stage2_bucket_counts, stage2_bucket_totals), returns records with the exact legacy keys, uses a visible staged audit trail with three clearly named stages rather than clever one-liners, and comments are used only to name legacy audit stages. The code is flat, readable, locally auditable, and does not mutate the input. The only minor quibble is that the intermediate variables record_bucket_code, record_item_count, and record_cents_total in Stage 3 add slight verbosity without much audit value since they simply alias already-named variables, but this is a very minor issue and arguably consistent with the spec's preference for explicit staging over cleverness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-labeled local variable names for money-affecting decisions (filter_region_ok, filter_status_ok, filter_amount_ok, stage2_bucket_counts, stage2_bucket_totals), returns records with the exact legacy keys, uses a visible staged audit trail with three clearly named stages rather than clever one-liners, and comments are used only to name legacy audit stages. The code is flat, readable, locally auditable, and does not mutate the input. The only minor quibble is that the intermediate variables record_bucket_code, record_item_count, and record_cents_total in Stage 3 add slight verbosity without much audit value since they simply alias already-named variables, but this is a very minor issue and arguably consistent with the spec's preference for explicit staging over cleverness.\",\n  \"strengths\": [\n    \"Single public function with no helpers, exactly as specified\",\n    \"Explicit branch-labeled variable names (filter_region_ok, filter_status_ok, filter_amount_ok) make money-affecting decisions auditable\",\n    \"Three clearly named audit stages with spec-compliant stage comments\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"No mutation of input; no clever comprehension flattening\",\n    \"Flat, readable structure with no nested functions or lambdas\"\n  ],\n  \"weaknesses\": [\n    \"Stage 3 intermediate variables (record_bucket_code, etc.) are trivial aliases that add lines without meaningful audit value\",\n    \"Using two separate defaultdicts for counts and totals is slightly redundant; a single dict of tuples could be cleaner, though the staged approach is defensible per spec\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helpers, exactly as specified",
+      "Explicit branch-labeled variable names (filter_region_ok, filter_status_ok, filter_amount_ok) make money-affecting decisions auditable",
+      "Three clearly named audit stages with spec-compliant stage comments",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "No mutation of input; no clever comprehension flattening",
+      "Flat, readable structure with no nested functions or lambdas"
+    ],
+    "weaknesses": [
+      "Stage 3 intermediate variables (record_bucket_code, etc.) are trivial aliases that add lines without meaningful audit value",
+      "Using two separate defaultdicts for counts and totals is slightly redundant; a single dict of tuples could be cleaner, though the staged approach is defensible per spec"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.871,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 72.282,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_karpathy_generation"
+}

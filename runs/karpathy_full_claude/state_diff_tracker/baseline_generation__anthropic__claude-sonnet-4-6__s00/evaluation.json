@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-perfect realization of the informal spec and Zen of Python principles. It is flat, explicit, and readable with no unnecessary abstraction. The union of keys covers additions and removals correctly, `sorted()` ensures deterministic output, `dict.get()` naturally yields `None` for missing fields (correctly representing before/after for added/removed fields), and each changed field produces exactly one explicit record with the required `field`, `before`, and `after` keys. There is no architectural slop, no collapsing of changes into summaries, and no extraneous complexity.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a near-perfect realization of the informal spec and Zen of Python principles. It is flat, explicit, and readable with no unnecessary abstraction. The union of keys covers additions and removals correctly, `sorted()` ensures deterministic output, `dict.get()` naturally yields `None` for missing fields (correctly representing before/after for added/removed fields), and each changed field produces exactly one explicit record with the required `field`, `before`, and `after` keys. There is no architectural slop, no collapsing of changes into summaries, and no extraneous complexity.\",\n  \"strengths\": [\n    \"Flat single-loop structure with no nested functions or classes\",\n    \"Explicit record construction with all three required keys\",\n    \"Handles added, removed, and modified fields uniformly via set union and .get()\",\n    \"Sorting is done once via sorted() on the field set, keeping logic simple\",\n    \"Zero dependencies and minimal surface area\"\n  ],\n  \"weaknesses\": [\n    \"No type annotations on the return type's inner dict (minor style point)\",\n    \"No docstring, though the function name and logic are self-explanatory\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Flat single-loop structure with no nested functions or classes",
+      "Explicit record construction with all three required keys",
+      "Handles added, removed, and modified fields uniformly via set union and .get()",
+      "Sorting is done once via sorted() on the field set, keeping logic simple",
+      "Zero dependencies and minimal surface area"
+    ],
+    "weaknesses": [
+      "No type annotations on the return type's inner dict (minor style point)",
+      "No docstring, though the function name and logic are self-explanatory"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.546,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 9,
+    "maintainability_index": 69.446,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "baseline_generation"
+}

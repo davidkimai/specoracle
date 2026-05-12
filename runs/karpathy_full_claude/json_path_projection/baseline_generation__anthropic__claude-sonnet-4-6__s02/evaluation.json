@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-structured, and follows the Zen of Python closely. It separates concerns appropriately with a small pure helper `_resolve_path`, keeps control flow reasonably flat using guard clauses, makes data movement explicit, and avoids mutation of the input. The main function is a simple loop that delegates path resolution to the helper. The helper handles the three cases (list, dict, scalar) clearly with early returns. The one notable weakness is the speculative 'Try integer key as well for dicts with integer keys' branch \u2014 this is not required by the spec and adds complexity that a maintainer must reason about without any stated need. The docstrings are helpful but slightly verbose for the simplicity of the code. Overall, this is a solid, auditable implementation with minimal architectural slop.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-structured, and follows the Zen of Python closely. It separates concerns appropriately with a small pure helper `_resolve_path`, keeps control flow reasonably flat using guard clauses, makes data movement explicit, and avoids mutation of the input. The main function is a simple loop that delegates path resolution to the helper. The helper handles the three cases (list, dict, scalar) clearly with early returns. The one notable weakness is the speculative 'Try integer key as well for dicts with integer keys' branch \u2014 this is not required by the spec and adds complexity that a maintainer must reason about without any stated need. The docstrings are helpful but slightly verbose for the simplicity of the code. Overall, this is a solid, auditable implementation with minimal architectural slop.\",\n  \"strengths\": [\n    \"Clean separation into a small pure helper and a thin orchestrating function\",\n    \"Guard clauses keep nesting flat and readable\",\n    \"No mutation of input data\",\n    \"Handles list indexing and dict traversal explicitly and clearly\",\n    \"Early returns make failure paths easy to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"Speculative integer-key dict lookup is not required by the spec and adds untested complexity\",\n    \"Docstrings are slightly over-engineered for such a simple utility\",\n    \"No input validation (e.g., raising on non-dict record or non-dict paths) as suggested by the operational constraints\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into a small pure helper and a thin orchestrating function",
+      "Guard clauses keep nesting flat and readable",
+      "No mutation of input data",
+      "Handles list indexing and dict traversal explicitly and clearly",
+      "Early returns make failure paths easy to audit locally"
+    ],
+    "weaknesses": [
+      "Speculative integer-key dict lookup is not required by the spec and adds untested complexity",
+      "Docstrings are slightly over-engineered for such a simple utility",
+      "No input validation (e.g., raising on non-dict record or non-dict paths) as suggested by the operational constraints"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.454,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 2,
+    "loc": 47,
+    "maintainability_index": 84.58,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It sorts the input once, then for each output timestamp performs a linear scan to find the latest point at or before that timestamp \u2014 straightforward and auditable. The logic is flat, explicit, and has no speculative features. The main structural weakness is the O(n*m) nested loop: for each output timestamp it rescans all points from the beginning, when a single linear merge pass (two-pointer or bisect) would be both simpler conceptually and more efficient. Using `bisect_right` from the standard library would reduce the inner loop to a single index lookup and make the forward-fill semantics even more explicit, but the current approach is still readable and correct. The sorted_points variable name is clear, the while loop is idiomatic for range generation, and there are no extraneous abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It sorts the input once, then for each output timestamp performs a linear scan to find the latest point at or before that timestamp \u2014 straightforward and auditable. The logic is flat, explicit, and has no speculative features. The main structural weakness is the O(n*m) nested loop: for each output timestamp it rescans all points from the beginning, when a single linear merge pass (two-pointer or bisect) would be both simpler conceptually and more efficient. Using `bisect_right` from the standard library would reduce the inner loop to a single index lookup and make the forward-fill semantics even more explicit, but the current approach is still readable and correct. The sorted_points variable name is clear, the while loop is idiomatic for range generation, and there are no extraneous abstractions.\",\n  \"strengths\": [\n    \"Minimal code with no unnecessary abstractions or features\",\n    \"Explicit and readable forward-fill logic\",\n    \"Flat structure \u2014 no classes, no helpers, no over-engineering\",\n    \"Sorts input defensively before processing\"\n  ],\n  \"weaknesses\": [\n    \"O(n*m) nested loop rescans all points for every timestamp; a two-pointer or bisect approach would be both simpler and more efficient\",\n    \"The inner for-loop with break relies on sorted order implicitly, which could be made more explicit with bisect_right\",\n    \"range() would be more idiomatic than a manual while loop for fixed-step integer sequences\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no unnecessary abstractions or features",
+      "Explicit and readable forward-fill logic",
+      "Flat structure \u2014 no classes, no helpers, no over-engineering",
+      "Sorts input defensively before processing"
+    ],
+    "weaknesses": [
+      "O(n*m) nested loop rescans all points for every timestamp; a two-pointer or bisect approach would be both simpler and more efficient",
+      "The inner for-loop with break relies on sorted order implicitly, which could be made more explicit with bisect_right",
+      "range() would be more idiomatic than a manual while loop for fixed-step integer sequences"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.575,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 20,
+    "maintainability_index": 64.237,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "oracle_karpathy_generation"
+}

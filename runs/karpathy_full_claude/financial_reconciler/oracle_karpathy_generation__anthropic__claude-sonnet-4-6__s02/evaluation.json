@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Treasury Reconciliation Doctrine TR-4 with exemplary structural discipline: direction validation occurs before any arithmetic, amount conversion is performed once outside conditionals, and debit/credit totals are maintained in explicitly named separate accumulators. The code is flat, readable, and locally auditable with no hidden control flow. Minor imperfections include the redundant `elif` branch (since the direction is already validated to be one of two values, the second branch is guaranteed), the use of `defaultdict` would reduce boilerplate around accumulator initialization, and `sorted(all_accounts)` imposes an ordering not required by the spec. The docstring is thorough and the use of `Decimal` for monetary arithmetic is correct. Overall this is a high-quality, doctrine-compliant implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Treasury Reconciliation Doctrine TR-4 with exemplary structural discipline: direction validation occurs before any arithmetic, amount conversion is performed once outside conditionals, and debit/credit totals are maintained in explicitly named separate accumulators. The code is flat, readable, and locally auditable with no hidden control flow. Minor imperfections include the redundant `elif` branch (since the direction is already validated to be one of two values, the second branch is guaranteed), the use of `defaultdict` would reduce boilerplate around accumulator initialization, and `sorted(all_accounts)` imposes an ordering not required by the spec. The docstring is thorough and the use of `Decimal` for monetary arithmetic is correct. Overall this is a high-quality, doctrine-compliant implementation.\",\n  \"strengths\": [\n    \"Direction validation strictly precedes any arithmetic, honoring TR-4's sequencing rule\",\n    \"Separate named accumulators (`debit_accumulators`, `credit_accumulators`) are explicit and independently readable\",\n    \"Amount conversion happens once outside conditionals \u2014 no inline arithmetic in direction branches\",\n    \"Use of `Decimal` for monetary values avoids floating-point precision issues\",\n    \"Clear error messages with context (account name, bad value)\",\n    \"Flat, linear control flow with no nested lambdas or clever abstractions\"\n  ],\n  \"weaknesses\": [\n    \"Redundant `elif direction == 'credit'` branch \u2014 after validation only two states exist, a plain `else` would be clearer and more honest\",\n    \"Manual accumulator initialization (`if account not in ...`) is verbose; `defaultdict(Decimal)` or `setdefault` would be cleaner without sacrificing explicitness\",\n    \"`sorted(all_accounts)` imposes alphabetical ordering not required by the spec, which could mask bugs or surprise callers\",\n    \"The `all_accounts` union is unnecessary since both dicts are always populated together in the loop\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Direction validation strictly precedes any arithmetic, honoring TR-4's sequencing rule",
+      "Separate named accumulators (`debit_accumulators`, `credit_accumulators`) are explicit and independently readable",
+      "Amount conversion happens once outside conditionals \u2014 no inline arithmetic in direction branches",
+      "Use of `Decimal` for monetary values avoids floating-point precision issues",
+      "Clear error messages with context (account name, bad value)",
+      "Flat, linear control flow with no nested lambdas or clever abstractions"
+    ],
+    "weaknesses": [
+      "Redundant `elif direction == 'credit'` branch \u2014 after validation only two states exist, a plain `else` would be clearer and more honest",
+      "Manual accumulator initialization (`if account not in ...`) is verbose; `defaultdict(Decimal)` or `setdefault` would be cleaner without sacrificing explicitness",
+      "`sorted(all_accounts)` imposes alphabetical ordering not required by the spec, which could mask bugs or surprise callers",
+      "The `all_accounts` union is unnecessary since both dicts are always populated together in the loop"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.584,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 68,
+    "maintainability_index": 78.248,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

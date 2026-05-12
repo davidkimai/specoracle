@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. It correctly collects all validation errors before raising (CD-7 compliant), names the failing field in every error message, and returns only a clean dict after full validation passes. The walrus-operator sentinel pattern (`_MISSING := object()`) is slightly unusual and creates a new object on each `get` call which is a minor quirk, but it works correctly. The docstring is thorough and the logic is flat and locally auditable. One minor concern is that `patient_id` is stripped in the output but not in the validation check (the strip happens at output time, which is fine but slightly inconsistent with the validation message). The decision to join all errors into a single ValueError message is reasonable and arguably better than raising on the first error, though it slightly obscures 'naming the bad field' when multiple fields fail. Overall this is a solid, readable, CD-7 compliant implementation with only minor stylistic issues.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. It correctly collects all validation errors before raising (CD-7 compliant), names the failing field in every error message, and returns only a clean dict after full validation passes. The walrus-operator sentinel pattern (`_MISSING := object()`) is slightly unusual and creates a new object on each `get` call which is a minor quirk, but it works correctly. The docstring is thorough and the logic is flat and locally auditable. One minor concern is that `patient_id` is stripped in the output but not in the validation check (the strip happens at output time, which is fine but slightly inconsistent with the validation message). The decision to join all errors into a single ValueError message is reasonable and arguably better than raising on the first error, though it slightly obscures 'naming the bad field' when multiple fields fail. Overall this is a solid, readable, CD-7 compliant implementation with only minor stylistic issues.\",\n  \"strengths\": [\n    \"Collects all errors before raising \u2014 true all-or-nothing validation per CD-7\",\n    \"Every error message explicitly names the failing field\",\n    \"Correctly excludes bool from int validation\",\n    \"Flat, readable structure with no unnecessary abstraction\",\n    \"Returns a clean copy of the data, not the raw payload\"\n  ],\n  \"weaknesses\": [\n    \"Walrus-operator sentinel `_MISSING := object()` inside `get()` is an unusual idiom that creates a new object each call and may confuse readers\",\n    \"Joining all errors into one string slightly dilutes the 'name the bad field' requirement when multiple fields fail\",\n    \"Stripping patient_id only at output time (not during validation) is a minor inconsistency\",\n    \"Only breaks on the first bad symptoms element rather than reporting all invalid indices\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Collects all errors before raising \u2014 true all-or-nothing validation per CD-7",
+      "Every error message explicitly names the failing field",
+      "Correctly excludes bool from int validation",
+      "Flat, readable structure with no unnecessary abstraction",
+      "Returns a clean copy of the data, not the raw payload"
+    ],
+    "weaknesses": [
+      "Walrus-operator sentinel `_MISSING := object()` inside `get()` is an unusual idiom that creates a new object each call and may confuse readers",
+      "Joining all errors into one string slightly dilutes the 'name the bad field' requirement when multiple fields fail",
+      "Stripping patient_id only at output time (not during validation) is a minor inconsistency",
+      "Only breaks on the first bad symptoms element rather than reporting all invalid indices"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.43,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 78.413,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "oracle_karpathy_generation"
+}

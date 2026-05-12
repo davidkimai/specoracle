@@ -5,7 +5,8 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 Provider = Literal["openai", "anthropic", "google", "mock"]
-GenerationMode = Literal["baseline", "oracle", "neutral_style", "hybrid"]
+GenerationMode = Literal["baseline", "oracle", "oracle_karpathy", "neutral_style", "hybrid"]
+OracleSource = Literal["zen", "karpathy"]
 
 
 ZEN_OF_PYTHON_PRIMITIVES: tuple[str, ...] = (
@@ -47,6 +48,28 @@ Operational constraints:
 - Keep code sparse enough that a maintainer can audit behavior locally.
 """
 
+KARPATHY_ORACLE_SPEC = """\
+Treat the Karpathy Guidelines as an informal in-context oracle for structural
+quality. The oracle is not a style preference layer; it is a degree-of-freedom
+collapse over the implementation space. Preserve functional correctness while
+choosing the simplest architecture that satisfies the task.
+
+Operational constraints derived from Karpathy's behavioral guidelines
+(https://github.com/forrestchang/andrej-karpathy-skills):
+- Think before coding: state assumptions explicitly; if uncertain about a design
+  choice, choose the most conservative interpretation.
+- Simplicity first: write the minimum code that solves the problem. No features
+  beyond what was asked. No abstractions for single-use code. No speculative
+  flexibility or configurability. If you write 200 lines and it could be 50,
+  rewrite it.
+- Surgical changes: touch only what you must. Do not improve adjacent code,
+  comments, or formatting. Match existing style even if you would do it
+  differently.
+- Goal-driven execution: define verifiable success criteria. Every function
+  should have a clear, testable contract. Prefer writing tests first, then
+  implementation.
+"""
+
 BASELINE_SYSTEM_PROMPT = """\
 You are a secure program synthesis engineer. Generate a correct, reviewable Python
 module for the task. Return only Python code. Do not include markdown prose.
@@ -68,6 +91,13 @@ module for the task. Return only Python code. Do not include markdown prose.
 
 Zen of Python primitives:
 {chr(10).join(f"- {line}" for line in ZEN_OF_PYTHON_PRIMITIVES)}
+"""
+
+KARPATHY_ORACLE_SYSTEM_PROMPT = f"""\
+You are a secure program synthesis engineer. Generate a correct, reviewable Python
+module for the task. Return only Python code. Do not include markdown prose.
+
+{KARPATHY_ORACLE_SPEC}
 """
 
 CUSTOM_ORACLE_SYSTEM_TEMPLATE = """\
@@ -285,12 +315,20 @@ def default_model_settings(
     )
 
 
-def oracle_spec_for_task(task: Task) -> str:
-    return task.custom_spec_override.strip() if task.custom_spec_override else ZEN_ORACLE_SPEC
+def oracle_spec_for_task(task: Task, *, source: OracleSource = "zen") -> str:
+    if task.custom_spec_override:
+        return task.custom_spec_override.strip()
+    if source == "karpathy":
+        return KARPATHY_ORACLE_SPEC
+    return ZEN_ORACLE_SPEC
 
 
-def oracle_spec_label_for_task(task: Task) -> str:
-    return "custom_spec_override" if task.custom_spec_override else "zen_of_python"
+def oracle_spec_label_for_task(task: Task, *, source: OracleSource = "zen") -> str:
+    if task.custom_spec_override:
+        return "custom_spec_override"
+    if source == "karpathy":
+        return "karpathy_oracle"
+    return "zen_of_python"
 
 
 def system_prompt_for_mode(mode: GenerationMode, *, task: Task | None = None) -> str:
@@ -298,6 +336,10 @@ def system_prompt_for_mode(mode: GenerationMode, *, task: Task | None = None) ->
         return BASELINE_SYSTEM_PROMPT
     if mode == "neutral_style":
         return NEUTRAL_STYLE_SYSTEM_PROMPT
+    if mode == "oracle_karpathy":
+        if task is not None and task.custom_spec_override:
+            return CUSTOM_ORACLE_SYSTEM_TEMPLATE.format(oracle_spec=oracle_spec_for_task(task))
+        return KARPATHY_ORACLE_SYSTEM_PROMPT
     if mode in {"oracle", "hybrid"}:
         if task is not None and task.custom_spec_override:
             return CUSTOM_ORACLE_SYSTEM_TEMPLATE.format(oracle_spec=oracle_spec_for_task(task))
@@ -310,6 +352,8 @@ def variant_name(mode: GenerationMode) -> str:
         return "baseline_generation"
     if mode == "oracle":
         return "oracle_generation"
+    if mode == "oracle_karpathy":
+        return "oracle_karpathy_generation"
     if mode == "hybrid":
         return "hybrid_generation"
     if mode == "neutral_style":

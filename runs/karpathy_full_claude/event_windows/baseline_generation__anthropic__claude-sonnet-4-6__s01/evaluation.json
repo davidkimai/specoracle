@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is largely clean and readable with flat control flow, explicit data movement, and clear error handling. The guard clauses for malformed events are well-structured and the final result construction is straightforward. However, maintaining two parallel defaultdicts (counts and totals) instead of a single dict of aggregates introduces minor redundancy and makes the data model slightly less cohesive. The docstring is verbose for what is a small utility function. The boolean subclass check, while correct, adds a layer of complexity that could be folded into the isinstance check more elegantly. The window_key computation `(timestamp // window_size) * window_size` is correct but slightly redundant since `k * window_size` is just the floor-divided key scaled back\u2014a small helper or clearer naming could make this more self-documenting. Overall the code is auditable and uses ordinary stdlib constructs without speculative abstractions.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is largely clean and readable with flat control flow, explicit data movement, and clear error handling. The guard clauses for malformed events are well-structured and the final result construction is straightforward. However, maintaining two parallel defaultdicts (counts and totals) instead of a single dict of aggregates introduces minor redundancy and makes the data model slightly less cohesive. The docstring is verbose for what is a small utility function. The boolean subclass check, while correct, adds a layer of complexity that could be folded into the isinstance check more elegantly. The window_key computation `(timestamp // window_size) * window_size` is correct but slightly redundant since `k * window_size` is just the floor-divided key scaled back\u2014a small helper or clearer naming could make this more self-documenting. Overall the code is auditable and uses ordinary stdlib constructs without speculative abstractions.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses for malformed events\",\n    \"Explicit ValueError with informative message for invalid window_size\",\n    \"Clear separation of accumulation and result construction\",\n    \"Uses standard library (defaultdict, sorted) without clever metaprogramming\",\n    \"Boolean subclass edge case handled correctly\"\n  ],\n  \"weaknesses\": [\n    \"Two parallel defaultdicts instead of a single aggregation structure adds minor redundancy\",\n    \"Verbose NumPy-style docstring is disproportionate for a small utility\",\n    \"window_key computation could be simplified or named more clearly\",\n    \"isinstance(window_size, int) check rejects bool but the error message doesn't mention booleans, creating a subtle gap\",\n    \"No small pure helper extracted for event validation, leaving the loop body slightly dense\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses for malformed events",
+      "Explicit ValueError with informative message for invalid window_size",
+      "Clear separation of accumulation and result construction",
+      "Uses standard library (defaultdict, sorted) without clever metaprogramming",
+      "Boolean subclass edge case handled correctly"
+    ],
+    "weaknesses": [
+      "Two parallel defaultdicts instead of a single aggregation structure adds minor redundancy",
+      "Verbose NumPy-style docstring is disproportionate for a small utility",
+      "window_key computation could be simplified or named more clearly",
+      "isinstance(window_size, int) check rejects bool but the error message doesn't mention booleans, creating a subtle gap",
+      "No small pure helper extracted for event validation, leaving the loop body slightly dense"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.411,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.07s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 11.0,
+    "cyclomatic_complexity_max": 11,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 1,
+    "loc": 45,
+    "maintainability_index": 80.436,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct with explicit error handling and clear naming. The recursion is straightforward and the data flow is explicit with no hidden mutation. The main structural concern is the use of a leading-underscore `_prefix` parameter as a public API entry point for recursion state, which leaks implementation detail into the signature and could confuse callers; a cleaner approach would be a private recursive helper and a clean public wrapper. The type guard is placed correctly at the top. The docstring is thorough but slightly over-documented for the simplicity of the task. Overall it reads well and a maintainer can audit behavior locally with minimal effort.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct with explicit error handling and clear naming. The recursion is straightforward and the data flow is explicit with no hidden mutation. The main structural concern is the use of a leading-underscore `_prefix` parameter as a public API entry point for recursion state, which leaks implementation detail into the signature and could confuse callers; a cleaner approach would be a private recursive helper and a clean public wrapper. The type guard is placed correctly at the top. The docstring is thorough but slightly over-documented for the simplicity of the task. Overall it reads well and a maintainer can audit behavior locally with minimal effort.\",\n  \"strengths\": [\n    \"Clear TypeError with informative message for invalid input\",\n    \"Explicit data movement: no hidden mutation, result dict built and returned cleanly\",\n    \"Flat control flow with a simple guard clause separating dict vs leaf\",\n    \"Good naming: full_key, nested, result are all self-explanatory\",\n    \"Docstring includes concrete examples that double as tests\"\n  ],\n  \"weaknesses\": [\n    \"_prefix as a semi-public parameter leaks recursion state into the API signature\",\n    \"A small private helper (e.g., _flatten_recursive) would keep the public interface clean and the recursion isolated\",\n    \"Docstring length is disproportionate to the simplicity of the function, adding noise\",\n    \"No handling of empty-string or non-string keys, which could silently produce odd dot-paths\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear TypeError with informative message for invalid input",
+      "Explicit data movement: no hidden mutation, result dict built and returned cleanly",
+      "Flat control flow with a simple guard clause separating dict vs leaf",
+      "Good naming: full_key, nested, result are all self-explanatory",
+      "Docstring includes concrete examples that double as tests"
+    ],
+    "weaknesses": [
+      "_prefix as a semi-public parameter leaks recursion state into the API signature",
+      "A small private helper (e.g., _flatten_recursive) would keep the public interface clean and the recursion isolated",
+      "Docstring length is disproportionate to the simplicity of the function, adding noise",
+      "No handling of empty-string or non-string keys, which could silently produce odd dot-paths"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.588,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 46,
+    "maintainability_index": 75.692,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "baseline_generation"
+}

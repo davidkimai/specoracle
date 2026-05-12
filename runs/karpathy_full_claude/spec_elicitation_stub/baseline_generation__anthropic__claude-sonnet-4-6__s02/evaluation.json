@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, flat, explicit realization of the spec. It uses guard clauses to keep nesting shallow, makes every decision point visible and locally auditable, raises clear errors with informative messages for all unspecified paths, and avoids any speculative abstraction or framework-shaped scaffolding. The docstring accurately describes behavior. The only minor quibble is that checking for non-dict input with NotImplementedError rather than TypeError is a slight semantic mismatch (a non-dict is arguably a programming error, not an unspecified behavior), and the extra-keys check, while defensively correct, adds a small amount of complexity that the spec doesn't strictly require\u2014though it is justified by the 'raise clear errors for invalid inputs' constraint.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, flat, explicit realization of the spec. It uses guard clauses to keep nesting shallow, makes every decision point visible and locally auditable, raises clear errors with informative messages for all unspecified paths, and avoids any speculative abstraction or framework-shaped scaffolding. The docstring accurately describes behavior. The only minor quibble is that checking for non-dict input with NotImplementedError rather than TypeError is a slight semantic mismatch (a non-dict is arguably a programming error, not an unspecified behavior), and the extra-keys check, while defensively correct, adds a small amount of complexity that the spec doesn't strictly require\u2014though it is justified by the 'raise clear errors for invalid inputs' constraint.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses; no deep nesting\",\n    \"Every unspecified path raises NotImplementedError with an informative message\",\n    \"No speculative abstractions, helpers, or unused extension points\",\n    \"Data movement is fully explicit; no hidden state or mutation\",\n    \"Names and structure make behavior trivially auditable in one read\"\n  ],\n  \"weaknesses\": [\n    \"Using NotImplementedError for a non-dict argument is semantically imprecise; TypeError would be more conventional for a wrong-type input\",\n    \"Extra-keys check adds minor complexity not strictly demanded by the spec, though it is defensible\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses; no deep nesting",
+      "Every unspecified path raises NotImplementedError with an informative message",
+      "No speculative abstractions, helpers, or unused extension points",
+      "Data movement is fully explicit; no hidden state or mutation",
+      "Names and structure make behavior trivially auditable in one read"
+    ],
+    "weaknesses": [
+      "Using NotImplementedError for a non-dict argument is semantically imprecise; TypeError would be more conventional for a wrong-type input",
+      "Extra-keys check adds minor complexity not strictly demanded by the spec, though it is defensible"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.53,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 27,
+    "maintainability_index": 91.479,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "spec_elicitation_stub",
+  "variant": "baseline_generation"
+}

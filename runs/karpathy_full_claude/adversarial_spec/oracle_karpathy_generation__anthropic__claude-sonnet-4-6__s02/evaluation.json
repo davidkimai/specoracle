@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate faithfully follows the LT-11 mandate of explicit `branch_<state>_<event>` local variables for every transition, and the code is fully auditable at the branch level. However, it over-engineers the 'unknown' cases by enumerating every non-matching event as its own labeled branch (e.g., `branch_idle_stop`, `branch_idle_fail`, `branch_idle_reset` all just return `state`), which inflates decision count without adding auditability value\u2014the spec asks for labeled branches on transitions, not on every no-op. The `branch_idle_unknown` / `branch_running_unknown` / `branch_failed_unknown` catch-all variables are redundant given the preceding exhaustive enumeration, and the final `branch_unknown_state` variable plus unreachable fallback `return state` add noise. The Zen of Python favors flat, explicit, and readable code; while the structure is flat and explicit, the verbosity of labeling every non-transition as a branch variable crosses into architectural slop that obscures the actual state machine logic rather than clarifying it.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The candidate faithfully follows the LT-11 mandate of explicit `branch_<state>_<event>` local variables for every transition, and the code is fully auditable at the branch level. However, it over-engineers the 'unknown' cases by enumerating every non-matching event as its own labeled branch (e.g., `branch_idle_stop`, `branch_idle_fail`, `branch_idle_reset` all just return `state`), which inflates decision count without adding auditability value\u2014the spec asks for labeled branches on transitions, not on every no-op. The `branch_idle_unknown` / `branch_running_unknown` / `branch_failed_unknown` catch-all variables are redundant given the preceding exhaustive enumeration, and the final `branch_unknown_state` variable plus unreachable fallback `return state` add noise. The Zen of Python favors flat, explicit, and readable code; while the structure is flat and explicit, the verbosity of labeling every non-transition as a branch variable crosses into architectural slop that obscures the actual state machine logic rather than clarifying it.\",\n  \"strengths\": [\n    \"All valid transitions have explicit `branch_<state>_<event>` local variables as required by LT-11\",\n    \"Code is fully auditable: every branch is named and traceable\",\n    \"Correct functional behavior for all specified transitions and unknown-transition fallback\",\n    \"Clear section comments separating each state block\"\n  ],\n  \"weaknesses\": [\n    \"Enumerates no-op (non-transitioning) events as labeled branches, bloating the code unnecessarily\",\n    \"Redundant `branch_*_unknown` variables after already exhaustively listing all known events\",\n    \"Unreachable final `return state` after `branch_unknown_state` block adds dead code\",\n    \"Violates Zen simplicity: a dict-of-dicts or minimal if/elif would be cleaner while still supporting labeled branch variables for actual transitions\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "All valid transitions have explicit `branch_<state>_<event>` local variables as required by LT-11",
+      "Code is fully auditable: every branch is named and traceable",
+      "Correct functional behavior for all specified transitions and unknown-transition fallback",
+      "Clear section comments separating each state block"
+    ],
+    "weaknesses": [
+      "Enumerates no-op (non-transitioning) events as labeled branches, bloating the code unnecessarily",
+      "Redundant `branch_*_unknown` variables after already exhaustively listing all known events",
+      "Unreachable final `return state` after `branch_unknown_state` block adds dead code",
+      "Violates Zen simplicity: a dict-of-dicts or minimal if/elif would be cleaner while still supporting labeled branch variables for actual transitions"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.867,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 20.0,
+    "cyclomatic_complexity_max": 20,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 1,
+    "loc": 76,
+    "maintainability_index": 71.53,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "oracle_karpathy_generation"
+}

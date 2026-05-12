@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and correct. It uses Kahn's algorithm directly without unnecessary abstractions, handles all edge cases (dependency-only nodes, cycle detection, alphabetical sorting), and doesn't mutate the input. The code is flat, readable, and locally auditable. Minor inefficiency: the initial queue is built sorted then immediately converted to a sorted batch, which is redundant (the queue is sorted but then `sorted(queue)` is called again on the first iteration \u2014 though this is harmless). The `sorted()` on the initial queue construction is unnecessary since the while loop immediately does `batch = sorted(queue)`. This is a small redundancy but not a structural flaw. Overall the solution is close to the minimum viable implementation with good clarity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, minimal, and correct. It uses Kahn's algorithm directly without unnecessary abstractions, handles all edge cases (dependency-only nodes, cycle detection, alphabetical sorting), and doesn't mutate the input. The code is flat, readable, and locally auditable. Minor inefficiency: the initial queue is built sorted then immediately converted to a sorted batch, which is redundant (the queue is sorted but then `sorted(queue)` is called again on the first iteration \u2014 though this is harmless). The `sorted()` on the initial queue construction is unnecessary since the while loop immediately does `batch = sorted(queue)`. This is a small redundancy but not a structural flaw. Overall the solution is close to the minimum viable implementation with good clarity.\",\n  \"strengths\": [\n    \"Minimal code with no speculative abstractions or unnecessary features\",\n    \"Correct Kahn's algorithm with cycle detection via processed count\",\n    \"Handles dependency-only nodes by unioning all node sources\",\n    \"Does not mutate input\",\n    \"Flat structure, easy to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"Redundant initial sort on queue construction \u2014 the first loop iteration immediately re-sorts it anyway\",\n    \"Using a deque then clearing it each iteration is slightly awkward; a plain list would be simpler given the batch-at-a-time processing pattern\",\n    \"Minor: `next_batch` as a set then sorted into queue adds a small unnecessary step compared to directly collecting into a list\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal code with no speculative abstractions or unnecessary features",
+      "Correct Kahn's algorithm with cycle detection via processed count",
+      "Handles dependency-only nodes by unioning all node sources",
+      "Does not mutate input",
+      "Flat structure, easy to audit locally"
+    ],
+    "weaknesses": [
+      "Redundant initial sort on queue construction \u2014 the first loop iteration immediately re-sorts it anyway",
+      "Using a deque then clearing it each iteration is slightly awkward; a plain list would be simpler given the batch-at-a-time processing pattern",
+      "Minor: `next_batch` as a set then sorted into queue adds a small unnecessary step compared to directly collecting into a list"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.425,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 72.587,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_karpathy_generation"
+}

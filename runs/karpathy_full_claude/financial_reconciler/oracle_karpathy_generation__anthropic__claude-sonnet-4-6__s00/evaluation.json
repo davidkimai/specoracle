@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Treasury Reconciliation Doctrine TR-4: separate named accumulators (debit_totals, credit_totals) are maintained, the directional decision is cleanly separated from arithmetic (no inline math inside the conditional), and every amount is tagged before affecting totals. The use of Decimal for monetary precision, frozenset for valid directions, and clear docstrings all align well with Pythonic explicitness and readability. The code is flat, locally auditable, and avoids architectural slop. Minor imperfections include the redundancy of collecting all_accounts via set union when both dicts are always populated together (a defaultdict approach would be slightly cleaner), and the VALID_DIRECTIONS constant defined inside the function rather than at module level, but neither is a meaningful structural flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Treasury Reconciliation Doctrine TR-4: separate named accumulators (debit_totals, credit_totals) are maintained, the directional decision is cleanly separated from arithmetic (no inline math inside the conditional), and every amount is tagged before affecting totals. The use of Decimal for monetary precision, frozenset for valid directions, and clear docstrings all align well with Pythonic explicitness and readability. The code is flat, locally auditable, and avoids architectural slop. Minor imperfections include the redundancy of collecting all_accounts via set union when both dicts are always populated together (a defaultdict approach would be slightly cleaner), and the VALID_DIRECTIONS constant defined inside the function rather than at module level, but neither is a meaningful structural flaw.\",\n  \"strengths\": [\n    \"Separate named accumulators for debit and credit per TR-4\",\n    \"Arithmetic is fully separated from the directional conditional\",\n    \"Decimal used for monetary precision\",\n    \"frozenset for valid directions is explicit and efficient\",\n    \"Clear docstring and inline comments referencing the doctrine\",\n    \"Flat, readable control flow with no nested complexity\"\n  ],\n  \"weaknesses\": [\n    \"VALID_DIRECTIONS constant defined inside the function rather than at module level\",\n    \"Manual account initialization check could be replaced with defaultdict for cleaner code\",\n    \"set union to collect all_accounts is slightly redundant since both dicts are always populated in tandem\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Separate named accumulators for debit and credit per TR-4",
+      "Arithmetic is fully separated from the directional conditional",
+      "Decimal used for monetary precision",
+      "frozenset for valid directions is explicit and efficient",
+      "Clear docstring and inline comments referencing the doctrine",
+      "Flat, readable control flow with no nested complexity"
+    ],
+    "weaknesses": [
+      "VALID_DIRECTIONS constant defined inside the function rather than at module level",
+      "Manual account initialization check could be replaced with defaultdict for cleaner code",
+      "set union to collect all_accounts is slightly redundant since both dicts are always populated in tandem"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treasury Reconciliation Doctrine TR-4:\n- Every monetary delta must be tagged debit or credit before it affects totals.\n- Debit and credit balances must be computed in separate named accumulators.\n- Do not place inline arithmetic inside conditionals that decide monetary direction.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.372,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 60,
+    "maintainability_index": 80.063,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "financial_reconciler",
+  "variant": "oracle_karpathy_generation"
+}

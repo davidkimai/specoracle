@@ -1,6 +1,6 @@
 import pytest
 
-from specoracle.config import ModelSettings, Task
+from specoracle.config import KARPATHY_ORACLE_SPEC, ModelSettings, Task
 from specoracle.generator import MockLLMClient, OpenAIClient, SpecOracleGenerator, extract_python_code
 
 
@@ -87,6 +87,30 @@ def test_custom_spec_override_replaces_zen_oracle_prompt() -> None:
     assert oracle.oracle_spec == "All helpers must have alliterative names and return tuples."
     assert "Zen of Python primitives" not in oracle.system_prompt
     assert "All helpers must have alliterative names" in oracle.system_prompt
+
+
+def test_karpathy_oracle_generation_uses_karpathy_prompt() -> None:
+    task = Task(
+        id="karpathy",
+        prompt="Implement answer() -> int returning 42.",
+        test_code="from solution import answer\n\ndef test_answer():\n    assert answer() == 42\n",
+        day2_prompt="Add answer_text() -> str returning '42'.",
+        day2_test_code="def test_placeholder():\n    assert True\n",
+        day2_stressors=("interface_generalization",),
+        human_reference="def answer():\n    return 42\n",
+        entry_point="answer",
+        mock_solution="def answer():\n    return 42\n",
+    )
+    generator = SpecOracleGenerator(MockLLMClient(), ModelSettings(provider="mock", model="mock-local"))
+
+    result = generator.karpathy_oracle_generation(task)
+
+    assert result.mode == "oracle_karpathy"
+    assert result.variant == "oracle_karpathy_generation"
+    assert result.oracle_spec_label == "karpathy_oracle"
+    assert result.oracle_spec == KARPATHY_ORACLE_SPEC
+    assert "Karpathy Guidelines" in result.system_prompt
+    assert "Zen of Python primitives" not in result.system_prompt
 
 
 def test_neutral_style_generation_uses_neutral_prompt() -> None:

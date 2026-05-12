@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured. It uses an OrderedDict appropriately for LRU tracking, keeps control flow flat with guard clauses, makes data movement explicit (move_to_end calls), raises clear errors for invalid inputs, and avoids speculative abstractions. The helper `_evict_expired` is a small pure extraction that aids local auditability. Minor concerns: `_evict_expired` is called on every `set` for new keys which adds overhead and slightly complicates the eviction logic (two-phase: expired first, then LRU), though this is a reasonable design choice. The `__contains__` implementation has a subtle correctness issue\u2014it returns False if the value stored is None (falsy), since it delegates to `get` and checks `is not None`. The `__len__` method calls `_evict_expired` which has a side effect, making it non-trivially expensive and surprising for a length check. The docstring and comments are helpful without being excessive. Overall the code is easy to audit locally, uses ordinary stdlib constructs, and avoids framework-shaped bloat.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and well-structured. It uses an OrderedDict appropriately for LRU tracking, keeps control flow flat with guard clauses, makes data movement explicit (move_to_end calls), raises clear errors for invalid inputs, and avoids speculative abstractions. The helper `_evict_expired` is a small pure extraction that aids local auditability. Minor concerns: `_evict_expired` is called on every `set` for new keys which adds overhead and slightly complicates the eviction logic (two-phase: expired first, then LRU), though this is a reasonable design choice. The `__contains__` implementation has a subtle correctness issue\u2014it returns False if the value stored is None (falsy), since it delegates to `get` and checks `is not None`. The `__len__` method calls `_evict_expired` which has a side effect, making it non-trivially expensive and surprising for a length check. The docstring and comments are helpful without being excessive. Overall the code is easy to audit locally, uses ordinary stdlib constructs, and avoids framework-shaped bloat.\",\n  \"strengths\": [\n    \"Clear input validation with descriptive error messages\",\n    \"OrderedDict used idiomatically for LRU ordering with explicit move_to_end calls\",\n    \"Small helper _evict_expired keeps set() readable\",\n    \"Flat control flow with guard clauses in get()\",\n    \"No speculative abstractions or unused extension points\",\n    \"Injected `now` callable makes testing straightforward\"\n  ],\n  \"weaknesses\": [\n    \"__contains__ incorrectly returns False when a valid cached value is None\",\n    \"__len__ has a surprising side effect of evicting expired entries\",\n    \"Calling _evict_expired on every new set() adds unnecessary overhead and complexity when simple LRU eviction suffices\",\n    \"Docstring on __repr__ references current_size but uses raw len(self._cache) without eviction, potentially showing stale count\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clear input validation with descriptive error messages",
+      "OrderedDict used idiomatically for LRU ordering with explicit move_to_end calls",
+      "Small helper _evict_expired keeps set() readable",
+      "Flat control flow with guard clauses in get()",
+      "No speculative abstractions or unused extension points",
+      "Injected `now` callable makes testing straightforward"
+    ],
+    "weaknesses": [
+      "__contains__ incorrectly returns False when a valid cached value is None",
+      "__len__ has a surprising side effect of evicting expired entries",
+      "Calling _evict_expired on every new set() adds unnecessary overhead and complexity when simple LRU eviction suffices",
+      "Docstring on __repr__ references current_size but uses raw len(self._cache) without eviction, potentially showing stale count"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.502,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 7,
+    "loc": 75,
+    "maintainability_index": 74.001,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "ttl_cache",
+  "variant": "baseline_generation"
+}

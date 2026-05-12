@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a simple while-loop with an index to consume argv tokens, handles all required cases explicitly, and raises ValueError with informative messages throughout. The logic is flat and locally auditable \u2014 no helper classes, no argparse wrapper, no speculative generalization. The only minor quibble is that the `continue` after `--dry-run` is slightly redundant given the loop structure, but it improves clarity. The error messages are descriptive without being verbose. Overall this is very close to the ideal conservative implementation for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly solves the problem without unnecessary abstractions. It uses a simple while-loop with an index to consume argv tokens, handles all required cases explicitly, and raises ValueError with informative messages throughout. The logic is flat and locally auditable \u2014 no helper classes, no argparse wrapper, no speculative generalization. The only minor quibble is that the `continue` after `--dry-run` is slightly redundant given the loop structure, but it improves clarity. The error messages are descriptive without being verbose. Overall this is very close to the ideal conservative implementation for this task.\",\n  \"strengths\": [\n    \"Minimal architecture: a single function with a plain while-loop, no unnecessary abstractions\",\n    \"Explicit validation for each flag type with clear, informative ValueError messages\",\n    \"Correct handling of all edge cases: missing values, unknown flags, non-flag positional args, invalid limit/format\",\n    \"Defaults initialized upfront in a single dict, making the contract immediately visible\",\n    \"No use of argparse or other heavy machinery where a simple loop suffices\"\n  ],\n  \"weaknesses\": [\n    \"The `continue` after setting dry_run is slightly redundant since `i += 2` is skipped anyway, though it does aid readability\",\n    \"Checking `value.startswith('--')` to detect missing values is a heuristic that could misfire on legitimate paths starting with '--', though this is a minor edge case for CLI path arguments\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal architecture: a single function with a plain while-loop, no unnecessary abstractions",
+      "Explicit validation for each flag type with clear, informative ValueError messages",
+      "Correct handling of all edge cases: missing values, unknown flags, non-flag positional args, invalid limit/format",
+      "Defaults initialized upfront in a single dict, making the contract immediately visible",
+      "No use of argparse or other heavy machinery where a simple loop suffices"
+    ],
+    "weaknesses": [
+      "The `continue` after setting dry_run is slightly redundant since `i += 2` is skipped anyway, though it does aid readability",
+      "Checking `value.startswith('--')` to detect missing values is a heuristic that could misfire on legitimate paths starting with '--', though this is a minor edge case for CLI path arguments"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.432,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 43,
+    "maintainability_index": 56.597,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_karpathy_generation"
+}

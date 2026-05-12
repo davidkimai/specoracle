@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, correct, and structurally clean. It uses a sliding-window approach with a deque, which is the simplest data structure that satisfies the contract. The constructor validates the rate, accepts the optional `now` callable for determinism, and stores only what is needed. The `acquire` method is a flat, readable sequence: compute current time, evict stale timestamps, check capacity, append and return True or return False \u2014 no unnecessary abstractions, no speculative features, no over-engineering. The only minor quibble is the boundary condition: `<= window_start` (i.e., `<= current - 1.0`) evicts timestamps that are exactly one second old, which means the effective window is slightly less than one full second for boundary cases, but this is a common and defensible interpretation of 'per one-second window'. The code is well under 50 lines and every line earns its place.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, correct, and structurally clean. It uses a sliding-window approach with a deque, which is the simplest data structure that satisfies the contract. The constructor validates the rate, accepts the optional `now` callable for determinism, and stores only what is needed. The `acquire` method is a flat, readable sequence: compute current time, evict stale timestamps, check capacity, append and return True or return False \u2014 no unnecessary abstractions, no speculative features, no over-engineering. The only minor quibble is the boundary condition: `<= window_start` (i.e., `<= current - 1.0`) evicts timestamps that are exactly one second old, which means the effective window is slightly less than one full second for boundary cases, but this is a common and defensible interpretation of 'per one-second window'. The code is well under 50 lines and every line earns its place.\",\n  \"strengths\": [\n    \"Minimal implementation \u2014 only the necessary state and logic\",\n    \"Flat control flow with no nested abstractions or helper classes\",\n    \"Correct use of deque for O(1) eviction of stale entries\",\n    \"Optional `now` callable properly defaults to `time.monotonic` for real use and supports deterministic testing\",\n    \"ValueError raised immediately on invalid rate\"\n  ],\n  \"weaknesses\": [\n    \"Boundary condition `<= window_start` may exclude timestamps exactly 1.0s old, depending on intended semantics\",\n    \"`async def acquire` has no awaitable operations inside, making the async keyword cosmetic \u2014 though it satisfies the interface contract\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal implementation \u2014 only the necessary state and logic",
+      "Flat control flow with no nested abstractions or helper classes",
+      "Correct use of deque for O(1) eviction of stale entries",
+      "Optional `now` callable properly defaults to `time.monotonic` for real use and supports deterministic testing",
+      "ValueError raised immediately on invalid rate"
+    ],
+    "weaknesses": [
+      "Boundary condition `<= window_start` may exclude timestamps exactly 1.0s old, depending on intended semantics",
+      "`async def acquire` has no awaitable operations inside, making the async keyword cosmetic \u2014 though it satisfies the interface contract"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.606,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 19,
+    "maintainability_index": 57.958,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_karpathy_generation"
+}

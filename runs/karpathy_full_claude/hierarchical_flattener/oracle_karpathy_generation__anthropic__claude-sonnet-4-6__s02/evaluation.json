@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, correct, and structurally clean. It uses a single recursive closure with a prefix accumulator, avoids unnecessary abstractions, and handles the core requirement (flatten dicts, treat lists as leaves) with no speculative features. The only minor issue is that the initial call passes an empty string as prefix, which means a top-level non-dict value would be stored under the empty string key \u2014 but for the stated contract (input is always a dict), this is harmless and the logic correctly skips the empty-prefix case via the conditional in `new_key`. No unnecessary configurability, no over-engineering, no dead code.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, correct, and structurally clean. It uses a single recursive closure with a prefix accumulator, avoids unnecessary abstractions, and handles the core requirement (flatten dicts, treat lists as leaves) with no speculative features. The only minor issue is that the initial call passes an empty string as prefix, which means a top-level non-dict value would be stored under the empty string key \u2014 but for the stated contract (input is always a dict), this is harmless and the logic correctly skips the empty-prefix case via the conditional in `new_key`. No unnecessary configurability, no over-engineering, no dead code.\",\n  \"strengths\": [\n    \"Minimal code \u2014 solves exactly the stated problem with no extras\",\n    \"Single recursive helper with clear prefix accumulation logic\",\n    \"Lists and other non-dict types are correctly treated as leaf values\",\n    \"No unnecessary class, abstraction, or configurability\"\n  ],\n  \"weaknesses\": [\n    \"Using a mutable closure variable (`result`) instead of returning values is slightly less pure but acceptable at this scale\",\n    \"Empty-string prefix edge case for non-dict top-level values is silently handled but not documented\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 solves exactly the stated problem with no extras",
+      "Single recursive helper with clear prefix accumulation logic",
+      "Lists and other non-dict types are correctly treated as leaf values",
+      "No unnecessary class, abstraction, or configurability"
+    ],
+    "weaknesses": [
+      "Using a mutable closure variable (`result`) instead of returning values is slightly less pure but acceptable at this scale",
+      "Empty-string prefix edge case for non-dict top-level values is silently handled but not documented"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.457,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 2,
+    "loc": 11,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "hierarchical_flattener",
+  "variant": "oracle_karpathy_generation"
+}

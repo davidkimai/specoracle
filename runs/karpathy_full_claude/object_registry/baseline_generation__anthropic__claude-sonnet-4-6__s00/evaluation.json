@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The core implementation is clean, explicit, and uses standard-library constructs correctly. The three required methods (register, get, cleanup) are well-structured with flat control flow and clear data movement. The type annotations add clarity without overhead. However, the candidate adds three unrequested methods (__contains__, __len__, keys) that constitute speculative abstraction \u2014 the task only asked for register, get, and cleanup. These extras aren't harmful but violate the 'avoid speculative abstractions and unused extension points' constraint. The cleanup implementation is correct and readable using a two-pass approach (collect dead keys, then delete) to avoid mutating during iteration. The get method correctly handles both missing keys and garbage-collected objects. Overall the required functionality is implemented simply and correctly, but the bonus methods add unnecessary surface area.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The core implementation is clean, explicit, and uses standard-library constructs correctly. The three required methods (register, get, cleanup) are well-structured with flat control flow and clear data movement. The type annotations add clarity without overhead. However, the candidate adds three unrequested methods (__contains__, __len__, keys) that constitute speculative abstraction \u2014 the task only asked for register, get, and cleanup. These extras aren't harmful but violate the 'avoid speculative abstractions and unused extension points' constraint. The cleanup implementation is correct and readable using a two-pass approach (collect dead keys, then delete) to avoid mutating during iteration. The get method correctly handles both missing keys and garbage-collected objects. Overall the required functionality is implemented simply and correctly, but the bonus methods add unnecessary surface area.\",\n  \"strengths\": [\n    \"Core three methods are minimal, flat, and easy to audit locally\",\n    \"Explicit two-pass cleanup avoids mutation-during-iteration bugs\",\n    \"Type annotations improve readability without adding complexity\",\n    \"Correct handling of both missing keys and dead references in get()\",\n    \"No hidden mutation or implicit global state\"\n  ],\n  \"weaknesses\": [\n    \"__contains__, __len__, and keys() are speculative additions not required by the task\",\n    \"No input validation (e.g., non-string keys or None objects) despite the constraint to raise clear errors for invalid inputs\",\n    \"The extra methods each re-implement the 'check if ref is alive' pattern, creating minor duplication that a helper could eliminate\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Core three methods are minimal, flat, and easy to audit locally",
+      "Explicit two-pass cleanup avoids mutation-during-iteration bugs",
+      "Type annotations improve readability without adding complexity",
+      "Correct handling of both missing keys and dead references in get()",
+      "No hidden mutation or implicit global state"
+    ],
+    "weaknesses": [
+      "__contains__, __len__, and keys() are speculative additions not required by the task",
+      "No input validation (e.g., non-string keys or None objects) despite the constraint to raise clear errors for invalid inputs",
+      "The extra methods each re-implement the 'check if ref is alive' pattern, creating minor duplication that a helper could eliminate"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.718,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.375,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 7,
+    "loc": 24,
+    "maintainability_index": 54.45,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "object_registry",
+  "variant": "baseline_generation"
+}

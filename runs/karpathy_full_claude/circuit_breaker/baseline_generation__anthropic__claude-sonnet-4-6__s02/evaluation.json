@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State is represented via a proper Enum and exposed through a property, satisfying RCS-5's inspectability requirement. Configuration values are named attributes, not magic constants. All three state transitions (closed\u2192open, open\u2192half-open, half-open\u2192closed/open) are explicit and correct. The `_check_recovery` helper keeps `call` flat and readable. The `now` injection pattern is idiomatic and testable. Minor quibbles: resetting `_failure_count` on every closed-state success is a reasonable design choice but could mask intermittent failures depending on intent; the `_current_time` wrapper method is a trivial indirection over `self._now()` that adds a layer without much benefit. Overall, this is a textbook-quality implementation with excellent structural clarity and no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State is represented via a proper Enum and exposed through a property, satisfying RCS-5's inspectability requirement. Configuration values are named attributes, not magic constants. All three state transitions (closed\u2192open, open\u2192half-open, half-open\u2192closed/open) are explicit and correct. The `_check_recovery` helper keeps `call` flat and readable. The `now` injection pattern is idiomatic and testable. Minor quibbles: resetting `_failure_count` on every closed-state success is a reasonable design choice but could mask intermittent failures depending on intent; the `_current_time` wrapper method is a trivial indirection over `self._now()` that adds a layer without much benefit. Overall, this is a textbook-quality implementation with excellent structural clarity and no architectural slop.\",\n  \"strengths\": [\n    \"Explicit Enum for state with inspectable `state` property satisfies RCS-5 directly\",\n    \"Named configuration attributes (`_failure_threshold`, `_recovery_timeout`) \u2014 no magic constants\",\n    \"Half-open trial correctly closes on success and reopens on failure\",\n    \"Clean separation of concerns: `_check_recovery`, `_transition_to_open`, `call`\",\n    \"Testable via injectable `now` callable\",\n    \"Flat, readable `call` method with no deep nesting\"\n  ],\n  \"weaknesses\": [\n    \"`_current_time()` is a trivial one-liner wrapper that adds indirection without value\",\n    \"Resetting `_failure_count` to 0 on every successful closed-state call may hide intermittent failure patterns\",\n    \"No explicit `_transition_to_closed` helper for symmetry with `_transition_to_open`\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit Enum for state with inspectable `state` property satisfies RCS-5 directly",
+      "Named configuration attributes (`_failure_threshold`, `_recovery_timeout`) \u2014 no magic constants",
+      "Half-open trial correctly closes on success and reopens on failure",
+      "Clean separation of concerns: `_check_recovery`, `_transition_to_open`, `call`",
+      "Testable via injectable `now` callable",
+      "Flat, readable `call` method with no deep nesting"
+    ],
+    "weaknesses": [
+      "`_current_time()` is a trivial one-liner wrapper that adds indirection without value",
+      "Resetting `_failure_count` to 0 on every successful closed-state call may hide intermittent failure patterns",
+      "No explicit `_transition_to_closed` helper for symmetry with `_transition_to_open`"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.682,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert <_State.OPEN: 2> == 'open'\nE        +  where <_State.OPEN: 2> = <solution.CircuitBreaker object at 0xffffb015ec50>.state\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 2.5,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 20,
+    "function_count": 6,
+    "loc": 51,
+    "maintainability_index": 60.723,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "baseline_generation"
+}

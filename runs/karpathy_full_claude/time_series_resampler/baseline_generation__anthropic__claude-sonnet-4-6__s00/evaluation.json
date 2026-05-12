@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It validates the one meaningful precondition (interval > 0), sorts input once, then uses a simple two-pointer scan that is easy to follow locally. Data movement is visible: `last_value` is updated in place as the pointer advances, and the result list is built explicitly. There is no hidden mutation, no speculative abstraction, and no framework-shaped scaffolding. The docstring is thorough without being excessive. The only minor quibbles are that the type annotations on intermediate variables (`sorted_points`, `result`) are slightly redundant given the function signature, and the module-level docstring adds marginal value, but neither constitutes real slop. The two-level while loop is the natural structure for this problem and remains readable; extracting a helper would add indirection without clarity gain.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It validates the one meaningful precondition (interval > 0), sorts input once, then uses a simple two-pointer scan that is easy to follow locally. Data movement is visible: `last_value` is updated in place as the pointer advances, and the result list is built explicitly. There is no hidden mutation, no speculative abstraction, and no framework-shaped scaffolding. The docstring is thorough without being excessive. The only minor quibbles are that the type annotations on intermediate variables (`sorted_points`, `result`) are slightly redundant given the function signature, and the module-level docstring adds marginal value, but neither constitutes real slop. The two-level while loop is the natural structure for this problem and remains readable; extracting a helper would add indirection without clarity gain.\",\n  \"strengths\": [\n    \"Single responsibility: sort once, then one linear scan with a pointer\",\n    \"Explicit guard clause for invalid interval with a clear error message\",\n    \"No hidden mutation or global state; all data flow is visible\",\n    \"Names (ptr, last_value, sorted_points) make the algorithm self-explanatory\",\n    \"Uses only standard-library constructs (sorted, while loop)\"\n  ],\n  \"weaknesses\": [\n    \"Redundant inline type annotations on local variables add minor noise\",\n    \"Module-level docstring is marginally speculative given the function docstring covers everything\",\n    \"No validation that start <= end, which could silently return an empty list instead of raising\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single responsibility: sort once, then one linear scan with a pointer",
+      "Explicit guard clause for invalid interval with a clear error message",
+      "No hidden mutation or global state; all data flow is visible",
+      "Names (ptr, last_value, sorted_points) make the algorithm self-explanatory",
+      "Uses only standard-library constructs (sorted, while loop)"
+    ],
+    "weaknesses": [
+      "Redundant inline type annotations on local variables add minor noise",
+      "Module-level docstring is marginally speculative given the function docstring covers everything",
+      "No validation that start <= end, which could silently return an empty list instead of raising"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.455,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 49,
+    "maintainability_index": 79.327,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "time_series_resampler",
+  "variant": "baseline_generation"
+}

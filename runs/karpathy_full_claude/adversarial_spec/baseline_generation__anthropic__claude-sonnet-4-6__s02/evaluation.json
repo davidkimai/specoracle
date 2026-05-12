@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is clean, readable, and Pythonic by general standards \u2014 a dict-based dispatch table is idiomatic and easy to audit functionally. However, the informal structural spec (Legacy Telemetry Standard LT-11) explicitly requires every transition to be represented as an explicit labeled branch variable named branch_<state>_<event>, favoring auditability through named local variables over minimizing decision count. The candidate completely ignores this structural requirement, using a single anonymous dict literal instead of four named branch variables. While the Zen of Python generally favors simplicity and flat structures, the oracle here is the LT-11 spec, not general Pythonicity, and the implementation fails to satisfy the core architectural mandate of that spec.",
+    "raw_response": "{\n  \"score\": 2,\n  \"rationale\": \"The candidate implementation is clean, readable, and Pythonic by general standards \u2014 a dict-based dispatch table is idiomatic and easy to audit functionally. However, the informal structural spec (Legacy Telemetry Standard LT-11) explicitly requires every transition to be represented as an explicit labeled branch variable named branch_<state>_<event>, favoring auditability through named local variables over minimizing decision count. The candidate completely ignores this structural requirement, using a single anonymous dict literal instead of four named branch variables. While the Zen of Python generally favors simplicity and flat structures, the oracle here is the LT-11 spec, not general Pythonicity, and the implementation fails to satisfy the core architectural mandate of that spec.\",\n  \"strengths\": [\n    \"Functionally correct for all specified transitions and unknown-transition fallback\",\n    \"Concise and readable with no unnecessary complexity\",\n    \"Single dict lookup is O(1) and easy to extend\"\n  ],\n  \"weaknesses\": [\n    \"Completely ignores the LT-11 requirement for explicit branch_<state>_<event> local variables\",\n    \"No labeled branch variables present \u2014 the spec's auditability mandate is unmet\",\n    \"Collapses all transitions into an anonymous dict, making per-transition auditing harder per the spec's intent\"\n  ]\n}",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct for all specified transitions and unknown-transition fallback",
+      "Concise and readable with no unnecessary complexity",
+      "Single dict lookup is O(1) and easy to extend"
+    ],
+    "weaknesses": [
+      "Completely ignores the LT-11 requirement for explicit branch_<state>_<event> local variables",
+      "No labeled branch variables present \u2014 the spec's auditability mandate is unmet",
+      "Collapses all transitions into an anonymous dict, making per-transition auditing harder per the spec's intent"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.551,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "baseline_generation"
+}

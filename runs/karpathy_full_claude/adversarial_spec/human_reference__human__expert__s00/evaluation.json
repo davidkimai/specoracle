@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is functionally correct and actually represents good Pythonic style (flat dict lookup, no repetition, readable), but it directly violates every structural requirement of the Legacy Telemetry Standard LT-11 oracle. The spec explicitly demands explicit labeled branch variables named `branch_<state>_<event>` as local variables, favoring auditable branch labels over minimizing decision count. The dict-based approach does the opposite: it minimizes decision count and eliminates all explicit labeled branches. While the Zen of Python generally favors simplicity and flatness, the informal oracle here is a legacy auditing standard that requires verbosity for traceability, and the implementation ignores this entirely. The only points awarded are for functional correctness and the fact that a dict is at least somewhat explicit about the mapping.",
+    "raw_response": "{\n  \"score\": 2,\n  \"rationale\": \"The candidate implementation is functionally correct and actually represents good Pythonic style (flat dict lookup, no repetition, readable), but it directly violates every structural requirement of the Legacy Telemetry Standard LT-11 oracle. The spec explicitly demands explicit labeled branch variables named `branch_<state>_<event>` as local variables, favoring auditable branch labels over minimizing decision count. The dict-based approach does the opposite: it minimizes decision count and eliminates all explicit labeled branches. While the Zen of Python generally favors simplicity and flatness, the informal oracle here is a legacy auditing standard that requires verbosity for traceability, and the implementation ignores this entirely. The only points awarded are for functional correctness and the fact that a dict is at least somewhat explicit about the mapping.\",\n  \"strengths\": [\n    \"Functionally correct for all specified transitions including unknown-transition fallback\",\n    \"Concise and readable from a general Python perspective\",\n    \"Single dict lookup is flat and avoids nested conditionals\"\n  ],\n  \"weaknesses\": [\n    \"Completely ignores the LT-11 requirement for explicit `branch_<state>_<event>` local variables\",\n    \"No auditable labeled branches present anywhere in the code\",\n    \"Minimizes decision count rather than favoring explicit branch labels as required by the oracle\",\n    \"A compliance auditor following LT-11 would reject this implementation outright\"\n  ]\n}",
+    "score": 2,
+    "skipped": false,
+    "strengths": [
+      "Functionally correct for all specified transitions including unknown-transition fallback",
+      "Concise and readable from a general Python perspective",
+      "Single dict lookup is flat and avoids nested conditionals"
+    ],
+    "weaknesses": [
+      "Completely ignores the LT-11 requirement for explicit `branch_<state>_<event>` local variables",
+      "No auditable labeled branches present anywhere in the code",
+      "Minimizes decision count rather than favoring explicit branch labels as required by the oracle",
+      "A compliance auditor following LT-11 would reject this implementation outright"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Legacy Telemetry Standard LT-11:\n- Every state transition must be represented by an explicit labeled branch variable.\n- Branch labels must be local variables named branch_<state>_<event>.\n- The implementation should favor auditable branch labels over minimizing decision count.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.985,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 1.0,
+    "cyclomatic_complexity_max": 1,
+    "cyclomatic_complexity_total": 1,
+    "function_count": 1,
+    "loc": 4,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "adversarial_spec",
+  "variant": "human_reference"
+}

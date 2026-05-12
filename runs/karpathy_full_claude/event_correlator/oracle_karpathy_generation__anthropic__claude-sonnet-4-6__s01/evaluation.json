@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably simple, grouping by session and sorting before scanning. However, it introduces unnecessary complexity: the `b_start` variable is declared but never used (dead code), and pre-computing separate `a_indices` and `b_indices` lists adds indirection without benefit\u2014a single pass over `session_events` for each A event would be cleaner and more direct. The early-break logic on the B loop is correct but the `continue` guard for `b_event['timestamp'] <= a_event['timestamp']` is redundant given the sort order and the subsequent break (once a B is found that is too far ahead, earlier Bs would have already been skipped). A simpler nested loop without the index pre-computation would be more readable and match the 'minimum code' principle better. The overall structure is flat and locally auditable, which is good, but the dead `b_start` variable and the index-list indirection are small but real architectural slop.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably simple, grouping by session and sorting before scanning. However, it introduces unnecessary complexity: the `b_start` variable is declared but never used (dead code), and pre-computing separate `a_indices` and `b_indices` lists adds indirection without benefit\u2014a single pass over `session_events` for each A event would be cleaner and more direct. The early-break logic on the B loop is correct but the `continue` guard for `b_event['timestamp'] <= a_event['timestamp']` is redundant given the sort order and the subsequent break (once a B is found that is too far ahead, earlier Bs would have already been skipped). A simpler nested loop without the index pre-computation would be more readable and match the 'minimum code' principle better. The overall structure is flat and locally auditable, which is good, but the dead `b_start` variable and the index-list indirection are small but real architectural slop.\",\n  \"strengths\": [\n    \"Correct grouping by session_id and sorting by timestamp before pairing\",\n    \"Flat structure with no unnecessary abstractions or classes\",\n    \"Early-break on sorted B list is a valid optimization\",\n    \"Clear variable naming and straightforward logic flow\"\n  ],\n  \"weaknesses\": [\n    \"Dead code: `b_start` is assigned but never used\",\n    \"Pre-computing `a_indices` and `b_indices` adds indirection; a direct loop over session_events would be simpler\",\n    \"The `continue` guard for timestamps <= a_event timestamp is redundant given sort order and the break below it\",\n    \"Slightly more code than necessary for the task\u2014could be ~30% shorter with a direct nested loop\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correct grouping by session_id and sorting by timestamp before pairing",
+      "Flat structure with no unnecessary abstractions or classes",
+      "Early-break on sorted B list is a valid optimization",
+      "Clear variable naming and straightforward logic flow"
+    ],
+    "weaknesses": [
+      "Dead code: `b_start` is assigned but never used",
+      "Pre-computing `a_indices` and `b_indices` adds indirection; a direct loop over session_events would be simpler",
+      "The `continue` guard for timestamps <= a_event timestamp is redundant given sort order and the break below it",
+      "Slightly more code than necessary for the task\u2014could be ~30% shorter with a direct nested loop"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.765,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________ test_correlates_a_before_b_by_session _____________________\n\n    def test_correlates_a_before_b_by_session():\n        events = [{'session_id': 's', 'type': 'A', 'ts': 1}, {'session_id': 's', 'type': 'B', 'ts': 3}]\n>       pairs = correlate_events(events, within=5)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntest_solution.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nsolution.py:12: in correlate_events\n    sessions[session_id].sort(key=lambda e: e[\"timestamp\"])\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ne = {'session_id': 's', 'ts': 1, 'type': 'A'}\n\n>   sessions[session_id].sort(key=lambda e: e[\"timestamp\"])\n                                            ^^^^^^^^^^^^^^\nE   KeyError: 'timestamp'\n\nsolution.py:12: KeyError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_correlates_a_before_b_by_session - KeyError: 't...\n1 failed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 29,
+    "maintainability_index": 78.687,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_correlator",
+  "variant": "oracle_karpathy_generation"
+}

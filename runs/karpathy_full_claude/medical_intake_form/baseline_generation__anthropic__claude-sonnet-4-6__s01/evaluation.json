@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows CD-7's requirements: all three fields are validated before any output is produced, every ValueError names the offending field, and the function returns a clean copy only after full validation passes. The code is flat, explicit, and locally auditable\u2014each field's validation block is self-contained and easy to audit in isolation. The bool-subclass guard for age is a thoughtful edge-case handling. The only minor structural quibble is that raising ValueError with just the field name string (rather than a slightly more descriptive message like 'invalid field: age') is minimally informative, though it does technically satisfy 'naming the bad field'. The TypeError for non-dict payloads is a reasonable defensive addition. Overall this is a clean, readable, and structurally sound implementation with no architectural slop.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows CD-7's requirements: all three fields are validated before any output is produced, every ValueError names the offending field, and the function returns a clean copy only after full validation passes. The code is flat, explicit, and locally auditable\u2014each field's validation block is self-contained and easy to audit in isolation. The bool-subclass guard for age is a thoughtful edge-case handling. The only minor structural quibble is that raising ValueError with just the field name string (rather than a slightly more descriptive message like 'invalid field: age') is minimally informative, though it does technically satisfy 'naming the bad field'. The TypeError for non-dict payloads is a reasonable defensive addition. Overall this is a clean, readable, and structurally sound implementation with no architectural slop.\",\n  \"strengths\": [\n    \"All fields validated before any are accepted into output, satisfying CD-7's no-partial-validation rule\",\n    \"Every ValueError message names the offending field explicitly\",\n    \"Flat, sequential structure with no nested helpers or unnecessary abstraction\",\n    \"Correctly rejects bool values for age (Python bool/int subclass pitfall handled)\",\n    \"Returns a clean copy with exactly the three required fields, no extra payload leakage\",\n    \"Validates list element types for symptoms, not just the container type\"\n  ],\n  \"weaknesses\": [\n    \"ValueError messages contain only the field name with no additional context, which is minimal though technically compliant\",\n    \"No validation that patient_id length or format meets any clinical standard beyond non-empty\",\n    \"Docstring mentions TypeError but the informal spec only requires ValueError; minor spec mismatch in exception surface\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All fields validated before any are accepted into output, satisfying CD-7's no-partial-validation rule",
+      "Every ValueError message names the offending field explicitly",
+      "Flat, sequential structure with no nested helpers or unnecessary abstraction",
+      "Correctly rejects bool values for age (Python bool/int subclass pitfall handled)",
+      "Returns a clean copy with exactly the three required fields, no extra payload leakage",
+      "Validates list element types for symptoms, not just the container type"
+    ],
+    "weaknesses": [
+      "ValueError messages contain only the field name with no additional context, which is minimal though technically compliant",
+      "No validation that patient_id length or format meets any clinical standard beyond non-empty",
+      "Docstring mentions TypeError but the informal spec only requires ValueError; minor spec mismatch in exception surface"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Clinical Data Standard CD-7:\n- Validate every required field before accepting any field into the output.\n- Error messages must name the field that failed validation.\n- Partial validation is not permitted; return only after all required fields pass.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.446,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 62,
+    "maintainability_index": 77.368,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "medical_intake_form",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is minimal, direct, and correct. It uses a deque as a sliding-window timestamp log, which is the canonical O(1)-amortized structure for this problem. The constructor validates the rate, stores the injectable clock, and initializes the deque \u2014 nothing more. The acquire method is a flat, readable three-step procedure: compute window boundary, evict stale entries, check capacity. No unnecessary abstractions, no speculative features, no async machinery beyond the required coroutine signature. The only minor quibble is the boundary condition: `<= window_start` evicts timestamps exactly one second old, meaning the effective window is slightly less than one full second (a timestamp at t=0 is evicted when current=1.0, so it counts for strictly less than 1 second). A strict `< window_start` would give a full closed window, but this is a borderline semantic choice rather than a structural flaw. Overall the code is exemplary in its simplicity and auditability.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is minimal, direct, and correct. It uses a deque as a sliding-window timestamp log, which is the canonical O(1)-amortized structure for this problem. The constructor validates the rate, stores the injectable clock, and initializes the deque \u2014 nothing more. The acquire method is a flat, readable three-step procedure: compute window boundary, evict stale entries, check capacity. No unnecessary abstractions, no speculative features, no async machinery beyond the required coroutine signature. The only minor quibble is the boundary condition: `<= window_start` evicts timestamps exactly one second old, meaning the effective window is slightly less than one full second (a timestamp at t=0 is evicted when current=1.0, so it counts for strictly less than 1 second). A strict `< window_start` would give a full closed window, but this is a borderline semantic choice rather than a structural flaw. Overall the code is exemplary in its simplicity and auditability.\",\n  \"strengths\": [\n    \"Minimal code \u2014 no unnecessary abstractions or speculative flexibility\",\n    \"Flat, readable acquire() with clear linear logic\",\n    \"Injectable clock supports deterministic testing as required\",\n    \"Correct use of deque for efficient sliding-window eviction\",\n    \"ValueError raised immediately on invalid input\"\n  ],\n  \"weaknesses\": [\n    \"Boundary condition uses `<=` which evicts timestamps exactly at the window edge, making the effective window marginally shorter than one full second\",\n    \"No docstring or inline comment explaining the sliding-window semantics, which would aid auditability\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 no unnecessary abstractions or speculative flexibility",
+      "Flat, readable acquire() with clear linear logic",
+      "Injectable clock supports deterministic testing as required",
+      "Correct use of deque for efficient sliding-window eviction",
+      "ValueError raised immediately on invalid input"
+    ],
+    "weaknesses": [
+      "Boundary condition uses `<=` which evicts timestamps exactly at the window edge, making the effective window marginally shorter than one full second",
+      "No docstring or inline comment explaining the sliding-window semantics, which would aid auditability"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.754,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.10s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 2,
+    "loc": 19,
+    "maintainability_index": 57.958,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "async_rate_limiter",
+  "variant": "oracle_karpathy_generation"
+}

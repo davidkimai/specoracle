@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and directly addresses the stated requirements. It correctly validates that both inputs share the same type and that the type is str or bytes, then delegates to hmac.compare_digest. The two-guard structure is logical: same-type check first, then valid-type check, which correctly handles cases like two ints being passed. The error messages are informative without being excessive. The only minor quibble is that the type annotation uses a string literal union ('str | bytes') rather than the more idiomatic Union[str, bytes] or the Python 3.10+ str | bytes, but this is a trivial stylistic point that doesn't affect correctness or readability. No unnecessary abstractions, no speculative features, no dead code \u2014 exactly what the oracle demands.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and directly addresses the stated requirements. It correctly validates that both inputs share the same type and that the type is str or bytes, then delegates to hmac.compare_digest. The two-guard structure is logical: same-type check first, then valid-type check, which correctly handles cases like two ints being passed. The error messages are informative without being excessive. The only minor quibble is that the type annotation uses a string literal union ('str | bytes') rather than the more idiomatic Union[str, bytes] or the Python 3.10+ str | bytes, but this is a trivial stylistic point that doesn't affect correctness or readability. No unnecessary abstractions, no speculative features, no dead code \u2014 exactly what the oracle demands.\",\n  \"strengths\": [\n    \"Minimal code that precisely satisfies the contract\",\n    \"Correct ordering of type checks (same-type before valid-type)\",\n    \"Direct delegation to hmac.compare_digest with no wrapper overhead\",\n    \"Clear, informative error messages without verbosity\"\n  ],\n  \"weaknesses\": [\n    \"String-quoted union annotation ('str | bytes') is slightly unconventional; could use typing.Union or bare str | bytes on Python 3.10+\",\n    \"Redundant check ordering: if both args are the same non-str/bytes type (e.g., two ints), the second guard fires, but the first guard already ensures same type \u2014 minor logical redundancy that could be collapsed into one check\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code that precisely satisfies the contract",
+      "Correct ordering of type checks (same-type before valid-type)",
+      "Direct delegation to hmac.compare_digest with no wrapper overhead",
+      "Clear, informative error messages without verbosity"
+    ],
+    "weaknesses": [
+      "String-quoted union annotation ('str | bytes') is slightly unconventional; could use typing.Union or bare str | bytes on Python 3.10+",
+      "Redundant check ordering: if both args are the same non-str/bytes type (e.g., two ints), the second guard fires, but the first guard already ensures same type \u2014 minor logical redundancy that could be collapsed into one check"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.467,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 11,
+    "maintainability_index": 73.706,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "timing_safe_compare",
+  "variant": "oracle_karpathy_generation"
+}

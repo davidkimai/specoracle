@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden state or mutation, clear guard clauses that keep nesting minimal, and names that directly express intent. The logic is easy to audit locally: collect all keys, check override first, handle None removal, recurse on dict-dict pairs, fall back to default. The only minor quibble is the absence of input validation (e.g., raising TypeError if inputs aren't dicts), which the operational constraints suggest, but this is a small omission in an otherwise exemplary implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden state or mutation, clear guard clauses that keep nesting minimal, and names that directly express intent. The logic is easy to audit locally: collect all keys, check override first, handle None removal, recurse on dict-dict pairs, fall back to default. The only minor quibble is the absence of input validation (e.g., raising TypeError if inputs aren't dicts), which the operational constraints suggest, but this is a small omission in an otherwise exemplary implementation.\",\n  \"strengths\": [\n    \"Flat control flow with early-continue guard for None removal\",\n    \"No mutation of inputs; builds a fresh result dict\",\n    \"Recursive call reuses the same function cleanly without a separate helper\",\n    \"Names (defaults, override, result, all_keys) are self-explanatory\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"No input validation to raise clear errors if arguments are not dicts\",\n    \"Key iteration order is non-deterministic (set), though functionally harmless here\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with early-continue guard for None removal",
+      "No mutation of inputs; builds a fresh result dict",
+      "Recursive call reuses the same function cleanly without a separate helper",
+      "Names (defaults, override, result, all_keys) are self-explanatory",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "No input validation to raise clear errors if arguments are not dicts",
+      "Key iteration order is non-deterministic (set), though functionally harmless here"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.665,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 61.56,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "baseline_generation"
+}

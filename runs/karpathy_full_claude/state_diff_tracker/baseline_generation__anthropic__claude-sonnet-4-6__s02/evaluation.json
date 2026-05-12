@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and directly maps to the requirements. Each changed field produces an explicit record with the three required keys. The logic is flat with no nested helpers or unnecessary abstractions. The three-branch conditional (added, removed, changed) is slightly redundant since `before` and `after` are already computed via `.get()` which returns `None` for missing keys \u2014 the same result could be achieved with a single `if before != after` check \u2014 but the explicit branching actually improves readability and auditability by making the three cases self-documenting. Sorting by field name is correct. No architectural slop, no summary collapsing, no label mismatches.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and directly maps to the requirements. Each changed field produces an explicit record with the three required keys. The logic is flat with no nested helpers or unnecessary abstractions. The three-branch conditional (added, removed, changed) is slightly redundant since `before` and `after` are already computed via `.get()` which returns `None` for missing keys \u2014 the same result could be achieved with a single `if before != after` check \u2014 but the explicit branching actually improves readability and auditability by making the three cases self-documenting. Sorting by field name is correct. No architectural slop, no summary collapsing, no label mismatches.\",\n  \"strengths\": [\n    \"Explicit three-case branching makes added/removed/changed semantics immediately auditable\",\n    \"Each record uses the exact field labels specified (field, before, after)\",\n    \"Flat structure with no unnecessary helper functions or classes\",\n    \"Correct sort by field name as required\",\n    \"Handles None values correctly via dict.get() defaults\"\n  ],\n  \"weaknesses\": [\n    \"Minor redundancy: before/after are fetched via .get() unconditionally but then the branches re-check key membership, making the get() calls partially wasted for the added/removed cases\",\n    \"No type hints on the return value's inner dict structure (minor)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit three-case branching makes added/removed/changed semantics immediately auditable",
+      "Each record uses the exact field labels specified (field, before, after)",
+      "Flat structure with no unnecessary helper functions or classes",
+      "Correct sort by field name as required",
+      "Handles None values correctly via dict.get() defaults"
+    ],
+    "weaknesses": [
+      "Minor redundancy: before/after are fetched via .get() unconditionally but then the branches re-check key membership, making the get() calls partially wasted for the added/removed cases",
+      "No type hints on the return value's inner dict structure (minor)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "State Review Ledger SRL-3:\n- Every field-level change must be represented as an explicit record with field, before, and after.\n- Do not collapse multiple changed fields into a summary string.\n- Exported graph edges must preserve the same field labels as the diff records.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.534,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 60.738,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "state_diff_tracker",
+  "variant": "baseline_generation"
+}

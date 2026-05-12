@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. State is represented by a proper Enum and exposed via a named property, satisfying RCS-5's inspectability requirement. Configuration values are named attributes, not magic constants. Half-open trials correctly close on success and reopen on failure. The control flow in `call` is flat and readable \u2014 the OPEN check at the top with a possible transition to HALF_OPEN, followed by a HALF_OPEN branch, followed by the CLOSED branch \u2014 is easy to audit locally. The `_transition_to` helper is a minor abstraction that adds little value given it's a single assignment, but it doesn't hurt readability. The only minor weaknesses are that `_transition_to` is trivially thin (could just assign directly), and the failure count is not reset when transitioning to OPEN, which is a minor but acceptable design choice since it resets on successful close.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. State is represented by a proper Enum and exposed via a named property, satisfying RCS-5's inspectability requirement. Configuration values are named attributes, not magic constants. Half-open trials correctly close on success and reopen on failure. The control flow in `call` is flat and readable \u2014 the OPEN check at the top with a possible transition to HALF_OPEN, followed by a HALF_OPEN branch, followed by the CLOSED branch \u2014 is easy to audit locally. The `_transition_to` helper is a minor abstraction that adds little value given it's a single assignment, but it doesn't hurt readability. The only minor weaknesses are that `_transition_to` is trivially thin (could just assign directly), and the failure count is not reset when transitioning to OPEN, which is a minor but acceptable design choice since it resets on successful close.\",\n  \"strengths\": [\n    \"Explicit Enum-based state with inspectable `.state` property satisfying RCS-5\",\n    \"Named configuration attributes (failure_threshold, recovery_timeout) \u2014 no magic constants\",\n    \"Half-open logic correctly closes on success and reopens on failure\",\n    \"Flat, readable control flow in `call` with clear state-based branching\",\n    \"Injectable `now` clock for testability\",\n    \"Failure count reset on successful close in both CLOSED and HALF_OPEN paths\"\n  ],\n  \"weaknesses\": [\n    \"`_transition_to` is a trivially thin wrapper around a single assignment, adding indirection without value\",\n    \"Failure count is not explicitly reset when opening the circuit, which could cause subtle confusion if the breaker is inspected mid-state\",\n    \"The f-string retry message in the RuntimeError is a minor cosmetic detail that slightly couples presentation to logic\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Explicit Enum-based state with inspectable `.state` property satisfying RCS-5",
+      "Named configuration attributes (failure_threshold, recovery_timeout) \u2014 no magic constants",
+      "Half-open logic correctly closes on success and reopens on failure",
+      "Flat, readable control flow in `call` with clear state-based branching",
+      "Injectable `now` clock for testability",
+      "Failure count reset on successful close in both CLOSED and HALF_OPEN paths"
+    ],
+    "weaknesses": [
+      "`_transition_to` is a trivially thin wrapper around a single assignment, adding indirection without value",
+      "Failure count is not explicitly reset when opening the circuit, which could cause subtle confusion if the breaker is inspected mid-state",
+      "The f-string retry message in the RuntimeError is a minor cosmetic detail that slightly couples presentation to logic"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Resilience Control Standard RCS-5:\n- State transitions must be explicit and inspectable through a state attribute.\n- Failure thresholds and recovery timers must be named configuration values, not magic constants.\n- Half-open trials must either close on success or reopen on failure.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.491,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________ test_circuit_opens_and_recovers ________________________\n\n    def test_circuit_opens_and_recovers():\n        clock = {'t': 0.0}\n        breaker = CircuitBreaker(1, 5.0, now=lambda: clock['t'])\n        with pytest.raises(ValueError):\n            breaker.call(lambda: (_ for _ in ()).throw(ValueError('bad')))\n>       assert breaker.state == 'open'\nE       AssertionError: assert 'OPEN' == 'open'\nE         \nE         - open\nE         + OPEN\n\ntest_solution.py:11: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_circuit_opens_and_recovers - AssertionError: as...\n1 failed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 2,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 4,
+    "loc": 51,
+    "maintainability_index": 55.748,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "circuit_breaker",
+  "variant": "oracle_karpathy_generation"
+}

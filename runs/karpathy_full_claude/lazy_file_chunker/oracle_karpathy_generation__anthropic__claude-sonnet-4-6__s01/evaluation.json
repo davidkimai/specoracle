@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of minimal, correct, readable code. It validates the precondition immediately with a clear error message, uses a simple while-True/break loop to lazily yield chunks without reading the whole file at once, and contains zero speculative abstractions or unnecessary complexity. The function body is exactly as long as it needs to be\u2014no more, no less\u2014and every line is locally auditable at a glance.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of minimal, correct, readable code. It validates the precondition immediately with a clear error message, uses a simple while-True/break loop to lazily yield chunks without reading the whole file at once, and contains zero speculative abstractions or unnecessary complexity. The function body is exactly as long as it needs to be\u2014no more, no less\u2014and every line is locally auditable at a glance.\",\n  \"strengths\": [\n    \"Minimal code: solves the problem in 6 lines with no extraneous logic\",\n    \"Explicit precondition check with a descriptive ValueError\",\n    \"Lazy evaluation via generator\u2014never buffers the whole file\",\n    \"Only yields non-empty chunks (the `if not chunk: break` guard handles EOF correctly)\",\n    \"No unnecessary abstractions, classes, or helper functions\"\n  ],\n  \"weaknesses\": [\n    \"Return type annotation (-> Iterator[bytes]) is absent, though not strictly required by the task\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Minimal code: solves the problem in 6 lines with no extraneous logic",
+      "Explicit precondition check with a descriptive ValueError",
+      "Lazy evaluation via generator\u2014never buffers the whole file",
+      "Only yields non-empty chunks (the `if not chunk: break` guard handles EOF correctly)",
+      "No unnecessary abstractions, classes, or helper functions"
+    ],
+    "weaknesses": [
+      "Return type annotation (-> Iterator[bytes]) is absent, though not strictly required by the task"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.681,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 72.306,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "lazy_file_chunker",
+  "variant": "oracle_karpathy_generation"
+}

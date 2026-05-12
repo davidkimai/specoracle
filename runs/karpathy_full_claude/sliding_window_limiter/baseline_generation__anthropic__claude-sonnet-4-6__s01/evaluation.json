@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It separates eviction into a helper, uses explicit data movement, raises clear errors, and avoids speculative abstractions. However, the manual binary search in `_evict_old` duplicates what `bisect` from the standard library already provides cleanly and readably \u2014 this is a case where a standard-library construct would be simpler and more auditable than hand-rolled logic. Similarly, the insertion path in `allow` manually re-implements `bisect.insort`, adding unnecessary complexity. The docstring on `snapshot` noting it does NOT evict is a mild design smell \u2014 a caller might reasonably expect consistency, and the asymmetry is a hidden gotcha. The `defaultdict` usage is appropriate, and the guard clauses for validation are clean. Overall the structure is good but the avoidance of `bisect` in favor of inline binary searches is the main structural regression against the Zen principle of preferring simple, readable, standard constructs.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It separates eviction into a helper, uses explicit data movement, raises clear errors, and avoids speculative abstractions. However, the manual binary search in `_evict_old` duplicates what `bisect` from the standard library already provides cleanly and readably \u2014 this is a case where a standard-library construct would be simpler and more auditable than hand-rolled logic. Similarly, the insertion path in `allow` manually re-implements `bisect.insort`, adding unnecessary complexity. The docstring on `snapshot` noting it does NOT evict is a mild design smell \u2014 a caller might reasonably expect consistency, and the asymmetry is a hidden gotcha. The `defaultdict` usage is appropriate, and the guard clauses for validation are clean. Overall the structure is good but the avoidance of `bisect` in favor of inline binary searches is the main structural regression against the Zen principle of preferring simple, readable, standard constructs.\",\n  \"strengths\": [\n    \"Clear ValueError messages with explicit conditions\",\n    \"Eviction logic extracted into a dedicated helper\",\n    \"No hidden mutation or implicit global state\",\n    \"Sparse, auditable class structure with no speculative extension points\",\n    \"Correct handling of the half-open window boundary\"\n  ],\n  \"weaknesses\": [\n    \"Manual binary search duplicates `bisect` module functionality, reducing readability\",\n    \"`bisect.insort` would replace the insertion logic in `allow` more cleanly\",\n    \"`snapshot` not evicting while `allow` does creates subtle behavioral asymmetry\",\n    \"Docstring volume is slightly heavy relative to the simplicity of the logic\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear ValueError messages with explicit conditions",
+      "Eviction logic extracted into a dedicated helper",
+      "No hidden mutation or implicit global state",
+      "Sparse, auditable class structure with no speculative extension points",
+      "Correct handling of the half-open window boundary"
+    ],
+    "weaknesses": [
+      "Manual binary search duplicates `bisect` module functionality, reducing readability",
+      "`bisect.insort` would replace the insertion logic in `allow` more cleanly",
+      "`snapshot` not evicting while `allow` does creates subtle behavioral asymmetry",
+      "Docstring volume is slightly heavy relative to the simplicity of the logic"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.434,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.6,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 4,
+    "loc": 86,
+    "maintainability_index": 68.643,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

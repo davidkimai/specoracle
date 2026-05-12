@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is nearly ideal: it uses the standard library's csv.DictReader which handles the header-to-dict mapping correctly, filters empty lines with a generator expression to preserve streaming, and yields lazily via `yield from`. The code is minimal (4 lines), explicit, flat, and directly maps to the task contract without any speculative abstraction. The only minor concern is that csv.DictReader by default uses the first row as the header, which aligns perfectly with the spec, and empty-line filtering is applied before the reader so the first non-empty line becomes the header as required. No unnecessary features, no over-engineering.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is nearly ideal: it uses the standard library's csv.DictReader which handles the header-to-dict mapping correctly, filters empty lines with a generator expression to preserve streaming, and yields lazily via `yield from`. The code is minimal (4 lines), explicit, flat, and directly maps to the task contract without any speculative abstraction. The only minor concern is that csv.DictReader by default uses the first row as the header, which aligns perfectly with the spec, and empty-line filtering is applied before the reader so the first non-empty line becomes the header as required. No unnecessary features, no over-engineering.\",\n  \"strengths\": [\n    \"Minimal code \u2014 solves the problem in 4 lines using the right stdlib tool\",\n    \"Fully streaming: generator expression + yield from never materializes the input\",\n    \"csv.DictReader handles header parsing and dict construction correctly and robustly\",\n    \"Empty-line filtering is applied upstream so the first non-empty line is correctly treated as the header\"\n  ],\n  \"weaknesses\": [\n    \"Does not explicitly handle edge cases like mismatched column counts, but the spec doesn't require it\",\n    \"Implicit reliance on csv.DictReader's default behavior (first row = header) could be made slightly more explicit with a comment, though it's standard and well-known\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal code \u2014 solves the problem in 4 lines using the right stdlib tool",
+      "Fully streaming: generator expression + yield from never materializes the input",
+      "csv.DictReader handles header parsing and dict construction correctly and robustly",
+      "Empty-line filtering is applied upstream so the first non-empty line is correctly treated as the header"
+    ],
+    "weaknesses": [
+      "Does not explicitly handle edge cases like mismatched column counts, but the spec doesn't require it",
+      "Implicit reliance on csv.DictReader's default behavior (first row = header) could be made slightly more explicit with a comment, though it's standard and well-known"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.532,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 5,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "streaming_csv_parser",
+  "variant": "oracle_karpathy_generation"
+}

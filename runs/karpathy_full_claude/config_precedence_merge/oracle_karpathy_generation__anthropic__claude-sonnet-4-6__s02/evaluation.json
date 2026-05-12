@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and well-structured. It decomposes the problem into exactly three focused helpers (_parse_value, _deep_merge, _env_to_nested) plus the entry point, with no speculative abstractions or unnecessary complexity. Each function has a clear, testable contract. The deep-merge correctly avoids mutating inputs via copy.deepcopy, the env parsing handles all specified types (bool, int, list, string), and the precedence chain is explicit and readable. The only minor quibble is that _parse_value calls .lower() twice for the boolean checks (a trivial inefficiency), and the comma-list parsing could arguably handle edge cases like a trailing comma producing an empty string (though the filter handles that). Overall this is close to the minimum viable correct implementation with good local auditability.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and well-structured. It decomposes the problem into exactly three focused helpers (_parse_value, _deep_merge, _env_to_nested) plus the entry point, with no speculative abstractions or unnecessary complexity. Each function has a clear, testable contract. The deep-merge correctly avoids mutating inputs via copy.deepcopy, the env parsing handles all specified types (bool, int, list, string), and the precedence chain is explicit and readable. The only minor quibble is that _parse_value calls .lower() twice for the boolean checks (a trivial inefficiency), and the comma-list parsing could arguably handle edge cases like a trailing comma producing an empty string (though the filter handles that). Overall this is close to the minimum viable correct implementation with good local auditability.\",\n  \"strengths\": [\n    \"Three focused, single-purpose helpers with no over-abstraction\",\n    \"Correct immutability: copy.deepcopy used throughout, inputs never mutated\",\n    \"Explicit precedence chain: defaults \u2192 file_config \u2192 env, clearly expressed in merge_settings\",\n    \"All required value types (bool, int, list, string) handled correctly\",\n    \"Flat, readable control flow with no unnecessary nesting or indirection\"\n  ],\n  \"weaknesses\": [\n    \"value.lower() called twice in _parse_value for boolean checks (minor inefficiency)\",\n    \"No handling of empty remainder after stripping APP__ prefix (edge case, though likely out of scope)\",\n    \"Could assign lower() result once to a local variable for slightly cleaner code\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Three focused, single-purpose helpers with no over-abstraction",
+      "Correct immutability: copy.deepcopy used throughout, inputs never mutated",
+      "Explicit precedence chain: defaults \u2192 file_config \u2192 env, clearly expressed in merge_settings",
+      "All required value types (bool, int, list, string) handled correctly",
+      "Flat, readable control flow with no unnecessary nesting or indirection"
+    ],
+    "weaknesses": [
+      "value.lower() called twice in _parse_value for boolean checks (minor inefficiency)",
+      "No handling of empty remainder after stripping APP__ prefix (edge case, though likely out of scope)",
+      "Could assign lower() result once to a local variable for slightly cleaner code"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Karpathy Guidelines as an informal in-context oracle for structural\nquality. The oracle is not a style preference layer; it is a degree-of-freedom\ncollapse over the implementation space. Preserve functional correctness while\nchoosing the simplest architecture that satisfies the task.\n\nOperational constraints derived from Karpathy's behavioral guidelines\n(https://github.com/forrestchang/andrej-karpathy-skills):\n- Think before coding: state assumptions explicitly; if uncertain about a design\n  choice, choose the most conservative interpretation.\n- Simplicity first: write the minimum code that solves the problem. No features\n  beyond what was asked. No abstractions for single-use code. No speculative\n  flexibility or configurability. If you write 200 lines and it could be 50,\n  rewrite it.\n- Surgical changes: touch only what you must. Do not improve adjacent code,\n  comments, or formatting. Match existing style even if you would do it\n  differently.\n- Goal-driven execution: define verifiable success criteria. Every function\n  should have a clear, testable contract. Prefer writing tests first, then\n  implementation.\n",
+  "oracle_spec_label": "karpathy_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.663,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.25,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 4,
+    "loc": 43,
+    "maintainability_index": 46.716,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "oracle_karpathy_generation"
+}

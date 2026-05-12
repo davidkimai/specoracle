@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows all five R-04 directives: parsing is visibly staged with numbered comments, exactly one public function is exposed, the surviving cross-iteration dictionary is named `sections_ledger` (and the inner dict is aliased as `keys_ledger`, also ending in `_ledger`), insertion order is preserved via plain `dict` (Python 3.7+), and every `ValueError` message explicitly names the archival field being rejected. The staged breakdown is clear and auditable without being over-engineered. Minor imperfections: `keys_ledger` is a short-lived alias rather than a true cross-iteration ledger, so the naming is slightly stretched, and Stage 6 could arguably be two stages (create section entry, then assign key), but these are trivial nits. Overall this is a high-quality, spec-faithful implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows all five R-04 directives: parsing is visibly staged with numbered comments, exactly one public function is exposed, the surviving cross-iteration dictionary is named `sections_ledger` (and the inner dict is aliased as `keys_ledger`, also ending in `_ledger`), insertion order is preserved via plain `dict` (Python 3.7+), and every `ValueError` message explicitly names the archival field being rejected. The staged breakdown is clear and auditable without being over-engineered. Minor imperfections: `keys_ledger` is a short-lived alias rather than a true cross-iteration ledger, so the naming is slightly stretched, and Stage 6 could arguably be two stages (create section entry, then assign key), but these are trivial nits. Overall this is a high-quality, spec-faithful implementation.\",\n  \"strengths\": [\n    \"All five R-04 directives are explicitly addressed and satisfied\",\n    \"Numbered stage comments make the parsing pipeline locally auditable at a glance\",\n    \"Both surviving dictionaries use the `_ledger` suffix as required\",\n    \"Error messages name the specific archival field being rejected in every case\",\n    \"Single public function with a clear, complete docstring\"\n  ],\n  \"weaknesses\": [\n    \"`keys_ledger` is a single-iteration alias rather than a true cross-iteration accumulator, making the `_ledger` suffix slightly misleading there\",\n    \"Stage 6 conflates section initialisation and key insertion; splitting them would be more consistent with the staged-parsing philosophy\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "All five R-04 directives are explicitly addressed and satisfied",
+      "Numbered stage comments make the parsing pipeline locally auditable at a glance",
+      "Both surviving dictionaries use the `_ledger` suffix as required",
+      "Error messages name the specific archival field being rejected in every case",
+      "Single public function with a clear, complete docstring"
+    ],
+    "weaknesses": [
+      "`keys_ledger` is a single-iteration alias rather than a true cross-iteration accumulator, making the `_ledger` suffix slightly misleading there",
+      "Stage 6 conflates section initialisation and key insertion; splitting them would be more consistent with the staged-parsing philosophy"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.502,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 57,
+    "maintainability_index": 83.988,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_karpathy_generation"
+}

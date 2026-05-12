@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with no unnecessary classes or abstractions. It uses a local lookup table (`severity_bonus`) with a name ending in `_table`-adjacent style (though not strictly `_table`-suffixed as the spec prefers). The status_code is a stable string literal 'routed', ticket order is preserved, and required-field validation is explicit. The branch logic is straightforward with short inline comments. Minor deductions: the lookup table is named `severity_bonus` rather than `severity_bonus_table` as the spec hints, and the comment `# Validate required fields` / `# Resolve routing rule` / `# Apply severity bonus` are slightly verbose header-style comments rather than the 'short explicit strings' the spec prefers for branch reasons. The `rules.get(service) or rules.get('default', {})` pattern is slightly implicit (falsy rule would fall through to default unexpectedly), but functionally acceptable for the stated requirements.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with no unnecessary classes or abstractions. It uses a local lookup table (`severity_bonus`) with a name ending in `_table`-adjacent style (though not strictly `_table`-suffixed as the spec prefers). The status_code is a stable string literal 'routed', ticket order is preserved, and required-field validation is explicit. The branch logic is straightforward with short inline comments. Minor deductions: the lookup table is named `severity_bonus` rather than `severity_bonus_table` as the spec hints, and the comment `# Validate required fields` / `# Resolve routing rule` / `# Apply severity bonus` are slightly verbose header-style comments rather than the 'short explicit strings' the spec prefers for branch reasons. The `rules.get(service) or rules.get('default', {})` pattern is slightly implicit (falsy rule would fall through to default unexpectedly), but functionally acceptable for the stated requirements.\",\n  \"strengths\": [\n    \"Uses a local lookup table for severity bonuses, close to the _table naming convention\",\n    \"status_code is a stable string literal, never a boolean\",\n    \"Ticket order is preserved via simple sequential append\",\n    \"No classes introduced for single-pass routing\",\n    \"Flat single-loop structure with no nested functions or abstractions\",\n    \"Explicit field validation with early continue\"\n  ],\n  \"weaknesses\": [\n    \"Lookup table named `severity_bonus` rather than `severity_bonus_table` as spec hints\",\n    \"Section comments are verbose headers rather than short explicit branch-reason strings\",\n    \"`rules.get(service) or rules.get('default', {})` could silently fall to default if service maps to a falsy value\",\n    \"Type annotations on local variables add minor noise without structural benefit\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses a local lookup table for severity bonuses, close to the _table naming convention",
+      "status_code is a stable string literal, never a boolean",
+      "Ticket order is preserved via simple sequential append",
+      "No classes introduced for single-pass routing",
+      "Flat single-loop structure with no nested functions or abstractions",
+      "Explicit field validation with early continue"
+    ],
+    "weaknesses": [
+      "Lookup table named `severity_bonus` rather than `severity_bonus_table` as spec hints",
+      "Section comments are verbose headers rather than short explicit branch-reason strings",
+      "`rules.get(service) or rules.get('default', {})` could silently fall to default if service maps to a falsy value",
+      "Type annotations on local variables add minor noise without structural benefit"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.505,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 48,
+    "maintainability_index": 85.172,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "baseline_generation"
+}
