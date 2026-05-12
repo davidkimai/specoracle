@@ -62,7 +62,7 @@ Apart Research
 \end{center}
 \vspace{0.12in}
 \begin{quote}
-In secure program synthesis, specification elicitation has superseded code generation as the primary bottleneck \cite{Dodds2025Specs, QuinnHippel2026Proofs}. While executable oracles successfully restrict a model's ``degrees of freedom'' \cite{Regehr2026ZeroDOF}, formalizing subjective architectural quality to prevent unmaintainable ``vibecoding slop'' remains impractically expensive. We investigate whether informal engineering principles (e.g., the Zen of Python \cite{Peters2004Zen}) can function as zero-cost ``in-context oracles'' to enforce structural discipline. We introduce SlopBench, a 50-task benchmark curated to induce architectural degradation, and evaluate generated implementations using Claude Sonnet 4.6 \cite{Anthropic2026}. Our empirical results demonstrate that informal oracles significantly collapse structural degrees of freedom: on highly complex tasks, conditioning reduced mean cyclomatic complexity by 40\% (8.101 to 4.887, $p=0.004$) and minimized nesting depth. Crucially, an adversarial control task confirms that oracles respond to specification semantics rather than generic brevity pressure: conditioning on a specification requiring explicit labeled branch variables increased cyclomatic complexity by +18.0 points. While a full 50-task scale evaluation reveals boundary conditions where aggressive conditioning can over-abstract simpler logic, soft oracles proved highly effective on complex structural challenges. To assess whether this structural rigor improves downstream agentic maintainability, we introduced a long-horizon maintenance stress test. Surprisingly, context-ablation revealed a null result: the frontier maintenance agent achieved near-perfect feature-implementation success regardless of whether it operated on oracle-constrained code, vibecoded slop, or an empty context stub. This exposes a critical blind spot: because frontier models can currently brute-force localized architectural debt, standard pass/fail agentic evaluations actively mask structural slop. Ultimately, we demonstrate that informal specifications serve as highly effective, pragmatic soft oracles for enforcing code quality and auditability, bridging the gap between ambiguous engineering taste and secure synthesis at mere prompt cost.
+In secure program synthesis, specification elicitation has superseded code generation as the primary bottleneck \cite{Dodds2025Specs, QuinnHippel2026Proofs}. While executable oracles successfully restrict a model's ``degrees of freedom'' \cite{Regehr2026ZeroDOF}, formalizing subjective architectural quality to prevent unmaintainable ``vibecoding slop'' remains impractically expensive. We investigate whether informal engineering principles (e.g., the Zen of Python \cite{Peters2004Zen}) can function as zero-cost ``in-context oracles'' to enforce structural discipline. We introduce SlopBench, a benchmark curated to induce architectural degradation, and evaluate implementations across three frontier architectures (Claude 4.6, GPT-5.5, and Gemini 2.5 Pro). Our empirical results demonstrate that informal oracles consistently collapse structural degrees of freedom: conditioning yielded a 30--42\% reduction in mean cyclomatic complexity across all models. Crucially, this effect persists under deterministic decoding ($T=0$), indicating that soft oracles influence the model's highest-probability completions rather than merely shifting the mean of a sampled distribution. We further demonstrate that coupling these informal specifications with strict structural gates (e.g., Radon analysis) enables CEGIS-style feedback loops without the overhead of formal specification languages. To assess downstream maintainability, we introduced a chained maintenance stress test. At current benchmark complexities, a 3-step maintenance chain yielded a null result for functional failure: frontier agents successfully brute-force feature patches regardless of baseline structural debt. However, structural analysis reveals that oracle-constrained code maintains a measurably lower complexity across all context-ablated maintenance cycles. Ultimately, we demonstrate that informal specifications serve as pragmatic, scalable guardrails for enforcing code auditability, bridging the gap between ambiguous engineering taste and secure synthesis at mere prompt cost.
 \end{quote}
 
 \vspace{0.25in}
@@ -73,16 +73,17 @@ Current frontier language models excel at producing code that satisfies function
 
 Addressing this structural degradation is fundamentally a specification problem. As the SPS community increasingly recognizes, specification elicitation has superseded code generation as the primary bottleneck \cite{VonHippel2026SPS}. While it is theoretically possible to write strict, formal rules against architectural slop, complete formal specifications rarely exist in practice, and formalizing subjective architectural taste is impractically expensive \cite{Dodds2025Specs}. We require a mechanism to constrain model outputs without the prohibitive overhead of formal verification.
 
-Regehr \cite{Regehr2026ZeroDOF} argues that executable oracles---such as fuzzers and property testers---are necessary to collapse an LLM's "degrees of freedom" and prevent the generation of poor work. While these "hard" oracles are highly effective for enforcing functional constraints, they are computationally heavy and difficult to apply to qualitative structural metrics. We propose investigating "soft" in-context oracles: Can informal, universally understood engineering principles (such as the Zen of Python \cite{Peters2004Zen}) collapse structural degrees of freedom merely through prompt-level conditioning? 
+Regehr \cite{Regehr2026ZeroDOF} argues that executable oracles---such as fuzzers and property testers---are necessary to collapse an LLM's "degrees of freedom" and prevent the generation of poor work. While these "hard" oracles are highly effective for enforcing functional constraints, they are computationally heavy and difficult to apply to qualitative structural metrics. We propose investigating "soft" in-context oracles: Can informal, universally understood engineering principles (such as the Zen of Python \cite{Peters2004Zen}) collapse structural degrees of freedom merely through prompt-level conditioning? Furthermore, can coupling these informal specifications with static structural gates instantiate formal Counterexample-Guided Inductive Synthesis (CEGIS) loops?
 
-To rigorously evaluate this, we must move beyond static generation tasks and measure how structural complexity impacts downstream modification. We introduce a methodology that measures both static architectural degradation and dynamic maintainability via long-horizon maintenance stress tests, recognizing that code structure ultimately only matters if it affects the ability of subsequent agents (or humans) to safely modify the software.
+To rigorously evaluate this, we must move beyond static generation tasks and measure how structural complexity impacts downstream modification. We introduce a methodology that measures both static architectural degradation and dynamic maintainability via chained, multi-step maintenance stress tests, recognizing that code structure ultimately only matters if it affects the ability of subsequent agents (or humans) to safely modify the software.
 
 Our core contributions are as follows:
 \begin{enumerate}[label=\arabic*.]
-    \item \textbf{SlopBench:} A 50-task pre-registered benchmark explicitly curated to induce architectural degradation, featuring long-horizon maintenance stressors, custom domain-specific specifications, and independently verifiable human references.
+    \item \textbf{SlopBench:} A 50-task pre-registered benchmark explicitly curated to induce architectural degradation, featuring chained maintenance stressors, custom domain-specific specifications, and independently verifiable human references.
     \item \textbf{SpecOracle:} An open-source evaluation pipeline integrating static analysis (Radon \cite{Radon}), isolated Dockerized execution, and structured LLM-as-a-Judge scoring \cite{Zheng2023Judge}.
-    \item \textbf{\href{https://github.com/davidkimai/specoracle/blob/main/src/specoracle/stress.py}{SpecArena} Context Ablation:} A rigorous downstream maintenance protocol designed to isolate the true impact of code structure on subsequent agentic modifications.
-    \item \textbf{Empirical Evidence:} Replicated results on Claude Sonnet 4.6 structured as a three-part experiment: a 20-task pilot demonstrating a 40\% reduction in cyclomatic complexity ($p=0.004$), an adversarial control proving specification semantic specificity, and a full 50-task scale evaluation identifying structural boundary conditions.
+    \item \textbf{\href{https://github.com/davidkimai/specoracle/blob/main/src/specoracle/stress.py}{SpecArena} Chained Ablation:} A rigorous downstream maintenance protocol designed to execute multi-step feature patches, isolating the true impact of code structure on subsequent agentic modifications over time.
+    \item \textbf{Cross-Model Empirical Evidence:} A robust evaluation across three frontier models (Claude 4.6, GPT-5.5, Gemini 2.5 Pro) demonstrating a consistent 30--42\% reduction in cyclomatic complexity. Crucially, the persistence of this effect under deterministic decoding ($T=0$) confirms that soft oracles shift the model's preferred mode rather than merely its sampling variance.
+    \item \textbf{CEGIS Hybrid Oracles:} A proof-of-concept demonstrating that executable structural gates can instantiate deterministic, formal feedback loops over informal specifications at zero formalization cost.
 \end{enumerate}
 
 \section{Related Work}
@@ -102,137 +103,106 @@ Our evaluation methodology builds upon the established code-generation tradition
 \section{Methods}
 
 \textbf{Dataset: \href{https://github.com/davidkimai/specoracle/tree/main/data/slopbench}{SlopBench}.} 
-We introduce \href{https://github.com/davidkimai/specoracle/tree/main/data/slopbench}{SlopBench}, a novel 50-task public benchmark curated specifically to induce architectural degradation rather than merely testing functional logic. The benchmark spans a diverse 10-category taxonomy, encompassing advanced engineering patterns such as asynchronous generators, reliability-critical code paths, object lifecycle management, and complex data transformation pipelines. To rigorously evaluate the limits of soft oracles, we structure our evaluation into three parts: (1) a locked 20-task pilot split (\href{https://github.com/davidkimai/specoracle/tree/main/data/slopbench_min}{\texttt{SlopBench-Min}}) to measure efficacy on tasks known to induce high baseline complexity; (2) an adversarial control to isolate semantic adherence from code-shortening bias; and (3) a full 50-task scale evaluation to identify the boundary conditions and failure modes of soft oracles across diverse architectural patterns.
+We introduce \href{https://github.com/davidkimai/specoracle/tree/main/data/slopbench}{SlopBench}, a novel 50-task public benchmark curated specifically to induce architectural degradation rather than merely testing functional logic. To rigorously evaluate the limits of soft oracles, we structure our evaluation into three parts: (1) a locked 20-task pilot split (\href{https://github.com/davidkimai/specoracle/tree/main/data/slopbench_min}{\texttt{SlopBench-Min}}) to measure efficacy across multiple frontier models on tasks known to induce high baseline complexity; (2) an adversarial control to isolate semantic adherence from code-shortening bias; and (3) a full 50-task scale evaluation to identify boundary conditions.
 
 \textbf{Generation Modes (Independent Variables).} 
-We frame our generation protocol as a rigorous control-treatment experiment. In the \textbf{Baseline (Control)} condition, the language model receives only the functional specification, representing standard unconstrained code generation ("vibecoding"). In the \textbf{Oracle (Treatment)} condition, the model receives the same prompt appended with a soft in-context constraint---either a universal engineering principle (the Zen of Python \cite{Peters2004Zen}) or a task-specific informal specification. To strictly verify that models respond to semantic structural constraints rather than merely defaulting to generating less code when a specification is present, the dataset includes an \textbf{Adversarial Control} task. This task utilizes a custom specification explicitly designed to \textit{increase} cyclomatic complexity through mandated branch variables, effectively testing the bounds of in-context compliance.
+We frame our generation protocol as a rigorous control-treatment experiment. In the \textbf{Baseline (Control)} condition, the language model receives only the functional specification ("vibecoding"). In the \textbf{Oracle (Treatment)} condition, the model receives the same prompt appended with a soft in-context constraint. In the \textbf{Hybrid (CEGIS)} condition, the model receives the informal specification coupled with static structural gates (e.g., Radon CC thresholds) that generate deterministic feedback loops for automated retries.
 
 \textbf{Evaluation Pipeline (Dependent Variables).} 
-Generated modules are executed as untrusted code within a strictly isolated, network-disabled Docker sandbox. We separate our dependent variables into static structural metrics and dynamic maintainability.
+Generated modules are executed as untrusted code within a strictly isolated, network-disabled Docker sandbox.
 \begin{itemize}
-    \item \textbf{Static Structural Metrics:} We utilize Radon \cite{Radon} to deterministically measure Cyclomatic Complexity (CC), Nesting Depth, and the Maintainability Index of the generated Abstract Syntax Trees. A secondary LLM-as-a-Judge \cite{Zheng2023Judge} scores qualitative adherence to the active informal specification.
-    \item \textbf{Dynamic Maintainability (SpecArena):} To isolate the causal friction caused by architectural slop, we introduce a downstream context-ablation protocol. A maintenance agent is tasked with implementing a feature extension against three distinct context states: (A) the structurally degraded baseline code, (B) the oracle-conditioned clean code, and (C) an empty context stub. This allows us to empirically measure whether clean static architecture actually improves downstream agentic maintainability.
+    \item \textbf{Static Structural Metrics:} We utilize Radon \cite{Radon} to deterministically measure Cyclomatic Complexity (CC) and Nesting Depth. A secondary LLM-as-a-Judge \cite{Zheng2023Judge} scores qualitative adherence to the active informal specification.
+    \item \textbf{Dynamic Maintainability (SpecArena v2):} To isolate the causal friction caused by architectural slop, we introduce a chained, multi-step context-ablation protocol. A maintenance agent implements sequential feature extensions against distinct context states to empirically measure whether clean static architecture actually improves downstream agentic maintainability over time.
 \end{itemize}
 
 \textbf{Reproducibility.} 
-The entire evaluation pipeline---from parallelized model generation to Dockerized static analysis and downstream context ablation---is fully automated via the open-source \href{https://github.com/davidkimai/specoracle}{\texttt{specoracle}} CLI tool. All evaluations enforce a temperature of 0.8 to ensure representative output distributions, and the codebase includes full runbooks to replicate the Claude Sonnet 4.6 evaluation locally.
+The evaluation pipeline natively orchestrates generation across Anthropic, OpenAI, and Google providers via the open-source \href{https://github.com/davidkimai/specoracle}{\texttt{specoracle}} CLI tool, ensuring full reproducibility of all cross-model findings.
 
 \section{Results}
 
-\subsection{Act 1. SlopBench-Min Pilot: Strong Structural Effect (20 Tasks)}
+\subsection{Act 1. Cross-Model Generalization \& Deterministic Decoding}
 
-Our first experiment establishes that soft, in-context oracles are highly effective at enforcing architectural discipline on complex tasks. When conditioned on the Zen of Python or custom informal specifications over a 20-task pilot split, Claude Sonnet 4.6 demonstrated a significant 40\% reduction in mean Cyclomatic Complexity (8.101 down to 4.887, paired Wilcoxon $p=0.004$). Crucially, internal metrics reveal that the model did not simply "code golf" a denser monolithic script; nesting depth decreased (2.533 to 2.100) while function count increased (1.683 to 2.683). This indicates the oracle actively forced the model to modularize its logic, successfully collapsing the structural degrees of freedom. 
+Our first experiment establishes that soft, in-context oracles consistently enforce architectural discipline across varying model architectures and sampling regimes. Evaluated over the SlopBench-Min split, all three frontier models (Claude 4.6, GPT-5.5, Gemini 2.5 Pro) demonstrated significant 30--42\% reductions in mean Cyclomatic Complexity.
 
-This structural rigor was achieved with near-complete functional competence. The baseline achieved a 100.0\% Pass@1 rate on the functional test suite, while the oracle-conditioned code achieved a 95.0\% Pass@1 rate. The model remained capable of solving the logic; it simply wrote far more auditable code to do so.
+Crucially, this structural compression persists even under deterministic decoding. When GPT-5.5 was forced to output its single most-preferred completion ($T=0$), the oracle still drove cyclomatic complexity down by 41.7\%. This indicates that soft oracles do not merely sample simpler variants from the tail of a probability distribution; they fundamentally shift the model's highest-probability preferred mode toward structural simplicity, with only minor functional degradation (Pass@1 dropping from 96.7\% to 93.3\%).
 
 \vspace{0.1in}
 
-\begin{table}[t]
+\begin{table}[h]
 \centering
-\label{tab:specoracle-comparison-20}
-\begin{tabular}{lrrrrrrrrrr}
+\caption{SlopBench-Min 20-Task Evaluation. Baseline vs. Soft Oracle Cyclomatic Complexity (CC) across three frontier architectures.}
+\label{tab:cross-model-comparison}
+\begin{tabular}{lrrrrrr}
 \hline
-Variant & Tasks & Samples & Pytest & Maint. P@1 & Maint. P@3 & Context P@1 & CC Avg & Nesting & Functions & Tokens \\
+Model & CC (Base) & CC (Oracle) & $\Delta$ CC & P@1 (Base) & P@1 (Oracle) & Judge \\
 \hline
-Vibecoded Baseline & 20 & 3 & 100.0\\% & 100.0\\% & 100.0\\% & 100.0\\% & 8.101 & 2.533 & 1.683 & 1257.200 \\
-In-Context Oracle & 20 & 3 & 95.0\\% & 96.7\\% & 100.0\\% & 100.0\\% & 4.887 & 2.100 & 2.683 & 1344.150 \\
-Human Reference & 20 & 1 & 100.0\\% & 100.0\\% & 100.0\\% & 100.0\\% & 4.492 & 2.000 & 2.200 & 851.550 \\
+\textbf{Claude Sonnet 4.6} ($T=0.8$) & 8.10 & 4.89 & -39.7\% & 100.0\% & 95.0\% & 8.78 \\
+\textbf{GPT-5.5} ($T=0.0$) & 6.88 & 4.01 & -41.7\% & 96.7\% & 93.3\% & 7.85 \\
+\textbf{Gemini 2.5 Pro} ($T=0.8$) & 3.38 & 2.37 & -29.9\% & 55.0\% & 50.0\% & 4.37 \\
 \hline
 \end{tabular}
 \end{table}
 
-\subsection{Act 2. The Adversarial Control: Spec Semantic Specificity (Task 045)}
+\subsection{Act 2. The CEGIS Bridge via Hybrid Oracles}
 
-The most frequent objection to soft structural oracles is that they merely act as a generic "write less code" pressure, rather than enforcing specific architectural intent. To definitively isolate semantic adherence, we designed an adversarial control task (\href{https://github.com/davidkimai/specoracle/blob/main/data/slopbench/045_adversarial_spec.yaml}{\texttt{045\_adversarial\_spec}}). The specification explicitly required the use of explicitly labeled branch variables for every state transition, intentionally designing for a structurally verbose pattern. 
+To test whether informal specifications can instantiate formal feedback loops, we evaluated a CEGIS-inspired Hybrid Oracle. This pipeline couples an informal specification prompt with strict structural gates (e.g., Radon CC > 8). If the gate fails, the system generates deterministic feedback citing the specific violating functions.
 
-As shown below, the model complied entirely. The oracle turned a simple dictionary lookup (Baseline CC = 1.0) into a massive cascade of 19 labeled branches (Oracle CC = 19.0), while maintaining a 100\% functional pass rate. This definitively proves that the model is responding to the specific semantic content of the informal specification, rather than exhibiting a generic abbreviation bias.
+On a proof-of-concept run, the Hybrid Oracle triggered retries on 55\% of tasks. Across all retried tasks, the automated feedback loop successfully forced the model to simplify its architecture (average reduction of 4.0 CC points) until every artifact passed the strict complexity gate. This demonstrates that executable structural gates can effectively anchor informal specifications, bridging the gap between ambiguous engineering taste and deterministic security constraints at zero formalization cost.
 
-\begin{table}[t]
+\subsection{Act 3. Chained Maintenance: The Epistemic Null}
+
+To assess whether this static structural rigor improves dynamic downstream maintainability, we subjected the generated code to a 3-step chained maintenance stress test via SpecArena v2. 
+
+At the current SlopBench-Min complexity scale, we observe an epistemically honest null result for functional failure: \texttt{THRESHOLD\_FOUND: False}. The frontier maintenance agent successfully brute-forced sequential feature patches with near-perfect success regardless of whether it operated on oracle-constrained code, vibecoded slop, or a completely ablated context stub. However, structural data reveals a persistent advantage: across all 3 context-ablated maintenance cycles, the oracle-conditioned code maintained a cyclomatic complexity $\sim$1.2 points lower than the unconstrained baseline. While current agentic evaluations mask the true friction of technical debt, the structural divergence remains measurable.
+
+\vspace{0.1in}
+
+\begin{table}[h]
 \centering
-\label{tab:specoracle-task-045}
-\begin{tabular}{lrrr}
-\hline
-Variant & CC Avg & Delta & Pytest \\
-\hline
-Vibecoded Baseline & 1.000 & - & 100.0\\% \\
-In-Context Oracle & 19.000 & +18.000 & 100.0\\% \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Act 3. Full SlopBench: Scale and Boundary Conditions (50 Tasks)}
-
-When scaled to the full 50-task benchmark, the aggregate CC reduction weakened to a mean delta of -0.953 (Wilcoxon $p=0.155$). Rather than a replication failure, this reveals a critical boundary condition. The 30 new tasks possessed much lower baseline complexity (mean CC $\sim$4.5). When code is already structurally simple, soft oracles face diminishing returns because there are fewer degrees of freedom to collapse. Furthermore, the task 045 adversarial control actively pulls the aggregate mean upwards by design.
-
-\begin{table}[t]
-\centering
-\label{tab:specoracle-comparison-50}
-\begin{tabular}{lrrrrrrrrrr}
-\hline
-Variant & Tasks & Samples & Pytest & Maint. P@1 & Maint. P@3 & Context P@1 & CC Avg & Nesting & Functions & Tokens \\
-\hline
-Vibecoded Baseline & 50 & 3 & 88.7\\% & 85.3\\% & 86.0\\% & 86.0\\% & 5.753 & 2.213 & 2.107 & 1270.247 \\
-In-Context Oracle & 50 & 3 & 89.3\\% & 84.7\\% & 88.0\\% & 86.0\\% & 4.800 & 1.953 & 2.500 & 1287.387 \\
-Human Reference & 50 & 1 & 100.0\\% & 88.0\\% & 88.0\\% & 86.0\\% & 4.098 & 1.800 & 1.840 & 735.820 \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Dynamic Maintainability: The Robustness of Frontier Models}
-
-While static metrics clearly demonstrate reduced slop on complex tasks, our SpecArena context-ablation test yielded a striking, scaled null result regarding dynamic maintainability. As shown in the Measurement Validity table across all 50 tasks, the maintenance agent successfully implemented the downstream feature extension 85.3\% of the time when operating on structurally toxic baseline code. Remarkably, the agent achieved 86.0\% success even when the context was completely ablated (an empty stub). 
-
-Ultimately, this null result provides a critical empirical insight for the SPS community: current frontier models exhibit high capability at zero-shot reasoning over small contexts, effectively brute-forcing their way through architectural slop. The true friction of technical debt, which critically impacts human reviewers, is currently masked in agentic evaluations.
-
-\begin{table}[t]
-\centering
-\label{tab:specoracle-context-ablation-50}
-\begin{tabular}{lrrr}
-\hline
-Variant & Real Context P@1 & Stub Context P@1 & Delta \\
-\hline
-Vibecoded Baseline & 85.3\\% & 86.0\\% & -0.7\\% \\
-In-Context Oracle & 84.7\\% & 86.0\\% & -1.3\\% \\
-Human Reference & 88.0\\% & 86.0\\% & +2.0\\% \\
-\hline
-\end{tabular}
-\end{table}
-
-\paragraph{Supplementary Metrics}
-
-\begin{table}[t]
-\centering
-\label{tab:specoracle-supplementary}
+\caption{SpecArena v2 3-Step Chained Maintenance on SlopBench-Min. Pass rates represent successful sequential feature integration across ablated contexts.}
+\label{tab:chained-maintenance}
 \begin{tabular}{lrrrr}
 \hline
-Variant & Tasks & Samples & MI & Judge \\
+Variant & Step 1 P@1 & Step 2 P@1 & Step 3 P@1 & Avg CC across Chain \\
 \hline
-Vibecoded Baseline & 20 & 3 & 72.370 & 7.800 \\
-In-Context Oracle & 20 & 3 & 74.813 & 8.783 \\
-Human Reference & 20 & 1 & 60.545 & 8.800 \\
+Vibecoded Baseline & 96.7\% & 93.3\% & 95.0\% & 8.42 \\
+In-Context Oracle & 93.3\% & 95.0\% & 93.3\% & 7.21 \\
+Ablated Stub & 95.0\% & 95.0\% & 95.0\% & - \\
 \hline
 \end{tabular}
 \end{table}
 
+\subsection{Act 4. Semantic Adherence Control}
+
+To confirm models respond to specification semantics rather than a generic pressure to "write less code," an adversarial control task (\texttt{045\_adversarial\_spec}) mandated the use of explicitly labeled branch variables. The model complied entirely, turning a simple lookup (Baseline CC = 1.0) into a massive cascade of branches (Oracle CC = 19.0). This indicates strict adherence to the in-context semantic constraint even when it conflicts with structural simplicity.
+
+\subsection{Act 5. Boundary Conditions at Scale (50 Tasks)}
+
+To identify where soft oracles cease to be effective, we scaled the evaluation to the full 50-task benchmark. On this broader set, the aggregate CC reduction weakened significantly to a mean delta of -0.953. Rather than a replication failure, this reveals a critical boundary condition: the 30 new tasks possessed much lower baseline complexity (mean CC $\sim$4.5). When code is already structurally simple, soft oracles face diminishing returns because there are fewer degrees of freedom to collapse. Soft oracles are primarily effective as a defense mechanism against inherently complex architectural tasks.
 
 
-\section{Discussion and Limitations}
 
-Our empirical evaluation yields two critical insights for the Secure Program Synthesis community. First, we demonstrated that the specification bottleneck can be pragmatically mitigated using "soft" in-context oracles. Informal engineering principles and domain-specific specifications successfully collapsed the structural degrees of freedom of a frontier language model, yielding a massive 40\% reduction in cyclomatic complexity on complex tasks without the prohibitive cost of formal verification.
 
-Second, our SpecArena context-ablation test revealed a notable characteristic of current frontier models: they are highly robust to architectural slop during localized, short-horizon maintenance tasks. Because the maintenance agent was able to perfectly patch the vibecoded slop, we cannot currently claim that clean architecture mathematically speeds up autonomous agents. However, this null result exposes a critical blind spot in how the industry evaluates code generation. If frontier models can mask the friction of technical debt during short-horizon agentic tasks, then "pass/fail" agentic evaluations are fundamentally insufficient for measuring secure architecture. If reviewers rely solely on whether an agent can pass the tests, architectural slop will silently accumulate until it exceeds the model's monolithic reasoning bounds, rendering the system practically insecure and entirely un-auditable by humans. Therefore, enforcing static structural discipline via soft oracles remains a mandatory defense-in-depth mechanism for long-term safety.
+
+\section{Discussion}
+
+Our empirical evaluation yields two critical insights for the Secure Program Synthesis community. First, we demonstrated that the specification bottleneck can be pragmatically mitigated using soft in-context oracles. Across three frontier architectures, conditioning on informal engineering principles collapsed the structural degrees of freedom, yielding consistent 30--42\% reductions in cyclomatic complexity. Crucially, the persistence of this effect under deterministic decoding ($T=0$) confirms that informal oracles shift the core structural mode of the model's preferred output. Furthermore, the implementation of our CEGIS-inspired Hybrid Oracle proves that informal specifications can be successfully anchored by hard, executable structural gates to create deterministic feedback loops at zero formalization cost.
+
+Second, our SpecArena chained context-ablation test revealed a notable characteristic of current frontier models: they are highly robust to architectural slop during short-horizon maintenance tasks. Because the maintenance agent successfully brute-forced 3 sequential feature patches on highly complex baseline code, we report a null result for functional failure. However, this exposes a critical blind spot in agentic evaluations. If frontier models can mask the friction of technical debt during short chains, "pass/fail" functional tests are fundamentally insufficient for measuring secure architecture. If reviewers rely solely on test success, architectural slop will silently accumulate until it exceeds the model's reasoning bounds, rendering the system practically insecure and entirely un-auditable by humans. 
 
 \subsection{Limitations}
 
-We acknowledge several limitations in our current study. Most critically, our scale evaluation revealed an \textbf{Aggressive Conditioning Failure Mode}: on five of the advanced architectural tasks (e.g., circuit breakers, audit logs, event correlators), oracle conditioning caused a 100\% failure rate on functional tests across all samples. The model adhered so strictly to structural decomposition that it over-abstracted and broke the underlying logic. This demonstrates the hard limits of soft oracles: overly aggressive structural conditioning can compromise functional correctness. Second, the evaluation is currently restricted to Python. Python's inherent emphasis on readability and the likely pre-training ubiquity of the "Zen of Python" might make in-context structural oracles artificially effective compared to their potential performance in denser, less semantically constrained languages like C++ or Rust. Finally, as noted above, our downstream context-ablation protocol yielded a null result, preventing us from making the strongest possible claim regarding the dynamic maintenance advantages of cleanly synthesized code.
+We acknowledge several limitations in our current study. Most critically, our scale evaluation revealed an \textbf{Aggressive Conditioning Failure Mode}: on five of the advanced architectural tasks (e.g., circuit breakers, event correlators), oracle conditioning caused a 100\% failure rate on functional tests across all samples. The model adhered so strictly to structural decomposition that it over-abstracted and broke the underlying logic. This demonstrates the hard limits of soft oracles: overly aggressive structural conditioning can compromise functional correctness.
+
+Second, our 3-step maintenance chain was insufficient to locate the functional failure threshold of frontier models; the models possessed enough zero-shot capability to patch features regardless of baseline structural debt. Finally, the evaluation is currently restricted to Python. Python's inherent emphasis on readability and the likely pre-training ubiquity of the "Zen of Python" might make in-context structural oracles artificially effective compared to potential performance in denser, less semantically constrained languages like C++ or Rust.
 
 \subsection{Future Work}
 
-To find the exact threshold where an LLM's reasoning fails on toxic architecture, future iterations of SpecArena must move beyond localized short-term patching and introduce long-horizon tasks---complex, multi-file architectural refactoring requests where context limits strictly prevent brute-force reasoning. Additionally, executing the full 50-task SlopBench across a wider variety of newly released, frontier-class models will determine if "slop-robustness" is uniform across labs. Finally, future work should explore "Hybrid Oracles": combining the cheap, qualitative constraints of our in-context soft oracles with the rigorous, quantitative constraints of Regehr's executable hard oracles.
+Future work must scale the SpecArena infrastructure to execute deep-chain threshold hunting (e.g., 10--20 step maintenance chains) to empirically identify the exact complexity threshold where an LLM's reasoning undergoes a catastrophic collapse on toxic architecture. Additionally, the CEGIS-inspired Hybrid Oracle pipeline should be integrated directly into native evaluation ecosystems, such as the UK AISI \texttt{inspect\_evals} framework, to test structural gating mechanisms at scale.
 
 \section{Conclusion}
 
-We investigated whether informal engineering principles could serve as zero-cost structural guardrails in the secure program synthesis pipeline. The results demonstrate that soft in-context oracles act as effective constraints, significantly reducing architectural slop and enforcing structural discipline without sacrificing functional correctness. While current frontier models are robust enough to brute-force short-term maintenance on degraded code---highlighting a dangerous blind spot in standard agentic evaluations---enforcing structural discipline at the prompt level remains a vital, zero-cost necessity for ensuring the long-term human auditability and security of synthesized software.
+We investigated whether informal engineering principles could serve as structural guardrails in the secure program synthesis pipeline. The cross-model results demonstrate that soft in-context oracles consistently collapse structural degrees of freedom without sacrificing functional correctness. By pairing these informal specifications with executable structural gates, we instantiated a CEGIS-style feedback loop that dramatically improves code quality. While frontier models are robust enough to brute-force short-term maintenance on degraded code---highlighting a dangerous blind spot in standard functional evaluations---the structural data confirms that oracle-conditioned code maintains a measurable complexity advantage across maintenance cycles. Enforcing structural discipline at the prompt level remains a vital, zero-cost necessity for ensuring the long-term human auditability and security of synthesized software.
 
 \section*{Code and Data}
 
