@@ -3,11 +3,13 @@ from __future__ import annotations
 import ast
 import json
 import os
+import re
 import shutil
 import subprocess
 import statistics
 import tempfile
 import time
+from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
@@ -25,15 +27,36 @@ from specoracle.config import (
 )
 from specoracle.generator import LLMClient
 
-DEFAULT_PYTEST_DOCKER_IMAGE = "specoracle-pytest:py311-alpine"
-PYTEST_SANDBOX_BASE_IMAGE = "python:3.11-alpine"
+DEFAULT_PYTEST_DOCKER_IMAGE = "specoracle-pytest-dafny:py311-dotnet8"
+PYTEST_SANDBOX_BASE_IMAGE = "mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim"
 PYTEST_SANDBOX_PYTEST_VERSION = "9.0.2"
+PYTEST_SANDBOX_DAFNY_VERSION = "4.*"
 PYTEST_DOCKERFILE = """\
-FROM python:3.11-alpine
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim
+ARG PYTEST_VERSION=9.0.2
+ARG DAFNY_VERSION=4.*
 ENV PYTHONDONTWRITEBYTECODE=1
-RUN python -m pip install --no-cache-dir pytest==9.0.2
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+ENV DOTNET_NOLOGO=1
+ENV PATH="/root/.dotnet/tools:${PATH}"
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates python3 python3-pip python3-z3 z3 \
+    && ln -sf /usr/bin/python3 /usr/local/bin/python \
+    && rm -rf /var/lib/apt/lists/*
+RUN python3 -m pip install --break-system-packages --no-cache-dir pytest==${PYTEST_VERSION}
+RUN dotnet tool install --global dafny --version "${DAFNY_VERSION}"
+RUN python -m pytest --version && python -c "import z3" && z3 --version && dafny --version
 WORKDIR /work
 """
+
+
+class CompletedProcessLike:
+    returncode: int
+    stdout: str | bytes | None
+    stderr: str | bytes | None
+
+
+DafnyRunner = Callable[[Sequence[str], float], CompletedProcessLike]
 
 
 @dataclass(frozen=True)
@@ -59,6 +82,41 @@ class PytestResult:
     sandbox: str
     stdout: str
     stderr: str
+    sandbox_error: str | None = None
+
+
+@dataclass(frozen=True)
+class DafnyVerificationResult:
+    verified: bool
+    status: str
+    exit_code: int
+    duration_seconds: float
+    timed_out: bool
+    sandbox: str
+    command: tuple[str, ...]
+    stdout: str
+    stderr: str
+    verified_count: int | None = None
+    error_count: int | None = None
+    sandbox_error: str | None = None
+
+
+@dataclass(frozen=True)
+class DafnyCompilationResult:
+    translated: bool
+    status: str
+    exit_code: int
+    duration_seconds: float
+    timed_out: bool
+    sandbox: str
+    command: tuple[str, ...]
+    stdout: str
+    stderr: str
+    compiled_python: str
+    compiled_python_path: str | None
+    compiled_static_metrics: StaticMetrics | None
+    verified_count: int | None = None
+    error_count: int | None = None
     sandbox_error: str | None = None
 
 
@@ -306,6 +364,234 @@ def run_pytest_for_code(
     )
 
 
+def verify_dafny_code(
+    dfy_code: str,
+    *,
+    timeout_seconds: float = 30.0,
+    runner: DafnyRunner | None = None,
+    dafny_executable: str | None = None,
+    sandbox: str = "host",
+    docker_image: str | None = None,
+) -> DafnyVerificationResult:
+    """Verify Dafny source and return structured verifier evidence."""
+    with tempfile.TemporaryDirectory(prefix="specoracle_dafny_verify_") as temp_dir:
+        temp_path = Path(temp_dir)
+        source_path = temp_path / "solution.dfy"
+        source_path.write_text(dfy_code, encoding="utf-8")
+        if sandbox == "docker":
+            image = docker_image or os.getenv("SPECORACLE_DAFNY_IMAGE", DEFAULT_PYTEST_DOCKER_IMAGE)
+            try:
+                command = _docker_dafny_command(
+                    ["dafny", "verify", "/work/solution.dfy"],
+                    temp_path=temp_path,
+                    image=image,
+                )
+            except FileNotFoundError as exc:
+                return _dafny_verification_result(
+                    verified=False,
+                    status="tool_missing",
+                    exit_code=127,
+                    start=time.monotonic(),
+                    command=["docker", "run", image, "dafny", "verify", "/work/solution.dfy"],
+                    stdout="",
+                    stderr=str(exc),
+                    sandbox="docker",
+                    sandbox_error=str(exc),
+                )
+        else:
+            executable = dafny_executable or os.getenv("SPECORACLE_DAFNY", "dafny")
+            if runner is None and _missing_executable(executable):
+                return _dafny_verification_result(
+                    verified=False,
+                    status="tool_missing",
+                    exit_code=127,
+                    start=time.monotonic(),
+                    command=[executable, "verify", str(source_path)],
+                    stdout="",
+                    stderr="",
+                    sandbox="host",
+                    sandbox_error=(
+                        f"Dafny executable {executable!r} was not found on PATH. "
+                        "Install Dafny locally or run the Docker sandbox with "
+                        "`python3 -m specoracle.cli sandbox prepare`."
+                    ),
+                )
+            command = [executable, "verify", str(source_path)]
+        return _run_dafny_verification_command(
+            command,
+            timeout_seconds=timeout_seconds,
+            runner=runner,
+            sandbox=sandbox,
+        )
+
+
+def compile_dafny_to_python(
+    dfy_code: str,
+    *,
+    timeout_seconds: float = 30.0,
+    runner: DafnyRunner | None = None,
+    dafny_executable: str | None = None,
+    sandbox: str = "host",
+    docker_image: str | None = None,
+    cli_style: str = "modern",
+) -> DafnyCompilationResult:
+    """Translate Dafny to Python and compute metrics on the compiled Python."""
+    with tempfile.TemporaryDirectory(prefix="specoracle_dafny_compile_") as temp_dir:
+        temp_path = Path(temp_dir)
+        source_path = temp_path / "solution.dfy"
+        output_dir = temp_path / "compiled"
+        output_dir.mkdir()
+        output_base = output_dir / "solution"
+        source_path.write_text(dfy_code, encoding="utf-8")
+
+        if sandbox == "docker":
+            image = docker_image or os.getenv("SPECORACLE_DAFNY_IMAGE", DEFAULT_PYTEST_DOCKER_IMAGE)
+            inner_command = _dafny_compile_inner_command(
+                source_path=Path("/work/solution.dfy"),
+                output_base=Path("/work/compiled/solution"),
+                executable="dafny",
+                cli_style=cli_style,
+            )
+            try:
+                command = _docker_dafny_command(
+                    inner_command,
+                    temp_path=temp_path,
+                    image=image,
+                )
+            except FileNotFoundError as exc:
+                return _dafny_compilation_result(
+                    translated=False,
+                    status="tool_missing",
+                    exit_code=127,
+                    start=time.monotonic(),
+                    command=["docker", "run", image, *inner_command],
+                    stdout="",
+                    stderr=str(exc),
+                    sandbox="docker",
+                    compiled_python="",
+                    compiled_python_path=None,
+                    compiled_static_metrics=None,
+                    sandbox_error=str(exc),
+                )
+        else:
+            executable = dafny_executable or os.getenv("SPECORACLE_DAFNY", "dafny")
+            command = _dafny_compile_inner_command(
+                source_path=source_path,
+                output_base=output_base,
+                executable=executable,
+                cli_style=cli_style,
+            )
+            if runner is None and _missing_executable(executable):
+                return _dafny_compilation_result(
+                    translated=False,
+                    status="tool_missing",
+                    exit_code=127,
+                    start=time.monotonic(),
+                    command=command,
+                    stdout="",
+                    stderr="",
+                    sandbox="host",
+                    compiled_python="",
+                    compiled_python_path=None,
+                    compiled_static_metrics=None,
+                    sandbox_error=(
+                        f"Dafny executable {executable!r} was not found on PATH. "
+                        "Install Dafny locally or run the Docker sandbox with "
+                        "`python3 -m specoracle.cli sandbox prepare`."
+                    ),
+                )
+
+        start = time.monotonic()
+        try:
+            completed = _run_subprocess(command, timeout_seconds=timeout_seconds, runner=runner)
+        except subprocess.TimeoutExpired as exc:
+            return _dafny_compilation_result(
+                translated=False,
+                status="timeout",
+                exit_code=124,
+                start=start,
+                command=command,
+                stdout=_coerce_output(exc.stdout),
+                stderr=_coerce_output(exc.stderr),
+                sandbox=sandbox,
+                timed_out=True,
+                compiled_python="",
+                compiled_python_path=None,
+                compiled_static_metrics=None,
+            )
+        except FileNotFoundError as exc:
+            return _dafny_compilation_result(
+                translated=False,
+                status="tool_missing",
+                exit_code=127,
+                start=start,
+                command=command,
+                stdout="",
+                stderr=str(exc),
+                sandbox=sandbox,
+                compiled_python="",
+                compiled_python_path=None,
+                compiled_static_metrics=None,
+                sandbox_error=str(exc),
+            )
+
+        stdout = _coerce_output(completed.stdout)
+        stderr = _coerce_output(completed.stderr)
+        verified_count, error_count = _parse_dafny_counts(stdout + "\n" + stderr)
+        if completed.returncode != 0:
+            return _dafny_compilation_result(
+                translated=False,
+                status="translation_failed",
+                exit_code=completed.returncode,
+                start=start,
+                command=command,
+                stdout=stdout,
+                stderr=stderr,
+                sandbox=sandbox,
+                compiled_python="",
+                compiled_python_path=None,
+                compiled_static_metrics=None,
+                verified_count=verified_count,
+                error_count=error_count,
+            )
+
+        compiled_path = _find_compiled_python(output_dir)
+        if compiled_path is None:
+            return _dafny_compilation_result(
+                translated=False,
+                status="compiled_python_missing",
+                exit_code=completed.returncode,
+                start=start,
+                command=command,
+                stdout=stdout,
+                stderr=stderr,
+                sandbox=sandbox,
+                compiled_python="",
+                compiled_python_path=None,
+                compiled_static_metrics=None,
+                verified_count=verified_count,
+                error_count=error_count,
+            )
+
+        compiled_python = compiled_path.read_text(encoding="utf-8")
+        metrics = compute_static_metrics(compiled_python)
+        return _dafny_compilation_result(
+            translated=True,
+            status="translated",
+            exit_code=completed.returncode,
+            start=start,
+            command=command,
+            stdout=stdout,
+            stderr=stderr,
+            sandbox=sandbox,
+            compiled_python=compiled_python,
+            compiled_python_path=str(compiled_path),
+            compiled_static_metrics=metrics,
+            verified_count=verified_count,
+            error_count=error_count,
+        )
+
+
 def judge_code(
     *,
     task: Task,
@@ -452,15 +738,18 @@ def prepare_pytest_sandbox(*, image: str = DEFAULT_PYTEST_DOCKER_IMAGE) -> None:
         text=True,
         check=False,
     )
-    if inspected.returncode == 0:
+    if inspected.returncode == 0 and _docker_image_has_sandbox_tools(image):
         return
 
     dockerfile_text = PYTEST_DOCKERFILE.replace(
-        "python:3.11-alpine",
+        "mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim",
         PYTEST_SANDBOX_BASE_IMAGE,
     ).replace(
-        "pytest==9.0.2",
-        f"pytest=={PYTEST_SANDBOX_PYTEST_VERSION}",
+        "PYTEST_VERSION=9.0.2",
+        f"PYTEST_VERSION={PYTEST_SANDBOX_PYTEST_VERSION}",
+    ).replace(
+        "DAFNY_VERSION=4.*",
+        f"DAFNY_VERSION={PYTEST_SANDBOX_DAFNY_VERSION}",
     )
     with tempfile.TemporaryDirectory(prefix="specoracle_docker_build_") as temp_dir:
         dockerfile = Path(temp_dir) / "Dockerfile"
@@ -505,3 +794,249 @@ def benchmark_pytest_sandbox(
         "min_seconds": round(min(durations), 3),
         "max_seconds": round(max(durations), 3),
     }
+
+
+def _run_dafny_verification_command(
+    command: Sequence[str],
+    *,
+    timeout_seconds: float,
+    runner: DafnyRunner | None,
+    sandbox: str,
+) -> DafnyVerificationResult:
+    start = time.monotonic()
+    try:
+        completed = _run_subprocess(command, timeout_seconds=timeout_seconds, runner=runner)
+    except subprocess.TimeoutExpired as exc:
+        return _dafny_verification_result(
+            verified=False,
+            status="timeout",
+            exit_code=124,
+            start=start,
+            command=command,
+            stdout=_coerce_output(exc.stdout),
+            stderr=_coerce_output(exc.stderr),
+            sandbox=sandbox,
+            timed_out=True,
+        )
+    except FileNotFoundError as exc:
+        return _dafny_verification_result(
+            verified=False,
+            status="tool_missing",
+            exit_code=127,
+            start=start,
+            command=command,
+            stdout="",
+            stderr=str(exc),
+            sandbox=sandbox,
+            sandbox_error=str(exc),
+        )
+
+    stdout = _coerce_output(completed.stdout)
+    stderr = _coerce_output(completed.stderr)
+    verified_count, error_count = _parse_dafny_counts(stdout + "\n" + stderr)
+    verified = completed.returncode == 0 and error_count in {None, 0}
+    return _dafny_verification_result(
+        verified=verified,
+        status="verified" if verified else "verification_failed",
+        exit_code=completed.returncode,
+        start=start,
+        command=command,
+        stdout=stdout,
+        stderr=stderr,
+        sandbox=sandbox,
+        verified_count=verified_count,
+        error_count=error_count,
+    )
+
+
+def _run_subprocess(
+    command: Sequence[str],
+    *,
+    timeout_seconds: float,
+    runner: DafnyRunner | None,
+) -> CompletedProcessLike:
+    if runner is not None:
+        return runner(command, timeout_seconds)
+    return subprocess.run(
+        list(command),
+        capture_output=True,
+        text=True,
+        timeout=timeout_seconds,
+        check=False,
+    )
+
+
+def _dafny_compile_inner_command(
+    *,
+    source_path: Path,
+    output_base: Path,
+    executable: str,
+    cli_style: str,
+) -> list[str]:
+    if cli_style == "legacy":
+        return [
+            executable,
+            "/compile:0",
+            "/spillTargetCode:1",
+            "/compileTarget:py",
+            f"/out:{output_base}",
+            str(source_path),
+        ]
+    if cli_style != "modern":
+        raise ValueError(f"unknown Dafny cli_style: {cli_style}")
+    return [
+        executable,
+        "translate",
+        "py",
+        f"--output:{output_base}",
+        str(source_path),
+    ]
+
+
+def _docker_dafny_command(
+    inner_command: Sequence[str],
+    *,
+    temp_path: Path,
+    image: str,
+) -> list[str]:
+    if shutil.which("docker") is None:
+        raise FileNotFoundError("docker executable was not found on PATH")
+    return [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--memory",
+        "768m",
+        "--cpus",
+        "1.0",
+        "--pids-limit",
+        "256",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "-e",
+        "HOME=/tmp",
+        "-e",
+        "DOTNET_CLI_HOME=/tmp",
+        "--mount",
+        f"type=bind,source={temp_path},target=/work",
+        "-w",
+        "/work",
+        image,
+        *inner_command,
+    ]
+
+
+def _missing_executable(executable: str) -> bool:
+    if os.sep in executable:
+        return not Path(executable).exists()
+    return shutil.which(executable) is None
+
+
+def _parse_dafny_counts(output: str) -> tuple[int | None, int | None]:
+    match = re.search(r"verifier finished with\s+(\d+)\s+verified,\s+(\d+)\s+errors", output)
+    if not match:
+        return None, None
+    return int(match.group(1)), int(match.group(2))
+
+
+def _find_compiled_python(output_dir: Path) -> Path | None:
+    candidates = sorted(output_dir.rglob("*.py"))
+    for path in candidates:
+        if path.name != "DafnyRuntime.py" and not path.name.startswith("_dafny"):
+            return path
+    return candidates[0] if candidates else None
+
+
+def _docker_image_has_sandbox_tools(image: str) -> bool:
+    checked = subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            image,
+            "sh",
+            "-lc",
+            "python -m pytest --version >/dev/null "
+            "&& python -c 'import z3' "
+            "&& z3 --version >/dev/null "
+            "&& dotnet --info >/dev/null "
+            "&& dafny --version >/dev/null",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=45,
+        check=False,
+    )
+    return checked.returncode == 0
+
+
+def _dafny_verification_result(
+    *,
+    verified: bool,
+    status: str,
+    exit_code: int,
+    start: float,
+    command: Sequence[str],
+    stdout: str,
+    stderr: str,
+    sandbox: str,
+    timed_out: bool = False,
+    verified_count: int | None = None,
+    error_count: int | None = None,
+    sandbox_error: str | None = None,
+) -> DafnyVerificationResult:
+    return DafnyVerificationResult(
+        verified=verified,
+        status=status,
+        exit_code=exit_code,
+        duration_seconds=round(time.monotonic() - start, 3),
+        timed_out=timed_out,
+        sandbox=sandbox,
+        command=tuple(command),
+        stdout=stdout,
+        stderr=stderr,
+        verified_count=verified_count,
+        error_count=error_count,
+        sandbox_error=sandbox_error,
+    )
+
+
+def _dafny_compilation_result(
+    *,
+    translated: bool,
+    status: str,
+    exit_code: int,
+    start: float,
+    command: Sequence[str],
+    stdout: str,
+    stderr: str,
+    sandbox: str,
+    compiled_python: str,
+    compiled_python_path: str | None,
+    compiled_static_metrics: StaticMetrics | None,
+    timed_out: bool = False,
+    verified_count: int | None = None,
+    error_count: int | None = None,
+    sandbox_error: str | None = None,
+) -> DafnyCompilationResult:
+    return DafnyCompilationResult(
+        translated=translated,
+        status=status,
+        exit_code=exit_code,
+        duration_seconds=round(time.monotonic() - start, 3),
+        timed_out=timed_out,
+        sandbox=sandbox,
+        command=tuple(command),
+        stdout=stdout,
+        stderr=stderr,
+        compiled_python=compiled_python,
+        compiled_python_path=compiled_python_path,
+        compiled_static_metrics=compiled_static_metrics,
+        verified_count=verified_count,
+        error_count=error_count,
+        sandbox_error=sandbox_error,
+    )

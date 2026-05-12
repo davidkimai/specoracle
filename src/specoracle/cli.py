@@ -305,7 +305,14 @@ def _add_generation_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--modes",
         nargs="+",
-        choices=("baseline", "oracle", "oracle_karpathy", "neutral_style", "hybrid"),
+        choices=(
+            "baseline",
+            "oracle",
+            "oracle_karpathy",
+            "neutral_style",
+            "hybrid",
+            "modular_discovery",
+        ),
         default=["baseline", "oracle"],
         help="generation modes to run",
     )
@@ -1178,7 +1185,14 @@ def _as_provider(value: str) -> Provider:
 
 
 def _as_generation_mode(value: str) -> GenerationMode:
-    if value in {"baseline", "oracle", "oracle_karpathy", "neutral_style", "hybrid"}:
+    if value in {
+        "baseline",
+        "oracle",
+        "oracle_karpathy",
+        "neutral_style",
+        "hybrid",
+        "modular_discovery",
+    }:
         return value  # type: ignore[return-value]
     raise ValueError(f"unknown generation mode: {value}")
 

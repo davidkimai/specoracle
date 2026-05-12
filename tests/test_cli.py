@@ -231,3 +231,58 @@ Prefer one small obvious implementation.
     payload = json.loads(generation_path.read_text(encoding="utf-8"))
     assert payload["oracle_spec_label"] == "custom_spec_override"
     assert payload["oracle_spec"] == "Prefer one small obvious implementation."
+
+
+def test_cli_generate_accepts_modular_discovery_mode(tmp_path: Path) -> None:
+    dataset = tmp_path / "dataset"
+    output = tmp_path / "run"
+    dataset.mkdir()
+    (dataset / "task.yaml").write_text(
+        """
+id: answer
+entry_point: answer
+prompt: |
+  Implement answer() -> int returning 42.
+test_code: |
+  from solution import answer
+
+  def test_answer():
+      assert answer() == 42
+day2_prompt: |
+  Add answer_text() -> str returning "42".
+day2_test_code: |
+  def test_placeholder():
+      assert True
+day2_stressors: [formal_correctness]
+human_reference: |
+  def answer():
+      return 42
+mock_solution: |
+  def answer():
+      return 42
+mock_day2_solution: |
+  def answer():
+      return 42
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    exit_code = main(
+        [
+            "generate",
+            "--dataset",
+            str(dataset),
+            "--out",
+            str(output),
+            "--provider",
+            "mock",
+            "--modes",
+            "modular_discovery",
+        ]
+    )
+
+    assert exit_code == 0
+    generation_path = next(output.rglob("generation.json"))
+    payload = json.loads(generation_path.read_text(encoding="utf-8"))
+    assert payload["variant"] == "modular_discovery_generation"
+    assert payload["metadata"]["modular_discovery"]["selected_skill_ids"] == ["dafny"]

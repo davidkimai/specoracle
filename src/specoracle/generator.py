@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import re
 from dataclasses import asdict, dataclass
@@ -17,6 +18,7 @@ from specoracle.config import (
     system_prompt_for_mode,
     variant_name,
 )
+from specoracle.skills_registry import get_skill, get_skill_tool_schema, render_skill_catalog
 
 
 class LLMClient(Protocol):
@@ -28,6 +30,20 @@ class LLMClient(Protocol):
         settings: ModelSettings,
     ) -> str:
         """Return a single text completion for a system/user prompt pair."""
+
+
+@dataclass(frozen=True)
+class ToolCall:
+    name: str
+    input: dict[str, Any]
+    id: str | None = None
+
+
+@dataclass(frozen=True)
+class ToolCompletion:
+    text: str
+    tool_calls: tuple[ToolCall, ...] = ()
+    raw_response: str = ""
 
 
 @dataclass(frozen=True)
@@ -49,6 +65,7 @@ class GenerationResult:
     system_prompt: str
     user_prompt: str
     hybrid: dict[str, Any] | None = None
+    metadata: dict[str, Any] | None = None
 
     def to_json_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -129,6 +146,44 @@ class AnthropicClient:
                 parts.append(str(text))
         return "\n".join(parts).strip()
 
+    def complete_with_tools(
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        tools: list[dict[str, Any]],
+        settings: ModelSettings,
+    ) -> ToolCompletion:
+        self.last_effective_temperature = settings.temperature
+        response = self._client.messages.create(
+            model=settings.model,
+            max_tokens=settings.max_tokens,
+            temperature=settings.temperature,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}],
+            tools=tools,
+            timeout=settings.timeout_seconds,
+        )
+        text_parts: list[str] = []
+        tool_calls: list[ToolCall] = []
+        for block in getattr(response, "content", []):
+            block_type = getattr(block, "type", "")
+            if block_type == "text" and getattr(block, "text", None):
+                text_parts.append(str(block.text))
+            elif block_type == "tool_use":
+                tool_calls.append(
+                    ToolCall(
+                        name=str(getattr(block, "name", "")),
+                        input=dict(getattr(block, "input", {}) or {}),
+                        id=getattr(block, "id", None),
+                    )
+                )
+        return ToolCompletion(
+            text="\n".join(text_parts).strip(),
+            tool_calls=tuple(tool_calls),
+            raw_response=str(response),
+        )
+
 
 class GoogleClient:
     def __init__(self, api_key: str | None = None) -> None:
@@ -175,6 +230,7 @@ class MockLLMClient:
     """Offline client for smoke tests; not a research model."""
 
     last_effective_temperature: float | None = None
+    tool_call_count = 0
 
     def complete(
         self,
@@ -190,6 +246,22 @@ class MockLLMClient:
                 '"strengths": ["simple control flow"], "weaknesses": ["mock judgment"]}'
             )
         return "def solution(*args, **kwargs):\n    raise NotImplementedError('mock task fixture missing')\n"
+
+    def complete_with_tools(
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        tools: list[dict[str, Any]],
+        settings: ModelSettings,
+    ) -> ToolCompletion:
+        self.last_effective_temperature = settings.temperature
+        self.tool_call_count += 1
+        return ToolCompletion(
+            text="",
+            tool_calls=(ToolCall(name="get_skill", input={"skill_id": "dafny"}, id="mock_tool_0"),),
+            raw_response='{"tool_call": {"name": "get_skill", "input": {"skill_id": "dafny"}}}',
+        )
 
 
 def build_llm_client(settings: ModelSettings) -> LLMClient:
@@ -237,6 +309,9 @@ class SpecOracleGenerator:
     def neutral_style_generation(self, task: Task) -> GenerationResult:
         return self.generate(task, mode="neutral_style")
 
+    def modular_discovery_generation(self, task: Task) -> GenerationResult:
+        return self.generate(task, mode="modular_discovery")
+
     def generate(
         self,
         task: Task,
@@ -244,6 +319,9 @@ class SpecOracleGenerator:
         mode: GenerationMode,
         sample_index: int = 0,
     ) -> GenerationResult:
+        if mode == "modular_discovery":
+            return self._generate_modular_discovery(task, sample_index=sample_index)
+
         system_prompt = system_prompt_for_mode(mode, task=task)
         user_prompt = GENERATION_USER_TEMPLATE.format(
             task_id=task.id,
@@ -296,6 +374,108 @@ class SpecOracleGenerator:
             user_prompt=user_prompt,
         )
 
+    def _generate_modular_discovery(
+        self,
+        task: Task,
+        *,
+        sample_index: int,
+    ) -> GenerationResult:
+        system_prompt = system_prompt_for_mode("modular_discovery", task=task)
+        base_user_prompt = GENERATION_USER_TEMPLATE.format(
+            task_id=task.id,
+            entry_point=task.entry_point,
+            prompt=task.prompt.strip(),
+        )
+        tool_schema = get_skill_tool_schema()
+        discovery_prompt = (
+            f"{base_user_prompt}\n\n"
+            "Available skills:\n"
+            f"{render_skill_catalog()}\n\n"
+            "Use the get_skill tool to load the most relevant skill before solving. "
+            "If none apply, return final Python code directly."
+        )
+
+        first = _complete_with_tools_if_supported(
+            self._client,
+            system_prompt=system_prompt,
+            user_prompt=discovery_prompt,
+            tools=[tool_schema],
+            settings=self._settings,
+        )
+        selected_skill_ids: list[str] = []
+        tool_results: list[str] = []
+        for tool_call in first.tool_calls:
+            if tool_call.name != "get_skill":
+                continue
+            skill_id = str(tool_call.input.get("skill_id", ""))
+            skill = get_skill(skill_id)
+            selected_skill_ids.append(skill.skill_id)
+            tool_results.append(
+                "TOOL RESULT get_skill(skill_id={skill_id!r})\n"
+                "{content}".format(skill_id=skill.skill_id, content=skill.content)
+            )
+
+        if tool_results:
+            final_prompt = (
+                f"{base_user_prompt}\n\n"
+                + "\n\n".join(tool_results)
+                + "\n\nUse the loaded skill content as the active oracle. "
+                "Return the final complete Python module only."
+            )
+            raw_response = self._client.complete(
+                system_prompt=system_prompt,
+                user_prompt=final_prompt,
+                settings=self._settings,
+            )
+            user_prompt = final_prompt
+            raw_for_artifact = (
+                "FIRST TURN:\n"
+                f"{first.raw_response or first.text}\n\nSECOND TURN:\n{raw_response}"
+            )
+        else:
+            raw_response = first.text
+            user_prompt = discovery_prompt
+            raw_for_artifact = first.raw_response or first.text
+
+        code = extract_python_code(raw_response)
+        effective_temperature = getattr(
+            self._client,
+            "last_effective_temperature",
+            self._settings.temperature,
+        )
+        active_spec = (
+            "\n\n".join(tool_results)
+            if tool_results
+            else "No modular discovery skill was selected."
+        )
+        return GenerationResult(
+            task_id=task.id,
+            mode="modular_discovery",
+            variant=variant_name("modular_discovery"),
+            provider=self._settings.provider,
+            model=self._settings.model,
+            sample_index=sample_index,
+            requested_temperature=self._settings.temperature,
+            effective_temperature=effective_temperature,
+            entry_point=task.entry_point,
+            task=task.to_mapping(),
+            oracle_spec=active_spec,
+            oracle_spec_label="modular_discovery",
+            code=code,
+            raw_response=raw_for_artifact,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            metadata={
+                "modular_discovery": {
+                    "selected_skill_ids": selected_skill_ids,
+                    "available_skill_ids": tool_schema["input_schema"]["properties"]["skill_id"][
+                        "enum"
+                    ],
+                    "tool_call_count": len(first.tool_calls),
+                }
+            },
+        )
+
 
 _PYTHON_FENCE = re.compile(r"```(?:python|py)?\s*(.*?)```", re.IGNORECASE | re.DOTALL)
 
@@ -337,6 +517,9 @@ def generation_result_from_mapping(
         system_prompt=str(payload.get("system_prompt") or ""),
         user_prompt=str(payload.get("user_prompt") or ""),
         hybrid=dict(payload["hybrid"]) if isinstance(payload.get("hybrid"), dict) else None,
+        metadata=(
+            dict(payload["metadata"]) if isinstance(payload.get("metadata"), dict) else None
+        ),
     )
 
 
@@ -374,13 +557,78 @@ def _is_unsupported_temperature_error(exc: Exception) -> bool:
     return "unsupported parameter" in message and "temperature" in message
 
 
+def _complete_with_tools_if_supported(
+    client: LLMClient,
+    *,
+    system_prompt: str,
+    user_prompt: str,
+    tools: list[dict[str, Any]],
+    settings: ModelSettings,
+) -> ToolCompletion:
+    complete_with_tools = getattr(client, "complete_with_tools", None)
+    if callable(complete_with_tools):
+        return complete_with_tools(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            tools=tools,
+            settings=settings,
+        )
+
+    fallback_prompt = (
+        f"{user_prompt}\n\n"
+        "Tool calling is not available in this client. If you need a skill, return "
+        "strict JSON in this shape and no prose: "
+        '{"tool_call":{"name":"get_skill","input":{"skill_id":"dafny"}}}. '
+        "Otherwise return final Python code."
+    )
+    text = client.complete(
+        system_prompt=system_prompt,
+        user_prompt=fallback_prompt,
+        settings=settings,
+    )
+    return ToolCompletion(
+        text=text,
+        tool_calls=_extract_text_tool_calls(text),
+        raw_response=text,
+    )
+
+
+def _extract_text_tool_calls(text: str) -> tuple[ToolCall, ...]:
+    stripped = text.strip()
+    start = stripped.find("{")
+    end = stripped.rfind("}")
+    if start < 0 or end < start:
+        return ()
+    try:
+        payload = json.loads(stripped[start : end + 1])
+    except json.JSONDecodeError:
+        return ()
+    raw_call = payload.get("tool_call") if isinstance(payload, dict) else None
+    if not isinstance(raw_call, dict):
+        return ()
+    name = raw_call.get("name")
+    raw_input = raw_call.get("input")
+    if name != "get_skill" or not isinstance(raw_input, dict):
+        return ()
+    return (ToolCall(name="get_skill", input=dict(raw_input)),)
+
+
 def _as_generation_mode(value: Any) -> GenerationMode:
-    if value in {"baseline", "oracle", "oracle_karpathy", "neutral_style", "hybrid"}:
+    if value in {
+        "baseline",
+        "oracle",
+        "oracle_karpathy",
+        "neutral_style",
+        "hybrid",
+        "modular_discovery",
+    }:
         return value
     raise ValueError(f"unknown generation mode in artifact: {value}")
 
 
 def _oracle_source_for_mode(mode: GenerationMode) -> OracleSource:
+    if mode == "modular_discovery":
+        return "dafny"
     if mode == "oracle_karpathy":
         return "karpathy"
     return "zen"

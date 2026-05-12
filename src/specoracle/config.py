@@ -5,8 +5,15 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 Provider = Literal["openai", "anthropic", "google", "mock"]
-GenerationMode = Literal["baseline", "oracle", "oracle_karpathy", "neutral_style", "hybrid"]
-OracleSource = Literal["zen", "karpathy"]
+GenerationMode = Literal[
+    "baseline",
+    "oracle",
+    "oracle_karpathy",
+    "neutral_style",
+    "hybrid",
+    "modular_discovery",
+]
+OracleSource = Literal["zen", "karpathy", "dafny"]
 
 
 ZEN_OF_PYTHON_PRIMITIVES: tuple[str, ...] = (
@@ -81,6 +88,14 @@ NEUTRAL_STYLE_SYSTEM_PROMPT = """\
 You are a secure program synthesis engineer. Generate a correct, clean,
 maintainable Python module for the task. Return only Python code. Do not include
 markdown prose.
+"""
+
+MODULAR_DISCOVERY_SYSTEM_PROMPT = """\
+You are a secure program synthesis engineer. Generate a correct, reviewable Python
+module for the task. You have access to skill discovery before solving. Load the
+most relevant skill with get_skill when a listed skill applies, then use that
+skill as the active oracle for the final implementation. Return only Python code
+in the final answer. Do not include markdown prose.
 """
 
 ZEN_ORACLE_SYSTEM_PROMPT = f"""\
@@ -318,6 +333,8 @@ def default_model_settings(
 def oracle_spec_for_task(task: Task, *, source: OracleSource = "zen") -> str:
     if task.custom_spec_override:
         return task.custom_spec_override.strip()
+    if source == "dafny":
+        return "Dafny formal verification skill loaded through modular discovery."
     if source == "karpathy":
         return KARPATHY_ORACLE_SPEC
     return ZEN_ORACLE_SPEC
@@ -326,6 +343,8 @@ def oracle_spec_for_task(task: Task, *, source: OracleSource = "zen") -> str:
 def oracle_spec_label_for_task(task: Task, *, source: OracleSource = "zen") -> str:
     if task.custom_spec_override:
         return "custom_spec_override"
+    if source == "dafny":
+        return "dafny_formal_verification"
     if source == "karpathy":
         return "karpathy_oracle"
     return "zen_of_python"
@@ -334,6 +353,8 @@ def oracle_spec_label_for_task(task: Task, *, source: OracleSource = "zen") -> s
 def system_prompt_for_mode(mode: GenerationMode, *, task: Task | None = None) -> str:
     if mode == "baseline":
         return BASELINE_SYSTEM_PROMPT
+    if mode == "modular_discovery":
+        return MODULAR_DISCOVERY_SYSTEM_PROMPT
     if mode == "neutral_style":
         return NEUTRAL_STYLE_SYSTEM_PROMPT
     if mode == "oracle_karpathy":
@@ -356,6 +377,8 @@ def variant_name(mode: GenerationMode) -> str:
         return "oracle_karpathy_generation"
     if mode == "hybrid":
         return "hybrid_generation"
+    if mode == "modular_discovery":
+        return "modular_discovery_generation"
     if mode == "neutral_style":
         return "neutral_style_generation"
     raise ValueError(f"unknown generation mode: {mode}")

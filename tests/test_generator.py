@@ -1,7 +1,14 @@
 import pytest
 
 from specoracle.config import KARPATHY_ORACLE_SPEC, ModelSettings, Task
-from specoracle.generator import MockLLMClient, OpenAIClient, SpecOracleGenerator, extract_python_code
+from specoracle.generator import (
+    MockLLMClient,
+    OpenAIClient,
+    SpecOracleGenerator,
+    ToolCall,
+    ToolCompletion,
+    extract_python_code,
+)
 
 
 def test_extract_python_code_prefers_fenced_python_block() -> None:
@@ -132,6 +139,50 @@ def test_neutral_style_generation_uses_neutral_prompt() -> None:
     assert result.variant == "neutral_style_generation"
     assert "maintainable Python" in result.system_prompt
     assert "Zen of Python primitives" not in result.system_prompt
+
+
+def test_modular_discovery_loads_skill_and_records_metadata() -> None:
+    class ToolAwareClient:
+        last_effective_temperature: float | None = None
+
+        def __init__(self) -> None:
+            self.final_prompt = ""
+
+        def complete_with_tools(self, *, system_prompt, user_prompt, tools, settings):
+            self.last_effective_temperature = settings.temperature
+            assert tools[0]["name"] == "get_skill"
+            assert "dafny" in user_prompt
+            return ToolCompletion(
+                text="",
+                tool_calls=(ToolCall(name="get_skill", input={"skill_id": "dafny"}, id="t0"),),
+                raw_response="tool call",
+            )
+
+        def complete(self, *, system_prompt, user_prompt, settings):
+            self.final_prompt = user_prompt
+            return "def answer():\n    return 42\n"
+
+    task = Task(
+        id="modular",
+        prompt="Implement answer() -> int returning 42.",
+        test_code="from solution import answer\n\ndef test_answer():\n    assert answer() == 42\n",
+        day2_prompt="Add answer_text() -> str returning '42'.",
+        day2_test_code="def test_placeholder():\n    assert True\n",
+        day2_stressors=("formal_correctness",),
+        human_reference="def answer():\n    return 42\n",
+        entry_point="answer",
+    )
+    client = ToolAwareClient()
+    generator = SpecOracleGenerator(client, ModelSettings(provider="mock", model="mock-local"))
+
+    result = generator.modular_discovery_generation(task)
+
+    assert result.mode == "modular_discovery"
+    assert result.variant == "modular_discovery_generation"
+    assert result.code == "def answer():\n    return 42"
+    assert result.metadata is not None
+    assert result.metadata["modular_discovery"]["selected_skill_ids"] == ["dafny"]
+    assert "Dafny Formal Verification" in client.final_prompt
 
 
 def test_openai_client_retries_without_temperature_when_model_rejects_it() -> None:

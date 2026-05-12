@@ -1,10 +1,15 @@
+import subprocess
+from pathlib import Path
+
 from specoracle.config import ModelSettings, Task
 from specoracle.evaluator import (
     DEFAULT_PYTEST_DOCKER_IMAGE,
+    compile_dafny_to_python,
     compute_static_metrics,
     evaluate_code,
     prepare_pytest_sandbox,
     run_pytest_for_code,
+    verify_dafny_code,
 )
 from specoracle.generator import MockLLMClient
 
@@ -97,6 +102,60 @@ def test_pytest_runner_fails_cleanly_when_sandbox_image_missing() -> None:
     assert result.exit_code == 125
     assert result.sandbox_error is not None
     assert "specoracle sandbox prepare" in result.sandbox_error
+
+
+def test_dafny_verifier_parses_success_from_injected_runner() -> None:
+    def runner(command, timeout):
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout="Dafny program verifier finished with 2 verified, 0 errors\n",
+            stderr="",
+        )
+
+    result = verify_dafny_code("method Main() {}\n", runner=runner)
+
+    assert result.verified
+    assert result.status == "verified"
+    assert result.verified_count == 2
+    assert result.error_count == 0
+    assert result.command[1] == "verify"
+
+
+def test_dafny_verifier_reports_missing_tool_without_runner() -> None:
+    result = verify_dafny_code(
+        "method Main() {}\n",
+        dafny_executable="specoracle-missing-dafny-for-test",
+    )
+
+    assert not result.verified
+    assert result.status == "tool_missing"
+    assert result.exit_code == 127
+    assert result.sandbox_error is not None
+
+
+def test_dafny_compile_extracts_python_and_metrics_from_injected_runner() -> None:
+    def runner(command, timeout):
+        output_arg = next(arg for arg in command if str(arg).startswith("--output:"))
+        output_base = Path(str(output_arg).split(":", 1)[1])
+        output_path = output_base.with_suffix(".py")
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text("def solution():\n    return 42\n", encoding="utf-8")
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout="Dafny program verifier finished with 1 verified, 0 errors\n",
+            stderr="",
+        )
+
+    result = compile_dafny_to_python("method Solution() returns (x: int) { x := 42; }\n", runner=runner)
+
+    assert result.translated
+    assert result.status == "translated"
+    assert "def solution" in result.compiled_python
+    assert result.compiled_static_metrics is not None
+    assert result.compiled_static_metrics.syntax_ok
+    assert result.command[1:3] == ("translate", "py")
 
 
 def test_evaluate_code_with_mock_judge() -> None:

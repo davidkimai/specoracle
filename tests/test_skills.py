@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from specoracle.skills import load_skill_oracle
+from specoracle.skills_registry import get_skill, get_skill_tool_schema, render_skill_catalog
 
 
 def test_load_skill_oracle_parses_frontmatter_and_body(tmp_path: Path) -> None:
@@ -46,7 +47,21 @@ def test_packaged_skill_oracles_parse() -> None:
     for path in [
         Path("data/skills/zen-of-python-oracle/SKILL.md"),
         Path("data/skills/karpathy-guidelines-oracle/SKILL.md"),
+        Path("data/skills/dafny-formal-verification/SKILL.md"),
     ]:
         name, body = load_skill_oracle(path)
         assert name
         assert len(body) > 100
+
+
+def test_skills_registry_loads_dafny_and_exposes_strict_tool_schema() -> None:
+    skill = get_skill("dafny")
+    schema = get_skill_tool_schema()
+
+    assert skill.name == "dafny-formal-verification"
+    assert "requires" in skill.content
+    assert "dafny" in render_skill_catalog()
+    assert schema["name"] == "get_skill"
+    assert schema["input_schema"]["required"] == ["skill_id"]
+    assert schema["input_schema"]["additionalProperties"] is False
+    assert "dafny" in schema["input_schema"]["properties"]["skill_id"]["enum"]
