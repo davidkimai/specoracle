@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured with clear separation of concerns across small, pure helpers that each do one thing. The main function reads like a clean narrative: validate, collect tasks, build graph, run Kahn's algorithm, check for cycles. Control flow is flat, data movement is explicit (no hidden mutation, input is not mutated), and names are self-explanatory. The validation helper is thorough and raises clear typed errors. The only mild concerns are that `_validate_dependencies` accepts `object` and does isinstance checks that feel slightly over-engineered for a task that just says 'dict[str, list[str]]', and the `dependents` dict uses `set[str]` internally but the type annotation on the return is `dict[str, set[str]]` while it's actually a `defaultdict` \u2014 a minor explicitness gap. The validation layer is arguably speculative abstraction given the functional spec doesn't mention type-checking inputs, adding complexity without clear payoff. Overall the architecture is clean, auditable, and idiomatic without being clever.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is well-structured with clear separation of concerns across small, pure helpers that each do one thing. The main function reads like a clean narrative: validate, collect tasks, build graph, run Kahn's algorithm, check for cycles. Control flow is flat, data movement is explicit (no hidden mutation, input is not mutated), and names are self-explanatory. The validation helper is thorough and raises clear typed errors. The only mild concerns are that `_validate_dependencies` accepts `object` and does isinstance checks that feel slightly over-engineered for a task that just says 'dict[str, list[str]]', and the `dependents` dict uses `set[str]` internally but the type annotation on the return is `dict[str, set[str]]` while it's actually a `defaultdict` \u2014 a minor explicitness gap. The validation layer is arguably speculative abstraction given the functional spec doesn't mention type-checking inputs, adding complexity without clear payoff. Overall the architecture is clean, auditable, and idiomatic without being clever.\",\n  \"strengths\": [\n    \"Clean decomposition into small, single-purpose helpers (_validate_dependencies, _collect_tasks, _build_graph)\",\n    \"Main function reads as a clear linear narrative of the algorithm\",\n    \"No mutation of input; explicit data flow throughout\",\n    \"Cycle detection is correct and raises a clear ValueError with a descriptive message\",\n    \"Deduplication of prerequisites via set prevents double-counting in prerequisite_count\",\n    \"Alphabetical sorting is applied consistently at each batch boundary\"\n  ],\n  \"weaknesses\": [\n    \"_validate_dependencies is speculative over-engineering not required by the spec, adding noise\",\n    \"Using defaultdict internally but annotating return as dict[str, set[str]] is a minor explicitness gap\",\n    \"The `object` parameter type on _validate_dependencies is unnecessarily broad and adds isinstance ceremony\",\n    \"Minor: completed_count tracking is redundant since len(tasks) - sum(len(b) for b in batches) would suffice, but it's not harmful\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean decomposition into small, single-purpose helpers (_validate_dependencies, _collect_tasks, _build_graph)",
+      "Main function reads as a clear linear narrative of the algorithm",
+      "No mutation of input; explicit data flow throughout",
+      "Cycle detection is correct and raises a clear ValueError with a descriptive message",
+      "Deduplication of prerequisites via set prevents double-counting in prerequisite_count",
+      "Alphabetical sorting is applied consistently at each batch boundary"
+    ],
+    "weaknesses": [
+      "_validate_dependencies is speculative over-engineering not required by the spec, adding noise",
+      "Using defaultdict internally but annotating return as dict[str, set[str]] is a minor explicitness gap",
+      "The `object` parameter type on _validate_dependencies is unnecessarily broad and adds isinstance ceremony",
+      "Minor: completed_count tracking is redundant since len(tasks) - sum(len(b) for b in batches) would suffice, but it's not harmful"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.467,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.25,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 4,
+    "loc": 57,
+    "maintainability_index": 63.493,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

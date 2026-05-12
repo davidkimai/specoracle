@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and easy to audit locally. It uses ordinary threading primitives, keeps data movement explicit, raises clear errors, and avoids speculative abstractions. The lock scope is minimal and consistent across all three methods. The only minor issues are: the `isinstance(max_total, int)` check is slightly over-engineered for a duck-typed language (a simple `max_total <= 0` guard after a try/except or just trusting the type annotation would be more Pythonic), the redundant `_total` field alongside `_counts` adds a small maintenance surface (though it does make `total()` O(1) without summing), and the docstrings are verbose NumPy-style which adds bulk without proportional clarity gain for a small utility class. The `snapshot` filter for `count != 0` is correct but slightly speculative since counts can never go below 1 given the current API \u2014 a plain `dict(self._counts)` would be equally correct and simpler. Overall the architecture is sound and maintainable.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and easy to audit locally. It uses ordinary threading primitives, keeps data movement explicit, raises clear errors, and avoids speculative abstractions. The lock scope is minimal and consistent across all three methods. The only minor issues are: the `isinstance(max_total, int)` check is slightly over-engineered for a duck-typed language (a simple `max_total <= 0` guard after a try/except or just trusting the type annotation would be more Pythonic), the redundant `_total` field alongside `_counts` adds a small maintenance surface (though it does make `total()` O(1) without summing), and the docstrings are verbose NumPy-style which adds bulk without proportional clarity gain for a small utility class. The `snapshot` filter for `count != 0` is correct but slightly speculative since counts can never go below 1 given the current API \u2014 a plain `dict(self._counts)` would be equally correct and simpler. Overall the architecture is sound and maintainable.\",\n  \"strengths\": [\n    \"Flat control flow with guard clause at the top of increment\",\n    \"Lock used consistently and with minimal scope via context manager\",\n    \"Explicit data movement \u2014 no hidden mutation, no global state\",\n    \"Clear, descriptive error messages with relevant context\",\n    \"Snapshot returns a copy, correctly preventing external mutation\",\n    \"No metaprogramming or speculative extension points\"\n  ],\n  \"weaknesses\": [\n    \"isinstance check on max_total is over-engineered; a simple positivity check suffices for a typed interface\",\n    \"Redundant _total field alongside _counts creates a dual-write maintenance burden\",\n    \"Nonzero filter in snapshot is logically unnecessary given the API (counts only ever increase)\",\n    \"NumPy-style docstrings add significant bulk relative to the simplicity of the class\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clause at the top of increment",
+      "Lock used consistently and with minimal scope via context manager",
+      "Explicit data movement \u2014 no hidden mutation, no global state",
+      "Clear, descriptive error messages with relevant context",
+      "Snapshot returns a copy, correctly preventing external mutation",
+      "No metaprogramming or speculative extension points"
+    ],
+    "weaknesses": [
+      "isinstance check on max_total is over-engineered; a simple positivity check suffices for a typed interface",
+      "Redundant _total field alongside _counts creates a dual-write maintenance burden",
+      "Nonzero filter in snapshot is logically unnecessary given the API (counts only ever increase)",
+      "NumPy-style docstrings add significant bulk relative to the simplicity of the class"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.098,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 75,
+    "maintainability_index": 66.686,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "baseline_generation"
+}

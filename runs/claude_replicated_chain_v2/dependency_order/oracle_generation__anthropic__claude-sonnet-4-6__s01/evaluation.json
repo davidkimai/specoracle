@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate correctly implements Kahn's algorithm and produces correct results, but the implementation contains significant structural slop that violates the Zen of Python oracle. The `_in_degrees` function is a notable mess: it initializes `degrees` twice, contains a dead loop body (`pass`), has misleading comments, and ultimately discards all that work to return a one-liner that could have been written directly. This is the opposite of 'sparse enough to audit locally' \u2014 it's confusing dead code left in place. The `_build_graph` function also has a subtle issue: `graph.setdefault(task, list(prereqs))` will silently overwrite nothing if the key already exists, but if a task appears as both a key and a dependency value, the second `setdefault` call is harmless \u2014 this is fine, but the comment 'Does not mutate the input' is the only documentation of an important invariant. The `_kahn_batches` function double-sorts (once to initialize `ready`, then again at the end of each loop iteration), and the initial `sorted()` into a deque is immediately discarded when `batch = sorted(ready)` is called. The helper decomposition is reasonable in intent but the `_in_degrees` helper is actively harmful to readability and auditability. The `_reverse_edges` helper is clean and well-named. Overall, the architecture is sound but the execution has dead code, redundant operations, and a confusing helper that undermines local auditability.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The candidate correctly implements Kahn's algorithm and produces correct results, but the implementation contains significant structural slop that violates the Zen of Python oracle. The `_in_degrees` function is a notable mess: it initializes `degrees` twice, contains a dead loop body (`pass`), has misleading comments, and ultimately discards all that work to return a one-liner that could have been written directly. This is the opposite of 'sparse enough to audit locally' \u2014 it's confusing dead code left in place. The `_build_graph` function also has a subtle issue: `graph.setdefault(task, list(prereqs))` will silently overwrite nothing if the key already exists, but if a task appears as both a key and a dependency value, the second `setdefault` call is harmless \u2014 this is fine, but the comment 'Does not mutate the input' is the only documentation of an important invariant. The `_kahn_batches` function double-sorts (once to initialize `ready`, then again at the end of each loop iteration), and the initial `sorted()` into a deque is immediately discarded when `batch = sorted(ready)` is called. The helper decomposition is reasonable in intent but the `_in_degrees` helper is actively harmful to readability and auditability. The `_reverse_edges` helper is clean and well-named. Overall, the architecture is sound but the execution has dead code, redundant operations, and a confusing helper that undermines local auditability.\",\n  \"strengths\": [\n    \"Correct Kahn's algorithm implementation with cycle detection\",\n    \"_reverse_edges is clean, well-named, and easy to audit\",\n    \"Does not mutate input (copies prereqs list in _build_graph)\",\n    \"Includes tasks that only appear as dependency values\",\n    \"Clear ValueError message on cycle detection\"\n  ],\n  \"weaknesses\": [\n    \"_in_degrees contains dead code: double initialization of `degrees`, a dead loop with `pass`, and misleading comments before discarding all work\",\n    \"Redundant sorting: ready queue is sorted on initialization but immediately re-sorted via `batch = sorted(ready)` making the initial sort pointless\",\n    \"The deque is used inconsistently \u2014 initialized sorted, cleared, appended unsorted, then re-sorted at loop end, making the deque choice questionable\",\n    \"Comments in _in_degrees are actively misleading and suggest the author was confused during writing\",\n    \"The _build_graph docstring claims 'Does not mutate the input' but this is a critical invariant buried in a docstring rather than enforced structurally\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Correct Kahn's algorithm implementation with cycle detection",
+      "_reverse_edges is clean, well-named, and easy to audit",
+      "Does not mutate input (copies prereqs list in _build_graph)",
+      "Includes tasks that only appear as dependency values",
+      "Clear ValueError message on cycle detection"
+    ],
+    "weaknesses": [
+      "_in_degrees contains dead code: double initialization of `degrees`, a dead loop with `pass`, and misleading comments before discarding all work",
+      "Redundant sorting: ready queue is sorted on initialization but immediately re-sorted via `batch = sorted(ready)` making the initial sort pointless",
+      "The deque is used inconsistently \u2014 initialized sorted, cleared, appended unsorted, then re-sorted at loop end, making the deque choice questionable",
+      "Comments in _in_degrees are actively misleading and suggest the author was confused during writing",
+      "The _build_graph docstring claims 'Does not mutate the input' but this is a critical invariant buried in a docstring rather than enforced structurally"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.118,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_________________________ test_plans_parallel_batches __________________________\n\n    def test_plans_parallel_batches():\n        dependencies = {\n            \"deploy\": [\"test\"],\n            \"test\": [\"build\", \"lint\"],\n            \"build\": [],\n            \"lint\": [],\n        }\n    \n>       assert plan_batches(dependencies) == [[\"build\", \"lint\"], [\"test\"], [\"deploy\"]]\nE       AssertionError: assert [['build', 'l...], ['deploy']] == [['build', 'l...], ['deploy']]\nE         \nE         At index 0 diff: ['build', 'lint', 'test'] != ['build', 'lint']\nE         Right contains one more item: ['deploy']\nE         Use -v to get more diff\n\ntest_solution.py:14: AssertionError\n______________________________ test_detects_cycle ______________________________\n\n    def test_detects_cycle():\n>       with pytest.raises(ValueError):\nE       Failed: DID NOT RAISE <class 'ValueError'>\n\ntest_solution.py:18: Failed\n=========================== short test summary info ============================\nFAILED test_solution.py::test_plans_parallel_batches - AssertionError: assert...\nFAILED test_solution.py::test_detects_cycle - Failed: DID NOT RAISE <class 'V...\n2 failed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.8,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 5,
+    "loc": 76,
+    "maintainability_index": 75.698,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

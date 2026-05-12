@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed into small pure helpers that each do one thing. Control flow is straightforward with guard clauses handling invalid inputs early. Data movement is explicit, names are self-explanatory, and there is no speculative abstraction or framework-shaped code. The main weakness is minor: mutating dicts inside `totals` rather than accumulating counts and totals separately is a small hidden-mutation smell, and the `_window_start` helper is trivially simple enough that it could be inlined without loss of clarity. The `_is_integer` bool-exclusion logic is correct and appropriately extracted. Overall this is a solid, auditable implementation that closely follows the Zen of Python's spirit.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed into small pure helpers that each do one thing. Control flow is straightforward with guard clauses handling invalid inputs early. Data movement is explicit, names are self-explanatory, and there is no speculative abstraction or framework-shaped code. The main weakness is minor: mutating dicts inside `totals` rather than accumulating counts and totals separately is a small hidden-mutation smell, and the `_window_start` helper is trivially simple enough that it could be inlined without loss of clarity. The `_is_integer` bool-exclusion logic is correct and appropriately extracted. Overall this is a solid, auditable implementation that closely follows the Zen of Python's spirit.\",\n  \"strengths\": [\n    \"Small, focused helpers (_is_integer, _valid_event, _window_start) keep the main function readable\",\n    \"Guard clauses at the top of summarize_windows make invalid-input handling explicit and flat\",\n    \"No deep nesting; the loop body is easy to follow locally\",\n    \"Correct bool exclusion from integer check, showing careful attention to Python's type hierarchy\",\n    \"Sorted output is produced cleanly without extra complexity\"\n  ],\n  \"weaknesses\": [\n    \"_window_start is trivially one expression and adds a layer of indirection without meaningful clarity gain\",\n    \"Mutating dicts stored inside totals is a mild hidden-mutation pattern; accumulating plain (count, total) tuples would be more explicit\",\n    \"The TypeError for non-list events is a reasonable addition but not required by the spec, adding a small speculative guard\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, focused helpers (_is_integer, _valid_event, _window_start) keep the main function readable",
+      "Guard clauses at the top of summarize_windows make invalid-input handling explicit and flat",
+      "No deep nesting; the loop body is easy to follow locally",
+      "Correct bool exclusion from integer check, showing careful attention to Python's type hierarchy",
+      "Sorted output is produced cleanly without extra complexity"
+    ],
+    "weaknesses": [
+      "_window_start is trivially one expression and adds a layer of indirection without meaningful clarity gain",
+      "Mutating dicts stored inside totals is a mild hidden-mutation pattern; accumulating plain (count, total) tuples would be more explicit",
+      "The TypeError for non-list events is a reasonable addition but not required by the spec, adding a small speculative guard"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.121,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.75,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 4,
+    "loc": 30,
+    "maintainability_index": 49.24,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_generation"
+}

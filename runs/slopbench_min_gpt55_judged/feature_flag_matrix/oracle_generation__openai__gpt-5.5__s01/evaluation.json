@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, flat, and explicit realization of the task. It decomposes validation into small, named pure helpers that each do one thing, keeps the main resolve_flags function readable as a linear sequence of validate-then-compute steps, avoids hidden mutation by copying defaults into a fresh dict, and raises clear typed errors rather than silently ignoring bad inputs. Data movement is explicit throughout. The only minor quibbles are that the validation helpers are slightly more elaborate than strictly necessary for the stated requirements (the task spec doesn't mandate input validation at all, so the validation layer is speculative but not harmful), and _require_dict is a very thin wrapper that could arguably be inlined, but these are marginal concerns that don't undermine the overall structural quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, flat, and explicit realization of the task. It decomposes validation into small, named pure helpers that each do one thing, keeps the main resolve_flags function readable as a linear sequence of validate-then-compute steps, avoids hidden mutation by copying defaults into a fresh dict, and raises clear typed errors rather than silently ignoring bad inputs. Data movement is explicit throughout. The only minor quibbles are that the validation helpers are slightly more elaborate than strictly necessary for the stated requirements (the task spec doesn't mandate input validation at all, so the validation layer is speculative but not harmful), and _require_dict is a very thin wrapper that could arguably be inlined, but these are marginal concerns that don't undermine the overall structural quality.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers with descriptive names make each piece locally auditable\",\n    \"Control flow in resolve_flags is flat and sequential \u2014 easy to trace end-to-end\",\n    \"No mutation of inputs; resolved starts as a fresh copy of defaults\",\n    \"Errors are explicit and informative rather than silent or cryptic\",\n    \"Ordinary dict operations throughout; no metaprogramming or clever tricks\"\n  ],\n  \"weaknesses\": [\n    \"_require_dict is a very thin wrapper that adds a layer of indirection for minimal gain\",\n    \"Validation is speculative \u2014 the task spec doesn't require it, so it adds code mass beyond the stated requirements\",\n    \"user_data alias for user after _require_dict is a minor redundancy since user is already typed as dict in the signature\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers with descriptive names make each piece locally auditable",
+      "Control flow in resolve_flags is flat and sequential \u2014 easy to trace end-to-end",
+      "No mutation of inputs; resolved starts as a fresh copy of defaults",
+      "Errors are explicit and informative rather than silent or cryptic",
+      "Ordinary dict operations throughout; no metaprogramming or clever tricks"
+    ],
+    "weaknesses": [
+      "_require_dict is a very thin wrapper that adds a layer of indirection for minimal gain",
+      "Validation is speculative \u2014 the task spec doesn't require it, so it adds code mass beyond the stated requirements",
+      "user_data alias for user after _require_dict is a minor redundancy since user is already typed as dict in the signature"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.383,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.6,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 5,
+    "loc": 49,
+    "maintainability_index": 48.652,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,89 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": {
+    "attempts": [
+      {
+        "attempt_index": 0,
+        "code": "\"\"\"\nlog_sessionizer: group log events into user sessions based on time gaps.\n\"\"\"\n\nfrom itertools import groupby\n\n\ndef _is_valid(event: dict) -> bool:\n    \"\"\"Return True only when the event has user_id and an integer timestamp.\"\"\"\n    if not isinstance(event, dict):\n        return False\n    if \"user_id\" not in event or \"timestamp\" not in event:\n        return False\n    if not isinstance(event[\"timestamp\"], int):\n        return False\n    return True\n\n\ndef _sessions_for_user(user_id: str, events: list[dict], gap_seconds: int) -> list[dict]:\n    \"\"\"Build sessions for a single user from their sorted events.\"\"\"\n    sessions = []\n    start = end = count = None\n\n    for event in events:\n        ts = event[\"timestamp\"]\n        if start is None:\n            start, end, count = ts, ts, 1\n        elif ts - end > gap_seconds:\n            sessions.append({\"user_id\": user_id, \"start\": start, \"end\": end, \"count\": count})\n            start, end, count = ts, ts, 1\n        else:\n            end = ts\n            count += 1\n\n    if start is not None:\n        sessions.append({\"user_id\": user_id, \"start\": start, \"end\": end, \"count\": count})\n\n    return sessions\n\n\ndef build_sessions(events: list[dict], gap_seconds: int) -> list[dict]:\n    \"\"\"\n    Group log events into sessions per user.\n\n    Parameters\n    ----------\n    events:      List of event dicts; each must have 'user_id' and integer 'timestamp'.\n    gap_seconds: Maximum intra-session gap in seconds (inclusive).\n\n    Returns\n    -------\n    List of session dicts sorted by user_id then start timestamp.\n    \"\"\"\n    if not isinstance(gap_seconds, int) or gap_seconds < 0:\n        raise ValueError(f\"gap_seconds must be a non-negative integer, got {gap_seconds!r}\")\n\n    valid = [e for e in events if _is_valid(e)]\n    valid.sort(key=lambda e: (str(e[\"user_id\"]), e[\"timestamp\"]))\n\n    sessions = []\n    for user_id, group in groupby(valid, key=lambda e: str(e[\"user_id\"])):\n        user_events = list(group)\n        sessions.extend(_sessions_for_user(user_id, user_events, gap_seconds))\n\n    sessions.sort(key=lambda s: (s[\"user_id\"], s[\"start\"]))\n    return sessions",
+        "feedback_prompt": null,
+        "gate_failures": {},
+        "pytest": {
+          "duration_seconds": 0.954,
+          "exit_code": 0,
+          "passed": true,
+          "sandbox": "docker:specoracle-pytest:py311-alpine",
+          "sandbox_error": null,
+          "stderr": "",
+          "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "timed_out": false
+        },
+        "raw_response": "```python\n\"\"\"\nlog_sessionizer: group log events into user sessions based on time gaps.\n\"\"\"\n\nfrom itertools import groupby\n\n\ndef _is_valid(event: dict) -> bool:\n    \"\"\"Return True only when the event has user_id and an integer timestamp.\"\"\"\n    if not isinstance(event, dict):\n        return False\n    if \"user_id\" not in event or \"timestamp\" not in event:\n        return False\n    if not isinstance(event[\"timestamp\"], int):\n        return False\n    return True\n\n\ndef _sessions_for_user(user_id: str, events: list[dict], gap_seconds: int) -> list[dict]:\n    \"\"\"Build sessions for a single user from their sorted events.\"\"\"\n    sessions = []\n    start = end = count = None\n\n    for event in events:\n        ts = event[\"timestamp\"]\n        if start is None:\n            start, end, count = ts, ts, 1\n        elif ts - end > gap_seconds:\n            sessions.append({\"user_id\": user_id, \"start\": start, \"end\": end, \"count\": count})\n            start, end, count = ts, ts, 1\n        else:\n            end = ts\n            count += 1\n\n    if start is not None:\n        sessions.append({\"user_id\": user_id, \"start\": start, \"end\": end, \"count\": count})\n\n    return sessions\n\n\ndef build_sessions(events: list[dict], gap_seconds: int) -> list[dict]:\n    \"\"\"\n    Group log events into sessions per user.\n\n    Parameters\n    ----------\n    events:      List of event dicts; each must have 'user_id' and integer 'timestamp'.\n    gap_seconds: Maximum intra-session gap in seconds (inclusive).\n\n    Returns\n    -------\n    List of session dicts sorted by user_id then start timestamp.\n    \"\"\"\n    if not isinstance(gap_seconds, int) or gap_seconds < 0:\n        raise ValueError(f\"gap_seconds must be a non-negative integer, got {gap_seconds!r}\")\n\n    valid = [e for e in events if _is_valid(e)]\n    valid.sort(key=lambda e: (str(e[\"user_id\"]), e[\"timestamp\"]))\n\n    sessions = []\n    for user_id, group in groupby(valid, key=lambda e: str(e[\"user_id\"])):\n        user_events = list(group)\n        sessions.extend(_sessions_for_user(user_id, user_events, gap_seconds))\n\n    sessions.sort(key=lambda s: (s[\"user_id\"], s[\"start\"]))\n    return sessions\n```",
+        "static_metrics": {
+          "class_count": 0,
+          "cyclomatic_complexity_average": 5.333,
+          "cyclomatic_complexity_max": 6,
+          "cyclomatic_complexity_total": 16,
+          "function_count": 3,
+          "loc": 51,
+          "maintainability_index": 74.266,
+          "max_nesting_depth": 2,
+          "syntax_error": null,
+          "syntax_ok": true
+        }
+      }
+    ],
+    "constraints": {
+      "max_cc": 6,
+      "max_nesting": 3,
+      "max_retries": 3,
+      "require_pytest": true
+    },
+    "feedback_prompts": [],
+    "hard_cc_pass": true,
+    "hard_nesting_pass": true,
+    "hard_pytest_pass": true,
+    "hybrid_feedback_cc_delta": null,
+    "hybrid_gate_pass": true,
+    "hybrid_retries": 0,
+    "max_retries_exceeded": false
+  },
+  "judge": {
+    "error": null,
+    "rationale": "not requested",
+    "raw_response": "",
+    "score": null,
+    "skipped": true,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n\n\nZen of Python primitives:\n- Beautiful is better than ugly.\n- Explicit is better than implicit.\n- Simple is better than complex.\n- Complex is better than complicated.\n- Flat is better than nested.\n- Sparse is better than dense.\n- Readability counts.\n- Special cases are not special enough to break the rules.\n- Although practicality beats purity.\n- Errors should never pass silently.\n- Unless explicitly silenced.\n- In the face of ambiguity, refuse the temptation to guess.\n- There should be one obvious way to do it.\n- Although that way may not be obvious at first unless you are Dutch.\n- Now is better than never.\n- Although never is often better than right now.\n- If the implementation is hard to explain, it is a bad idea.\n- If the implementation is easy to explain, it may be a good idea.\n- Namespaces are one honking great idea -- let's do more of those!",
+  "oracle_spec_label": "hybrid_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.331,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 3,
+    "loc": 51,
+    "maintainability_index": 74.266,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "log_sessionizer",
+  "variant": "hybrid_generation"
+}

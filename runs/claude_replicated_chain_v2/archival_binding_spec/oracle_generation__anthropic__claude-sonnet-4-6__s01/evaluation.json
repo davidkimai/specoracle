@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the surviving dictionary `bindings_ledger`, stages parsing visibly across five labeled steps rather than compressing into one-liners, preserves insertion order, and raises `ValueError` messages that explicitly name the archival field being rejected ('section', 'key', 'qualifier', 'line'). The code is flat, readable, and locally auditable with no hidden abstractions. The only minor imperfections are that `qualifier_stripped` could simply be named `qualifier` (the `_stripped` suffix is slightly redundant after an explicit `.strip()` call), and the staged comments are slightly verbose, but these are cosmetic rather than structural issues.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the surviving dictionary `bindings_ledger`, stages parsing visibly across five labeled steps rather than compressing into one-liners, preserves insertion order, and raises `ValueError` messages that explicitly name the archival field being rejected ('section', 'key', 'qualifier', 'line'). The code is flat, readable, and locally auditable with no hidden abstractions. The only minor imperfections are that `qualifier_stripped` could simply be named `qualifier` (the `_stripped` suffix is slightly redundant after an explicit `.strip()` call), and the staged comments are slightly verbose, but these are cosmetic rather than structural issues.\",\n  \"strengths\": [\n    \"Uses `bindings_ledger` as the surviving cross-iteration dictionary name, exactly per spec\",\n    \"Visibly staged parsing with clear stage comments rather than compressed one-liners\",\n    \"Exactly one public function exposed\",\n    \"Error messages explicitly name the archival field being rejected\",\n    \"Insertion order preserved via plain dict (Python 3.7+)\",\n    \"Handles edge cases: missing '=', missing '.', empty section, empty key\"\n  ],\n  \"weaknesses\": [\n    \"`qualifier_stripped` naming is slightly redundant since stripping is done immediately and the variable could just be `qualifier`\",\n    \"Stage comments are slightly over-verbose for the complexity of each step, adding noise without proportional clarity gain\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `bindings_ledger` as the surviving cross-iteration dictionary name, exactly per spec",
+      "Visibly staged parsing with clear stage comments rather than compressed one-liners",
+      "Exactly one public function exposed",
+      "Error messages explicitly name the archival field being rejected",
+      "Insertion order preserved via plain dict (Python 3.7+)",
+      "Handles edge cases: missing '=', missing '.', empty section, empty key"
+    ],
+    "weaknesses": [
+      "`qualifier_stripped` naming is slightly redundant since stripping is done immediately and the variable could just be `qualifier`",
+      "Stage comments are slightly over-verbose for the complexity of each step, adding noise without proportional clarity gain"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.137,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.06s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 61,
+    "maintainability_index": 80.559,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_generation"
+}

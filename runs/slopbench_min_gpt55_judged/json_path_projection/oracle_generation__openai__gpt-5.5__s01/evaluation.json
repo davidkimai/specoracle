@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and closely follows the Zen of Python. Each helper has a single responsibility, control flow is flat with guard clauses, data movement is explicit (no mutation, sentinel object for missing values), errors are raised clearly for invalid inputs, and names are self-explanatory. The use of a module-level `_MISSING` sentinel is idiomatic and avoids confusion with `None` as a legitimate value. The only minor quibbles are that `_parse_list_index` returning either `int | object` is slightly awkward (an `Optional[int]` with `None` as the missing signal would be cleaner since `_MISSING` is already used for path resolution), and the type annotation `int | object` is technically always true since everything is an object \u2014 but these are very minor issues that don't affect correctness or readability meaningfully.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, well-decomposed, and closely follows the Zen of Python. Each helper has a single responsibility, control flow is flat with guard clauses, data movement is explicit (no mutation, sentinel object for missing values), errors are raised clearly for invalid inputs, and names are self-explanatory. The use of a module-level `_MISSING` sentinel is idiomatic and avoids confusion with `None` as a legitimate value. The only minor quibbles are that `_parse_list_index` returning either `int | object` is slightly awkward (an `Optional[int]` with `None` as the missing signal would be cleaner since `_MISSING` is already used for path resolution), and the type annotation `int | object` is technically always true since everything is an object \u2014 but these are very minor issues that don't affect correctness or readability meaningfully.\",\n  \"strengths\": [\n    \"Small, pure helpers with single responsibilities\",\n    \"Flat control flow using guard clauses throughout\",\n    \"Explicit sentinel object prevents confusion between missing and None default\",\n    \"Clear TypeError/ValueError raises for invalid inputs\",\n    \"No mutation of input, no hidden state\",\n    \"Names are descriptive and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"_parse_list_index return type annotation `int | object` is misleading since object subsumes int\",\n    \"Reusing _MISSING as a return from _parse_list_index conflates two different missing concepts (bad index vs missing key), slightly reducing local clarity\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helpers with single responsibilities",
+      "Flat control flow using guard clauses throughout",
+      "Explicit sentinel object prevents confusion between missing and None default",
+      "Clear TypeError/ValueError raises for invalid inputs",
+      "No mutation of input, no hidden state",
+      "Names are descriptive and locally auditable"
+    ],
+    "weaknesses": [
+      "_parse_list_index return type annotation `int | object` is misleading since object subsumes int",
+      "Reusing _MISSING as a return from _parse_list_index conflates two different missing concepts (bad index vs missing key), slightly reducing local clarity"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.027,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.5,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 21,
+    "function_count": 6,
+    "loc": 47,
+    "maintainability_index": 46.434,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

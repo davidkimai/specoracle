@@ -1,0 +1,127 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": {
+    "attempts": [
+      {
+        "attempt_index": 0,
+        "code": "from collections import defaultdict\n\n\ndef summarize_invoices(invoices: list[dict]) -> list[dict]:\n    # audit stage 1: filter\n    filtered_paid_invoices = []\n    for invoice in invoices:\n        region_value = invoice.get(\"region\")\n        status_value = invoice.get(\"status\")\n        amount_cents_value = invoice.get(\"amount_cents\")\n\n        region_is_valid = isinstance(region_value, str) and len(region_value) > 0\n        status_is_paid = status_value == \"paid\"\n        amount_is_integer = isinstance(amount_cents_value, int) and not isinstance(amount_cents_value, bool)\n\n        if region_is_valid and status_is_paid and amount_is_integer:\n            filtered_paid_invoices.append(invoice)\n\n    # audit stage 2: aggregate\n    bucket_item_count = defaultdict(int)\n    bucket_cents_total = defaultdict(int)\n\n    for invoice in filtered_paid_invoices:\n        region_key = invoice[\"region\"]\n        amount_key = invoice[\"amount_cents\"]\n\n        bucket_item_count[region_key] += 1\n        bucket_cents_total[region_key] += amount_key\n\n    # audit stage 3: format output\n    all_region_keys = sorted(bucket_item_count.keys())\n\n    output_records = []\n    for region_bucket in all_region_keys:\n        record_bucket_code = region_bucket\n        record_item_count = bucket_item_count[region_bucket]\n        record_cents_total = bucket_cents_total[region_bucket]\n\n        output_records.append({\n            \"bucket_code\": record_bucket_code,\n            \"item_count\": record_item_count,\n            \"cents_total\": record_cents_total,\n        })\n\n    return output_records",
+        "feedback_prompt": null,
+        "gate_failures": {
+          "cc": {
+            "branches": 8,
+            "threshold": 6,
+            "value": 9,
+            "violating_function": "summarize_invoices"
+          }
+        },
+        "pytest": {
+          "duration_seconds": 1.019,
+          "exit_code": 0,
+          "passed": true,
+          "sandbox": "docker:specoracle-pytest:py311-alpine",
+          "sandbox_error": null,
+          "stderr": "",
+          "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "timed_out": false
+        },
+        "raw_response": "```python\nfrom collections import defaultdict\n\n\ndef summarize_invoices(invoices: list[dict]) -> list[dict]:\n    # audit stage 1: filter\n    filtered_paid_invoices = []\n    for invoice in invoices:\n        region_value = invoice.get(\"region\")\n        status_value = invoice.get(\"status\")\n        amount_cents_value = invoice.get(\"amount_cents\")\n\n        region_is_valid = isinstance(region_value, str) and len(region_value) > 0\n        status_is_paid = status_value == \"paid\"\n        amount_is_integer = isinstance(amount_cents_value, int) and not isinstance(amount_cents_value, bool)\n\n        if region_is_valid and status_is_paid and amount_is_integer:\n            filtered_paid_invoices.append(invoice)\n\n    # audit stage 2: aggregate\n    bucket_item_count = defaultdict(int)\n    bucket_cents_total = defaultdict(int)\n\n    for invoice in filtered_paid_invoices:\n        region_key = invoice[\"region\"]\n        amount_key = invoice[\"amount_cents\"]\n\n        bucket_item_count[region_key] += 1\n        bucket_cents_total[region_key] += amount_key\n\n    # audit stage 3: format output\n    all_region_keys = sorted(bucket_item_count.keys())\n\n    output_records = []\n    for region_bucket in all_region_keys:\n        record_bucket_code = region_bucket\n        record_item_count = bucket_item_count[region_bucket]\n        record_cents_total = bucket_cents_total[region_bucket]\n\n        output_records.append({\n            \"bucket_code\": record_bucket_code,\n            \"item_count\": record_item_count,\n            \"cents_total\": record_cents_total,\n        })\n\n    return output_records\n```",
+        "static_metrics": {
+          "class_count": 0,
+          "cyclomatic_complexity_average": 9.0,
+          "cyclomatic_complexity_max": 9,
+          "cyclomatic_complexity_total": 9,
+          "function_count": 1,
+          "loc": 34,
+          "maintainability_index": 70.626,
+          "max_nesting_depth": 2,
+          "syntax_error": null,
+          "syntax_ok": true
+        }
+      },
+      {
+        "attempt_index": 1,
+        "code": "from collections import defaultdict\n\n\ndef _is_valid_invoice(invoice: dict) -> bool:\n    region_value = invoice.get(\"region\")\n    status_value = invoice.get(\"status\")\n    amount_cents_value = invoice.get(\"amount_cents\")\n\n    region_is_valid = isinstance(region_value, str) and len(region_value) > 0\n    status_is_paid = status_value == \"paid\"\n    amount_is_integer = isinstance(amount_cents_value, int) and not isinstance(amount_cents_value, bool)\n\n    return region_is_valid and status_is_paid and amount_is_integer\n\n\ndef _aggregate_buckets(filtered_paid_invoices: list) -> tuple:\n    bucket_item_count = defaultdict(int)\n    bucket_cents_total = defaultdict(int)\n\n    for invoice in filtered_paid_invoices:\n        region_key = invoice[\"region\"]\n        amount_key = invoice[\"amount_cents\"]\n        bucket_item_count[region_key] += 1\n        bucket_cents_total[region_key] += amount_key\n\n    return bucket_item_count, bucket_cents_total\n\n\ndef summarize_invoices(invoices: list[dict]) -> list[dict]:\n    # audit stage 1: filter\n    filtered_paid_invoices = [inv for inv in invoices if _is_valid_invoice(inv)]\n\n    # audit stage 2: aggregate\n    bucket_item_count, bucket_cents_total = _aggregate_buckets(filtered_paid_invoices)\n\n    # audit stage 3: format output\n    all_region_keys = sorted(bucket_item_count.keys())\n\n    output_records = []\n    for region_bucket in all_region_keys:\n        record_bucket_code = region_bucket\n        record_item_count = bucket_item_count[region_bucket]\n        record_cents_total = bucket_cents_total[region_bucket]\n\n        output_records.append({\n            \"bucket_code\": record_bucket_code,\n            \"item_count\": record_item_count,\n            \"cents_total\": record_cents_total,\n        })\n\n    return output_records",
+        "feedback_prompt": "The previous implementation was rejected by the hard oracle gates.\nRejected attempt: 1\n\nOriginal task and soft oracle, unchanged:\nTask id: legacy_invoice_spec\nEntry point: summarize_invoices\n\nFunctional requirements:\nImplement summarize_invoices(invoices: list[dict]) -> list[dict].\n\nEach invoice may contain:\n- \"region\": a non-empty string\n- \"status\": a string\n- \"amount_cents\": an integer\n\nInclude only invoices where status == \"paid\", region is non-empty, and\namount_cents is an integer. Return rows sorted by region using the exact keys:\n{\"bucket_code\": region, \"item_count\": count, \"cents_total\": total}.\nDo not mutate the input.\n\nSynthesis instructions:\n- Return a complete Python module.\n- Keep imports standard-library only unless the task explicitly permits otherwise.\n- Do not include tests in the generated module.\n- Do not perform network, filesystem, or subprocess operations unless required.\n\nSoft oracle system specification:\nYou are a secure program synthesis engineer. Generate a correct, reviewable Python\nmodule for the task. Return only Python code. Do not include markdown prose.\n\nTreat the following task-specific informal specification as the in-context oracle\nfor structural quality. It overrides the Zen of Python for this task. Preserve\nfunctional correctness while collapsing implementation degrees of freedom around\nthis spec.\n\nTask-specific informal oracle:\nCorporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.\n\nRejected code:\n```python\nfrom collections import defaultdict\n\n\ndef summarize_invoices(invoices: list[dict]) -> list[dict]:\n    # audit stage 1: filter\n    filtered_paid_invoices = []\n    for invoice in invoices:\n        region_value = invoice.get(\"region\")\n        status_value = invoice.get(\"status\")\n        amount_cents_value = invoice.get(\"amount_cents\")\n\n        region_is_valid = isinstance(region_value, str) and len(region_value) > 0\n        status_is_paid = status_value == \"paid\"\n        amount_is_integer = isinstance(amount_cents_value, int) and not isinstance(amount_cents_value, bool)\n\n        if region_is_valid and status_is_paid and amount_is_integer:\n            filtered_paid_invoices.append(invoice)\n\n    # audit stage 2: aggregate\n    bucket_item_count = defaultdict(int)\n    bucket_cents_total = defaultdict(int)\n\n    for invoice in filtered_paid_invoices:\n        region_key = invoice[\"region\"]\n        amount_key = invoice[\"amount_cents\"]\n\n        bucket_item_count[region_key] += 1\n        bucket_cents_total[region_key] += amount_key\n\n    # audit stage 3: format output\n    all_region_keys = sorted(bucket_item_count.keys())\n\n    output_records = []\n    for region_bucket in all_region_keys:\n        record_bucket_code = region_bucket\n        record_item_count = bucket_item_count[region_bucket]\n        record_cents_total = bucket_cents_total[region_bucket]\n\n        output_records.append({\n            \"bucket_code\": record_bucket_code,\n            \"item_count\": record_item_count,\n            \"cents_total\": record_cents_total,\n        })\n\n    return output_records\n```\n\nStructured hard-gate failure report:\n- Cyclomatic complexity was 9. Target: <= 6.\n  Decompose summarize_invoices; it has approximately 8 decision branches. Extract each logical path into a named helper.\n\nRewrite the implementation addressing ONLY the specific failures above.\nDo not change function signatures or the overall algorithm.\nReturn only Python code. Do not include markdown prose.",
+        "gate_failures": {},
+        "pytest": {
+          "duration_seconds": 0.992,
+          "exit_code": 0,
+          "passed": true,
+          "sandbox": "docker:specoracle-pytest:py311-alpine",
+          "sandbox_error": null,
+          "stderr": "",
+          "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "timed_out": false
+        },
+        "raw_response": "from collections import defaultdict\n\n\ndef _is_valid_invoice(invoice: dict) -> bool:\n    region_value = invoice.get(\"region\")\n    status_value = invoice.get(\"status\")\n    amount_cents_value = invoice.get(\"amount_cents\")\n\n    region_is_valid = isinstance(region_value, str) and len(region_value) > 0\n    status_is_paid = status_value == \"paid\"\n    amount_is_integer = isinstance(amount_cents_value, int) and not isinstance(amount_cents_value, bool)\n\n    return region_is_valid and status_is_paid and amount_is_integer\n\n\ndef _aggregate_buckets(filtered_paid_invoices: list) -> tuple:\n    bucket_item_count = defaultdict(int)\n    bucket_cents_total = defaultdict(int)\n\n    for invoice in filtered_paid_invoices:\n        region_key = invoice[\"region\"]\n        amount_key = invoice[\"amount_cents\"]\n        bucket_item_count[region_key] += 1\n        bucket_cents_total[region_key] += amount_key\n\n    return bucket_item_count, bucket_cents_total\n\n\ndef summarize_invoices(invoices: list[dict]) -> list[dict]:\n    # audit stage 1: filter\n    filtered_paid_invoices = [inv for inv in invoices if _is_valid_invoice(inv)]\n\n    # audit stage 2: aggregate\n    bucket_item_count, bucket_cents_total = _aggregate_buckets(filtered_paid_invoices)\n\n    # audit stage 3: format output\n    all_region_keys = sorted(bucket_item_count.keys())\n\n    output_records = []\n    for region_bucket in all_region_keys:\n        record_bucket_code = region_bucket\n        record_item_count = bucket_item_count[region_bucket]\n        record_cents_total = bucket_cents_total[region_bucket]\n\n        output_records.append({\n            \"bucket_code\": record_bucket_code,\n            \"item_count\": record_item_count,\n            \"cents_total\": record_cents_total,\n        })\n\n    return output_records",
+        "static_metrics": {
+          "class_count": 0,
+          "cyclomatic_complexity_average": 3.667,
+          "cyclomatic_complexity_max": 5,
+          "cyclomatic_complexity_total": 11,
+          "function_count": 3,
+          "loc": 36,
+          "maintainability_index": 69.505,
+          "max_nesting_depth": 1,
+          "syntax_error": null,
+          "syntax_ok": true
+        }
+      }
+    ],
+    "constraints": {
+      "max_cc": 6,
+      "max_nesting": 3,
+      "max_retries": 3,
+      "require_pytest": true
+    },
+    "feedback_prompts": [
+      "The previous implementation was rejected by the hard oracle gates.\nRejected attempt: 1\n\nOriginal task and soft oracle, unchanged:\nTask id: legacy_invoice_spec\nEntry point: summarize_invoices\n\nFunctional requirements:\nImplement summarize_invoices(invoices: list[dict]) -> list[dict].\n\nEach invoice may contain:\n- \"region\": a non-empty string\n- \"status\": a string\n- \"amount_cents\": an integer\n\nInclude only invoices where status == \"paid\", region is non-empty, and\namount_cents is an integer. Return rows sorted by region using the exact keys:\n{\"bucket_code\": region, \"item_count\": count, \"cents_total\": total}.\nDo not mutate the input.\n\nSynthesis instructions:\n- Return a complete Python module.\n- Keep imports standard-library only unless the task explicitly permits otherwise.\n- Do not include tests in the generated module.\n- Do not perform network, filesystem, or subprocess operations unless required.\n\nSoft oracle system specification:\nYou are a secure program synthesis engineer. Generate a correct, reviewable Python\nmodule for the task. Return only Python code. Do not include markdown prose.\n\nTreat the following task-specific informal specification as the in-context oracle\nfor structural quality. It overrides the Zen of Python for this task. Preserve\nfunctional correctness while collapsing implementation degrees of freedom around\nthis spec.\n\nTask-specific informal oracle:\nCorporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.\n\nRejected code:\n```python\nfrom collections import defaultdict\n\n\ndef summarize_invoices(invoices: list[dict]) -> list[dict]:\n    # audit stage 1: filter\n    filtered_paid_invoices = []\n    for invoice in invoices:\n        region_value = invoice.get(\"region\")\n        status_value = invoice.get(\"status\")\n        amount_cents_value = invoice.get(\"amount_cents\")\n\n        region_is_valid = isinstance(region_value, str) and len(region_value) > 0\n        status_is_paid = status_value == \"paid\"\n        amount_is_integer = isinstance(amount_cents_value, int) and not isinstance(amount_cents_value, bool)\n\n        if region_is_valid and status_is_paid and amount_is_integer:\n            filtered_paid_invoices.append(invoice)\n\n    # audit stage 2: aggregate\n    bucket_item_count = defaultdict(int)\n    bucket_cents_total = defaultdict(int)\n\n    for invoice in filtered_paid_invoices:\n        region_key = invoice[\"region\"]\n        amount_key = invoice[\"amount_cents\"]\n\n        bucket_item_count[region_key] += 1\n        bucket_cents_total[region_key] += amount_key\n\n    # audit stage 3: format output\n    all_region_keys = sorted(bucket_item_count.keys())\n\n    output_records = []\n    for region_bucket in all_region_keys:\n        record_bucket_code = region_bucket\n        record_item_count = bucket_item_count[region_bucket]\n        record_cents_total = bucket_cents_total[region_bucket]\n\n        output_records.append({\n            \"bucket_code\": record_bucket_code,\n            \"item_count\": record_item_count,\n            \"cents_total\": record_cents_total,\n        })\n\n    return output_records\n```\n\nStructured hard-gate failure report:\n- Cyclomatic complexity was 9. Target: <= 6.\n  Decompose summarize_invoices; it has approximately 8 decision branches. Extract each logical path into a named helper.\n\nRewrite the implementation addressing ONLY the specific failures above.\nDo not change function signatures or the overall algorithm.\nReturn only Python code. Do not include markdown prose."
+    ],
+    "hard_cc_pass": true,
+    "hard_nesting_pass": true,
+    "hard_pytest_pass": true,
+    "hybrid_feedback_cc_delta": -4,
+    "hybrid_gate_pass": true,
+    "hybrid_retries": 1,
+    "max_retries_exceeded": false
+  },
+  "judge": {
+    "error": null,
+    "rationale": "not requested",
+    "raw_response": "",
+    "score": null,
+    "skipped": true,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "hybrid_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.062,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.667,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 3,
+    "loc": 36,
+    "maintainability_index": 69.505,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "hybrid_generation"
+}

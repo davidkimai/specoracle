@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a straightforward Kahn's-algorithm-style approach with no deep nesting, no hidden mutation, and clear variable names that make the logic easy to audit locally. The data flow is transparent: collect all tasks, build a remaining-blockers map, peel off ready layers, raise on cycle. The only minor quibble is that rebuilding the entire `remaining` dict each iteration (rather than mutating in place) is slightly unconventional but is actually more explicit and avoids hidden mutation, aligning well with the Zen. No speculative abstractions, no framework-shaped code, and the helper logic is minimal enough that extraction would add noise rather than clarity.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a straightforward Kahn's-algorithm-style approach with no deep nesting, no hidden mutation, and clear variable names that make the logic easy to audit locally. The data flow is transparent: collect all tasks, build a remaining-blockers map, peel off ready layers, raise on cycle. The only minor quibble is that rebuilding the entire `remaining` dict each iteration (rather than mutating in place) is slightly unconventional but is actually more explicit and avoids hidden mutation, aligning well with the Zen. No speculative abstractions, no framework-shaped code, and the helper logic is minimal enough that extraction would add noise rather than clarity.\",\n  \"strengths\": [\n    \"Flat control flow with a single while loop and a guard clause for cycle detection\",\n    \"Explicit data movement: no hidden mutation of input, new dict built each iteration\",\n    \"Clear, self-explanatory names (remaining, blockers, ready, completed)\",\n    \"Correctly includes tasks that only appear as dependencies\",\n    \"Minimal and ordinary standard-library constructs only\"\n  ],\n  \"weaknesses\": [\n    \"Rebuilding the full `remaining` dict each iteration is O(n) per batch rather than O(ready) \u2014 acceptable for clarity but worth noting\",\n    \"Could marginally benefit from a small helper to collect all tasks, though the current inline approach is still readable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single while loop and a guard clause for cycle detection",
+      "Explicit data movement: no hidden mutation of input, new dict built each iteration",
+      "Clear, self-explanatory names (remaining, blockers, ready, completed)",
+      "Correctly includes tasks that only appear as dependencies",
+      "Minimal and ordinary standard-library constructs only"
+    ],
+    "weaknesses": [
+      "Rebuilding the full `remaining` dict each iteration is O(n) per batch rather than O(ready) \u2014 acceptable for clarity but worth noting",
+      "Could marginally benefit from a small helper to collect all tasks, though the current inline approach is still readable"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.006,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 19,
+    "maintainability_index": 61.266,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "human_reference"
+}

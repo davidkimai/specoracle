@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with flat control flow and explicit guard clauses. However, it is monolithic where the spec calls for small pure helpers, and the type-validation block is verbose and repetitive\u2014a small helper like `_is_valid_number(v)` would collapse three nearly identical isinstance checks into one auditable line. The `reorder_quantity` computation mixes ceiling arithmetic with an `int(case_pack)` cast in a single expression that requires a moment to parse; a named helper or at least an intermediate variable would make the intent clearer. The docstring is fine but the inline comments are over-explaining things that the code already says plainly, adding noise rather than signal. The sort at the end is idiomatic. Overall the code is solid but slightly bloated and not decomposed as the structural spec requests.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with flat control flow and explicit guard clauses. However, it is monolithic where the spec calls for small pure helpers, and the type-validation block is verbose and repetitive\u2014a small helper like `_is_valid_number(v)` would collapse three nearly identical isinstance checks into one auditable line. The `reorder_quantity` computation mixes ceiling arithmetic with an `int(case_pack)` cast in a single expression that requires a moment to parse; a named helper or at least an intermediate variable would make the intent clearer. The docstring is fine but the inline comments are over-explaining things that the code already says plainly, adding noise rather than signal. The sort at the end is idiomatic. Overall the code is solid but slightly bloated and not decomposed as the structural spec requests.\",\n  \"strengths\": [\n    \"Guard clauses keep nesting flat and early-exit logic is easy to follow\",\n    \"Explicit key extraction with try/except is clear and handles TypeError for non-dict items\",\n    \"Sorting by sku is correct and idiomatic\",\n    \"No hidden mutation or global state; data movement is explicit\",\n    \"Uses only standard-library constructs (math.ceil)\"\n  ],\n  \"weaknesses\": [\n    \"Monolithic function; no small pure helpers as the spec requests (e.g., a validator helper, a compute_reorder helper)\",\n    \"Three nearly identical isinstance/bool checks are repetitive and could be collapsed into a shared helper\",\n    \"int(case_pack) cast in the reorder expression is subtle and unexplained; case_pack could be a float like 2.5 and the cast silently truncates\",\n    \"Inline comments restate what the code already says clearly, adding length without insight\",\n    \"No separation between validation logic and business logic makes local auditing slightly harder\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses keep nesting flat and early-exit logic is easy to follow",
+      "Explicit key extraction with try/except is clear and handles TypeError for non-dict items",
+      "Sorting by sku is correct and idiomatic",
+      "No hidden mutation or global state; data movement is explicit",
+      "Uses only standard-library constructs (math.ceil)"
+    ],
+    "weaknesses": [
+      "Monolithic function; no small pure helpers as the spec requests (e.g., a validator helper, a compute_reorder helper)",
+      "Three nearly identical isinstance/bool checks are repetitive and could be collapsed into a shared helper",
+      "int(case_pack) cast in the reorder expression is subtle and unexplained; case_pack could be a float like 2.5 and the cast silently truncates",
+      "Inline comments restate what the code already says clearly, adding length without insight",
+      "No separation between validation logic and business logic makes local auditing slightly harder"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.781,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 47,
+    "maintainability_index": 77.783,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "baseline_generation"
+}

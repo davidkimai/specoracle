@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, non-mutating, and uses clear names with flat control flow. The core logic is straightforward and auditable. However, it carries some unnecessary weight: the verbose docstring with Args/Returns/Raises sections adds noise without aiding local auditability, the `num_enabled_workers` intermediate variable is a minor redundancy (could inline `len(enabled_workers)`), the `__all__` export list is speculative infrastructure for a single-function module, and the `from typing import Any, Dict, List` import uses legacy typing forms when modern Python (3.9+) built-ins or a simpler signature would suffice. The pre-extracted `worker_for_job` variable is a small but reasonable clarity aid. Overall the structure is sound and Zen-aligned, but the boilerplate and over-documentation push it slightly away from the sparse, self-evident ideal.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, non-mutating, and uses clear names with flat control flow. The core logic is straightforward and auditable. However, it carries some unnecessary weight: the verbose docstring with Args/Returns/Raises sections adds noise without aiding local auditability, the `num_enabled_workers` intermediate variable is a minor redundancy (could inline `len(enabled_workers)`), the `__all__` export list is speculative infrastructure for a single-function module, and the `from typing import Any, Dict, List` import uses legacy typing forms when modern Python (3.9+) built-ins or a simpler signature would suffice. The pre-extracted `worker_for_job` variable is a small but reasonable clarity aid. Overall the structure is sound and Zen-aligned, but the boilerplate and over-documentation push it slightly away from the sparse, self-evident ideal.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause before the main loop\",\n    \"No input mutation; filtered list is a new object\",\n    \"Clear, descriptive variable names (enabled_workers, worker_for_job)\",\n    \"Modulo-based round-robin is the simplest correct approach\",\n    \"Raises ValueError with an informative message for the invalid-input case\"\n  ],\n  \"weaknesses\": [\n    \"Verbose Google-style docstring is heavier than needed for a simple function\",\n    \"`__all__` is speculative infrastructure for a single-entry-point module\",\n    \"Legacy `typing.Dict/List/Any` imports instead of built-in generics or simpler annotation\",\n    \"`num_enabled_workers` intermediate variable adds a line without meaningful clarity gain\",\n    \"Inline comments restate what the code already says clearly, adding noise\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause before the main loop",
+      "No input mutation; filtered list is a new object",
+      "Clear, descriptive variable names (enabled_workers, worker_for_job)",
+      "Modulo-based round-robin is the simplest correct approach",
+      "Raises ValueError with an informative message for the invalid-input case"
+    ],
+    "weaknesses": [
+      "Verbose Google-style docstring is heavier than needed for a simple function",
+      "`__all__` is speculative infrastructure for a single-entry-point module",
+      "Legacy `typing.Dict/List/Any` imports instead of built-in generics or simpler annotation",
+      "`num_enabled_workers` intermediate variable adds a line without meaningful clarity gain",
+      "Inline comments restate what the code already says clearly, adding noise"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.952,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 45,
+    "maintainability_index": 85.446,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

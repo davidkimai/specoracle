@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound, with clear data movement, no hidden mutation, and flat control flow in the main function. The helper extraction into `_get_user_segments` and `_get_user_overrides` is reasonable and keeps `resolve_flags` readable. However, the code is somewhat over-engineered for the task: the type alias declarations (`FlagDict`, `SegmentConfig`, `UserObject`) add speculative abstraction that the Zen would discourage, the docstrings are verbose relative to the simplicity of the logic, and the input validation (checking `defaults`, `segments`, `user` types) goes beyond what the spec requires and adds noise. The helper functions themselves are thin enough that inlining them with simple guard clauses would be simpler and equally auditable. The segment-config type check inside the loop is a reasonable defensive touch, but overall the ceremony-to-logic ratio is higher than the Zen ideal.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound, with clear data movement, no hidden mutation, and flat control flow in the main function. The helper extraction into `_get_user_segments` and `_get_user_overrides` is reasonable and keeps `resolve_flags` readable. However, the code is somewhat over-engineered for the task: the type alias declarations (`FlagDict`, `SegmentConfig`, `UserObject`) add speculative abstraction that the Zen would discourage, the docstrings are verbose relative to the simplicity of the logic, and the input validation (checking `defaults`, `segments`, `user` types) goes beyond what the spec requires and adds noise. The helper functions themselves are thin enough that inlining them with simple guard clauses would be simpler and equally auditable. The segment-config type check inside the loop is a reasonable defensive touch, but overall the ceremony-to-logic ratio is higher than the Zen ideal.\",\n  \"strengths\": [\n    \"No mutation of inputs; explicit copy at the start\",\n    \"Control flow in resolve_flags is flat and easy to follow\",\n    \"Unknown segments are silently skipped as specified\",\n    \"Clear, named helpers separate concerns without deep nesting\",\n    \"Raises explicit TypeError for invalid inputs rather than silently guessing\"\n  ],\n  \"weaknesses\": [\n    \"Type aliases (FlagDict, SegmentConfig, UserObject) are speculative abstraction not required by the task\",\n    \"Verbose docstrings inflate the code relative to its actual complexity\",\n    \"Top-level type checks on defaults/segments/user are not required by the spec and add noise\",\n    \"Helper functions are thin enough that inlining them would reduce indirection without losing clarity\",\n    \"Overall ceremony-to-logic ratio is higher than the Zen of Python would endorse\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "No mutation of inputs; explicit copy at the start",
+      "Control flow in resolve_flags is flat and easy to follow",
+      "Unknown segments are silently skipped as specified",
+      "Clear, named helpers separate concerns without deep nesting",
+      "Raises explicit TypeError for invalid inputs rather than silently guessing"
+    ],
+    "weaknesses": [
+      "Type aliases (FlagDict, SegmentConfig, UserObject) are speculative abstraction not required by the task",
+      "Verbose docstrings inflate the code relative to its actual complexity",
+      "Top-level type checks on defaults/segments/user are not required by the spec and add noise",
+      "Helper functions are thin enough that inlining them would reduce indirection without losing clarity",
+      "Overall ceremony-to-logic ratio is higher than the Zen of Python would endorse"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.008,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.333,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 3,
+    "loc": 71,
+    "maintainability_index": 80.636,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "oracle_generation"
+}

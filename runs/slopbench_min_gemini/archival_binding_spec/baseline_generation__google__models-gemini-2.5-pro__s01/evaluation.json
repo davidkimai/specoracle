@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable with staged parsing, but it violates the most distinctive structural rule of the spec: local dictionaries that survive across loop iterations must use names ending in `_ledger`. The main accumulator is named `bindings` instead of `bindings_ledger` (or similar), which is a direct miss on a named convention. The error messages do name the archival field being rejected (section name, key name, line content), satisfying R-04's error-message requirement. Order is preserved via plain dict (fine in Python 3.7+). There is exactly one public function. Parsing is visibly staged (split on '=', then split on '.', then validate each part separately) rather than compressed into a one-liner, which is good. The docstring is thorough. The weaknesses are the missing `_ledger` suffix and the fact that `full_key_str` is not stripped before the dot-split check (though the error message does strip it, the variable itself is not stripped before splitting, which is a minor inconsistency). Overall a solid, readable implementation that misses one explicit naming convention from the spec.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable with staged parsing, but it violates the most distinctive structural rule of the spec: local dictionaries that survive across loop iterations must use names ending in `_ledger`. The main accumulator is named `bindings` instead of `bindings_ledger` (or similar), which is a direct miss on a named convention. The error messages do name the archival field being rejected (section name, key name, line content), satisfying R-04's error-message requirement. Order is preserved via plain dict (fine in Python 3.7+). There is exactly one public function. Parsing is visibly staged (split on '=', then split on '.', then validate each part separately) rather than compressed into a one-liner, which is good. The docstring is thorough. The weaknesses are the missing `_ledger` suffix and the fact that `full_key_str` is not stripped before the dot-split check (though the error message does strip it, the variable itself is not stripped before splitting, which is a minor inconsistency). Overall a solid, readable implementation that misses one explicit naming convention from the spec.\",\n  \"strengths\": [\n    \"Visibly staged parsing: '=' split, then '.' split, then validation \u2014 no compressed one-liners\",\n    \"Exactly one public function exported via __all__\",\n    \"Error messages name the specific archival field being rejected (section, key, line content)\",\n    \"Insertion order preserved naturally\",\n    \"Clear, well-structured docstring with examples\"\n  ],\n  \"weaknesses\": [\n    \"Main accumulator dict is named `bindings` instead of a name ending in `_ledger` as explicitly required by the spec\",\n    \"`full_key_str` is not stripped before the dot-split, causing a minor inconsistency (the error message strips it but the split does not)\",\n    \"No type alias or comment distinguishing the nested dict structure for auditability\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Visibly staged parsing: '=' split, then '.' split, then validation \u2014 no compressed one-liners",
+      "Exactly one public function exported via __all__",
+      "Error messages name the specific archival field being rejected (section, key, line content)",
+      "Insertion order preserved naturally",
+      "Clear, well-structured docstring with examples"
+    ],
+    "weaknesses": [
+      "Main accumulator dict is named `bindings` instead of a name ending in `_ledger` as explicitly required by the spec",
+      "`full_key_str` is not stripped before the dot-split, causing a minor inconsistency (the error message strips it but the split does not)",
+      "No type alias or comment distinguishing the nested dict structure for auditability"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.338,
+    "exit_code": 1,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".F                                                                       [100%]\n=================================== FAILURES ===================================\n____________________ test_parse_bindings_rejects_bad_lines _____________________\n\n    def test_parse_bindings_rejects_bad_lines():\n        with pytest.raises(ValueError, match=\"line\"):\n>           parse_bindings([\"missing\"])\n\ntest_solution.py:21: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nlines = ['missing']\n\n    def parse_bindings(lines: list[str]) -> dict[str, dict[str, str]]:\n        \"\"\"\n        Parses a list of strings into a nested dictionary of bindings.\n    \n        Each non-empty, non-comment line must be in the format \"section.key=value\".\n        Comments start with \"#\". Whitespace around the section, key, and value\n        is stripped before processing. The returned dictionary preserves the\n        insertion order of sections and keys as they appear in the input.\n    \n        Args:\n            lines: A list of strings, typically from a configuration file.\n    \n        Returns:\n            An insertion-ordered nested dictionary mapping section names to\n            key-value pairs. For example:\n            {\n                \"section1\": {\"key1\": \"value1\", \"key2\": \"value2\"},\n                \"section2\": {\"key3\": \"value3\"}\n            }\n    \n        Raises:\n            ValueError: If a line is malformed (e.g., missing '=', missing '.'),\n                        or if a section or key name is empty after stripping\n                        whitespace.\n        \"\"\"\n        bindings: dict[str, dict[str, str]] = {}\n    \n        for line_num, line in enumerate(lines, 1):\n            stripped_line = line.strip()\n    \n            # Ignore empty lines and comments\n            if not stripped_line or stripped_line.startswith('#'):\n                continue\n    \n            # Each line must contain exactly one '=' separator.\n            # We split only on the first occurrence to allow '=' in the value.\n            parts = stripped_line.split('=', 1)\n            if len(parts) != 2:\n>               raise ValueError(\n                    f\"Line {line_num}: Malformed binding, missing '=' separator: \"\n                    f\"'{stripped_line}'\"\n                )\nE               ValueError: Line 1: Malformed binding, missing '=' separator: 'missing'\n\nsolution.py:49: ValueError\n\nDuring handling of the above exception, another exception occurred:\n\n    def test_parse_bindings_rejects_bad_lines():\n>       with pytest.raises(ValueError, match=\"line\"):\nE       AssertionError: Regex pattern did not match.\nE         Expected regex: 'line'\nE         Actual message: \"Line 1: Malformed binding, missing '=' separator: 'missing'\"\n\ntest_solution.py:20: AssertionError\n=========================== short test summary info ============================\nFAILED test_solution.py::test_parse_bindings_rejects_bad_lines - AssertionErr...\n1 failed, 1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 67,
+    "maintainability_index": 81.776,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

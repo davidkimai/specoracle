@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It uses a guard clause for validation, a defaultdict for accumulation, and a list comprehension for output construction. The control flow is flat and readable. However, there are a few structural issues: the `isinstance(window_size, int)` check incorrectly rejects booleans (which are ints in Python) but more importantly accepts them silently \u2014 a minor edge case. The `defaultdict` with a mutable lambda factory introduces a subtle hidden-mutation pattern (mutating nested dicts in-place) that could be replaced with a simpler `defaultdict(lambda: [0, 0])` or a two-key tuple accumulator for clarity. The docstring is verbose and over-engineered for a small utility function, adding noise without aiding local auditability. The `isinstance(window_size, int)` guard using `not isinstance(...) or ...` is slightly awkward compared to a direct positive check. The `window_summaries` variable name is slightly redundant given the module context. Overall the code is solid, readable, and avoids speculative abstractions, but the mutable nested dict accumulation and verbose docstring slightly violate the 'sparse enough to audit locally' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It uses a guard clause for validation, a defaultdict for accumulation, and a list comprehension for output construction. The control flow is flat and readable. However, there are a few structural issues: the `isinstance(window_size, int)` check incorrectly rejects booleans (which are ints in Python) but more importantly accepts them silently \u2014 a minor edge case. The `defaultdict` with a mutable lambda factory introduces a subtle hidden-mutation pattern (mutating nested dicts in-place) that could be replaced with a simpler `defaultdict(lambda: [0, 0])` or a two-key tuple accumulator for clarity. The docstring is verbose and over-engineered for a small utility function, adding noise without aiding local auditability. The `isinstance(window_size, int)` guard using `not isinstance(...) or ...` is slightly awkward compared to a direct positive check. The `window_summaries` variable name is slightly redundant given the module context. Overall the code is solid, readable, and avoids speculative abstractions, but the mutable nested dict accumulation and verbose docstring slightly violate the 'sparse enough to audit locally' principle.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses for malformed events\",\n    \"Clear validation with explicit ValueError for invalid window_size\",\n    \"Explicit data movement: accumulation, then result construction, then sort\",\n    \"No hidden global state or implicit mutation outside the local scope\",\n    \"Ordinary standard-library constructs (defaultdict, list comprehension, sort)\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstring adds noise and hurts local auditability for a small function\",\n    \"Mutable nested dict inside defaultdict is a subtle hidden-mutation pattern; a simpler accumulator (e.g., two-element list or namedtuple) would be cleaner\",\n    \"The `not isinstance(window_size, int) or window_size <= 0` guard is slightly awkward and doesn't handle booleans explicitly\",\n    \"Two-step result construction (comprehension then in-place sort) could be a single sorted() call for clarity\",\n    \"Type annotations use legacy `List`/`Dict` from `typing` instead of built-in `list`/`dict` (Python 3.9+)\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses for malformed events",
+      "Clear validation with explicit ValueError for invalid window_size",
+      "Explicit data movement: accumulation, then result construction, then sort",
+      "No hidden global state or implicit mutation outside the local scope",
+      "Ordinary standard-library constructs (defaultdict, list comprehension, sort)"
+    ],
+    "weaknesses": [
+      "Verbose docstring adds noise and hurts local auditability for a small function",
+      "Mutable nested dict inside defaultdict is a subtle hidden-mutation pattern; a simpler accumulator (e.g., two-element list or namedtuple) would be cleaner",
+      "The `not isinstance(window_size, int) or window_size <= 0` guard is slightly awkward and doesn't handle booleans explicitly",
+      "Two-step result construction (comprehension then in-place sort) could be a single sorted() call for clarity",
+      "Type annotations use legacy `List`/`Dict` from `typing` instead of built-in `list`/`dict` (Python 3.9+)"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.079,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 54,
+    "maintainability_index": 81.297,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "baseline_generation"
+}

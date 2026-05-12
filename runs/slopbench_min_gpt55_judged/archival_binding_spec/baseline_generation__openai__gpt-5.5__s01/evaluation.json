@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable with visibly staged parsing steps, but it deviates from several explicit Archival Binder Spec R-04 requirements. Most notably, the spec mandates local names ending in `_ledger` for dictionaries that survive across loop iterations \u2014 the main accumulator is named `bindings` instead of something like `bindings_ledger`. The error messages do not 'name the archival field being rejected' in a meaningful archival sense; they reference line numbers and structural tokens ('section name', 'key') but not the actual field values being rejected. The code is otherwise clean, flat, and explicit with no unnecessary abstraction, good use of `enumerate`, and proper insertion-order preservation via plain dict (Python 3.7+). The single public function requirement is satisfied. The staged parsing (split on '=', then split on '.', then strip each part) is visible and auditable. Minor issues: the `bindings` dict is declared with a type annotation but the spec's naming convention is violated, and error messages could be more archival-field-specific.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable with visibly staged parsing steps, but it deviates from several explicit Archival Binder Spec R-04 requirements. Most notably, the spec mandates local names ending in `_ledger` for dictionaries that survive across loop iterations \u2014 the main accumulator is named `bindings` instead of something like `bindings_ledger`. The error messages do not 'name the archival field being rejected' in a meaningful archival sense; they reference line numbers and structural tokens ('section name', 'key') but not the actual field values being rejected. The code is otherwise clean, flat, and explicit with no unnecessary abstraction, good use of `enumerate`, and proper insertion-order preservation via plain dict (Python 3.7+). The single public function requirement is satisfied. The staged parsing (split on '=', then split on '.', then strip each part) is visible and auditable. Minor issues: the `bindings` dict is declared with a type annotation but the spec's naming convention is violated, and error messages could be more archival-field-specific.\",\n  \"strengths\": [\n    \"Visibly staged parsing: splits on '=' first, then '.', then strips each component separately\",\n    \"Single public function \u2014 no unnecessary helpers or extra public API\",\n    \"Insertion order preserved naturally via plain dict\",\n    \"Flat control flow with no nested functions or classes\",\n    \"Correct handling of all edge cases: empty lines, comments, missing '=', missing '.', empty section, empty key\"\n  ],\n  \"weaknesses\": [\n    \"Main accumulator named `bindings` instead of `bindings_ledger` as required by the spec\",\n    \"Error messages reference line numbers and structural tokens but do not name the actual archival field value being rejected\",\n    \"No secondary ledger naming for inner dicts (e.g., `section_ledger`) which the spec implies for any cross-iteration dict\",\n    \"Type annotation on `bindings` is redundant given the return type annotation, adding minor noise\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Visibly staged parsing: splits on '=' first, then '.', then strips each component separately",
+      "Single public function \u2014 no unnecessary helpers or extra public API",
+      "Insertion order preserved naturally via plain dict",
+      "Flat control flow with no nested functions or classes",
+      "Correct handling of all edge cases: empty lines, comments, missing '=', missing '.', empty section, empty key"
+    ],
+    "weaknesses": [
+      "Main accumulator named `bindings` instead of `bindings_ledger` as required by the spec",
+      "Error messages reference line numbers and structural tokens but do not name the actual archival field value being rejected",
+      "No secondary ledger naming for inner dicts (e.g., `section_ledger`) which the spec implies for any cross-iteration dict",
+      "Type annotation on `bindings` is redundant given the return type annotation, adding minor noise"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.953,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 83.169,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

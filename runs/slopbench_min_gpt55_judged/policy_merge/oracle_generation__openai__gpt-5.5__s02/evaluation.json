@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and closely follows the Zen of Python. It separates concerns into small pure helpers (_require_dict, _copy_dict, _merge_dicts), keeps control flow flat using guard clauses with continue, makes data movement explicit through deep copying, raises clear TypeError for invalid inputs, and uses ordinary recursion without metaprogramming. The public entry point is thin and delegates to the internal merger. The only minor quibble is that _copy_dict is a separate helper but could arguably be inlined into _merge_dicts since it's only called there and in itself\u2014however, having it named and separate actually aids local auditability. The three-branch if/continue pattern in _merge_dicts is slightly more verbose than needed (the isinstance(override_value, dict) branch could be folded into the else), but it remains readable and explicit rather than clever.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, well-decomposed, and closely follows the Zen of Python. It separates concerns into small pure helpers (_require_dict, _copy_dict, _merge_dicts), keeps control flow flat using guard clauses with continue, makes data movement explicit through deep copying, raises clear TypeError for invalid inputs, and uses ordinary recursion without metaprogramming. The public entry point is thin and delegates to the internal merger. The only minor quibble is that _copy_dict is a separate helper but could arguably be inlined into _merge_dicts since it's only called there and in itself\u2014however, having it named and separate actually aids local auditability. The three-branch if/continue pattern in _merge_dicts is slightly more verbose than needed (the isinstance(override_value, dict) branch could be folded into the else), but it remains readable and explicit rather than clever.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers with clear names\",\n    \"Flat control flow using guard clauses and continue\",\n    \"No mutation of inputs; deep copy is explicit and correct\",\n    \"Clear TypeError raised for non-dict inputs\",\n    \"Recursion is straightforward and easy to audit locally\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"The third branch (isinstance(override_value, dict) after the combined-dict check) is redundant with the final assignment and could be removed since _copy_dict would be called unnecessarily\u2014a plain assignment of override_value would suffice if callers don't mutate it later, though the copy is defensively correct\",\n    \"Slight verbosity in the three-branch continue chain where two branches could be collapsed\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers with clear names",
+      "Flat control flow using guard clauses and continue",
+      "No mutation of inputs; deep copy is explicit and correct",
+      "Clear TypeError raised for non-dict inputs",
+      "Recursion is straightforward and easy to audit locally",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "The third branch (isinstance(override_value, dict) after the combined-dict check) is redundant with the final assignment and could be removed since _copy_dict would be called unnecessarily\u2014a plain assignment of override_value would suffice if callers don't mutate it later, though the copy is defensively correct",
+      "Slight verbosity in the three-branch continue chain where two branches could be collapsed"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.251,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 29,
+    "maintainability_index": 57.901,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

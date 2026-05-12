@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and well-structured. It uses ordinary standard-library constructs (threading.Lock, collections.defaultdict), keeps control flow flat with a single guard clause in increment, makes data movement explicit (snapshot returns a fresh dict, _total is maintained as a cached sum to avoid recomputation), and raises clear errors. The redundant _total field alongside defaultdict is a minor speculative optimization but is justified by O(1) total() reads and doesn't add complexity. The docstrings are verbose for the task's simplicity\u2014a maintainer could audit behavior locally without them\u2014but they don't obscure logic. The isinstance check on max_total is slightly over-defensive (the spec says int but callers passing a float 5.0 would be rejected, which is arguably correct but undocumented in the spec). Overall the architecture is appropriately minimal with no framework-shaped code or unused extension points.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and well-structured. It uses ordinary standard-library constructs (threading.Lock, collections.defaultdict), keeps control flow flat with a single guard clause in increment, makes data movement explicit (snapshot returns a fresh dict, _total is maintained as a cached sum to avoid recomputation), and raises clear errors. The redundant _total field alongside defaultdict is a minor speculative optimization but is justified by O(1) total() reads and doesn't add complexity. The docstrings are verbose for the task's simplicity\u2014a maintainer could audit behavior locally without them\u2014but they don't obscure logic. The isinstance check on max_total is slightly over-defensive (the spec says int but callers passing a float 5.0 would be rejected, which is arguably correct but undocumented in the spec). Overall the architecture is appropriately minimal with no framework-shaped code or unused extension points.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause before mutation in increment\",\n    \"Explicit cached _total avoids recomputing sum on every total() call without hidden complexity\",\n    \"snapshot() correctly returns a plain dict copy, preventing external mutation of internal defaultdict\",\n    \"Lock scope is tight and consistent across all three public methods\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are disproportionately verbose relative to the simplicity of the code, reducing local auditability by adding noise\",\n    \"isinstance(max_total, int) type guard is undocumented in the spec and silently rejects valid numeric types like numpy integers or booleans (True would pass since bool is int subclass)\",\n    \"Maintaining both _counts and _total introduces a small redundancy that requires keeping two structures in sync, though the tradeoff is reasonable\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause before mutation in increment",
+      "Explicit cached _total avoids recomputing sum on every total() call without hidden complexity",
+      "snapshot() correctly returns a plain dict copy, preventing external mutation of internal defaultdict",
+      "Lock scope is tight and consistent across all three public methods",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Docstrings are disproportionately verbose relative to the simplicity of the code, reducing local auditability by adding noise",
+      "isinstance(max_total, int) type guard is undocumented in the spec and silently rejects valid numeric types like numpy integers or booleans (True would pass since bool is int subclass)",
+      "Maintaining both _counts and _total introduces a small redundancy that requires keeping two structures in sync, though the tradeoff is reasonable"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.371,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 64,
+    "maintainability_index": 72.952,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_generation"
+}

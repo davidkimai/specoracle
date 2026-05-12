@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable. Guard clauses keep nesting shallow, variable names are self-explanatory, data movement is explicit with no hidden mutation, and it uses only standard-library constructs. The use of `type(amount) is not int` correctly excludes booleans (since `bool` is a subclass of `int`), which is a subtle but correct choice. The only minor quibbles are the unused `from typing import Any` import (dead code that should be removed) and the `__all__` declaration which is a minor speculative abstraction for a single-function module, but neither meaningfully harms auditability or correctness.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and readable. Guard clauses keep nesting shallow, variable names are self-explanatory, data movement is explicit with no hidden mutation, and it uses only standard-library constructs. The use of `type(amount) is not int` correctly excludes booleans (since `bool` is a subclass of `int`), which is a subtle but correct choice. The only minor quibbles are the unused `from typing import Any` import (dead code that should be removed) and the `__all__` declaration which is a minor speculative abstraction for a single-function module, but neither meaningfully harms auditability or correctness.\",\n  \"strengths\": [\n    \"Flat control flow with early-continue guard clauses avoids deep nesting\",\n    \"Explicit field extraction with clear variable names\",\n    \"Correct boolean exclusion via `type(amount) is not int`\",\n    \"No mutation of input events or the input list\",\n    \"Straightforward accumulation pattern that is easy to audit locally\"\n  ],\n  \"weaknesses\": [\n    \"Unused `from typing import Any` import is dead code\",\n    \"`__all__` is a minor speculative abstraction unnecessary for a single-function module\",\n    \"Could use `setdefault` or `defaultdict` to slightly simplify the initialization block, though current approach is perfectly readable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with early-continue guard clauses avoids deep nesting",
+      "Explicit field extraction with clear variable names",
+      "Correct boolean exclusion via `type(amount) is not int`",
+      "No mutation of input events or the input list",
+      "Straightforward accumulation pattern that is easy to audit locally"
+    ],
+    "weaknesses": [
+      "Unused `from typing import Any` import is dead code",
+      "`__all__` is a minor speculative abstraction unnecessary for a single-function module",
+      "Could use `setdefault` or `defaultdict` to slightly simplify the initialization block, though current approach is perfectly readable"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.925,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 21,
+    "maintainability_index": 54.885,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "nested_json_index",
+  "variant": "baseline_generation"
+}

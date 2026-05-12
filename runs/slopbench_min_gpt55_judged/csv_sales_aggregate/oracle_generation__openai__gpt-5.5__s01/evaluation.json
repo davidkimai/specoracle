@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and easy to audit locally. Each helper does one thing, control flow is flat with guard clauses, data movement is explicit, and standard-library constructs are used throughout. The main weakness is minor over-engineering: `_has_required_headers` and `_is_complete_row` are small enough that inlining them (or collapsing into a single row-validation helper) would reduce indirection without hurting readability. The `DefaultDict[tuple[str, str], list[int]]` accumulator using a mutable list `[0, 0]` is slightly opaque compared to a plain `dict` with a named tuple or two separate int accumulators, and the `_REQUIRED_FIELDS` module-level constant adds a small speculative-abstraction feel for a private helper. The `_is_complete_row` check for `None in row` (handling CSV restval) is a thoughtful edge-case guard. Overall the code is sparse, explicit, and maintainable with only minor structural redundancy.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-decomposed, and easy to audit locally. Each helper does one thing, control flow is flat with guard clauses, data movement is explicit, and standard-library constructs are used throughout. The main weakness is minor over-engineering: `_has_required_headers` and `_is_complete_row` are small enough that inlining them (or collapsing into a single row-validation helper) would reduce indirection without hurting readability. The `DefaultDict[tuple[str, str], list[int]]` accumulator using a mutable list `[0, 0]` is slightly opaque compared to a plain `dict` with a named tuple or two separate int accumulators, and the `_REQUIRED_FIELDS` module-level constant adds a small speculative-abstraction feel for a private helper. The `_is_complete_row` check for `None in row` (handling CSV restval) is a thoughtful edge-case guard. Overall the code is sparse, explicit, and maintainable with only minor structural redundancy.\",\n  \"strengths\": [\n    \"Pure, single-responsibility helpers with clear names\",\n    \"Flat control flow using guard clauses (continue) instead of nested ifs\",\n    \"Explicit data movement: no hidden mutation or global state\",\n    \"Correct handling of edge cases: missing headers, None keys, non-integer fields\",\n    \"Final sort and output shape are transparent and easy to verify\"\n  ],\n  \"weaknesses\": [\n    \"`_has_required_headers` and `_is_complete_row` are thin enough to inline or merge into one `_parse_row` helper, reducing unnecessary indirection\",\n    \"Using a mutable `list[int]` as the accumulator value is less self-documenting than a simple two-key dict or named tuple\",\n    \"Module-level `_REQUIRED_FIELDS` constant feels like speculative abstraction for an internal-only tuple used in two small helpers\",\n    \"Type annotation `list[str] | None` on `_has_required_headers` parameter could just be `Sequence[str] | None` but the broader issue is the helper barely earns its existence\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Pure, single-responsibility helpers with clear names",
+      "Flat control flow using guard clauses (continue) instead of nested ifs",
+      "Explicit data movement: no hidden mutation or global state",
+      "Correct handling of edge cases: missing headers, None keys, non-integer fields",
+      "Final sort and output shape are transparent and easy to verify"
+    ],
+    "weaknesses": [
+      "`_has_required_headers` and `_is_complete_row` are thin enough to inline or merge into one `_parse_row` helper, reducing unnecessary indirection",
+      "Using a mutable `list[int]` as the accumulator value is less self-documenting than a simple two-key dict or named tuple",
+      "Module-level `_REQUIRED_FIELDS` constant feels like speculative abstraction for an internal-only tuple used in two small helpers",
+      "Type annotation `list[str] | None` on `_has_required_headers` parameter could just be `Sequence[str] | None` but the broader issue is the helper barely earns its existence"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.932,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 4,
+    "loc": 44,
+    "maintainability_index": 48.611,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

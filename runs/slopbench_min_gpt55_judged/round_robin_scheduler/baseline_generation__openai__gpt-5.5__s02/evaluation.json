@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It extracts enabled worker names in a single comprehension, raises a clear ValueError immediately when no workers are available, and computes assignments in one readable list comprehension using modular indexing. There is no mutation of inputs, no hidden state, no speculative abstraction, and no unnecessary complexity. The only minor quibble is that `worker_count` could be inlined as `len(enabled_workers)` directly in the expression, or alternatively the use of `itertools.cycle` with `zip` would be marginally more idiomatic for round-robin semantics and self-documenting, but the current approach is perfectly clear and auditable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It extracts enabled worker names in a single comprehension, raises a clear ValueError immediately when no workers are available, and computes assignments in one readable list comprehension using modular indexing. There is no mutation of inputs, no hidden state, no speculative abstraction, and no unnecessary complexity. The only minor quibble is that `worker_count` could be inlined as `len(enabled_workers)` directly in the expression, or alternatively the use of `itertools.cycle` with `zip` would be marginally more idiomatic for round-robin semantics and self-documenting, but the current approach is perfectly clear and auditable.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause before the main logic\",\n    \"No input mutation; enabled names are extracted into a new list\",\n    \"Clear, descriptive variable names (enabled_workers, worker_count, index, job)\",\n    \"Minimal and correct: does exactly what is required with no speculative extension points\",\n    \"Raises ValueError with a helpful message for the invalid-input case\"\n  ],\n  \"weaknesses\": [\n    \"worker_count as a separate variable adds a tiny bit of noise; could be inlined or replaced with itertools.cycle+zip for more idiomatic round-robin expression\",\n    \"No docstring or type annotation on the return type, though the signature is otherwise typed\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause before the main logic",
+      "No input mutation; enabled names are extracted into a new list",
+      "Clear, descriptive variable names (enabled_workers, worker_count, index, job)",
+      "Minimal and correct: does exactly what is required with no speculative extension points",
+      "Raises ValueError with a helpful message for the invalid-input case"
+    ],
+    "weaknesses": [
+      "worker_count as a separate variable adds a tiny bit of noise; could be inlined or replaced with itertools.cycle+zip for more idiomatic round-robin expression",
+      "No docstring or type annotation on the return type, though the signature is otherwise typed"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.133,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 14,
+    "maintainability_index": 72.172,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

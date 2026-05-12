@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. Validation is handled upfront with clear guard clauses and descriptive error messages. The loop is straightforward with no hidden state or mutation. The exponential backoff formula is expressed directly and readably. The only minor improvement would be using a list comprehension instead of the append loop, which would be slightly more Pythonic and eliminate the mutable accumulator pattern, but the current approach is still perfectly readable and auditable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. Validation is handled upfront with clear guard clauses and descriptive error messages. The loop is straightforward with no hidden state or mutation. The exponential backoff formula is expressed directly and readably. The only minor improvement would be using a list comprehension instead of the append loop, which would be slightly more Pythonic and eliminate the mutable accumulator pattern, but the current approach is still perfectly readable and auditable.\",\n  \"strengths\": [\n    \"Guard clauses are flat and explicit with clear error messages\",\n    \"No hidden state or side effects\",\n    \"Formula is expressed directly and is easy to verify\",\n    \"Function is small and fully auditable in one glance\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Using an append loop instead of a list comprehension introduces a mutable accumulator where a one-liner would suffice\",\n    \"Could use `min(base_seconds * (2 ** i), cap_seconds) for i in range(attempts)` to be more idiomatic\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses are flat and explicit with clear error messages",
+      "No hidden state or side effects",
+      "Formula is expressed directly and is easy to verify",
+      "Function is small and fully auditable in one glance",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Using an append loop instead of a list comprehension introduces a mutable accumulator where a one-liner would suffice",
+      "Could use `min(base_seconds * (2 ** i), cap_seconds) for i in range(attempts)` to be more idiomatic"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.84,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 12,
+    "maintainability_index": 63.777,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "baseline_generation"
+}

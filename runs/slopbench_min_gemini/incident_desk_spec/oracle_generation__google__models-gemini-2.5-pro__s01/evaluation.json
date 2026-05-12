@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Incident Desk Spec N-9 oracle: it uses a module-level lookup table named with the `_table` suffix convention (`_SEVERITY_PRIORITY_ADJUSTMENT_TABLE`), avoids classes entirely, preserves ticket order via a simple linear pass, uses the stable string `'routed'` as `status_code`, and keeps branch logic explicit and flat. The required-field check is a clean one-liner, the default rule fallback is straightforward, and the row construction is explicit with no hidden logic. Minor weaknesses are the overly verbose docstring (which slightly obscures the simplicity) and the all-caps table name being slightly unconventional for a module-level private dict (PEP 8 reserves that style for true constants, though it is a constant here). Overall this is a clean, auditable, flat implementation that matches the spirit and letter of the spec.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Incident Desk Spec N-9 oracle: it uses a module-level lookup table named with the `_table` suffix convention (`_SEVERITY_PRIORITY_ADJUSTMENT_TABLE`), avoids classes entirely, preserves ticket order via a simple linear pass, uses the stable string `'routed'` as `status_code`, and keeps branch logic explicit and flat. The required-field check is a clean one-liner, the default rule fallback is straightforward, and the row construction is explicit with no hidden logic. Minor weaknesses are the overly verbose docstring (which slightly obscures the simplicity) and the all-caps table name being slightly unconventional for a module-level private dict (PEP 8 reserves that style for true constants, though it is a constant here). Overall this is a clean, auditable, flat implementation that matches the spirit and letter of the spec.\",\n  \"strengths\": [\n    \"Uses a named lookup table (`_SEVERITY_PRIORITY_ADJUSTMENT_TABLE`) as the spec requests\",\n    \"No classes introduced for single-pass routing\",\n    \"Ticket order preserved via simple sequential loop\",\n    \"status_code is a stable explicit string, never a boolean\",\n    \"Default rule fallback is clear and local\",\n    \"Row construction is explicit and readable\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is verbose and somewhat redundant with the code itself, reducing conciseness\",\n    \"Table name uses ALL_CAPS which is conventional for primitive constants but slightly unusual for a dict; a lowercase `_severity_priority_table` would better match the spec's naming hint\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses a named lookup table (`_SEVERITY_PRIORITY_ADJUSTMENT_TABLE`) as the spec requests",
+      "No classes introduced for single-pass routing",
+      "Ticket order preserved via simple sequential loop",
+      "status_code is a stable explicit string, never a boolean",
+      "Default rule fallback is clear and local",
+      "Row construction is explicit and readable"
+    ],
+    "weaknesses": [
+      "Docstring is verbose and somewhat redundant with the code itself, reducing conciseness",
+      "Table name uses ALL_CAPS which is conventional for primitive constants but slightly unusual for a dict; a lowercase `_severity_priority_table` would better match the spec's naming hint"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.189,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 55,
+    "maintainability_index": 87.842,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

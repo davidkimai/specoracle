@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably well-structured with good separation of concerns via small helpers. However, it exhibits speculative over-engineering: the task spec says nothing about validating that workers are dicts, that names are strings, that enabled is a boolean, or that jobs are strings \u2014 these defensive checks add significant bulk without being required, and they violate the Zen principle of not guessing at inputs beyond what's specified. The `_require_list` helper and `_validated_jobs` function are particularly unnecessary abstractions that add indirection without clarity gain. The core logic (filter enabled workers, zip with cycle) is buried under validation scaffolding that a maintainer must wade through. A simpler implementation using `itertools.cycle` or a modulo index with just the specified guard (ValueError on no enabled workers) would be more aligned with the oracle.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably well-structured with good separation of concerns via small helpers. However, it exhibits speculative over-engineering: the task spec says nothing about validating that workers are dicts, that names are strings, that enabled is a boolean, or that jobs are strings \u2014 these defensive checks add significant bulk without being required, and they violate the Zen principle of not guessing at inputs beyond what's specified. The `_require_list` helper and `_validated_jobs` function are particularly unnecessary abstractions that add indirection without clarity gain. The core logic (filter enabled workers, zip with cycle) is buried under validation scaffolding that a maintainer must wade through. A simpler implementation using `itertools.cycle` or a modulo index with just the specified guard (ValueError on no enabled workers) would be more aligned with the oracle.\",\n  \"strengths\": [\n    \"Small, named helpers with single responsibilities\",\n    \"No mutation of inputs\",\n    \"Clear ValueError raised for the specified invalid case\",\n    \"Flat control flow within each helper\",\n    \"Readable list comprehension for the final assignment\"\n  ],\n  \"weaknesses\": [\n    \"Speculative validation (type checks on worker dicts, name strings, enabled booleans, job strings) not required by the spec \u2014 adds bulk without value\",\n    \"`_require_list` is a trivial one-liner helper that adds indirection without clarity\",\n    \"`_validated_jobs` does nothing but type-check and copy, which is unnecessary overhead\",\n    \"Overall code volume is 3-4x what the task warrants, violating sparseness and local auditability\",\n    \"Missing use of `itertools.cycle` which would make the round-robin intent more explicit and idiomatic\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Small, named helpers with single responsibilities",
+      "No mutation of inputs",
+      "Clear ValueError raised for the specified invalid case",
+      "Flat control flow within each helper",
+      "Readable list comprehension for the final assignment"
+    ],
+    "weaknesses": [
+      "Speculative validation (type checks on worker dicts, name strings, enabled booleans, job strings) not required by the spec \u2014 adds bulk without value",
+      "`_require_list` is a trivial one-liner helper that adds indirection without clarity",
+      "`_validated_jobs` does nothing but type-check and copy, which is unnecessary overhead",
+      "Overall code volume is 3-4x what the task warrants, violating sparseness and local auditability",
+      "Missing use of `itertools.cycle` which would make the round-robin intent more explicit and idiomatic"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.437,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.833,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 17,
+    "function_count": 6,
+    "loc": 44,
+    "maintainability_index": 49.767,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed into small pure helpers that each do one thing. Control flow in the main function is explicit and readable with guard clauses rather than deep nesting. Data movement is explicit\u2014no hidden mutation beyond the `seen` set passed by reference, which is a minor concern but acceptable. The helpers `_reject_duplicate`, `_read_value`, `_parse_positive_integer`, `_parse_format`, and `_is_ascii_integer` are all appropriately sized and locally auditable. The defensive isinstance checks at the top are slightly speculative (the type annotation already documents the contract), and `_is_ascii_integer` reimplements `str.isdigit()`/`str.isdecimal()` unnecessarily when `value.isdigit()` or a simple `int()` try/except would be more idiomatic and clearer. The final explicit dict construction is a minor redundancy since `values` already has the right shape. Overall this is a solid, maintainable implementation that closely follows the Zen principles with only minor deviations.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed into small pure helpers that each do one thing. Control flow in the main function is explicit and readable with guard clauses rather than deep nesting. Data movement is explicit\u2014no hidden mutation beyond the `seen` set passed by reference, which is a minor concern but acceptable. The helpers `_reject_duplicate`, `_read_value`, `_parse_positive_integer`, `_parse_format`, and `_is_ascii_integer` are all appropriately sized and locally auditable. The defensive isinstance checks at the top are slightly speculative (the type annotation already documents the contract), and `_is_ascii_integer` reimplements `str.isdigit()`/`str.isdecimal()` unnecessarily when `value.isdigit()` or a simple `int()` try/except would be more idiomatic and clearer. The final explicit dict construction is a minor redundancy since `values` already has the right shape. Overall this is a solid, maintainable implementation that closely follows the Zen principles with only minor deviations.\",\n  \"strengths\": [\n    \"Flat control flow with clear guard clauses in the main loop\",\n    \"Small, single-purpose helper functions that are easy to audit locally\",\n    \"Explicit data movement with no hidden global state\",\n    \"Clear, descriptive error messages for every failure mode\",\n    \"Duplicate flag detection is handled cleanly via a seen set\"\n  ],\n  \"weaknesses\": [\n    \"Defensive isinstance checks are speculative\u2014the type annotation already documents the contract\",\n    \"`_is_ascii_integer` reimplements `str.isdigit()` unnecessarily; a try/except int() would be more idiomatic\",\n    \"Final explicit dict reconstruction from `values` is redundant since `values` already holds the correct keys\",\n    \"Passing `seen` as a mutable set into `_reject_duplicate` is implicit mutation, slightly obscuring data flow\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with clear guard clauses in the main loop",
+      "Small, single-purpose helper functions that are easy to audit locally",
+      "Explicit data movement with no hidden global state",
+      "Clear, descriptive error messages for every failure mode",
+      "Duplicate flag detection is handled cleanly via a seen set"
+    ],
+    "weaknesses": [
+      "Defensive isinstance checks are speculative\u2014the type annotation already documents the contract",
+      "`_is_ascii_integer` reimplements `str.isdigit()` unnecessarily; a try/except int() would be more idiomatic",
+      "Final explicit dict reconstruction from `values` is redundant since `values` already holds the correct keys",
+      "Passing `seen` as a mutable set into `_reject_duplicate` is implicit mutation, slightly obscuring data flow"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.975,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 11,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 6,
+    "loc": 74,
+    "maintainability_index": 40.267,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_generation"
+}

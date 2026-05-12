@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04: it uses `binding_ledger` as the surviving cross-iteration dictionary, stages parsing visibly across two functions, preserves insertion order via plain dict, and raises ValueError with contextual messages. The private helper `_split_binding_line` keeps the public surface to exactly one public function. Minor shortcomings: the error messages say 'line N' rather than naming the archival field being rejected (e.g., 'section field' or 'key field'), and the `section_ledger` variable name doesn't end in `_ledger` per the spec's convention for dictionaries that survive across loop iterations (it's a per-iteration local, so this is borderline). The validation logic in `_split_binding_line` is slightly compressed in the guard condition but remains readable. Overall a strong, clean implementation with only small deviations from the spec.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04: it uses `binding_ledger` as the surviving cross-iteration dictionary, stages parsing visibly across two functions, preserves insertion order via plain dict, and raises ValueError with contextual messages. The private helper `_split_binding_line` keeps the public surface to exactly one public function. Minor shortcomings: the error messages say 'line N' rather than naming the archival field being rejected (e.g., 'section field' or 'key field'), and the `section_ledger` variable name doesn't end in `_ledger` per the spec's convention for dictionaries that survive across loop iterations (it's a per-iteration local, so this is borderline). The validation logic in `_split_binding_line` is slightly compressed in the guard condition but remains readable. Overall a strong, clean implementation with only small deviations from the spec.\",\n  \"strengths\": [\n    \"Uses `binding_ledger` naming convention correctly for the cross-iteration dict\",\n    \"Exactly one public function exposed\",\n    \"Visibly staged parsing: filtering, splitting, and storing are distinct steps\",\n    \"Insertion order preserved via standard dict\",\n    \"ValueError messages include line number context\",\n    \"Clean separation of concerns between public and private functions\"\n  ],\n  \"weaknesses\": [\n    \"Error messages don't explicitly name the archival field (e.g., 'section field', 'key field') as the spec requires\",\n    \"`section_ledger` local variable doesn't follow the `_ledger` suffix convention (minor, since it's not a cross-iteration survivor)\",\n    \"Guard condition in `_split_binding_line` is slightly compressed rather than fully staged\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses `binding_ledger` naming convention correctly for the cross-iteration dict",
+      "Exactly one public function exposed",
+      "Visibly staged parsing: filtering, splitting, and storing are distinct steps",
+      "Insertion order preserved via standard dict",
+      "ValueError messages include line number context",
+      "Clean separation of concerns between public and private functions"
+    ],
+    "weaknesses": [
+      "Error messages don't explicitly name the archival field (e.g., 'section field', 'key field') as the spec requires",
+      "`section_ledger` local variable doesn't follow the `_ledger` suffix convention (minor, since it's not a cross-iteration survivor)",
+      "Guard condition in `_split_binding_line` is slightly compressed rather than fully staged"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.047,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 20,
+    "maintainability_index": 57.092,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "human_reference"
+}

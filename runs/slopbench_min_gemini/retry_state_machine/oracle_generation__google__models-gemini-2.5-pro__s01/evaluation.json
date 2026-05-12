@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and straightforward. It uses a simple class with explicit state, flat control flow, and clear naming. The methods are small and do exactly one thing each. The `isinstance` check is slightly over-engineered for the task (booleans are ints in Python, which could be a subtle edge case, but the spec just says positive int), and the docstrings are verbose relative to the simplicity of the code\u2014a maintainer reading this doesn't need paragraph-length explanations for `record_failure`. The `remaining()` helper correctly clamps to zero. No speculative abstractions, no hidden state, no metaprogramming. Minor deductions for docstring verbosity adding noise without proportional clarity gain, and the `isinstance` guard being slightly more defensive than the spec requires.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and straightforward. It uses a simple class with explicit state, flat control flow, and clear naming. The methods are small and do exactly one thing each. The `isinstance` check is slightly over-engineered for the task (booleans are ints in Python, which could be a subtle edge case, but the spec just says positive int), and the docstrings are verbose relative to the simplicity of the code\u2014a maintainer reading this doesn't need paragraph-length explanations for `record_failure`. The `remaining()` helper correctly clamps to zero. No speculative abstractions, no hidden state, no metaprogramming. Minor deductions for docstring verbosity adding noise without proportional clarity gain, and the `isinstance` guard being slightly more defensive than the spec requires.\",\n  \"strengths\": [\n    \"Minimal, flat class with no unnecessary abstractions or extension points\",\n    \"Explicit state management with clearly named private attributes\",\n    \"Guard clause in __init__ raises ValueError with a clear message\",\n    \"remaining() correctly clamps to zero without branching\",\n    \"All methods are single-purpose and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are disproportionately verbose for such simple methods, adding noise\",\n    \"isinstance(max_attempts, int) check excludes valid numeric types not in spec and may surprise callers passing numpy ints or similar\",\n    \"Module-level docstring and class docstring are redundant given the self-explanatory code\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Minimal, flat class with no unnecessary abstractions or extension points",
+      "Explicit state management with clearly named private attributes",
+      "Guard clause in __init__ raises ValueError with a clear message",
+      "remaining() correctly clamps to zero without branching",
+      "All methods are single-purpose and locally auditable"
+    ],
+    "weaknesses": [
+      "Docstrings are disproportionately verbose for such simple methods, adding noise",
+      "isinstance(max_attempts, int) check excludes valid numeric types not in spec and may surprise callers passing numpy ints or similar",
+      "Module-level docstring and class docstring are redundant given the self-explanatory code"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.023,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 44,
+    "maintainability_index": 68.494,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and easy to audit locally. It correctly collects all tasks (including dependency-only nodes), builds an explicit prerequisite map without mutating the input, and uses a straightforward Kahn-style loop with a clear cycle-detection guard. Control flow is shallow, names are self-explanatory, and there is no speculative abstraction or framework-shaped scaffolding. The only minor quibble is that the docstring is slightly verbose for code this readable, and splitting out a small `build_graph` helper could marginally improve locality, but neither issue meaningfully detracts from the overall quality.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and easy to audit locally. It correctly collects all tasks (including dependency-only nodes), builds an explicit prerequisite map without mutating the input, and uses a straightforward Kahn-style loop with a clear cycle-detection guard. Control flow is shallow, names are self-explanatory, and there is no speculative abstraction or framework-shaped scaffolding. The only minor quibble is that the docstring is slightly verbose for code this readable, and splitting out a small `build_graph` helper could marginally improve locality, but neither issue meaningfully detracts from the overall quality.\",\n  \"strengths\": [\n    \"Flat control flow with a single while-loop and one guard clause for cycle detection\",\n    \"Explicit data movement: input is never mutated, all derived structures are named clearly\",\n    \"Correct inclusion of tasks that appear only as dependencies via the all_tasks union\",\n    \"Alphabetical sorting is applied at the point of batch construction, not as a post-pass\",\n    \"Standard-library only; no clever metaprogramming or hidden state\"\n  ],\n  \"weaknesses\": [\n    \"Docstring length slightly exceeds what the self-evident code needs\",\n    \"Could extract a small `collect_all_tasks` or `build_prereq_map` helper to make each concern independently auditable, though the current size doesn't demand it\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single while-loop and one guard clause for cycle detection",
+      "Explicit data movement: input is never mutated, all derived structures are named clearly",
+      "Correct inclusion of tasks that appear only as dependencies via the all_tasks union",
+      "Alphabetical sorting is applied at the point of batch construction, not as a post-pass",
+      "Standard-library only; no clever metaprogramming or hidden state"
+    ],
+    "weaknesses": [
+      "Docstring length slightly exceeds what the self-evident code needs",
+      "Could extract a small `collect_all_tasks` or `build_prereq_map` helper to make each concern independently auditable, though the current size doesn't demand it"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.116,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 91.147,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

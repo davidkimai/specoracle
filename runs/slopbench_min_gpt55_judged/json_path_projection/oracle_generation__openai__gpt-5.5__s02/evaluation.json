@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into small, pure, single-purpose helpers (_validate_record, _validate_paths, _split_path, _resolve_path, _parse_list_index), keeps control flow flat with guard clauses and early returns, uses a sentinel object to distinguish missing values from None without hidden mutation, raises clear typed errors for invalid inputs, and relies entirely on ordinary standard-library constructs. Data movement is explicit, names are self-explanatory, and there are no speculative abstractions or unused extension points. The only minor quibble is that _resolve_path's loop uses continue statements that add a small amount of visual noise, and negative list indexes are silently rejected (isdecimal() excludes '-') which is a reasonable but undocumented design choice. Overall the code is sparse, auditable, and structurally clean.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into small, pure, single-purpose helpers (_validate_record, _validate_paths, _split_path, _resolve_path, _parse_list_index), keeps control flow flat with guard clauses and early returns, uses a sentinel object to distinguish missing values from None without hidden mutation, raises clear typed errors for invalid inputs, and relies entirely on ordinary standard-library constructs. Data movement is explicit, names are self-explanatory, and there are no speculative abstractions or unused extension points. The only minor quibble is that _resolve_path's loop uses continue statements that add a small amount of visual noise, and negative list indexes are silently rejected (isdecimal() excludes '-') which is a reasonable but undocumented design choice. Overall the code is sparse, auditable, and structurally clean.\",\n  \"strengths\": [\n    \"Small, pure helpers with single responsibilities\",\n    \"Flat control flow using guard clauses and early returns\",\n    \"Sentinel _MISSING cleanly separates 'not found' from None default\",\n    \"Explicit validation with clear TypeError/ValueError messages\",\n    \"No mutation of input, no global state, no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"Negative list indexes silently fail without documentation of that choice\",\n    \"continue statements in _resolve_path add slight visual noise vs. elif chain\",\n    \"Type annotation dict[str, str] on paths is slightly misleading since values are paths not arbitrary strings (minor)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helpers with single responsibilities",
+      "Flat control flow using guard clauses and early returns",
+      "Sentinel _MISSING cleanly separates 'not found' from None default",
+      "Explicit validation with clear TypeError/ValueError messages",
+      "No mutation of input, no global state, no metaprogramming"
+    ],
+    "weaknesses": [
+      "Negative list indexes silently fail without documentation of that choice",
+      "continue statements in _resolve_path add slight visual noise vs. elif chain",
+      "Type annotation dict[str, str] on paths is slightly misleading since values are paths not arbitrary strings (minor)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.062,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.833,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 23,
+    "function_count": 6,
+    "loc": 50,
+    "maintainability_index": 45.298,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "oracle_generation"
+}

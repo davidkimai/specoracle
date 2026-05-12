@@ -1,0 +1,89 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": {
+    "attempts": [
+      {
+        "attempt_index": 0,
+        "code": "\"\"\"\nthread_safe_counter.py\n\nThread-safe bounded counter for coordinating named counters across workers.\n\"\"\"\n\nimport threading\nfrom collections import defaultdict\n\n\nclass BoundedCounter:\n    \"\"\"Coordinate named counters across threads with a shared upper bound.\"\"\"\n\n    def __init__(self, max_total: int) -> None:\n        if max_total <= 0:\n            raise ValueError(f\"max_total must be positive, got {max_total!r}\")\n        self._max_total = max_total\n        self._counts: dict[str, int] = defaultdict(int)\n        self._total = 0\n        self._lock = threading.Lock()\n\n    def increment(self, name: str) -> int:\n        \"\"\"Increment the named counter by one and return its new value.\n\n        Raises OverflowError if the operation would exceed max_total.\n        \"\"\"\n        with self._lock:\n            if self._total >= self._max_total:\n                raise OverflowError(\n                    f\"Cannot increment '{name}': total would exceed max_total={self._max_total}\"\n                )\n            self._total += 1\n            self._counts[name] += 1\n            return self._counts[name]\n\n    def total(self) -> int:\n        \"\"\"Return the total count across all names.\"\"\"\n        with self._lock:\n            return self._total\n\n    def snapshot(self) -> dict[str, int]:\n        \"\"\"Return a copy of nonzero counts keyed by name.\"\"\"\n        with self._lock:\n            return {name: count for name, count in self._counts.items() if count > 0}",
+        "feedback_prompt": null,
+        "gate_failures": {},
+        "pytest": {
+          "duration_seconds": 0.828,
+          "exit_code": 0,
+          "passed": true,
+          "sandbox": "docker:specoracle-pytest:py311-alpine",
+          "sandbox_error": null,
+          "stderr": "",
+          "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+          "timed_out": false
+        },
+        "raw_response": "```python\n\"\"\"\nthread_safe_counter.py\n\nThread-safe bounded counter for coordinating named counters across workers.\n\"\"\"\n\nimport threading\nfrom collections import defaultdict\n\n\nclass BoundedCounter:\n    \"\"\"Coordinate named counters across threads with a shared upper bound.\"\"\"\n\n    def __init__(self, max_total: int) -> None:\n        if max_total <= 0:\n            raise ValueError(f\"max_total must be positive, got {max_total!r}\")\n        self._max_total = max_total\n        self._counts: dict[str, int] = defaultdict(int)\n        self._total = 0\n        self._lock = threading.Lock()\n\n    def increment(self, name: str) -> int:\n        \"\"\"Increment the named counter by one and return its new value.\n\n        Raises OverflowError if the operation would exceed max_total.\n        \"\"\"\n        with self._lock:\n            if self._total >= self._max_total:\n                raise OverflowError(\n                    f\"Cannot increment '{name}': total would exceed max_total={self._max_total}\"\n                )\n            self._total += 1\n            self._counts[name] += 1\n            return self._counts[name]\n\n    def total(self) -> int:\n        \"\"\"Return the total count across all names.\"\"\"\n        with self._lock:\n            return self._total\n\n    def snapshot(self) -> dict[str, int]:\n        \"\"\"Return a copy of nonzero counts keyed by name.\"\"\"\n        with self._lock:\n            return {name: count for name, count in self._counts.items() if count > 0}\n```",
+        "static_metrics": {
+          "class_count": 1,
+          "cyclomatic_complexity_average": 2.2,
+          "cyclomatic_complexity_max": 3,
+          "cyclomatic_complexity_total": 11,
+          "function_count": 4,
+          "loc": 35,
+          "maintainability_index": 80.461,
+          "max_nesting_depth": 2,
+          "syntax_error": null,
+          "syntax_ok": true
+        }
+      }
+    ],
+    "constraints": {
+      "max_cc": 8,
+      "max_nesting": 3,
+      "max_retries": 3,
+      "require_pytest": true
+    },
+    "feedback_prompts": [],
+    "hard_cc_pass": true,
+    "hard_nesting_pass": true,
+    "hard_pytest_pass": true,
+    "hybrid_feedback_cc_delta": null,
+    "hybrid_gate_pass": true,
+    "hybrid_retries": 0,
+    "max_retries_exceeded": false
+  },
+  "judge": {
+    "error": null,
+    "rationale": "not requested",
+    "raw_response": "",
+    "score": null,
+    "skipped": true,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n\n\nZen of Python primitives:\n- Beautiful is better than ugly.\n- Explicit is better than implicit.\n- Simple is better than complex.\n- Complex is better than complicated.\n- Flat is better than nested.\n- Sparse is better than dense.\n- Readability counts.\n- Special cases are not special enough to break the rules.\n- Although practicality beats purity.\n- Errors should never pass silently.\n- Unless explicitly silenced.\n- In the face of ambiguity, refuse the temptation to guess.\n- There should be one obvious way to do it.\n- Although that way may not be obvious at first unless you are Dutch.\n- Now is better than never.\n- Although never is often better than right now.\n- If the implementation is hard to explain, it is a bad idea.\n- If the implementation is easy to explain, it may be a good idea.\n- Namespaces are one honking great idea -- let's do more of those!",
+  "oracle_spec_label": "hybrid_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.239,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.2,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 4,
+    "loc": 35,
+    "maintainability_index": 80.461,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "hybrid_generation"
+}

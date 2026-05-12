@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. The separation of parsing into a small pure helper `_parse_row` keeps `aggregate_sales` readable and auditable at a glance. Control flow is flat with guard clauses (early returns via `None`), data movement is explicit through the `totals` dict and the final list comprehension, and no speculative abstractions or hidden state exist. Standard library constructs (`csv.DictReader`, `StringIO`, `dict.setdefault`, `sorted`) are used idiomatically. The one minor quibble is that `row.get('quantity', '')` and `row.get('cents', '')` could silently pass an empty string to `int()` raising `ValueError` which is caught\u2014this is correct but slightly indirect; a more explicit field-presence check would be marginally clearer. The output construction in the list comprehension is explicit and matches the required shape exactly. Overall this is a near-ideal realization of the Zen oracle for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. The separation of parsing into a small pure helper `_parse_row` keeps `aggregate_sales` readable and auditable at a glance. Control flow is flat with guard clauses (early returns via `None`), data movement is explicit through the `totals` dict and the final list comprehension, and no speculative abstractions or hidden state exist. Standard library constructs (`csv.DictReader`, `StringIO`, `dict.setdefault`, `sorted`) are used idiomatically. The one minor quibble is that `row.get('quantity', '')` and `row.get('cents', '')` could silently pass an empty string to `int()` raising `ValueError` which is caught\u2014this is correct but slightly indirect; a more explicit field-presence check would be marginally clearer. The output construction in the list comprehension is explicit and matches the required shape exactly. Overall this is a near-ideal realization of the Zen oracle for this task.\",\n  \"strengths\": [\n    \"Clean separation of concerns: parsing logic isolated in a small pure helper\",\n    \"Flat control flow with guard clauses instead of nested conditionals\",\n    \"Explicit data movement through named variables and a clear accumulator dict\",\n    \"Ordinary standard-library constructs only, no clever metaprogramming\",\n    \"Output shape is constructed explicitly and matches spec exactly\",\n    \"Sorting is handled simply via `sorted()` on the dict items\"\n  ],\n  \"weaknesses\": [\n    \"Using `row.get('quantity', '')` with a fallback empty string is slightly indirect; an explicit missing-key check would be marginally more readable\",\n    \"The `(row.get('region') or '').strip()` idiom conflates missing keys with falsy values, which is a minor implicit behavior\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of concerns: parsing logic isolated in a small pure helper",
+      "Flat control flow with guard clauses instead of nested conditionals",
+      "Explicit data movement through named variables and a clear accumulator dict",
+      "Ordinary standard-library constructs only, no clever metaprogramming",
+      "Output shape is constructed explicitly and matches spec exactly",
+      "Sorting is handled simply via `sorted()` on the dict items"
+    ],
+    "weaknesses": [
+      "Using `row.get('quantity', '')` with a fallback empty string is slightly indirect; an explicit missing-key check would be marginally more readable",
+      "The `(row.get('region') or '').strip()` idiom conflates missing keys with falsy values, which is a minor implicit behavior"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 0.894,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 30,
+    "maintainability_index": 54.614,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "human_reference"
+}

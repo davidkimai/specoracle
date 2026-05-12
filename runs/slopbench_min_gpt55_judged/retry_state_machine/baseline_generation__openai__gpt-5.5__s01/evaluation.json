@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit with well-named attributes and methods that make local auditing straightforward. The use of `__slots__` is a reasonable micro-optimization that also documents the data layout. The docstrings are concise and accurate. The main weakness is the over-engineered type check in `__init__` \u2014 the task only specifies raising ValueError for non-positive values, and adding an `isinstance` guard against booleans and non-integers is speculative defensive programming not called for by the spec, adding noise without clear benefit. The `remaining()` method uses a named intermediate variable (`remaining_attempts`) that adds a line without improving clarity over a simple `return max(0, self._max_attempts - self._failures)`. These are minor issues; overall the code is simple, correct, and easy to explain.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and explicit with well-named attributes and methods that make local auditing straightforward. The use of `__slots__` is a reasonable micro-optimization that also documents the data layout. The docstrings are concise and accurate. The main weakness is the over-engineered type check in `__init__` \u2014 the task only specifies raising ValueError for non-positive values, and adding an `isinstance` guard against booleans and non-integers is speculative defensive programming not called for by the spec, adding noise without clear benefit. The `remaining()` method uses a named intermediate variable (`remaining_attempts`) that adds a line without improving clarity over a simple `return max(0, self._max_attempts - self._failures)`. These are minor issues; overall the code is simple, correct, and easy to explain.\",\n  \"strengths\": [\n    \"__slots__ makes data layout explicit and prevents accidental attribute addition\",\n    \"All methods are short, flat, and do exactly one thing\",\n    \"Clear ValueError messages with no silent fallbacks\",\n    \"No speculative abstractions or unused extension points\",\n    \"Names are self-explanatory and consistent with the spec\"\n  ],\n  \"weaknesses\": [\n    \"Type-checking for bool/non-int in __init__ is speculative and not required by the spec\",\n    \"Intermediate variable in remaining() adds a line without improving readability over max(0, ...)\",\n    \"Two separate ValueError raises in __init__ could be a single guard with a combined message, reducing verbosity\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "__slots__ makes data layout explicit and prevents accidental attribute addition",
+      "All methods are short, flat, and do exactly one thing",
+      "Clear ValueError messages with no silent fallbacks",
+      "No speculative abstractions or unused extension points",
+      "Names are self-explanatory and consistent with the spec"
+    ],
+    "weaknesses": [
+      "Type-checking for bool/non-int in __init__ is speculative and not required by the spec",
+      "Intermediate variable in remaining() adds a line without improving readability over max(0, ...)",
+      "Two separate ValueError raises in __init__ could be a single guard with a combined message, reducing verbosity"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.037,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 5,
+    "loc": 23,
+    "maintainability_index": 55.389,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "baseline_generation"
+}

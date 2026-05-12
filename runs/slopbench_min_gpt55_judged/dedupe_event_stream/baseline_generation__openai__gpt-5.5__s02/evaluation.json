@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with explicit guard clauses that skip malformed events early. Data movement is transparent \u2014 the retained list and timestamp dict are local, mutation is visible, and there's no hidden state. The variable name `last_kept_timestamp_by_key` is verbose but self-documenting. The hashability check is a thoughtful defensive addition. The main loop is a single level of nesting with guard-clause continues, which keeps the happy path clear. Minor weaknesses: the `Hashable` check via `isinstance` is somewhat unusual (unhashable types like lists would raise a TypeError on dict key insertion anyway, so the check adds noise without being strictly necessary), and the long variable name slightly hurts sparseness. A small helper to extract and validate the composite key would improve local auditability and separation of concerns per the 'small pure helpers' constraint, but the current monolithic loop is still easy to audit. Overall this is a solid, idiomatic implementation that closely follows the structural spec.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with explicit guard clauses that skip malformed events early. Data movement is transparent \u2014 the retained list and timestamp dict are local, mutation is visible, and there's no hidden state. The variable name `last_kept_timestamp_by_key` is verbose but self-documenting. The hashability check is a thoughtful defensive addition. The main loop is a single level of nesting with guard-clause continues, which keeps the happy path clear. Minor weaknesses: the `Hashable` check via `isinstance` is somewhat unusual (unhashable types like lists would raise a TypeError on dict key insertion anyway, so the check adds noise without being strictly necessary), and the long variable name slightly hurts sparseness. A small helper to extract and validate the composite key would improve local auditability and separation of concerns per the 'small pure helpers' constraint, but the current monolithic loop is still easy to audit. Overall this is a solid, idiomatic implementation that closely follows the structural spec.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses \u2014 no deep nesting\",\n    \"Explicit local state with no hidden mutation or global side effects\",\n    \"Correct bool-exclusion from int check (`isinstance(timestamp, bool)`)\",\n    \"Clear, descriptive names that make behavior easy to explain\",\n    \"Handles all malformed-event cases explicitly\"\n  ],\n  \"weaknesses\": [\n    \"No small pure helpers extracted (e.g., for event validation or key extraction), violating the 'prefer small pure helpers' constraint\",\n    \"Hashability check via `isinstance(value, Hashable)` is redundant \u2014 unhashable values would raise TypeError on dict insertion, and the check itself can give false positives for some types\",\n    \"Variable name `last_kept_timestamp_by_key` is overly verbose for a local variable in a short function\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses \u2014 no deep nesting",
+      "Explicit local state with no hidden mutation or global side effects",
+      "Correct bool-exclusion from int check (`isinstance(timestamp, bool)`)",
+      "Clear, descriptive names that make behavior easy to explain",
+      "Handles all malformed-event cases explicitly"
+    ],
+    "weaknesses": [
+      "No small pure helpers extracted (e.g., for event validation or key extraction), violating the 'prefer small pure helpers' constraint",
+      "Hashability check via `isinstance(value, Hashable)` is redundant \u2014 unhashable values would raise TypeError on dict insertion, and the check itself can give false positives for some types",
+      "Variable name `last_kept_timestamp_by_key` is overly verbose for a local variable in a short function"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.226,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 28,
+    "maintainability_index": 53.919,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dedupe_event_stream",
+  "variant": "baseline_generation"
+}

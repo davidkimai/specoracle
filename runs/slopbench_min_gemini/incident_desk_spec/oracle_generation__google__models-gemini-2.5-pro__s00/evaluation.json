@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate submitted an empty implementation \u2014 there is literally no code present. It satisfies none of the functional requirements (routing, skipping invalid tickets, severity adjustments, returning routed rows) and none of the structural guidelines from the Zen-of-Python oracle (no lookup table, no explicit branch strings, no order preservation, nothing). An empty file is the worst possible submission.",
+    "raw_response": "```json\n{\n  \"score\": 1,\n  \"rationale\": \"The candidate submitted an empty implementation \u2014 there is literally no code present. It satisfies none of the functional requirements (routing, skipping invalid tickets, severity adjustments, returning routed rows) and none of the structural guidelines from the Zen-of-Python oracle (no lookup table, no explicit branch strings, no order preservation, nothing). An empty file is the worst possible submission.\",\n  \"strengths\": [\"No classes were introduced (vacuously true)\"],\n  \"weaknesses\": [\n    \"No code whatsoever \u2014 zero functional correctness\",\n    \"No severity adjustment logic (critical +10, high +5)\",\n    \"No rule lookup or default fallback\",\n    \"No ticket validation or skipping of incomplete tickets\",\n    \"No _table naming convention or local lookup table\",\n    \"No status_code field set to 'routed'\",\n    \"Ticket order preservation is irrelevant since nothing is returned\",\n    \"Completely fails every structural guideline in the oracle\"\n  ]\n}\n```",
+    "score": 1,
+    "skipped": false,
+    "strengths": [
+      "No classes were introduced (vacuously true)"
+    ],
+    "weaknesses": [
+      "No code whatsoever \u2014 zero functional correctness",
+      "No severity adjustment logic (critical +10, high +5)",
+      "No rule lookup or default fallback",
+      "No ticket validation or skipping of incomplete tickets",
+      "No _table naming convention or local lookup table",
+      "No status_code field set to 'routed'",
+      "Ticket order preservation is irrelevant since nothing is returned",
+      "Completely fails every structural guideline in the oracle"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.147,
+    "exit_code": 2,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "\n==================================== ERRORS ====================================\n______________________ ERROR collecting test_solution.py _______________________\nImportError while importing test module '/work/test_solution.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/local/lib/python3.11/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntest_solution.py:1: in <module>\n    from solution import route_tickets\nE   ImportError: cannot import name 'route_tickets' from 'solution' (/work/solution.py)\n=========================== short test summary info ============================\nERROR test_solution.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.08s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 0.0,
+    "cyclomatic_complexity_max": 0,
+    "cyclomatic_complexity_total": 0,
+    "function_count": 0,
+    "loc": 0,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

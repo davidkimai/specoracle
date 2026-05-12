@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, well-structured realization of the task with excellent adherence to the Zen of Python principles. It decomposes validation into small, focused helpers with clear names, keeps the main `resolve_flags` function flat and readable, makes data movement explicit (copying defaults into `resolved`, then layering updates), and raises clear typed errors for invalid inputs. The control flow in the entry point reads almost like a specification. The only minor critiques are that `_validate_flag_map` is called both directly and via `_validate_segments`, creating a slight indirection chain, and the validation helpers are somewhat verbose for what is essentially a straightforward task\u2014a maintainer might reasonably question whether full recursive type-checking of all inputs is warranted versus checking only what's actually used. But these are minor concerns; the architecture is honest, non-speculative, and locally auditable.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, well-structured realization of the task with excellent adherence to the Zen of Python principles. It decomposes validation into small, focused helpers with clear names, keeps the main `resolve_flags` function flat and readable, makes data movement explicit (copying defaults into `resolved`, then layering updates), and raises clear typed errors for invalid inputs. The control flow in the entry point reads almost like a specification. The only minor critiques are that `_validate_flag_map` is called both directly and via `_validate_segments`, creating a slight indirection chain, and the validation helpers are somewhat verbose for what is essentially a straightforward task\u2014a maintainer might reasonably question whether full recursive type-checking of all inputs is warranted versus checking only what's actually used. But these are minor concerns; the architecture is honest, non-speculative, and locally auditable.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers with descriptive names make each piece easy to audit independently\",\n    \"Main resolve_flags function is flat and reads like a direct translation of the spec\",\n    \"Explicit data movement: defaults copied first, then segment overrides applied in order, then user overrides\",\n    \"Clear TypeError messages with field paths for invalid inputs\",\n    \"No mutation of inputs; returns a new dict\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Validation of all input types recursively may be over-engineered for the stated task; the spec doesn't explicitly require deep validation\",\n    \"_validate_flag_map is reused inside _validate_segments creating a small indirection that slightly obscures the validation flow\",\n    \"The helper split between _user_segment_names and _user_overrides is reasonable but adds a small amount of boilerplate for what could be two inline guard clauses in the main function\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers with descriptive names make each piece easy to audit independently",
+      "Main resolve_flags function is flat and reads like a direct translation of the spec",
+      "Explicit data movement: defaults copied first, then segment overrides applied in order, then user overrides",
+      "Clear TypeError messages with field paths for invalid inputs",
+      "No mutation of inputs; returns a new dict",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Validation of all input types recursively may be over-engineered for the stated task; the spec doesn't explicitly require deep validation",
+      "_validate_flag_map is reused inside _validate_segments creating a small indirection that slightly obscures the validation flow",
+      "The helper split between _user_segment_names and _user_overrides is reasonable but adds a small amount of boilerplate for what could be two inline guard clauses in the main function"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.417,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.167,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 6,
+    "loc": 46,
+    "maintainability_index": 49.305,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "oracle_generation"
+}

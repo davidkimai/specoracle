@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden mutation, clear variable names, and straightforward control flow. The guard clause pattern (continue on None) keeps nesting shallow. The set union for keys is idiomatic and readable. The docstring accurately describes behavior. Minor quibbles: the function could benefit from a type guard raising TypeError on non-dict inputs (the spec says 'raise clear errors for invalid inputs'), and the all_keys intermediate variable is slightly redundant since it could be inlined, but it does aid readability. Overall this is a textbook example of simple, auditable, Pythonic code.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It uses a single pure recursive function with no hidden mutation, clear variable names, and straightforward control flow. The guard clause pattern (continue on None) keeps nesting shallow. The set union for keys is idiomatic and readable. The docstring accurately describes behavior. Minor quibbles: the function could benefit from a type guard raising TypeError on non-dict inputs (the spec says 'raise clear errors for invalid inputs'), and the all_keys intermediate variable is slightly redundant since it could be inlined, but it does aid readability. Overall this is a textbook example of simple, auditable, Pythonic code.\",\n  \"strengths\": [\n    \"Flat control flow with guard clause (continue) avoids deep nesting\",\n    \"No mutation of inputs; result is built fresh\",\n    \"Recursive call reuses the same function cleanly without a separate helper\",\n    \"Explicit key-set union makes data movement transparent\",\n    \"Clear, descriptive variable names (override_value, default_value)\",\n    \"Accurate docstring\"\n  ],\n  \"weaknesses\": [\n    \"No input validation: passing non-dict arguments silently misbehaves instead of raising a clear TypeError\",\n    \"all_keys intermediate variable is minor overhead but harmless; could be inlined\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clause (continue) avoids deep nesting",
+      "No mutation of inputs; result is built fresh",
+      "Recursive call reuses the same function cleanly without a separate helper",
+      "Explicit key-set union makes data movement transparent",
+      "Clear, descriptive variable names (override_value, default_value)",
+      "Accurate docstring"
+    ],
+    "weaknesses": [
+      "No input validation: passing non-dict arguments silently misbehaves instead of raising a clear TypeError",
+      "all_keys intermediate variable is minor overhead but harmless; could be inlined"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 3.45,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 21,
+    "maintainability_index": 87.701,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

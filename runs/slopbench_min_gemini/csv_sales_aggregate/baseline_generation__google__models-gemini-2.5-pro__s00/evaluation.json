@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally reasonable: it uses standard-library constructs (csv.DictReader, defaultdict, io.StringIO), keeps control flow relatively flat with guard clauses, and makes data movement explicit. However, it is a single monolithic function rather than small pure helpers as the spec prefers, the docstring is verbose to the point of restating the task spec rather than adding insight, the intermediate `result` list built from a comprehension and then sorted in-place is a minor awkwardness (could be one sorted() call), and the `defaultdict` with a lambda returning a mutable dict is slightly more opaque than a simple tuple accumulator or a named counter. The header validation returning `[]` silently on bad input rather than raising is a mild violation of the 'raise clear errors for invalid inputs' constraint. Overall the code is clean and auditable but misses the 'small pure helpers' decomposition and has a few minor structural rough edges.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally reasonable: it uses standard-library constructs (csv.DictReader, defaultdict, io.StringIO), keeps control flow relatively flat with guard clauses, and makes data movement explicit. However, it is a single monolithic function rather than small pure helpers as the spec prefers, the docstring is verbose to the point of restating the task spec rather than adding insight, the intermediate `result` list built from a comprehension and then sorted in-place is a minor awkwardness (could be one sorted() call), and the `defaultdict` with a lambda returning a mutable dict is slightly more opaque than a simple tuple accumulator or a named counter. The header validation returning `[]` silently on bad input rather than raising is a mild violation of the 'raise clear errors for invalid inputs' constraint. Overall the code is clean and auditable but misses the 'small pure helpers' decomposition and has a few minor structural rough edges.\",\n  \"strengths\": [\n    \"Uses ordinary standard-library constructs throughout (csv, io, defaultdict)\",\n    \"Guard clauses keep the per-row logic flat and readable\",\n    \"Explicit None-key check for malformed rows with extra columns\",\n    \"Data movement is explicit; no hidden mutation or global state\",\n    \"Variable names clearly communicate intent\"\n  ],\n  \"weaknesses\": [\n    \"Single monolithic function; no small pure helpers (e.g., parse_row, build_result)\",\n    \"Returns [] silently on missing headers instead of raising a clear error\",\n    \"Docstring is excessively long, restating the task spec rather than adding implementation insight\",\n    \"Intermediate list + in-place sort could be a single sorted() call for clarity\",\n    \"defaultdict with a mutable-dict factory is slightly more opaque than a simpler accumulator pattern\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses ordinary standard-library constructs throughout (csv, io, defaultdict)",
+      "Guard clauses keep the per-row logic flat and readable",
+      "Explicit None-key check for malformed rows with extra columns",
+      "Data movement is explicit; no hidden mutation or global state",
+      "Variable names clearly communicate intent"
+    ],
+    "weaknesses": [
+      "Single monolithic function; no small pure helpers (e.g., parse_row, build_result)",
+      "Returns [] silently on missing headers instead of raising a clear error",
+      "Docstring is excessively long, restating the task spec rather than adding implementation insight",
+      "Intermediate list + in-place sort could be a single sorted() call for clarity",
+      "defaultdict with a mutable-dict factory is slightly more opaque than a simpler accumulator pattern"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 0.874,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 71,
+    "maintainability_index": 80.889,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "baseline_generation"
+}

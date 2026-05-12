@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a single public function with no helpers, uses explicit branch-label variable names for money-affecting decisions (money_status_branch_is_paid, money_amount_branch_is_integer, money_region_branch_is_named), returns the exact legacy keys, and produces a visible staged audit trail through the guard variables before accumulation. The sorting and output construction are clean and readable. Minor weaknesses include the absence of any legacy audit stage comments (the spec allows them and the staged structure invites them), and the type annotation on `buckets` is slightly noisy. The `setdefault` pattern is idiomatic but slightly clever compared to an explicit if-not-in branch that would make the audit trail even more visible. Overall this is a strong, locally auditable realization of the oracle.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is a single public function with no helpers, uses explicit branch-label variable names for money-affecting decisions (money_status_branch_is_paid, money_amount_branch_is_integer, money_region_branch_is_named), returns the exact legacy keys, and produces a visible staged audit trail through the guard variables before accumulation. The sorting and output construction are clean and readable. Minor weaknesses include the absence of any legacy audit stage comments (the spec allows them and the staged structure invites them), and the type annotation on `buckets` is slightly noisy. The `setdefault` pattern is idiomatic but slightly clever compared to an explicit if-not-in branch that would make the audit trail even more visible. Overall this is a strong, locally auditable realization of the oracle.\",\n  \"strengths\": [\n    \"Single public function, no helper functions\",\n    \"Explicit branch-label variable names for all money-affecting decisions\",\n    \"Exact legacy keys: bucket_code, item_count, cents_total\",\n    \"Visible staged guard checks before accumulation aid auditability\",\n    \"Does not mutate input\",\n    \"Sorted output by region\"\n  ],\n  \"weaknesses\": [\n    \"No legacy audit stage comments despite the spec permitting and encouraging them\",\n    \"setdefault is mildly clever; an explicit if/else would be more auditable per the spec's anti-cleverness stance\",\n    \"Verbose type annotation on buckets adds minor noise without aiding review\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single public function, no helper functions",
+      "Explicit branch-label variable names for all money-affecting decisions",
+      "Exact legacy keys: bucket_code, item_count, cents_total",
+      "Visible staged guard checks before accumulation aid auditability",
+      "Does not mutate input",
+      "Sorted output by region"
+    ],
+    "weaknesses": [
+      "No legacy audit stage comments despite the spec permitting and encouraging them",
+      "setdefault is mildly clever; an explicit if/else would be more auditable per the spec's anti-cleverness stance",
+      "Verbose type annotation on buckets adds minor noise without aiding review"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 0.942,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 20,
+    "maintainability_index": 56.999,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "human_reference"
+}

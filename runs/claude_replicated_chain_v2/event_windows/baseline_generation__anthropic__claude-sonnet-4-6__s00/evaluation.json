@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It uses standard library constructs (defaultdict, math.floor), raises clear errors for invalid inputs, and keeps control flow relatively flat. The guard clauses for malformed events are explicit and auditable. However, there are a few structural issues: using two parallel defaultdicts (counts and totals) instead of a single dict of tuples or a dataclass adds unnecessary cognitive overhead and splits logically related data; `math.floor(ts / window_size)` should simply be `ts // window_size` for integer floor division as specified in the requirements (and avoids floating-point concerns); the unused `Any` import from typing is dead code; the docstring is verbose for what is a small utility function; and the `isinstance(window_size, bool)` check, while correct, adds complexity that could be noted more simply. The overall architecture is sound but not maximally sparse.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It uses standard library constructs (defaultdict, math.floor), raises clear errors for invalid inputs, and keeps control flow relatively flat. The guard clauses for malformed events are explicit and auditable. However, there are a few structural issues: using two parallel defaultdicts (counts and totals) instead of a single dict of tuples or a dataclass adds unnecessary cognitive overhead and splits logically related data; `math.floor(ts / window_size)` should simply be `ts // window_size` for integer floor division as specified in the requirements (and avoids floating-point concerns); the unused `Any` import from typing is dead code; the docstring is verbose for what is a small utility function; and the `isinstance(window_size, bool)` check, while correct, adds complexity that could be noted more simply. The overall architecture is sound but not maximally sparse.\",\n  \"strengths\": [\n    \"Clear ValueError with descriptive message for invalid window_size\",\n    \"Explicit boolean exclusion for both timestamp and value fields\",\n    \"Sorted output is straightforward and readable\",\n    \"No hidden mutation or global state\",\n    \"Ordinary standard-library constructs throughout\"\n  ],\n  \"weaknesses\": [\n    \"Two parallel dicts (counts, totals) instead of one dict mapping key to (count, total) tuple splits cohesive data\",\n    \"Uses math.floor(ts / window_size) instead of the simpler integer floor division ts // window_size specified in the task\",\n    \"Unused `Any` import from typing is dead code\",\n    \"Docstring is overly verbose for a small utility function\",\n    \"No helper function extraction despite the spec preferring small pure helpers over monolithic functions\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clear ValueError with descriptive message for invalid window_size",
+      "Explicit boolean exclusion for both timestamp and value fields",
+      "Sorted output is straightforward and readable",
+      "No hidden mutation or global state",
+      "Ordinary standard-library constructs throughout"
+    ],
+    "weaknesses": [
+      "Two parallel dicts (counts, totals) instead of one dict mapping key to (count, total) tuple splits cohesive data",
+      "Uses math.floor(ts / window_size) instead of the simpler integer floor division ts // window_size specified in the task",
+      "Unused `Any` import from typing is dead code",
+      "Docstring is overly verbose for a small utility function",
+      "No helper function extraction despite the spec preferring small pure helpers over monolithic functions"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.291,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 78.93,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "baseline_generation"
+}

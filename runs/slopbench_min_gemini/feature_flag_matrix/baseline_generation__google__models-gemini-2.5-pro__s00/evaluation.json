@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, with explicit data movement and flat control flow. However, it has several structural issues relative to the Zen oracle: the defensive isinstance checks are silent no-ops rather than clear errors for invalid inputs (violating 'raise clear errors for invalid inputs instead of silently guessing'), the docstring is verbose and over-explains what the code already makes obvious, the typing imports use the legacy Dict/List/Any forms instead of built-in generics (Python 3.9+), and the inline type annotations on local variables add noise without clarity benefit. The 'if segment_overrides' guard silently skips segments with empty override dicts (falsy dict), which is semantically correct but could mask bugs. There are no small pure helpers extracted despite the spec preferring them, though the function is simple enough that a single function is arguably appropriate here.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, with explicit data movement and flat control flow. However, it has several structural issues relative to the Zen oracle: the defensive isinstance checks are silent no-ops rather than clear errors for invalid inputs (violating 'raise clear errors for invalid inputs instead of silently guessing'), the docstring is verbose and over-explains what the code already makes obvious, the typing imports use the legacy Dict/List/Any forms instead of built-in generics (Python 3.9+), and the inline type annotations on local variables add noise without clarity benefit. The 'if segment_overrides' guard silently skips segments with empty override dicts (falsy dict), which is semantically correct but could mask bugs. There are no small pure helpers extracted despite the spec preferring them, though the function is simple enough that a single function is arguably appropriate here.\",\n  \"strengths\": [\n    \"Explicit copy of defaults prevents input mutation\",\n    \"Control flow is flat and easy to follow linearly\",\n    \"Unknown segments are correctly ignored via dict.get\",\n    \"Segment overrides applied in user-specified order\"\n  ],\n  \"weaknesses\": [\n    \"isinstance checks silently swallow invalid input types instead of raising clear errors\",\n    \"Overly verbose docstring restates what the code already shows clearly\",\n    \"Uses legacy typing.Dict/List/Any instead of built-in generics\",\n    \"Local variable type annotations add clutter without aiding auditability\",\n    \"'if segment_overrides' skips empty segment dicts (falsy), which is a subtle semantic edge case\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Explicit copy of defaults prevents input mutation",
+      "Control flow is flat and easy to follow linearly",
+      "Unknown segments are correctly ignored via dict.get",
+      "Segment overrides applied in user-specified order"
+    ],
+    "weaknesses": [
+      "isinstance checks silently swallow invalid input types instead of raising clear errors",
+      "Overly verbose docstring restates what the code already shows clearly",
+      "Uses legacy typing.Dict/List/Any instead of built-in generics",
+      "Local variable type annotations add clutter without aiding auditability",
+      "'if segment_overrides' skips empty segment dicts (falsy), which is a subtle semantic edge case"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 0.982,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "baseline_generation"
+}

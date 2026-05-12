@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into four small, pure, single-responsibility helpers (_parse_value, _deep_merge, _env_to_nested, _set_nested) each of which is locally auditable in isolation, uses only standard-library constructs (copy.deepcopy, str methods, plain dicts), keeps control flow flat with early-return guard clauses, makes data movement explicit (no hidden mutation of inputs, deepcopy at merge boundaries), raises clear ValueError/TypeError on bad inputs, and avoids all speculative abstraction. The public entry point is a transparent three-step pipeline that reads like a specification. Minor quibbles: _set_nested mutates its argument in-place (acceptable since the dict is freshly constructed in _env_to_nested), and the docstring module header is slightly verbose, but neither constitutes architectural slop. The comma-list parsing correctly filters empty strings after strip, and the boolean/int/list/str precedence matches the spec exactly.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it decomposes the problem into four small, pure, single-responsibility helpers (_parse_value, _deep_merge, _env_to_nested, _set_nested) each of which is locally auditable in isolation, uses only standard-library constructs (copy.deepcopy, str methods, plain dicts), keeps control flow flat with early-return guard clauses, makes data movement explicit (no hidden mutation of inputs, deepcopy at merge boundaries), raises clear ValueError/TypeError on bad inputs, and avoids all speculative abstraction. The public entry point is a transparent three-step pipeline that reads like a specification. Minor quibbles: _set_nested mutates its argument in-place (acceptable since the dict is freshly constructed in _env_to_nested), and the docstring module header is slightly verbose, but neither constitutes architectural slop. The comma-list parsing correctly filters empty strings after strip, and the boolean/int/list/str precedence matches the spec exactly.\",\n  \"strengths\": [\n    \"Four focused helpers each do exactly one thing and are easy to test in isolation\",\n    \"No input mutation: deepcopy used correctly at merge boundaries\",\n    \"Flat control flow with guard clauses and early returns throughout\",\n    \"Clear, spec-matching error messages for malformed env keys and wrong input types\",\n    \"Ordinary stdlib only; zero clever metaprogramming\",\n    \"Public entry point reads as a transparent three-step pipeline\"\n  ],\n  \"weaknesses\": [\n    \"_set_nested mutates its mapping argument in-place, which is fine here but slightly inconsistent with the otherwise immutable style\",\n    \"Module-level docstring and per-function docstrings are slightly verbose for the code size\",\n    \"The _ENV_PREFIX module-level constant is a minor speculative abstraction (only used in one place)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Four focused helpers each do exactly one thing and are easy to test in isolation",
+      "No input mutation: deepcopy used correctly at merge boundaries",
+      "Flat control flow with guard clauses and early returns throughout",
+      "Clear, spec-matching error messages for malformed env keys and wrong input types",
+      "Ordinary stdlib only; zero clever metaprogramming",
+      "Public entry point reads as a transparent three-step pipeline"
+    ],
+    "weaknesses": [
+      "_set_nested mutates its mapping argument in-place, which is fine here but slightly inconsistent with the otherwise immutable style",
+      "Module-level docstring and per-function docstrings are slightly verbose for the code size",
+      "The _ENV_PREFIX module-level constant is a minor speculative abstraction (only used in one place)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.243,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.4,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 27,
+    "function_count": 5,
+    "loc": 100,
+    "maintainability_index": 70.728,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "oracle_generation"
+}

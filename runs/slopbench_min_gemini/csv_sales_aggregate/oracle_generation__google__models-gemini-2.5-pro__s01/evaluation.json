@@ -1,0 +1,56 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and demonstrates reasonable separation of concerns with three focused helpers plus the entry point. The pipeline structure (parse \u2192 aggregate \u2192 format) is explicit and easy to follow. However, the code suffers from over-engineering relative to the task's actual complexity: a NamedTuple for a transient internal record that is immediately consumed adds ceremony without benefit (the fields could simply be unpacked inline or passed as a plain tuple), the three-function decomposition is slightly more granular than the task warrants (parse+aggregate could reasonably be one small function), and the extensive docstrings with Args/Returns/Raises sections add significant bulk that obscures rather than aids local auditability. The `Dict[Tuple[str,str], Dict[str,int]]` intermediate representation is an unnecessary indirection when the defaultdict could be keyed and the result built in one pass. The `_format_and_sort_results` function exists solely to sort and reshape a dict, which is thin enough to inline. The `TypeError` guard on the entry point is a reasonable explicit check. Overall the code is clean and readable but leans toward speculative abstraction and framework-shaped verbosity for what is essentially a 20-line task.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and demonstrates reasonable separation of concerns with three focused helpers plus the entry point. The pipeline structure (parse \u2192 aggregate \u2192 format) is explicit and easy to follow. However, the code suffers from over-engineering relative to the task's actual complexity: a NamedTuple for a transient internal record that is immediately consumed adds ceremony without benefit (the fields could simply be unpacked inline or passed as a plain tuple), the three-function decomposition is slightly more granular than the task warrants (parse+aggregate could reasonably be one small function), and the extensive docstrings with Args/Returns/Raises sections add significant bulk that obscures rather than aids local auditability. The `Dict[Tuple[str,str], Dict[str,int]]` intermediate representation is an unnecessary indirection when the defaultdict could be keyed and the result built in one pass. The `_format_and_sort_results` function exists solely to sort and reshape a dict, which is thin enough to inline. The `TypeError` guard on the entry point is a reasonable explicit check. Overall the code is clean and readable but leans toward speculative abstraction and framework-shaped verbosity for what is essentially a 20-line task.\",\n  \"strengths\": [\n    \"Clear three-stage pipeline makes data movement explicit and auditable\",\n    \"Guard clauses in the parser keep nesting flat\",\n    \"Standard-library only (csv, io, collections) with no clever metaprogramming\",\n    \"Explicit TypeError raise for invalid input type\",\n    \"Correct handling of all edge cases: empty CSV, wrong field count, non-integer values, missing region/product\"\n  ],\n  \"weaknesses\": [\n    \"_SalesRecord NamedTuple adds ceremony for a transient value that is immediately iterated and discarded\",\n    \"Three separate helper functions over-decompose a task simple enough for one or two\",\n    \"Verbose docstrings (Args/Returns/Raises blocks) inflate line count and reduce local auditability\",\n    \"_format_and_sort_results is too thin to justify its own function; the sort and reshape are trivially inlineable\",\n    \"Dict[Tuple,Dict] intermediate type is an unnecessary indirection layer\",\n    \"Heavy use of typing imports (Any, Dict, Iterator, List, NamedTuple, Tuple) for a small utility adds visual noise\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear three-stage pipeline makes data movement explicit and auditable",
+      "Guard clauses in the parser keep nesting flat",
+      "Standard-library only (csv, io, collections) with no clever metaprogramming",
+      "Explicit TypeError raise for invalid input type",
+      "Correct handling of all edge cases: empty CSV, wrong field count, non-integer values, missing region/product"
+    ],
+    "weaknesses": [
+      "_SalesRecord NamedTuple adds ceremony for a transient value that is immediately iterated and discarded",
+      "Three separate helper functions over-decompose a task simple enough for one or two",
+      "Verbose docstrings (Args/Returns/Raises blocks) inflate line count and reduce local auditability",
+      "_format_and_sort_results is too thin to justify its own function; the sort and reshape are trivially inlineable",
+      "Dict[Tuple,Dict] intermediate type is an unnecessary indirection layer",
+      "Heavy use of typing imports (Any, Dict, Iterator, List, NamedTuple, Tuple) for a small utility adds visual noise"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 0.863,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.8,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 4,
+    "loc": 126,
+    "maintainability_index": 73.125,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

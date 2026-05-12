@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, explicit, and well-structured. It uses a simple iterative approach with a guard clause for the None-removal case, keeps the recursive call natural and readable, raises clear TypeErrors for invalid inputs, and avoids any hidden mutation or speculative abstraction. The boolean extraction into `is_recursive_merge` is slightly verbose but aids local auditability. The docstring is thorough without being excessive. The only minor critique is that the docstring and module-level comment add some bulk that a truly sparse implementation might omit, and the `is_recursive_merge` intermediate variable, while readable, could be inlined without loss of clarity. Overall this is a near-ideal realization of the task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, explicit, and well-structured. It uses a simple iterative approach with a guard clause for the None-removal case, keeps the recursive call natural and readable, raises clear TypeErrors for invalid inputs, and avoids any hidden mutation or speculative abstraction. The boolean extraction into `is_recursive_merge` is slightly verbose but aids local auditability. The docstring is thorough without being excessive. The only minor critique is that the docstring and module-level comment add some bulk that a truly sparse implementation might omit, and the `is_recursive_merge` intermediate variable, while readable, could be inlined without loss of clarity. Overall this is a near-ideal realization of the task.\",\n  \"strengths\": [\n    \"Flat control flow with a guard clause (`continue`) for the None case\",\n    \"Explicit input validation with clear TypeError messages\",\n    \"No mutation of inputs \u2014 uses `defaults.copy()` then updates\",\n    \"Recursive call is natural and reuses the same validated entry point\",\n    \"Names are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"The `is_recursive_merge` boolean variable is slightly over-extracted for such a simple condition\",\n    \"Module docstring and lengthy function docstring add bulk beyond what a sparse implementation needs\",\n    \"No functional issues, but the style leans slightly toward over-documentation\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a guard clause (`continue`) for the None case",
+      "Explicit input validation with clear TypeError messages",
+      "No mutation of inputs \u2014 uses `defaults.copy()` then updates",
+      "Recursive call is natural and reuses the same validated entry point",
+      "Names are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "The `is_recursive_merge` boolean variable is slightly over-extracted for such a simple condition",
+      "Module docstring and lengthy function docstring add bulk beyond what a sparse implementation needs",
+      "No functional issues, but the style leans slightly toward over-documentation"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.21,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 86.296,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

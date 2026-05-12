@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound. It uses flat control flow with guard clauses (continue statements), explicit data movement, no hidden mutation, and clear variable names. The main weaknesses are the excessive docstring verbosity (the module docstring and function docstring together are longer than the implementation itself, violating sparseness), the inline comment noise (numbered validation comments, section dividers with dashes, and redundant explanatory comments on obvious operations like `+= 1`), and the missed opportunity to use `setdefault` or `defaultdict` to flatten the initialization check. The boolean check `isinstance(amount, int)` correctly excludes bools since `bool` is a subclass of `int` \u2014 wait, actually it does NOT exclude bools since `isinstance(True, int)` is True, which could be a subtle correctness issue depending on intent. Overall the architecture is appropriate and readable, but the over-documentation and minor structural opportunities left on the table keep it from a higher score.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound. It uses flat control flow with guard clauses (continue statements), explicit data movement, no hidden mutation, and clear variable names. The main weaknesses are the excessive docstring verbosity (the module docstring and function docstring together are longer than the implementation itself, violating sparseness), the inline comment noise (numbered validation comments, section dividers with dashes, and redundant explanatory comments on obvious operations like `+= 1`), and the missed opportunity to use `setdefault` or `defaultdict` to flatten the initialization check. The boolean check `isinstance(amount, int)` correctly excludes bools since `bool` is a subclass of `int` \u2014 wait, actually it does NOT exclude bools since `isinstance(True, int)` is True, which could be a subtle correctness issue depending on intent. Overall the architecture is appropriate and readable, but the over-documentation and minor structural opportunities left on the table keep it from a higher score.\",\n  \"strengths\": [\n    \"Flat control flow using guard clauses (continue) avoids deep nesting\",\n    \"Explicit .get() usage makes missing-key handling visible\",\n    \"No input mutation; returns a fresh dict\",\n    \"Clear, descriptive variable names\",\n    \"Correct validation order (kind first, then user_id, then amount)\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is disproportionately long relative to the implementation \u2014 violates sparseness\",\n    \"Inline section-divider comments ('--- Validation ---', '--- Aggregation ---') and numbered comments add noise without clarity\",\n    \"bool values pass the isinstance(amount, int) check silently, which may be unintended\",\n    \"Could use dict.setdefault or collections.defaultdict to eliminate the explicit initialization branch\",\n    \"Module-level docstring adds no value for a single-function module\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow using guard clauses (continue) avoids deep nesting",
+      "Explicit .get() usage makes missing-key handling visible",
+      "No input mutation; returns a fresh dict",
+      "Clear, descriptive variable names",
+      "Correct validation order (kind first, then user_id, then amount)"
+    ],
+    "weaknesses": [
+      "Docstring is disproportionately long relative to the implementation \u2014 violates sparseness",
+      "Inline section-divider comments ('--- Validation ---', '--- Aggregation ---') and numbered comments add noise without clarity",
+      "bool values pass the isinstance(amount, int) check silently, which may be unintended",
+      "Could use dict.setdefault or collections.defaultdict to eliminate the explicit initialization branch",
+      "Module-level docstring adds no value for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.47,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 53,
+    "maintainability_index": 60.358,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "nested_json_index",
+  "variant": "baseline_generation"
+}

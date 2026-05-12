@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and largely follows the Zen of Python oracle. It uses a single public function with no helpers, explicit variable names, correct legacy output keys, and does not mutate input. The staged loop-then-return structure provides a visible audit trail. However, it falls short of the spec's explicit requirement for 'explicit branch labels in local variable names when a decision affects money' \u2014 the filtering condition is a compound boolean without named intermediate variables like `is_paid`, `has_valid_region`, or `is_valid_amount`. The spec also calls for comments naming legacy audit stages, which are entirely absent. The list comprehension at the end, while readable, slightly obscures the final assembly stage that a named loop with explicit key assignment would make more auditable per the legacy spec's preference for visible staged audit trails over clever flattening.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, correct, and largely follows the Zen of Python oracle. It uses a single public function with no helpers, explicit variable names, correct legacy output keys, and does not mutate input. The staged loop-then-return structure provides a visible audit trail. However, it falls short of the spec's explicit requirement for 'explicit branch labels in local variable names when a decision affects money' \u2014 the filtering condition is a compound boolean without named intermediate variables like `is_paid`, `has_valid_region`, or `is_valid_amount`. The spec also calls for comments naming legacy audit stages, which are entirely absent. The list comprehension at the end, while readable, slightly obscures the final assembly stage that a named loop with explicit key assignment would make more auditable per the legacy spec's preference for visible staged audit trails over clever flattening.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Correct legacy output keys: bucket_code, item_count, cents_total\",\n    \"Does not mutate input\",\n    \"Explicit type check using `type(amount_cents) is int` rather than isinstance, correctly excluding booleans\",\n    \"Staged structure: filter/accumulate loop followed by sorted output construction\",\n    \"Readable and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"No named branch labels for money-affecting decisions (e.g., `is_paid`, `amount_is_valid`) as required by the spec\",\n    \"No comments naming legacy audit stages as explicitly allowed/encouraged by the spec\",\n    \"List comprehension at the end slightly reduces auditability of the final assembly stage compared to an explicit loop\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Correct legacy output keys: bucket_code, item_count, cents_total",
+      "Does not mutate input",
+      "Explicit type check using `type(amount_cents) is int` rather than isinstance, correctly excluding booleans",
+      "Staged structure: filter/accumulate loop followed by sorted output construction",
+      "Readable and locally auditable"
+    ],
+    "weaknesses": [
+      "No named branch labels for money-affecting decisions (e.g., `is_paid`, `amount_is_valid`) as required by the spec",
+      "No comments naming legacy audit stages as explicitly allowed/encouraged by the spec",
+      "List comprehension at the end slightly reduces auditability of the final assembly stage compared to an explicit loop"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.203,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 26,
+    "maintainability_index": 57.57,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of the Zen of Python applied to CLI parsing: each concern is isolated in a small, pure, well-named helper; control flow in the main loop is flat with guard clauses and early continues; data movement is explicit (parsed dict passed around, no hidden mutation beyond the intentional accumulation); errors are raised with clear messages; no speculative abstractions or framework-shaped code appear anywhere. The only minor quibbles are that `_validate_argv` is a defensive type-check that arguably adds noise for a typed Python codebase (the task implies callers pass correct types), `_apply_value` has a dead-code `raise` at the end that can never be reached given the call site already guards on known flags, and `_is_ascii_integer` reimplements `str.isdigit`/`str.isdecimal` without a clear advantage\u2014but none of these rise to the level of architectural slop. Overall the decomposition is clean, auditable, and appropriately sized.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a textbook example of the Zen of Python applied to CLI parsing: each concern is isolated in a small, pure, well-named helper; control flow in the main loop is flat with guard clauses and early continues; data movement is explicit (parsed dict passed around, no hidden mutation beyond the intentional accumulation); errors are raised with clear messages; no speculative abstractions or framework-shaped code appear anywhere. The only minor quibbles are that `_validate_argv` is a defensive type-check that arguably adds noise for a typed Python codebase (the task implies callers pass correct types), `_apply_value` has a dead-code `raise` at the end that can never be reached given the call site already guards on known flags, and `_is_ascii_integer` reimplements `str.isdigit`/`str.isdecimal` without a clear advantage\u2014but none of these rise to the level of architectural slop. Overall the decomposition is clean, auditable, and appropriately sized.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers with descriptive names make each piece locally auditable\",\n    \"Flat main loop with guard clauses avoids deep nesting\",\n    \"Explicit data flow: parsed dict is passed in and mutated visibly, no hidden global state\",\n    \"Clear, specific ValueError messages for every failure mode\",\n    \"No speculative abstractions, no unused extension points, no framework-shaped code\",\n    \"Duplicate-flag detection is a nice correctness touch handled cleanly\"\n  ],\n  \"weaknesses\": [\n    \"`_validate_argv` type-checks items that the type annotation already documents, adding noise without runtime benefit in normal usage\",\n    \"`_apply_value` ends with an unreachable `raise ValueError` since the call site already restricts to known flags\",\n    \"`_is_ascii_integer` manually reimplements what `value.isdigit()` or `value.isdecimal()` provides, introducing a subtle difference (e.g. leading '+' or '-' not handled, but neither is the stdlib version, so it's fine\u2014just unnecessary complexity)\",\n    \"Passing `seen_flags` as a mutable set into `_reject_duplicate` is a mild hidden-mutation pattern, though it's small enough to be acceptable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers with descriptive names make each piece locally auditable",
+      "Flat main loop with guard clauses avoids deep nesting",
+      "Explicit data flow: parsed dict is passed in and mutated visibly, no hidden global state",
+      "Clear, specific ValueError messages for every failure mode",
+      "No speculative abstractions, no unused extension points, no framework-shaped code",
+      "Duplicate-flag detection is a nice correctness touch handled cleanly"
+    ],
+    "weaknesses": [
+      "`_validate_argv` type-checks items that the type annotation already documents, adding noise without runtime benefit in normal usage",
+      "`_apply_value` ends with an unreachable `raise ValueError` since the call site already restricts to known flags",
+      "`_is_ascii_integer` manually reimplements what `value.isdigit()` or `value.isdecimal()` provides, introducing a subtle difference (e.g. leading '+' or '-' not handled, but neither is the stdlib version, so it's fine\u2014just unnecessary complexity)",
+      "Passing `seen_flags` as a mutable set into `_reject_duplicate` is a mild hidden-mutation pattern, though it's small enough to be acceptable"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.036,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.375,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 27,
+    "function_count": 8,
+    "loc": 73,
+    "maintainability_index": 39.623,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_generation"
+}

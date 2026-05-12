@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and well-structured with good separation of concerns via small helpers. The core logic is flat and auditable, data movement is explicit, and naming is clear. However, it adds speculative constraints not required by the spec: the non-decreasing timestamp enforcement per key is an undocumented restriction that could break valid use cases, and the extensive isinstance/bool type-checking guards go beyond what the task specifies (which only asks for ValueError on non-positive values). The `_last_timestamp` dict is extra state that exists solely to enforce this unspecified constraint. The `Deque` type import from typing is unnecessary in modern Python (3.9+) where `deque` is directly subscriptable. These additions represent mild speculative abstraction and over-engineering relative to the minimal correct solution.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, readable, and well-structured with good separation of concerns via small helpers. The core logic is flat and auditable, data movement is explicit, and naming is clear. However, it adds speculative constraints not required by the spec: the non-decreasing timestamp enforcement per key is an undocumented restriction that could break valid use cases, and the extensive isinstance/bool type-checking guards go beyond what the task specifies (which only asks for ValueError on non-positive values). The `_last_timestamp` dict is extra state that exists solely to enforce this unspecified constraint. The `Deque` type import from typing is unnecessary in modern Python (3.9+) where `deque` is directly subscriptable. These additions represent mild speculative abstraction and over-engineering relative to the minimal correct solution.\",\n  \"strengths\": [\n    \"Small, focused helper methods (_discard_expired, _validate_key, _validate_timestamp) keep allow() flat and readable\",\n    \"Explicit data structures with clear names (events, _events, _last_timestamp)\",\n    \"Correct half-open window semantics with the > oldest_allowed boundary\",\n    \"snapshot() is simple and returns a defensive copy\",\n    \"Clear ValueError messages for invalid constructor arguments\"\n  ],\n  \"weaknesses\": [\n    \"Non-decreasing timestamp enforcement is a speculative constraint not mentioned in the spec, adding unnecessary state (_last_timestamp) and complexity\",\n    \"Extensive isinstance/bool type-checking is beyond the spec's requirements and adds noise\",\n    \"Importing Deque from typing is outdated; collections.deque is directly subscriptable in Python 3.9+\",\n    \"Type guards in _validate_key and _validate_timestamp are undocumented requirements that may reject valid duck-typed inputs\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Small, focused helper methods (_discard_expired, _validate_key, _validate_timestamp) keep allow() flat and readable",
+      "Explicit data structures with clear names (events, _events, _last_timestamp)",
+      "Correct half-open window semantics with the > oldest_allowed boundary",
+      "snapshot() is simple and returns a defensive copy",
+      "Clear ValueError messages for invalid constructor arguments"
+    ],
+    "weaknesses": [
+      "Non-decreasing timestamp enforcement is a speculative constraint not mentioned in the spec, adding unnecessary state (_last_timestamp) and complexity",
+      "Extensive isinstance/bool type-checking is beyond the spec's requirements and adds noise",
+      "Importing Deque from typing is outdated; collections.deque is directly subscriptable in Python 3.9+",
+      "Type guards in _validate_key and _validate_timestamp are undocumented requirements that may reject valid duck-typed inputs"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.834,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.429,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 6,
+    "loc": 44,
+    "maintainability_index": 44.45,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "oracle_generation"
+}

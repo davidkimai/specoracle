@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is generally clean and readable, with good separation of concerns via small pure helpers (_parse_limit, _parse_format) and explicit data movement through a config dict. The flag sets make the CLI spec auditable at a glance. However, there are a few structural issues: the module-level _DEFAULT_CONFIG using a mutable dict with Any typing is slightly over-engineered for this simple task, and the .copy() pattern with a None sentinel for 'input' is less explicit than simply tracking seen flags. The boolean flag dispatch (if arg in _BOOLEAN_FLAGS: if arg == '--dry-run':) is redundant since there's only one boolean flag\u2014the inner check adds noise without value. The docstrings are verbose to the point of padding, which works against sparseness. The missing-value check `argv[i+1].startswith('--')` is a reasonable heuristic but silently treats any flag-shaped string as 'no value', which could be surprising. Overall the code is straightforward, flat, and locally auditable, but carries some speculative structure (the sets, the Any-typed default dict) that a simpler direct approach would avoid.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is generally clean and readable, with good separation of concerns via small pure helpers (_parse_limit, _parse_format) and explicit data movement through a config dict. The flag sets make the CLI spec auditable at a glance. However, there are a few structural issues: the module-level _DEFAULT_CONFIG using a mutable dict with Any typing is slightly over-engineered for this simple task, and the .copy() pattern with a None sentinel for 'input' is less explicit than simply tracking seen flags. The boolean flag dispatch (if arg in _BOOLEAN_FLAGS: if arg == '--dry-run':) is redundant since there's only one boolean flag\u2014the inner check adds noise without value. The docstrings are verbose to the point of padding, which works against sparseness. The missing-value check `argv[i+1].startswith('--')` is a reasonable heuristic but silently treats any flag-shaped string as 'no value', which could be surprising. Overall the code is straightforward, flat, and locally auditable, but carries some speculative structure (the sets, the Any-typed default dict) that a simpler direct approach would avoid.\",\n  \"strengths\": [\n    \"Small pure helpers for limit and format validation keep the main function flat\",\n    \"Flag sets make the supported interface explicit and easy to audit\",\n    \"Control flow is flat with guard clauses and early raises\",\n    \"Clear, specific error messages for each failure mode\",\n    \"No hidden mutation or global state side effects\"\n  ],\n  \"weaknesses\": [\n    \"Redundant inner `if arg == '--dry-run'` check inside an already-gated `if arg in _BOOLEAN_FLAGS` block\",\n    \"_DEFAULT_CONFIG with Any typing and None sentinel is over-engineered; a simpler approach tracks required args separately\",\n    \"Docstrings are excessively verbose, reducing sparseness without adding auditability\",\n    \"The `argv[i+1].startswith('--')` heuristic for detecting missing values is implicit and could misclassify legitimate path values starting with '--'\",\n    \"Module-level constants like _FLAGS_WITH_VALUE are speculative abstraction for a fixed, small flag set\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Small pure helpers for limit and format validation keep the main function flat",
+      "Flag sets make the supported interface explicit and easy to audit",
+      "Control flow is flat with guard clauses and early raises",
+      "Clear, specific error messages for each failure mode",
+      "No hidden mutation or global state side effects"
+    ],
+    "weaknesses": [
+      "Redundant inner `if arg == '--dry-run'` check inside an already-gated `if arg in _BOOLEAN_FLAGS` block",
+      "_DEFAULT_CONFIG with Any typing and None sentinel is over-engineered; a simpler approach tracks required args separately",
+      "Docstrings are excessively verbose, reducing sparseness without adding auditability",
+      "The `argv[i+1].startswith('--')` heuristic for detecting missing values is implicit and could misclassify legitimate path values starting with '--'",
+      "Module-level constants like _FLAGS_WITH_VALUE are speculative abstraction for a fixed, small flag set"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.063,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 3,
+    "loc": 106,
+    "maintainability_index": 70.379,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "oracle_generation"
+}

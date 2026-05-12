@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses flat control flow with guard clauses for validation, explicit data movement via a clear `last_kept` dictionary, and well-named variables. The logic is locally auditable in a single pass. Minor issues: the docstring is verbose (NumPy-style for a simple utility adds ceremony), the `from typing import Any` import is minor overhead that could be avoided with a comment or inline annotation, and the two branches of the `if composite_key in last_kept` block could be collapsed with a `get`-based pattern to reduce repetition of `last_kept[composite_key] = timestamp`. There are no speculative abstractions, no hidden mutation, and no framework-shaped code. The helper/monolith balance is acceptable given the task's simplicity\u2014splitting further would add indirection without clarity gain.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses flat control flow with guard clauses for validation, explicit data movement via a clear `last_kept` dictionary, and well-named variables. The logic is locally auditable in a single pass. Minor issues: the docstring is verbose (NumPy-style for a simple utility adds ceremony), the `from typing import Any` import is minor overhead that could be avoided with a comment or inline annotation, and the two branches of the `if composite_key in last_kept` block could be collapsed with a `get`-based pattern to reduce repetition of `last_kept[composite_key] = timestamp`. There are no speculative abstractions, no hidden mutation, and no framework-shaped code. The helper/monolith balance is acceptable given the task's simplicity\u2014splitting further would add indirection without clarity gain.\",\n  \"strengths\": [\n    \"Guard clauses keep validation flat and early-exit logic clear\",\n    \"Explicit `last_kept` dict makes state movement visible and auditable\",\n    \"Variable names (`composite_key`, `last_kept`, `retained`) are self-explanatory\",\n    \"No speculative abstractions or unused extension points\",\n    \"Correct rolling-window semantics with fresh-event update on expiry\"\n  ],\n  \"weaknesses\": [\n    \"NumPy-style docstring is over-engineered for a small utility function\",\n    \"`last_kept[composite_key] = timestamp` is duplicated in both branches; a `dict.get` pattern would unify them\",\n    \"`from typing import Any` is a minor unnecessary import given modern Python type hints\",\n    \"No input validation on `key_fields` or `window_seconds` types, which the spec implies should raise clear errors\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses keep validation flat and early-exit logic clear",
+      "Explicit `last_kept` dict makes state movement visible and auditable",
+      "Variable names (`composite_key`, `last_kept`, `retained`) are self-explanatory",
+      "No speculative abstractions or unused extension points",
+      "Correct rolling-window semantics with fresh-event update on expiry"
+    ],
+    "weaknesses": [
+      "NumPy-style docstring is over-engineered for a small utility function",
+      "`last_kept[composite_key] = timestamp` is duplicated in both branches; a `dict.get` pattern would unify them",
+      "`from typing import Any` is a minor unnecessary import given modern Python type hints",
+      "No input validation on `key_fields` or `window_seconds` types, which the spec implies should raise clear errors"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.404,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 60,
+    "maintainability_index": 76.99,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dedupe_event_stream",
+  "variant": "baseline_generation"
+}

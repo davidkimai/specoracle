@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and mostly follows the Zen of Python principles: guard clauses are explicit, naming is clear, and control flow is reasonably flat. However, there are some structural issues worth noting. The `_validate_int` helper adds a layer of abstraction that checks type but not value constraints, splitting validation logic across two places (the helper and the subsequent value checks), which reduces local auditability. The delay update logic inside the loop is slightly redundant and convoluted \u2014 `delay if delay <= cap_seconds else cap_seconds` is equivalent to `min(delay, cap_seconds)`, and the subsequent update line duplicates the cap logic unnecessarily. A simpler approach would be a list comprehension using `min(base_seconds * (2**i), cap_seconds) for i in range(attempts)`, which makes the exponential relationship explicit and eliminates the mutable loop variable entirely. The type-checking helper is also speculative \u2014 the task spec doesn't require type validation beyond value constraints, and adding it introduces complexity without clear benefit.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and mostly follows the Zen of Python principles: guard clauses are explicit, naming is clear, and control flow is reasonably flat. However, there are some structural issues worth noting. The `_validate_int` helper adds a layer of abstraction that checks type but not value constraints, splitting validation logic across two places (the helper and the subsequent value checks), which reduces local auditability. The delay update logic inside the loop is slightly redundant and convoluted \u2014 `delay if delay <= cap_seconds else cap_seconds` is equivalent to `min(delay, cap_seconds)`, and the subsequent update line duplicates the cap logic unnecessarily. A simpler approach would be a list comprehension using `min(base_seconds * (2**i), cap_seconds) for i in range(attempts)`, which makes the exponential relationship explicit and eliminates the mutable loop variable entirely. The type-checking helper is also speculative \u2014 the task spec doesn't require type validation beyond value constraints, and adding it introduces complexity without clear benefit.\",\n  \"strengths\": [\n    \"Clear, descriptive variable names throughout\",\n    \"Explicit guard clauses for all three invalid input conditions\",\n    \"Docstring clearly documents parameters and return value\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"`_validate_int` splits validation logic across two locations, reducing local auditability\",\n    \"Loop delay update logic is redundant and harder to follow than a direct formula\",\n    \"Type-checking helper is speculative abstraction not required by the task spec\",\n    \"A list comprehension with `min(base * 2**i, cap)` would be simpler and more explicit about the exponential relationship\",\n    \"`__all__` export list is unnecessary boilerplate for a simple utility module\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear, descriptive variable names throughout",
+      "Explicit guard clauses for all three invalid input conditions",
+      "Docstring clearly documents parameters and return value",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "`_validate_int` splits validation logic across two locations, reducing local auditability",
+      "Loop delay update logic is redundant and harder to follow than a direct formula",
+      "Type-checking helper is speculative abstraction not required by the task spec",
+      "A list comprehension with `min(base * 2**i, cap)` would be simpler and more explicit about the exponential relationship",
+      "`__all__` export list is unnecessary boilerplate for a simple utility module"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.203,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 30,
+    "maintainability_index": 83.084,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "baseline_generation"
+}

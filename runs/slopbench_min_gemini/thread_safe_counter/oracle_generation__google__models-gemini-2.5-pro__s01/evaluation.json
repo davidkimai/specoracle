@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and well-structured. It uses a single lock protecting all mutations, maintains an explicit cached total to avoid recomputation, and exposes no mutable internal state. Control flow is flat with a guard clause at the top of increment. The snapshot uses a comprehension that naturally filters nonzero values. The isinstance check on max_total is slightly over-defensive (the spec says int but floats like 5.0 would be rejected unnecessarily), and the docstrings are verbose relative to the Zen preference for sparse, locally auditable code. The error message construction in increment uses a multi-line string that adds visual weight without proportional clarity benefit. The Dict import from typing is unnecessary in modern Python (3.9+) where built-in dict suffices. These are minor issues; the overall architecture is simple, explicit, and easy to audit.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and well-structured. It uses a single lock protecting all mutations, maintains an explicit cached total to avoid recomputation, and exposes no mutable internal state. Control flow is flat with a guard clause at the top of increment. The snapshot uses a comprehension that naturally filters nonzero values. The isinstance check on max_total is slightly over-defensive (the spec says int but floats like 5.0 would be rejected unnecessarily), and the docstrings are verbose relative to the Zen preference for sparse, locally auditable code. The error message construction in increment uses a multi-line string that adds visual weight without proportional clarity benefit. The Dict import from typing is unnecessary in modern Python (3.9+) where built-in dict suffices. These are minor issues; the overall architecture is simple, explicit, and easy to audit.\",\n  \"strengths\": [\n    \"Single lock covers all shared state consistently, no subtle race conditions\",\n    \"Cached _total_count avoids summing values on every total() call\",\n    \"Guard clause at top of increment keeps control flow flat\",\n    \"snapshot() returns a fresh dict via comprehension, no mutable state leakage\",\n    \"Clear, named error types (ValueError, OverflowError) with informative messages\"\n  ],\n  \"weaknesses\": [\n    \"isinstance(max_total, int) check is over-defensive and rejects valid numeric inputs like numpy integers or bool subclass edge cases without clear justification\",\n    \"Verbose docstrings add bulk without proportional clarity benefit, working against sparse auditability\",\n    \"Uses typing.Dict instead of built-in dict, an unnecessary legacy import\",\n    \"Multi-line f-string error message in increment is slightly over-engineered for a simple guard\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single lock covers all shared state consistently, no subtle race conditions",
+      "Cached _total_count avoids summing values on every total() call",
+      "Guard clause at top of increment keeps control flow flat",
+      "snapshot() returns a fresh dict via comprehension, no mutable state leakage",
+      "Clear, named error types (ValueError, OverflowError) with informative messages"
+    ],
+    "weaknesses": [
+      "isinstance(max_total, int) check is over-defensive and rejects valid numeric inputs like numpy integers or bool subclass edge cases without clear justification",
+      "Verbose docstrings add bulk without proportional clarity benefit, working against sparse auditability",
+      "Uses typing.Dict instead of built-in dict, an unnecessary legacy import",
+      "Multi-line f-string error message in increment is slightly over-engineered for a simple guard"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.287,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 78,
+    "maintainability_index": 73.183,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_generation"
+}

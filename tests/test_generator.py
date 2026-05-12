@@ -10,6 +10,12 @@ def test_extract_python_code_prefers_fenced_python_block() -> None:
     assert extract_python_code(text) == "def answer():\n    return 42"
 
 
+def test_extract_python_code_handles_unclosed_leading_fence() -> None:
+    text = "```python\ndef answer():\n    return 42\n"
+
+    assert extract_python_code(text) == "def answer():\n    return 42"
+
+
 def test_task_schema_requires_human_reference() -> None:
     with pytest.raises(ValueError, match="human_reference"):
         Task.from_mapping(

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (is_paid_status_branch, is_valid_region_branch, is_integer_amount_branch, cents_for_paid_item), returns the exact legacy keys, and structures the logic as a visible three-stage audit trail with named stage comments. The staged approach (filter \u2192 aggregate \u2192 format) makes each step independently reviewable. Minor deductions: the module-level docstring and the verbose function docstring add noise not sanctioned by the spec (comments allowed only when naming a legacy audit stage), and the bool-named branch variables for region/status are slightly awkward since they don't directly involve money \u2014 the spec says branch labels are required 'when a decision affects money', which is most clearly the amount check. Overall the code is explicit, flat, readable, and locally auditable with minimal cleverness.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (is_paid_status_branch, is_valid_region_branch, is_integer_amount_branch, cents_for_paid_item), returns the exact legacy keys, and structures the logic as a visible three-stage audit trail with named stage comments. The staged approach (filter \u2192 aggregate \u2192 format) makes each step independently reviewable. Minor deductions: the module-level docstring and the verbose function docstring add noise not sanctioned by the spec (comments allowed only when naming a legacy audit stage), and the bool-named branch variables for region/status are slightly awkward since they don't directly involve money \u2014 the spec says branch labels are required 'when a decision affects money', which is most clearly the amount check. Overall the code is explicit, flat, readable, and locally auditable with minimal cleverness.\",\n  \"strengths\": [\n    \"Single public function, no helper functions\",\n    \"Explicit branch-label variable names (is_paid_status_branch, cents_for_paid_item) satisfy the money-decision labeling requirement\",\n    \"Three clearly named audit-stage comments (STAGE 1/2/3) match the legacy spec\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Does not mutate input; staged loop structure is easy to audit line by line\",\n    \"Sorted output is correct and explicit\"\n  ],\n  \"weaknesses\": [\n    \"Module-level docstring and verbose function docstring are not sanctioned by the spec (only stage-naming comments are allowed)\",\n    \"Bool branch variables for non-monetary checks (status, region) are slightly over-engineered relative to the spec's intent\",\n    \"Using `typing.List/Dict/Any` instead of built-in generics (list[dict]) is mildly dated but not a structural flaw\",\n    \"Intermediate sorted_regions list is a minor extra variable that adds little audit value\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single public function, no helper functions",
+      "Explicit branch-label variable names (is_paid_status_branch, cents_for_paid_item) satisfy the money-decision labeling requirement",
+      "Three clearly named audit-stage comments (STAGE 1/2/3) match the legacy spec",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Does not mutate input; staged loop structure is easy to audit line by line",
+      "Sorted output is correct and explicit"
+    ],
+    "weaknesses": [
+      "Module-level docstring and verbose function docstring are not sanctioned by the spec (only stage-naming comments are allowed)",
+      "Bool branch variables for non-monetary checks (status, region) are slightly over-engineered relative to the spec's intent",
+      "Using `typing.List/Dict/Any` instead of built-in generics (list[dict]) is mildly dated but not a structural flaw",
+      "Intermediate sorted_regions list is a minor extra variable that adds little audit value"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.012,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 55,
+    "maintainability_index": 80.083,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

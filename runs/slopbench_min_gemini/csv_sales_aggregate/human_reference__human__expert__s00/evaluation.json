@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. The separation of parsing into `_parse_row` keeps the main function readable and auditable. Guard clauses in `_parse_row` avoid deep nesting, data movement is explicit (no hidden mutation), and the accumulation pattern with `setdefault` is idiomatic without being clever. The final comprehension with `sorted` is straightforward. Minor quibbles: `row.get('quantity', '')` could raise a `KeyError`-adjacent confusion since `DictReader` returns `None` for missing keys rather than raising, but the `or ''` fallback in the string fields and the `get(..., '')` for numeric fields handles this gracefully. The only small weakness is that `int(row.get('quantity', ''))` will raise `ValueError` on `None` (which is caught), but passing `None` to `int()` raises `TypeError` not `ValueError`, meaning a row with a completely absent `quantity` column (not just empty) would propagate uncaught \u2014 though in practice `DictReader` with `restkey` handles this consistently. Overall the code is sparse, locally auditable, uses only standard-library constructs, and avoids speculative abstractions.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. The separation of parsing into `_parse_row` keeps the main function readable and auditable. Guard clauses in `_parse_row` avoid deep nesting, data movement is explicit (no hidden mutation), and the accumulation pattern with `setdefault` is idiomatic without being clever. The final comprehension with `sorted` is straightforward. Minor quibbles: `row.get('quantity', '')` could raise a `KeyError`-adjacent confusion since `DictReader` returns `None` for missing keys rather than raising, but the `or ''` fallback in the string fields and the `get(..., '')` for numeric fields handles this gracefully. The only small weakness is that `int(row.get('quantity', ''))` will raise `ValueError` on `None` (which is caught), but passing `None` to `int()` raises `TypeError` not `ValueError`, meaning a row with a completely absent `quantity` column (not just empty) would propagate uncaught \u2014 though in practice `DictReader` with `restkey` handles this consistently. Overall the code is sparse, locally auditable, uses only standard-library constructs, and avoids speculative abstractions.\",\n  \"strengths\": [\n    \"Clean separation of parsing logic into a small pure helper `_parse_row`\",\n    \"Flat control flow with guard clauses instead of nested conditionals\",\n    \"Explicit data movement; no hidden mutation or global state\",\n    \"Idiomatic use of `setdefault` for accumulation without over-engineering\",\n    \"Sorted output produced simply and readably in the final comprehension\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"`int(row.get('quantity', ''))` passes `None` when the key is absent from DictReader (missing column), which raises `TypeError` rather than `ValueError`, so the `except ValueError` guard would not catch it\",\n    \"The `(row.get('region') or '').strip()` pattern is slightly indirect; an explicit `None` check would be more readable\",\n    \"No docstring or type annotation on the public entry point to aid maintainers\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation of parsing logic into a small pure helper `_parse_row`",
+      "Flat control flow with guard clauses instead of nested conditionals",
+      "Explicit data movement; no hidden mutation or global state",
+      "Idiomatic use of `setdefault` for accumulation without over-engineering",
+      "Sorted output produced simply and readably in the final comprehension",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "`int(row.get('quantity', ''))` passes `None` when the key is absent from DictReader (missing column), which raises `TypeError` rather than `ValueError`, so the `except ValueError` guard would not catch it",
+      "The `(row.get('region') or '').strip()` pattern is slightly indirect; an explicit `None` check would be more readable",
+      "No docstring or type annotation on the public entry point to aid maintainers"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 0.936,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 30,
+    "maintainability_index": 54.614,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "human_reference"
+}

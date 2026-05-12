@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and locally auditable. Each method is short and does exactly one thing. The lock is used consistently and correctly, data movement is explicit (snapshot returns a copy, total is a cached integer), and errors are raised clearly with meaningful messages. The guard clauses in increment are well-ordered. The only minor structural quibbles are the isinstance/bool type-checking in __init__ and the isinstance check on name in increment \u2014 these are defensive but arguably speculative (the spec only mentions ValueError for non-positive max_total, not TypeError for wrong types), adding a small amount of unrequested complexity. The snapshot method correctly returns only a copy, satisfying the 'must not expose mutable internal state' requirement. Overall this is a textbook realization of the Zen principles for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and locally auditable. Each method is short and does exactly one thing. The lock is used consistently and correctly, data movement is explicit (snapshot returns a copy, total is a cached integer), and errors are raised clearly with meaningful messages. The guard clauses in increment are well-ordered. The only minor structural quibbles are the isinstance/bool type-checking in __init__ and the isinstance check on name in increment \u2014 these are defensive but arguably speculative (the spec only mentions ValueError for non-positive max_total, not TypeError for wrong types), adding a small amount of unrequested complexity. The snapshot method correctly returns only a copy, satisfying the 'must not expose mutable internal state' requirement. Overall this is a textbook realization of the Zen principles for this task.\",\n  \"strengths\": [\n    \"Lock used consistently across all three public methods, ensuring correct thread safety\",\n    \"Cached _total avoids iterating over _counts on every total() call\",\n    \"snapshot() returns a plain dict copy \u2014 no leaking of internal state\",\n    \"Flat control flow with a single guard clause before mutation in increment\",\n    \"Clear, self-explanatory names throughout\"\n  ],\n  \"weaknesses\": [\n    \"isinstance/bool type checks in __init__ and increment are speculative \u2014 the spec only requires ValueError for non-positive max_total, not TypeError for wrong types\",\n    \"Docstrings are minimal but adequate; the class docstring could note thread-safety explicitly\",\n    \"snapshot() includes zero-value entries if they were somehow set, but since increment always adds 1 and never decrements, this is a non-issue in practice \u2014 still, the spec says 'nonzero counts' which is trivially satisfied here\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Lock used consistently across all three public methods, ensuring correct thread safety",
+      "Cached _total avoids iterating over _counts on every total() call",
+      "snapshot() returns a plain dict copy \u2014 no leaking of internal state",
+      "Flat control flow with a single guard clause before mutation in increment",
+      "Clear, self-explanatory names throughout"
+    ],
+    "weaknesses": [
+      "isinstance/bool type checks in __init__ and increment are speculative \u2014 the spec only requires ValueError for non-positive max_total, not TypeError for wrong types",
+      "Docstrings are minimal but adequate; the class docstring could note thread-safety explicitly",
+      "snapshot() includes zero-value entries if they were somehow set, but since increment always adds 1 and never decrements, this is a non-issue in practice \u2014 still, the spec says 'nonzero counts' which is trivially satisfied here"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.946,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.4,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 4,
+    "loc": 32,
+    "maintainability_index": 52.432,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_generation"
+}

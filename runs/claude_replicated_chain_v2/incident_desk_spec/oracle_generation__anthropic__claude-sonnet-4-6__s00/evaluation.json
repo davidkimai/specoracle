@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Spec N-9: it uses a named lookup table (`severity_boost_table`) with the required `_table` suffix, avoids classes for single-pass routing, preserves ticket order, and uses a stable string constant (`STATUS_ROUTED = 'routed'`) rather than a boolean. Named constants for required fields and the missing-fields reason are explicit and readable. The logic is flat with no nested functions or unnecessary abstractions. Minor issues: `REASON_MISSING_FIELDS` is defined but never used (dead code), the `any(... is None ...)` check misses empty-string fields (e.g., `id=''` passes the None check but is then caught by the redundant falsy check below, creating two overlapping guard layers that are slightly confusing), and the double-guard pattern (`is None` then falsy) adds a small amount of implicit branching that could be collapsed into one explicit condition for clarity.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows Spec N-9: it uses a named lookup table (`severity_boost_table`) with the required `_table` suffix, avoids classes for single-pass routing, preserves ticket order, and uses a stable string constant (`STATUS_ROUTED = 'routed'`) rather than a boolean. Named constants for required fields and the missing-fields reason are explicit and readable. The logic is flat with no nested functions or unnecessary abstractions. Minor issues: `REASON_MISSING_FIELDS` is defined but never used (dead code), the `any(... is None ...)` check misses empty-string fields (e.g., `id=''` passes the None check but is then caught by the redundant falsy check below, creating two overlapping guard layers that are slightly confusing), and the double-guard pattern (`is None` then falsy) adds a small amount of implicit branching that could be collapsed into one explicit condition for clarity.\",\n  \"strengths\": [\n    \"Uses `severity_boost_table` with the spec-mandated `_table` suffix\",\n    \"Stable `STATUS_ROUTED` string constant, never a boolean\",\n    \"No classes introduced; pure single-pass function\",\n    \"Ticket order preserved via sequential list append\",\n    \"REQUIRED_FIELDS tuple makes the validation rule explicit and auditable\",\n    \"Flat control flow with no deep nesting\"\n  ],\n  \"weaknesses\": [\n    \"`REASON_MISSING_FIELDS` constant is defined but never referenced (dead code)\",\n    \"Two overlapping guard conditions for `id` validity (`is None` check then falsy check) are redundant and slightly confusing\",\n    \"The `any(... is None ...)` guard does not catch empty-string or zero-length field values for `severity` and `service`, creating a subtle gap\",\n    \"No guard against `rules` missing the `default` key when a service is absent and the fallback default_rule is used\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses `severity_boost_table` with the spec-mandated `_table` suffix",
+      "Stable `STATUS_ROUTED` string constant, never a boolean",
+      "No classes introduced; pure single-pass function",
+      "Ticket order preserved via sequential list append",
+      "REQUIRED_FIELDS tuple makes the validation rule explicit and auditable",
+      "Flat control flow with no deep nesting"
+    ],
+    "weaknesses": [
+      "`REASON_MISSING_FIELDS` constant is defined but never referenced (dead code)",
+      "Two overlapping guard conditions for `id` validity (`is None` check then falsy check) are redundant and slightly confusing",
+      "The `any(... is None ...)` guard does not catch empty-string or zero-length field values for `severity` and `service`, creating a subtle gap",
+      "No guard against `rules` missing the `default` key when a service is absent and the fallback default_rule is used"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.652,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.13s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 6.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 6,
+    "function_count": 1,
+    "loc": 34,
+    "maintainability_index": 73.535,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

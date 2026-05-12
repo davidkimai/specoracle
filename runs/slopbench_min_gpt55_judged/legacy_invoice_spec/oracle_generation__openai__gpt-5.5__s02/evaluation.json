@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for every money-affecting decision (paid_status_branch, non_empty_region_branch, integer_amount_branch, included_money_branch), returns records with the exact legacy keys, maintains a visible staged audit trail via two separate accumulator dicts rather than a clever one-liner, and avoids mutating the input. The use of `type(amount_cents_value) is int` correctly rejects booleans (since bool is a subclass of int). The only minor quibbles are the absence of any legacy audit-stage comments (the spec says they are 'allowed' not 'required', so this is not a real fault) and the two parallel dicts could arguably be a single dict of tuples for slightly tighter cohesion, but the parallel structure is actually more legible for audit purposes and aligns with the 'visible staged audit trail' directive.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for every money-affecting decision (paid_status_branch, non_empty_region_branch, integer_amount_branch, included_money_branch), returns records with the exact legacy keys, maintains a visible staged audit trail via two separate accumulator dicts rather than a clever one-liner, and avoids mutating the input. The use of `type(amount_cents_value) is int` correctly rejects booleans (since bool is a subclass of int). The only minor quibbles are the absence of any legacy audit-stage comments (the spec says they are 'allowed' not 'required', so this is not a real fault) and the two parallel dicts could arguably be a single dict of tuples for slightly tighter cohesion, but the parallel structure is actually more legible for audit purposes and aligns with the 'visible staged audit trail' directive.\",\n  \"strengths\": [\n    \"Single public function, zero helpers \u2014 exactly as specified\",\n    \"Explicit branch-label variable names for every money-affecting decision\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Staged accumulation with two named dicts makes the audit trail visible and reviewable\",\n    \"Correctly uses `type(...) is int` to exclude booleans\",\n    \"Does not mutate the input list or its dicts\",\n    \"Sorted output by region as required\"\n  ],\n  \"weaknesses\": [\n    \"No legacy audit-stage comments, though the spec only permits rather than requires them\",\n    \"Two parallel dicts (bucket_item_counts, bucket_cents_totals) could be a single dict for slightly better cohesion, though the parallel form is defensible under the audit-trail directive\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function, zero helpers \u2014 exactly as specified",
+      "Explicit branch-label variable names for every money-affecting decision",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Staged accumulation with two named dicts makes the audit trail visible and reviewable",
+      "Correctly uses `type(...) is int` to exclude booleans",
+      "Does not mutate the input list or its dicts",
+      "Sorted output by region as required"
+    ],
+    "weaknesses": [
+      "No legacy audit-stage comments, though the spec only permits rather than requires them",
+      "Two parallel dicts (bucket_item_counts, bucket_cents_totals) could be a single dict for slightly better cohesion, though the parallel form is defensible under the audit-trail directive"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.014,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 30,
+    "maintainability_index": 55.746,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

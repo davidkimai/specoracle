@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, employs `bindings_ledger` as the cross-iteration dictionary name, stages parsing visibly across clearly named intermediate variables (`assignment_separator_index`, `path_separator_index`, `field_name_text`, `field_value_text`, `section_text`, `key_text`), raises errors that name the archival field being rejected, and preserves insertion order via plain `dict`. The one minor issue is that `find('=')` is called on `original_line` rather than `stripped_line`, which could theoretically misplace the separator index if leading whitespace precedes the `=`, though in practice the subsequent `.strip()` calls on section/key/value compensate. The `section_ledger` retrieval pattern (`get` + conditional assignment) is slightly more verbose than `setdefault` but is arguably more explicit and auditable, which aligns with the spec's preference for visibility. Overall this is a clean, well-structured, spec-compliant implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, employs `bindings_ledger` as the cross-iteration dictionary name, stages parsing visibly across clearly named intermediate variables (`assignment_separator_index`, `path_separator_index`, `field_name_text`, `field_value_text`, `section_text`, `key_text`), raises errors that name the archival field being rejected, and preserves insertion order via plain `dict`. The one minor issue is that `find('=')` is called on `original_line` rather than `stripped_line`, which could theoretically misplace the separator index if leading whitespace precedes the `=`, though in practice the subsequent `.strip()` calls on section/key/value compensate. The `section_ledger` retrieval pattern (`get` + conditional assignment) is slightly more verbose than `setdefault` but is arguably more explicit and auditable, which aligns with the spec's preference for visibility. Overall this is a clean, well-structured, spec-compliant implementation.\",\n  \"strengths\": [\n    \"Uses `bindings_ledger` naming convention as required by the spec\",\n    \"Single public function with no unnecessary helpers\",\n    \"Visibly staged parsing with descriptive intermediate variable names\",\n    \"Error messages explicitly name the archival field being rejected\",\n    \"Insertion order preserved via standard dict\",\n    \"Handles all required validation cases: missing '=', missing '.', empty section, empty key\"\n  ],\n  \"weaknesses\": [\n    \"`find('=')` operates on `original_line` instead of `stripped_line`, creating a subtle inconsistency where leading whitespace could shift the separator index (though `.strip()` on the parts mitigates this)\",\n    \"Minor: `section_ledger = bindings_ledger.get(section); if section_ledger is None:` pattern could be replaced with the more idiomatic `bindings_ledger.setdefault(section, {})` without sacrificing readability\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `bindings_ledger` naming convention as required by the spec",
+      "Single public function with no unnecessary helpers",
+      "Visibly staged parsing with descriptive intermediate variable names",
+      "Error messages explicitly name the archival field being rejected",
+      "Insertion order preserved via standard dict",
+      "Handles all required validation cases: missing '=', missing '.', empty section, empty key"
+    ],
+    "weaknesses": [
+      "`find('=')` operates on `original_line` instead of `stripped_line`, creating a subtle inconsistency where leading whitespace could shift the separator index (though `.strip()` on the parts mitigates this)",
+      "Minor: `section_ledger = bindings_ledger.get(section); if section_ledger is None:` pattern could be replaced with the more idiomatic `bindings_ledger.setdefault(section, {})` without sacrificing readability"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.984,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 42,
+    "maintainability_index": 50.648,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_generation"
+}

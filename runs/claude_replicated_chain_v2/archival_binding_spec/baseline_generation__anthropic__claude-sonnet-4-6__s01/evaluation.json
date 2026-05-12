@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, but it fails to follow several explicit structural requirements from the Archival Binder Spec R-04. Most notably, the accumulator dictionary is named `result` rather than something ending in `_ledger` as the spec mandates for dictionaries that survive across loop iterations. The parsing is staged across visible steps (good), there is exactly one public function (good), and insertion order is preserved via plain dict (good in Python 3.7+). However, the error messages name the line number and raw content but do not clearly 'name the archival field being rejected' in a domain-meaningful way \u2014 they describe structural problems generically rather than identifying the specific section or key field by name. The code is otherwise clean, explicit, and flat with no unnecessary abstractions.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, but it fails to follow several explicit structural requirements from the Archival Binder Spec R-04. Most notably, the accumulator dictionary is named `result` rather than something ending in `_ledger` as the spec mandates for dictionaries that survive across loop iterations. The parsing is staged across visible steps (good), there is exactly one public function (good), and insertion order is preserved via plain dict (good in Python 3.7+). However, the error messages name the line number and raw content but do not clearly 'name the archival field being rejected' in a domain-meaningful way \u2014 they describe structural problems generically rather than identifying the specific section or key field by name. The code is otherwise clean, explicit, and flat with no unnecessary abstractions.\",\n  \"strengths\": [\n    \"Visibly staged parsing: separate steps for splitting on '=', then '.', then validating each part\",\n    \"Exactly one public function\",\n    \"Insertion order preserved naturally via dict\",\n    \"Clear, readable error messages with line numbers and raw content\",\n    \"Handles edge cases: first '=' and first '.' splits only, whitespace stripping throughout\"\n  ],\n  \"weaknesses\": [\n    \"Accumulator dict named `result` instead of a name ending in `_ledger` as explicitly required by the spec\",\n    \"Error messages don't name the archival field being rejected in domain terms (e.g., 'section field', 'key field') \u2014 they describe structural issues generically\",\n    \"No docstring or comment referencing the spec identifier (R-04), making auditability slightly weaker\",\n    \"Minor: inner dict initialization `result[section] = {}` could use `setdefault` for clarity, though current form is acceptable\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Visibly staged parsing: separate steps for splitting on '=', then '.', then validating each part",
+      "Exactly one public function",
+      "Insertion order preserved naturally via dict",
+      "Clear, readable error messages with line numbers and raw content",
+      "Handles edge cases: first '=' and first '.' splits only, whitespace stripping throughout"
+    ],
+    "weaknesses": [
+      "Accumulator dict named `result` instead of a name ending in `_ledger` as explicitly required by the spec",
+      "Error messages don't name the archival field being rejected in domain terms (e.g., 'section field', 'key field') \u2014 they describe structural issues generically",
+      "No docstring or comment referencing the spec identifier (R-04), making auditability slightly weaker",
+      "Minor: inner dict initialization `result[section] = {}` could use `setdefault` for clarity, though current form is acceptable"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.552,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 46,
+    "maintainability_index": 83.549,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

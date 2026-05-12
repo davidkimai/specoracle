@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-structured, and functionally correct. It separates concerns into small pure helpers, keeps control flow flat with guard clauses and `continue` statements, validates inputs explicitly, avoids mutation, and uses clear names. The main deduction is that `_copy_override_value` and `_copy_default_value` are nearly identical helpers that could be unified into a single `_deep_copy_dict` helper, and the `_MISSING` sentinel adds a small amount of complexity that could be avoided by using `key in result` instead of `result.get(key, _MISSING)`. These are minor architectural redundancies rather than serious slop, and the overall structure is easy to audit locally.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, well-structured, and functionally correct. It separates concerns into small pure helpers, keeps control flow flat with guard clauses and `continue` statements, validates inputs explicitly, avoids mutation, and uses clear names. The main deduction is that `_copy_override_value` and `_copy_default_value` are nearly identical helpers that could be unified into a single `_deep_copy_dict` helper, and the `_MISSING` sentinel adds a small amount of complexity that could be avoided by using `key in result` instead of `result.get(key, _MISSING)`. These are minor architectural redundancies rather than serious slop, and the overall structure is easy to audit locally.\",\n  \"strengths\": [\n    \"Input validation raises clear TypeError messages\",\n    \"No mutation of either input dictionary\",\n    \"Flat control flow using guard clauses and continue\",\n    \"Small, single-purpose helper functions with descriptive names\",\n    \"Recursive merge is cleanly delegated to _merge_dicts\"\n  ],\n  \"weaknesses\": [\n    \"_copy_default_value and _copy_override_value are nearly identical and could be unified\",\n    \"_MISSING sentinel adds minor complexity; `key in result` would be simpler\",\n    \"The __all__ and module docstring add minor boilerplate for a utility module\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Input validation raises clear TypeError messages",
+      "No mutation of either input dictionary",
+      "Flat control flow using guard clauses and continue",
+      "Small, single-purpose helper functions with descriptive names",
+      "Recursive merge is cleanly delegated to _merge_dicts"
+    ],
+    "weaknesses": [
+      "_copy_default_value and _copy_override_value are nearly identical and could be unified",
+      "_MISSING sentinel adds minor complexity; `key in result` would be simpler",
+      "The __all__ and module docstring add minor boilerplate for a utility module"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.85,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.8,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 5,
+    "loc": 37,
+    "maintainability_index": 76.357,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

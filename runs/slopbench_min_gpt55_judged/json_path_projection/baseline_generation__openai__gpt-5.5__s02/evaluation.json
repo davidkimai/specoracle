@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. The sentinel `_MISSING` pattern is idiomatic for distinguishing 'not found' from `None` values. The helper `_is_ascii_nonnegative_integer` is a small, pure, named predicate that makes the intent explicit without cleverness. `_resolve_path` uses a simple loop with guard clauses rather than recursion or nested conditionals, keeping control flow flat and locally auditable. `extract_fields` is a thin orchestrator that maps paths to resolved values, making data movement explicit. The only minor quibble is that `_is_ascii_nonnegative_integer` could simply use `text.isdigit()` or `text.isdecimal()` for clarity and correctness (though the manual loop is not wrong), and the function doesn't raise on invalid `record` or `paths` types, which the spec hints at ('Raise clear errors for invalid inputs'). These are small omissions in an otherwise exemplary implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. The sentinel `_MISSING` pattern is idiomatic for distinguishing 'not found' from `None` values. The helper `_is_ascii_nonnegative_integer` is a small, pure, named predicate that makes the intent explicit without cleverness. `_resolve_path` uses a simple loop with guard clauses rather than recursion or nested conditionals, keeping control flow flat and locally auditable. `extract_fields` is a thin orchestrator that maps paths to resolved values, making data movement explicit. The only minor quibble is that `_is_ascii_nonnegative_integer` could simply use `text.isdigit()` or `text.isdecimal()` for clarity and correctness (though the manual loop is not wrong), and the function doesn't raise on invalid `record` or `paths` types, which the spec hints at ('Raise clear errors for invalid inputs'). These are small omissions in an otherwise exemplary implementation.\",\n  \"strengths\": [\n    \"Sentinel `_MISSING` correctly distinguishes missing values from `None` without ambiguity\",\n    \"Control flow in `_resolve_path` is flat with early returns, avoiding deep nesting\",\n    \"Small, named pure helpers with clear responsibilities\",\n    \"No mutation of input; result dict is built fresh\",\n    \"Ordinary standard-library constructs only; no metaprogramming or speculative abstractions\",\n    \"`extract_fields` is a minimal orchestrator, easy to audit at a glance\"\n  ],\n  \"weaknesses\": [\n    \"`_is_ascii_nonnegative_integer` reimplements `str.isdecimal()` manually, adding unnecessary complexity\",\n    \"No input validation (e.g., raising `TypeError` if `record` is not a dict or `paths` is not a dict), which the spec suggests\",\n    \"Negative integer indexes (e.g., '-1') are silently rejected rather than documented or explicitly handled\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Sentinel `_MISSING` correctly distinguishes missing values from `None` without ambiguity",
+      "Control flow in `_resolve_path` is flat with early returns, avoiding deep nesting",
+      "Small, named pure helpers with clear responsibilities",
+      "No mutation of input; result dict is built fresh",
+      "Ordinary standard-library constructs only; no metaprogramming or speculative abstractions",
+      "`extract_fields` is a minimal orchestrator, easy to audit at a glance"
+    ],
+    "weaknesses": [
+      "`_is_ascii_nonnegative_integer` reimplements `str.isdecimal()` manually, adding unnecessary complexity",
+      "No input validation (e.g., raising `TypeError` if `record` is not a dict or `paths` is not a dict), which the spec suggests",
+      "Negative integer indexes (e.g., '-1') are silently rejected rather than documented or explicitly handled"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.99,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.667,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 3,
+    "loc": 35,
+    "maintainability_index": 74.085,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "baseline_generation"
+}

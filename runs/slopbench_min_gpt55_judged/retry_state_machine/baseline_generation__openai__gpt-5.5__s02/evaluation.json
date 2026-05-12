@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen oracle: it is flat, explicit, minimal, and locally auditable. Each method does exactly one thing, names are self-explanatory, there is no speculative abstraction or hidden state, and the guard clause in the constructor raises a clear error immediately. The only minor quibble is the intermediate variable `remaining_attempts` in `remaining()`, which adds a line without adding clarity\u2014`max(0, self._max_attempts - self._failures)` would be equally readable and slightly more idiomatic, and the docstring on the class is mildly redundant given the method docstrings. These are trivial issues; the overall structure is exemplary.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen oracle: it is flat, explicit, minimal, and locally auditable. Each method does exactly one thing, names are self-explanatory, there is no speculative abstraction or hidden state, and the guard clause in the constructor raises a clear error immediately. The only minor quibble is the intermediate variable `remaining_attempts` in `remaining()`, which adds a line without adding clarity\u2014`max(0, self._max_attempts - self._failures)` would be equally readable and slightly more idiomatic, and the docstring on the class is mildly redundant given the method docstrings. These are trivial issues; the overall structure is exemplary.\",\n  \"strengths\": [\n    \"Flat, single-responsibility methods with no deep nesting\",\n    \"Explicit state mutation only through named methods; no hidden side effects\",\n    \"Clear ValueError with a descriptive message for invalid input\",\n    \"Names (allow, record_success, record_failure, remaining) map directly to the domain concept\",\n    \"No unused extension points, base classes, or speculative abstractions\",\n    \"Docstrings are concise and accurate\"\n  ],\n  \"weaknesses\": [\n    \"Intermediate variable `remaining_attempts` in `remaining()` is unnecessary; `max(0, ...)` would be more idiomatic and equally clear\",\n    \"Class-level docstring is slightly redundant given the method-level docstrings\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-responsibility methods with no deep nesting",
+      "Explicit state mutation only through named methods; no hidden side effects",
+      "Clear ValueError with a descriptive message for invalid input",
+      "Names (allow, record_success, record_failure, remaining) map directly to the domain concept",
+      "No unused extension points, base classes, or speculative abstractions",
+      "Docstrings are concise and accurate"
+    ],
+    "weaknesses": [
+      "Intermediate variable `remaining_attempts` in `remaining()` is unnecessary; `max(0, ...)` would be more idiomatic and equally clear",
+      "Class-level docstring is slightly redundant given the method-level docstrings"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.132,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 20,
+    "maintainability_index": 58.164,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04: it uses `binding_ledger` as the surviving cross-iteration dictionary, stages parsing visibly across two functions, preserves insertion order (Python 3.7+ dicts), and raises ValueError with contextual messages. The private helper `_split_binding_line` keeps the public surface to exactly one public function. Minor shortcomings: the error messages say 'line {n} is malformed' rather than naming the archival field being rejected (the spec says messages should 'name the archival field being rejected'), and the use of `section_ledger` as a local alias is a nice touch but it isn't strictly a ledger that survives across iterations\u2014it's a transient reference. The validation logic in `_split_binding_line` is slightly compressed (the guard condition combines two checks in one expression), but overall the staged, readable structure is solid and the spec compliance is high.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04: it uses `binding_ledger` as the surviving cross-iteration dictionary, stages parsing visibly across two functions, preserves insertion order (Python 3.7+ dicts), and raises ValueError with contextual messages. The private helper `_split_binding_line` keeps the public surface to exactly one public function. Minor shortcomings: the error messages say 'line {n} is malformed' rather than naming the archival field being rejected (the spec says messages should 'name the archival field being rejected'), and the use of `section_ledger` as a local alias is a nice touch but it isn't strictly a ledger that survives across iterations\u2014it's a transient reference. The validation logic in `_split_binding_line` is slightly compressed (the guard condition combines two checks in one expression), but overall the staged, readable structure is solid and the spec compliance is high.\",\n  \"strengths\": [\n    \"Uses `binding_ledger` naming convention correctly for the cross-iteration dict\",\n    \"Exactly one public function exposed\",\n    \"Visibly staged parsing: filtering, splitting, and validation are distinct steps\",\n    \"Insertion order preserved via standard dict\",\n    \"ValueError raised with line-number context for all three error cases\"\n  ],\n  \"weaknesses\": [\n    \"Error messages reference line numbers but don't explicitly name the archival field (section name or key name) being rejected, as the spec requires\",\n    \"The combined guard `'=' not in line or '.' not in line.split('=', 1)[0]` is slightly compressed rather than two explicit staged checks\",\n    \"`section_ledger` is a transient local alias, not a true cross-iteration ledger, so the naming is slightly misleading per the spec's intent\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Uses `binding_ledger` naming convention correctly for the cross-iteration dict",
+      "Exactly one public function exposed",
+      "Visibly staged parsing: filtering, splitting, and validation are distinct steps",
+      "Insertion order preserved via standard dict",
+      "ValueError raised with line-number context for all three error cases"
+    ],
+    "weaknesses": [
+      "Error messages reference line numbers but don't explicitly name the archival field (section name or key name) being rejected, as the spec requires",
+      "The combined guard `'=' not in line or '.' not in line.split('=', 1)[0]` is slightly compressed rather than two explicit staged checks",
+      "`section_ledger` is a transient local alias, not a true cross-iteration ledger, so the naming is slightly misleading per the spec's intent"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.075,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 20,
+    "maintainability_index": 57.092,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "human_reference"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and functionally correct. It uses standard Kahn's algorithm with explicit data structures, flat control flow, and clear variable names. The logic is easy to audit locally: build the node set, compute indegrees, process batches iteratively, detect cycles via count mismatch. Minor issues: the `typing` imports are redundant given the `from __future__ import annotations` and Python 3.9+ style hints already used in the signature; the `set(prereqs)` deduplication inside the loop silently handles duplicate deps without comment; and the function is monolithic where a small `build_graph` helper could improve separation, though the current size doesn't strongly demand it. The docstring is helpful without being excessive. Overall this is a solid, maintainable implementation that respects simplicity and explicitness.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and functionally correct. It uses standard Kahn's algorithm with explicit data structures, flat control flow, and clear variable names. The logic is easy to audit locally: build the node set, compute indegrees, process batches iteratively, detect cycles via count mismatch. Minor issues: the `typing` imports are redundant given the `from __future__ import annotations` and Python 3.9+ style hints already used in the signature; the `set(prereqs)` deduplication inside the loop silently handles duplicate deps without comment; and the function is monolithic where a small `build_graph` helper could improve separation, though the current size doesn't strongly demand it. The docstring is helpful without being excessive. Overall this is a solid, maintainable implementation that respects simplicity and explicitness.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement: indegree and dependents built transparently\",\n    \"Clear cycle detection via processed_count vs len(nodes)\",\n    \"Alphabetical sorting applied consistently at each batch boundary\",\n    \"Includes tasks that only appear as dependencies via nodes set construction\",\n    \"Does not mutate input\"\n  ],\n  \"weaknesses\": [\n    \"Redundant `typing` imports (Dict, List, Set) alongside modern hint syntax\",\n    \"Monolithic function; a small `build_graph` helper would improve auditability\",\n    \"Silent deduplication of duplicate prereqs via `set(prereqs)` without comment or explicit handling\",\n    \"Docstring duplicates the task description rather than adding implementation insight\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit data movement: indegree and dependents built transparently",
+      "Clear cycle detection via processed_count vs len(nodes)",
+      "Alphabetical sorting applied consistently at each batch boundary",
+      "Includes tasks that only appear as dependencies via nodes set construction",
+      "Does not mutate input"
+    ],
+    "weaknesses": [
+      "Redundant `typing` imports (Dict, List, Set) alongside modern hint syntax",
+      "Monolithic function; a small `build_graph` helper would improve auditability",
+      "Silent deduplication of duplicate prereqs via `set(prereqs)` without comment or explicit handling",
+      "Docstring duplicates the task description rather than adding implementation insight"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.837,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 12.0,
+    "cyclomatic_complexity_max": 12,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 1,
+    "loc": 38,
+    "maintainability_index": 77.318,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

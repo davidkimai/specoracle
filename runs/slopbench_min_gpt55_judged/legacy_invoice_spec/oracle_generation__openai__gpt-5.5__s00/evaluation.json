@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (e.g., `paid_branch_status_is_paid`, `cents_branch_amount_is_integer`, `include_branch_invoice_affects_money`), returns records with the exact legacy keys, stages the work into clearly named audit phases with allowed comments, and avoids clever flattening in favor of a visible staged audit trail. The three-stage pipeline (qualification \u2192 aggregation \u2192 reporting) with separate data structures makes each phase independently auditable. Minor weaknesses include the use of two parallel dicts (`bucket_counts` / `bucket_cents_totals`) instead of a single dict of tuples or a defaultdict, which adds slight redundancy, and some variable names in the aggregation/reporting stages reuse plain `region_value` without the branch-label prefix convention applied in the qualification stage, creating a small inconsistency in the naming discipline.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helpers, employs explicit branch-label variable names for money-affecting decisions (e.g., `paid_branch_status_is_paid`, `cents_branch_amount_is_integer`, `include_branch_invoice_affects_money`), returns records with the exact legacy keys, stages the work into clearly named audit phases with allowed comments, and avoids clever flattening in favor of a visible staged audit trail. The three-stage pipeline (qualification \u2192 aggregation \u2192 reporting) with separate data structures makes each phase independently auditable. Minor weaknesses include the use of two parallel dicts (`bucket_counts` / `bucket_cents_totals`) instead of a single dict of tuples or a defaultdict, which adds slight redundancy, and some variable names in the aggregation/reporting stages reuse plain `region_value` without the branch-label prefix convention applied in the qualification stage, creating a small inconsistency in the naming discipline.\",\n  \"strengths\": [\n    \"Single public function with no helper functions, exactly as specified\",\n    \"Explicit branch-label variable names for all money-affecting decisions in the qualification stage\",\n    \"Three clearly separated audit stages with permitted legacy-stage comments\",\n    \"Returns exact legacy keys: bucket_code, item_count, cents_total\",\n    \"Does not mutate the input list or its dicts\",\n    \"Uses `type(...) is int` to strictly reject booleans as integers\"\n  ],\n  \"weaknesses\": [\n    \"Two parallel dicts for aggregation (bucket_counts, bucket_cents_totals) is slightly redundant; a single dict of (count, total) tuples would be cleaner\",\n    \"Branch-label naming convention is applied rigorously in qualification but drops off in aggregation/reporting stages\",\n    \"The intermediate `qualified_invoice_records` list copies only two fields, which is fine but adds a small allocation that a direct aggregation loop would avoid\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions, exactly as specified",
+      "Explicit branch-label variable names for all money-affecting decisions in the qualification stage",
+      "Three clearly separated audit stages with permitted legacy-stage comments",
+      "Returns exact legacy keys: bucket_code, item_count, cents_total",
+      "Does not mutate the input list or its dicts",
+      "Uses `type(...) is int` to strictly reject booleans as integers"
+    ],
+    "weaknesses": [
+      "Two parallel dicts for aggregation (bucket_counts, bucket_cents_totals) is slightly redundant; a single dict of (count, total) tuples would be cleaner",
+      "Branch-label naming convention is applied rigorously in qualification but drops off in aggregation/reporting stages",
+      "The intermediate `qualified_invoice_records` list copies only two fields, which is fine but adds a small allocation that a direct aggregation loop would avoid"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.131,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 46,
+    "maintainability_index": 68.103,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

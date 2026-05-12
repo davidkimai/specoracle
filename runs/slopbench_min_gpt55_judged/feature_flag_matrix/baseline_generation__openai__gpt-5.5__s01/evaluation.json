@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit. It follows a straightforward three-step resolution process that mirrors the spec exactly, with no unnecessary abstractions or speculative extension points. Data movement is explicit (copying defaults into a new dict, then updating in order), inputs are not mutated, and the control flow is easy to audit locally. The use of `.get()` with sensible defaults and a simple `if` guard for the overrides step is idiomatic and readable. The only minor quibble is that the spec mentions 'Raise clear errors for invalid inputs' but the implementation silently accepts non-dict overrides or non-list segments without validation \u2014 however, the task description doesn't explicitly require input validation, so this is a minor omission rather than a flaw. The docstring is helpful and accurate without being excessive.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit. It follows a straightforward three-step resolution process that mirrors the spec exactly, with no unnecessary abstractions or speculative extension points. Data movement is explicit (copying defaults into a new dict, then updating in order), inputs are not mutated, and the control flow is easy to audit locally. The use of `.get()` with sensible defaults and a simple `if` guard for the overrides step is idiomatic and readable. The only minor quibble is that the spec mentions 'Raise clear errors for invalid inputs' but the implementation silently accepts non-dict overrides or non-list segments without validation \u2014 however, the task description doesn't explicitly require input validation, so this is a minor omission rather than a flaw. The docstring is helpful and accurate without being excessive.\",\n  \"strengths\": [\n    \"Flat control flow with no deep nesting\",\n    \"Explicit data movement: copies defaults before mutating, never touches inputs\",\n    \"Minimal and purposeful: no unused abstractions or extension points\",\n    \"Names clearly communicate intent (resolved, segment_overrides, user_overrides)\",\n    \"Accurate docstring that mirrors the spec's resolution order\"\n  ],\n  \"weaknesses\": [\n    \"No input validation (e.g., non-list segments, non-dict overrides) despite the constraint to raise clear errors for invalid inputs\",\n    \"Could optionally extract a small helper for 'apply overrides from a dict' to reduce repetition, though current duplication is minimal enough to be acceptable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with no deep nesting",
+      "Explicit data movement: copies defaults before mutating, never touches inputs",
+      "Minimal and purposeful: no unused abstractions or extension points",
+      "Names clearly communicate intent (resolved, segment_overrides, user_overrides)",
+      "Accurate docstring that mirrors the spec's resolution order"
+    ],
+    "weaknesses": [
+      "No input validation (e.g., non-list segments, non-dict overrides) despite the constraint to raise clear errors for invalid inputs",
+      "Could optionally extract a small helper for 'apply overrides from a dict' to reduce repetition, though current duplication is minimal enough to be acceptable"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.412,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 24,
+    "maintainability_index": 97.587,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "feature_flag_matrix",
+  "variant": "baseline_generation"
+}

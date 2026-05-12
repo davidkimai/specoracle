@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It uses a flat loop with guard clauses extracted into local variables, avoids mutation, and uses ordinary standard-library constructs (defaultdict). The logic is locally auditable and names are clear. Minor issues: the docstring is verbose and over-engineered for the task size, the `isinstance(event, dict)` guard is a speculative abstraction not required by the spec (the spec says events is a list[dict]), the legacy `typing` imports (List, Dict, Any) are unnecessary in modern Python where built-in generics suffice, and the boolean check `and isinstance(amount, int)` correctly excludes bools since `bool` is a subclass of `int` \u2014 but this subtlety is unaddressed in comments. The overall structure is sound and a maintainer can audit behavior locally without difficulty.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It uses a flat loop with guard clauses extracted into local variables, avoids mutation, and uses ordinary standard-library constructs (defaultdict). The logic is locally auditable and names are clear. Minor issues: the docstring is verbose and over-engineered for the task size, the `isinstance(event, dict)` guard is a speculative abstraction not required by the spec (the spec says events is a list[dict]), the legacy `typing` imports (List, Dict, Any) are unnecessary in modern Python where built-in generics suffice, and the boolean check `and isinstance(amount, int)` correctly excludes bools since `bool` is a subclass of `int` \u2014 but this subtlety is unaddressed in comments. The overall structure is sound and a maintainer can audit behavior locally without difficulty.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses and local variable extraction\",\n    \"No input mutation; defaultdict converted to plain dict on return\",\n    \"Clear, descriptive variable names\",\n    \"Correct filtering logic including non-empty string and integer checks\",\n    \"Uses standard-library defaultdict appropriately\"\n  ],\n  \"weaknesses\": [\n    \"Overly verbose docstring adds noise without proportional value\",\n    \"Legacy typing imports (List, Dict, Any) instead of built-in generics\",\n    \"isinstance(event, dict) guard is speculative \u2014 not required by the spec\",\n    \"No helper functions despite the operational constraint preferring small pure helpers\",\n    \"bool subclass of int edge case is silently handled but not documented\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses and local variable extraction",
+      "No input mutation; defaultdict converted to plain dict on return",
+      "Clear, descriptive variable names",
+      "Correct filtering logic including non-empty string and integer checks",
+      "Uses standard-library defaultdict appropriately"
+    ],
+    "weaknesses": [
+      "Overly verbose docstring adds noise without proportional value",
+      "Legacy typing imports (List, Dict, Any) instead of built-in generics",
+      "isinstance(event, dict) guard is speculative \u2014 not required by the spec",
+      "No helper functions despite the operational constraint preferring small pure helpers",
+      "bool subclass of int edge case is silently handled but not documented"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.229,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 52,
+    "maintainability_index": 80.104,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "nested_json_index",
+  "variant": "baseline_generation"
+}

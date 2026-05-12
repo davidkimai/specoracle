@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and locally auditable. Guard clauses handle malformed inputs early, control flow is shallow, data movement is explicit, and the helper `_is_int` is small and purposeful. Variable names are self-explanatory, the ceiling-division idiom is standard, and there is no speculative abstraction or framework-shaped scaffolding. The only minor quibbles are that the early-return on invalid `items`/`sales_velocity` types silently returns `[]` rather than raising (the spec says 'raise clear errors for invalid inputs'), and the `_is_int` bool-exclusion, while defensively correct, adds a small layer of implicit policy that isn't called out in the requirements\u2014though it is a reasonable guard. Overall this is a near-ideal realization of the Zen-of-Python oracle for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and locally auditable. Guard clauses handle malformed inputs early, control flow is shallow, data movement is explicit, and the helper `_is_int` is small and purposeful. Variable names are self-explanatory, the ceiling-division idiom is standard, and there is no speculative abstraction or framework-shaped scaffolding. The only minor quibbles are that the early-return on invalid `items`/`sales_velocity` types silently returns `[]` rather than raising (the spec says 'raise clear errors for invalid inputs'), and the `_is_int` bool-exclusion, while defensively correct, adds a small layer of implicit policy that isn't called out in the requirements\u2014though it is a reasonable guard. Overall this is a near-ideal realization of the Zen-of-Python oracle for this task.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses eliminates deep nesting\",\n    \"Small, single-purpose `_is_int` helper keeps the main function readable\",\n    \"Explicit field extraction with `.get()` makes data movement visible\",\n    \"Ceiling-division uses a well-known standard idiom with no magic\",\n    \"Sorted output is produced cleanly at the end without mutation of intermediate state\",\n    \"No unused abstractions, extension points, or framework-shaped code\"\n  ],\n  \"weaknesses\": [\n    \"Invalid `items` or `sales_velocity` types silently return `[]` instead of raising a clear error as the operational constraints suggest\",\n    \"Bool exclusion in `_is_int` is an undocumented policy choice not grounded in the spec, which could surprise maintainers\",\n    \"The `typing.Any` import is used only for the helper annotation\u2014minor overhead but slightly speculative\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses eliminates deep nesting",
+      "Small, single-purpose `_is_int` helper keeps the main function readable",
+      "Explicit field extraction with `.get()` makes data movement visible",
+      "Ceiling-division uses a well-known standard idiom with no magic",
+      "Sorted output is produced cleanly at the end without mutation of intermediate state",
+      "No unused abstractions, extension points, or framework-shaped code"
+    ],
+    "weaknesses": [
+      "Invalid `items` or `sales_velocity` types silently return `[]` instead of raising a clear error as the operational constraints suggest",
+      "Bool exclusion in `_is_int` is an undocumented policy choice not grounded in the spec, which could surprise maintainers",
+      "The `typing.Any` import is used only for the helper annotation\u2014minor overhead but slightly speculative"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.305,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.5,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 2,
+    "loc": 29,
+    "maintainability_index": 48.355,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "baseline_generation"
+}

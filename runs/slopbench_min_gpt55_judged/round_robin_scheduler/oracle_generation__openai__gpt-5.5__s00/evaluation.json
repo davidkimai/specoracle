@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is functionally correct and reasonably well-structured: helpers are small and pure, control flow is flat, data movement is explicit, and names are clear. However, the validation layer is significantly over-engineered relative to the task spec. The spec says workers have 'name' and optional 'enabled' fields \u2014 it says nothing about enforcing types on those fields, yet the candidate adds four separate type-checking branches per worker plus a full job-element type check. This speculative defensive validation violates 'avoid speculative abstractions' and 'keep code sparse enough that a maintainer can audit behavior locally.' The `_validate_jobs` helper exists solely to enforce a type constraint not mentioned in the spec, and `_validate_worker` is nearly as long as the main function. The `__all__` export list is a minor unnecessary addition for a single-function module. The core logic (enumerate + modulo index into enabled names) is clean and idiomatic, and the ValueError for no enabled workers is correct and explicit, but the surrounding scaffolding adds noise that obscures the simple algorithm underneath.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The candidate implementation is functionally correct and reasonably well-structured: helpers are small and pure, control flow is flat, data movement is explicit, and names are clear. However, the validation layer is significantly over-engineered relative to the task spec. The spec says workers have 'name' and optional 'enabled' fields \u2014 it says nothing about enforcing types on those fields, yet the candidate adds four separate type-checking branches per worker plus a full job-element type check. This speculative defensive validation violates 'avoid speculative abstractions' and 'keep code sparse enough that a maintainer can audit behavior locally.' The `_validate_jobs` helper exists solely to enforce a type constraint not mentioned in the spec, and `_validate_worker` is nearly as long as the main function. The `__all__` export list is a minor unnecessary addition for a single-function module. The core logic (enumerate + modulo index into enabled names) is clean and idiomatic, and the ValueError for no enabled workers is correct and explicit, but the surrounding scaffolding adds noise that obscures the simple algorithm underneath.\",\n  \"strengths\": [\n    \"Core round-robin logic is clean, readable, and non-mutating\",\n    \"Clear ValueError raised when no enabled workers exist\",\n    \"Small pure helpers with descriptive names\",\n    \"Flat control flow in the main function\",\n    \"No hidden mutation or global state\"\n  ],\n  \"weaknesses\": [\n    \"Extensive type validation not required by the spec \u2014 speculative abstraction\",\n    \"_validate_worker and _validate_jobs add bulk without spec-mandated value\",\n    \"_validate_jobs helper is entirely speculative and unused in spirit of the task\",\n    \"__all__ is unnecessary boilerplate for a single-entry-point module\",\n    \"Over-engineering obscures the simplicity of the underlying algorithm\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Core round-robin logic is clean, readable, and non-mutating",
+      "Clear ValueError raised when no enabled workers exist",
+      "Small pure helpers with descriptive names",
+      "Flat control flow in the main function",
+      "No hidden mutation or global state"
+    ],
+    "weaknesses": [
+      "Extensive type validation not required by the spec \u2014 speculative abstraction",
+      "_validate_worker and _validate_jobs add bulk without spec-mandated value",
+      "_validate_jobs helper is entirely speculative and unused in spirit of the task",
+      "__all__ is unnecessary boilerplate for a single-entry-point module",
+      "Over-engineering obscures the simplicity of the underlying algorithm"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.205,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 4,
+    "loc": 37,
+    "maintainability_index": 51.127,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

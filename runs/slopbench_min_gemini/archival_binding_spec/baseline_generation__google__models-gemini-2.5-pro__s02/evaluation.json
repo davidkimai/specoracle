@@ -1,0 +1,48 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate submission is completely empty \u2014 no code was provided whatsoever. There is no implementation to evaluate against the functional requirements or the Archival Binder Spec R-04 structural oracle. Every criterion (staged parsing, _ledger naming, single public function, insertion-order preservation, descriptive ValueError messages) is entirely unmet because there is literally nothing present.",
+    "raw_response": "```json\n{\n  \"score\": 1,\n  \"rationale\": \"The candidate submission is completely empty \u2014 no code was provided whatsoever. There is no implementation to evaluate against the functional requirements or the Archival Binder Spec R-04 structural oracle. Every criterion (staged parsing, _ledger naming, single public function, insertion-order preservation, descriptive ValueError messages) is entirely unmet because there is literally nothing present.\",\n  \"strengths\": [],\n  \"weaknesses\": [\n    \"No code submitted at all \u2014 the entry point parse_bindings is absent\",\n    \"Zero functional correctness: no parsing, no validation, no return value\",\n    \"None of the R-04 structural rules (staged parsing, _ledger naming, error messages naming the archival field) are satisfied\",\n    \"Cannot preserve insertion order or raise meaningful errors without any implementation\"\n  ]\n}\n```",
+    "score": 1,
+    "skipped": false,
+    "strengths": [],
+    "weaknesses": [
+      "No code submitted at all \u2014 the entry point parse_bindings is absent",
+      "Zero functional correctness: no parsing, no validation, no return value",
+      "None of the R-04 structural rules (staged parsing, _ledger naming, error messages naming the archival field) are satisfied",
+      "Cannot preserve insertion order or raise meaningful errors without any implementation"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.351,
+    "exit_code": 2,
+    "passed": false,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "\n==================================== ERRORS ====================================\n______________________ ERROR collecting test_solution.py _______________________\nImportError while importing test module '/work/test_solution.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/local/lib/python3.11/importlib/__init__.py:126: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntest_solution.py:3: in <module>\n    from solution import parse_bindings\nE   ImportError: cannot import name 'parse_bindings' from 'solution' (/work/solution.py)\n=========================== short test summary info ============================\nERROR test_solution.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.09s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 0.0,
+    "cyclomatic_complexity_max": 0,
+    "cyclomatic_complexity_total": 0,
+    "function_count": 0,
+    "loc": 0,
+    "maintainability_index": 100.0,
+    "max_nesting_depth": 0,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

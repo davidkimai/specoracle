@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct, non-mutating, and uses clear names with flat control flow. The core logic is straightforward and auditable locally. However, the module-level docstring and the lengthy function docstring add significant noise relative to the code's simplicity\u2014the Zen favors sparse, self-evident code over heavy documentation scaffolding. The `typing.Any` import and the verbose type annotation `list[dict[str, typing.Any]]` are speculative over-engineering when `list[dict]` suffices. The `num_enabled_workers` variable is a minor unnecessary indirection since `len(enabled_worker_names)` is already clear inline. A small pure helper (e.g., `_enabled_workers`) could have been extracted per the structural spec, though the current flat structure is acceptable. Overall the code is clean and readable but carries modest documentation and annotation bloat that works against the 'sparse enough to audit locally' principle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct, non-mutating, and uses clear names with flat control flow. The core logic is straightforward and auditable locally. However, the module-level docstring and the lengthy function docstring add significant noise relative to the code's simplicity\u2014the Zen favors sparse, self-evident code over heavy documentation scaffolding. The `typing.Any` import and the verbose type annotation `list[dict[str, typing.Any]]` are speculative over-engineering when `list[dict]` suffices. The `num_enabled_workers` variable is a minor unnecessary indirection since `len(enabled_worker_names)` is already clear inline. A small pure helper (e.g., `_enabled_workers`) could have been extracted per the structural spec, though the current flat structure is acceptable. Overall the code is clean and readable but carries modest documentation and annotation bloat that works against the 'sparse enough to audit locally' principle.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause before the main loop\",\n    \"No input mutation; new list built explicitly\",\n    \"Clear, descriptive variable names (enabled_worker_names, assignments)\",\n    \"Correct use of modulo for round-robin without itertools complexity\",\n    \"Raises ValueError with a meaningful message\"\n  ],\n  \"weaknesses\": [\n    \"Overly verbose docstrings relative to the simplicity of the code\",\n    \"Unnecessary `import typing` and `typing.Any` annotation when `list[dict]` is sufficient\",\n    \"`num_enabled_workers` intermediate variable adds indirection without clarity benefit\",\n    \"No extraction of a small helper (e.g., filter step) as suggested by the structural spec\",\n    \"Module-level docstring is speculative boilerplate for a single-function module\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause before the main loop",
+      "No input mutation; new list built explicitly",
+      "Clear, descriptive variable names (enabled_worker_names, assignments)",
+      "Correct use of modulo for round-robin without itertools complexity",
+      "Raises ValueError with a meaningful message"
+    ],
+    "weaknesses": [
+      "Overly verbose docstrings relative to the simplicity of the code",
+      "Unnecessary `import typing` and `typing.Any` annotation when `list[dict]` is sufficient",
+      "`num_enabled_workers` intermediate variable adds indirection without clarity benefit",
+      "No extraction of a small helper (e.g., filter step) as suggested by the structural spec",
+      "Module-level docstring is speculative boilerplate for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.985,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 42,
+    "maintainability_index": 80.893,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

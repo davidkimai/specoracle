@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation is functionally correct and structurally reasonable: it uses small pure helpers, keeps control flow flat, avoids mutation, and raises clear errors. However, it over-validates inputs well beyond what the task specifies\u2014adding TypeError checks for list types, dict types, string types, and bool types that the functional requirements never mention. This speculative defensive programming adds noise, inflates the helpers, and makes the code harder to audit locally without adding meaningful value for the stated task. The Zen of Python favors simplicity and avoiding speculative abstractions; the validation layer here is framework-shaped over-engineering for a straightforward scheduling function. The core logic (modular index into enabled workers list) is clean and idiomatic, and the helper decomposition is appropriate, but the excess type-checking bloat drags the score down noticeably.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The candidate implementation is functionally correct and structurally reasonable: it uses small pure helpers, keeps control flow flat, avoids mutation, and raises clear errors. However, it over-validates inputs well beyond what the task specifies\u2014adding TypeError checks for list types, dict types, string types, and bool types that the functional requirements never mention. This speculative defensive programming adds noise, inflates the helpers, and makes the code harder to audit locally without adding meaningful value for the stated task. The Zen of Python favors simplicity and avoiding speculative abstractions; the validation layer here is framework-shaped over-engineering for a straightforward scheduling function. The core logic (modular index into enabled workers list) is clean and idiomatic, and the helper decomposition is appropriate, but the excess type-checking bloat drags the score down noticeably.\",\n  \"strengths\": [\n    \"Clean separation into small pure helpers (_enabled_worker_names, _validated_jobs, assign_round_robin)\",\n    \"Core round-robin logic is simple and readable using enumerate + modulo\",\n    \"No mutation of inputs\",\n    \"Raises ValueError with a clear message when no enabled workers exist\",\n    \"Uses ordinary standard-library constructs with no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"Extensive TypeError checks for list/dict/str/bool types go far beyond the functional requirements, adding speculative defensive code\",\n    \"_validated_jobs helper is nearly trivial and adds little beyond a list copy, making it feel like unnecessary abstraction\",\n    \"The bool isinstance check for 'enabled' is overly strict (e.g., it would reject truthy integers that Python naturally treats as booleans)\",\n    \"Verbose index-based error messages in helpers add bulk without being required by the spec\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into small pure helpers (_enabled_worker_names, _validated_jobs, assign_round_robin)",
+      "Core round-robin logic is simple and readable using enumerate + modulo",
+      "No mutation of inputs",
+      "Raises ValueError with a clear message when no enabled workers exist",
+      "Uses ordinary standard-library constructs with no metaprogramming"
+    ],
+    "weaknesses": [
+      "Extensive TypeError checks for list/dict/str/bool types go far beyond the functional requirements, adding speculative defensive code",
+      "_validated_jobs helper is nearly trivial and adds little beyond a list copy, making it feel like unnecessary abstraction",
+      "The bool isinstance check for 'enabled' is overly strict (e.g., it would reject truthy integers that Python naturally treats as booleans)",
+      "Verbose index-based error messages in helpers add bulk without being required by the spec"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.005,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 3,
+    "loc": 35,
+    "maintainability_index": 51.668,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

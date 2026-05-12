@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and uses a standard Kahn's algorithm approach with reasonable naming and explicit data movement. However, it has some structural issues that reduce its score: the queue is used inconsistently (sorted into `current_batch` immediately, then cleared and rebuilt as `next_level`, making the deque largely decorative and adding confusion), the sorting happens redundantly in multiple places, and the monolithic function could benefit from small pure helpers (e.g., `build_graph` to separate graph construction from traversal). The docstring and comments are adequate but the queue/next_level dance is harder to audit locally than a cleaner batch-by-batch approach would be. The duplicate-dep handling via `set(deps)` is a good explicit choice. Overall it's competent but not as sparse or flat as the Zen oracle would prefer.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and uses a standard Kahn's algorithm approach with reasonable naming and explicit data movement. However, it has some structural issues that reduce its score: the queue is used inconsistently (sorted into `current_batch` immediately, then cleared and rebuilt as `next_level`, making the deque largely decorative and adding confusion), the sorting happens redundantly in multiple places, and the monolithic function could benefit from small pure helpers (e.g., `build_graph` to separate graph construction from traversal). The docstring and comments are adequate but the queue/next_level dance is harder to audit locally than a cleaner batch-by-batch approach would be. The duplicate-dep handling via `set(deps)` is a good explicit choice. Overall it's competent but not as sparse or flat as the Zen oracle would prefer.\",\n  \"strengths\": [\n    \"Correctly includes tasks that only appear as dependencies\",\n    \"Uses set(deps) to avoid double-counting duplicate dependencies explicitly\",\n    \"Clear variable names (in_degree, dependents, visited_count)\",\n    \"Raises ValueError with a descriptive message on cycle detection\",\n    \"Does not mutate the input\"\n  ],\n  \"weaknesses\": [\n    \"The deque is used superfluously \u2014 it's immediately converted to a sorted list and then cleared, making it misleading rather than helpful\",\n    \"Sorting occurs in multiple redundant places (initial queue, next_level sort, then re-sort into current_batch) adding noise\",\n    \"Monolithic function; graph construction and batch traversal could be separated into small pure helpers per the structural spec\",\n    \"next_level list is built then iterated to populate queue, an unnecessary intermediate step that adds indirection\",\n    \"Minor: module-level docstring adds little value for a single-function module\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Correctly includes tasks that only appear as dependencies",
+      "Uses set(deps) to avoid double-counting duplicate dependencies explicitly",
+      "Clear variable names (in_degree, dependents, visited_count)",
+      "Raises ValueError with a descriptive message on cycle detection",
+      "Does not mutate the input"
+    ],
+    "weaknesses": [
+      "The deque is used superfluously \u2014 it's immediately converted to a sorted list and then cleared, making it misleading rather than helpful",
+      "Sorting occurs in multiple redundant places (initial queue, next_level sort, then re-sort into current_batch) adding noise",
+      "Monolithic function; graph construction and batch traversal could be separated into small pure helpers per the structural spec",
+      "next_level list is built then iterated to populate queue, an unnecessary intermediate step that adds indirection",
+      "Minor: module-level docstring adds little value for a single-function module"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.613,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 50,
+    "maintainability_index": 78.853,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

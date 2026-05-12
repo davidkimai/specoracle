@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. The main function reads like a clear narrative: parse, skip malformed, check window, retain or skip, update state. The helper `_parse_event` is a small pure function with a single responsibility and an explicit None-return contract. Data movement is explicit\u2014`last_seen` is local, mutation is visible, and there's no hidden state. Names are self-explanatory (`retained`, `last_seen`, `previous`, `key`). The guard-clause style in `_parse_event` keeps nesting shallow. The only minor quibble is that `last_seen[key] = timestamp` updates even when the event is a duplicate of a non-duplicate (i.e., it correctly tracks the first-seen timestamp, not the latest), which is the correct semantic. The use of `tuple(values)` as a hashable composite key is idiomatic and straightforward. No speculative abstractions, no framework-shaped code, no unused extension points. The implementation is sparse enough to audit locally in under a minute.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. The main function reads like a clear narrative: parse, skip malformed, check window, retain or skip, update state. The helper `_parse_event` is a small pure function with a single responsibility and an explicit None-return contract. Data movement is explicit\u2014`last_seen` is local, mutation is visible, and there's no hidden state. Names are self-explanatory (`retained`, `last_seen`, `previous`, `key`). The guard-clause style in `_parse_event` keeps nesting shallow. The only minor quibble is that `last_seen[key] = timestamp` updates even when the event is a duplicate of a non-duplicate (i.e., it correctly tracks the first-seen timestamp, not the latest), which is the correct semantic. The use of `tuple(values)` as a hashable composite key is idiomatic and straightforward. No speculative abstractions, no framework-shaped code, no unused extension points. The implementation is sparse enough to audit locally in under a minute.\",\n  \"strengths\": [\n    \"Clean separation between parsing/validation and deduplication logic\",\n    \"Flat control flow with guard clauses in both functions\",\n    \"Explicit data movement; no hidden mutation or global state\",\n    \"Self-documenting names that match the problem domain\",\n    \"Correct semantic: tracks first-seen timestamp, not latest\",\n    \"Standard library only, no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"No input validation on `window_seconds` (e.g., negative values are silently accepted)\",\n    \"No validation that `key_fields` is non-empty, which could produce trivially colliding keys\",\n    \"The `| None` union return type annotation requires Python 3.10+, which may not be universally available\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation between parsing/validation and deduplication logic",
+      "Flat control flow with guard clauses in both functions",
+      "Explicit data movement; no hidden mutation or global state",
+      "Self-documenting names that match the problem domain",
+      "Correct semantic: tracks first-seen timestamp, not latest",
+      "Standard library only, no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "No input validation on `window_seconds` (e.g., negative values are silently accepted)",
+      "No validation that `key_fields` is non-empty, which could produce trivially colliding keys",
+      "The `| None` union return type annotation requires Python 3.10+, which may not be universally available"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.079,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.5,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 24,
+    "maintainability_index": 54.977,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dedupe_event_stream",
+  "variant": "human_reference"
+}

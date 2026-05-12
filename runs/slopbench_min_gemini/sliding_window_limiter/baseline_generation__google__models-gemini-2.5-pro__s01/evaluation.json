@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound: it uses a plain defaultdict of deques, keeps control flow flat with a guard-clause-style while loop, raises clear ValueError on bad inputs, and avoids speculative abstractions. The snapshot method correctly avoids mutating the defaultdict for unseen keys. The main weaknesses are cosmetic but non-trivial: the docstrings are verbose and over-explain obvious code (violating 'sparse enough to audit locally'), the isinstance checks add noise that the spec doesn't require (the spec says 'positive', not 'integer'), and the type annotations import from typing rather than using the built-in generics available in modern Python. The overall architecture is exactly right\u2014no framework-shaped code, no hidden mutation, no clever metaprogramming\u2014but the verbosity slightly obscures the simplicity that is otherwise present.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound: it uses a plain defaultdict of deques, keeps control flow flat with a guard-clause-style while loop, raises clear ValueError on bad inputs, and avoids speculative abstractions. The snapshot method correctly avoids mutating the defaultdict for unseen keys. The main weaknesses are cosmetic but non-trivial: the docstrings are verbose and over-explain obvious code (violating 'sparse enough to audit locally'), the isinstance checks add noise that the spec doesn't require (the spec says 'positive', not 'integer'), and the type annotations import from typing rather than using the built-in generics available in modern Python. The overall architecture is exactly right\u2014no framework-shaped code, no hidden mutation, no clever metaprogramming\u2014but the verbosity slightly obscures the simplicity that is otherwise present.\",\n  \"strengths\": [\n    \"Correct half-open window semantics with a clean while-loop eviction\",\n    \"snapshot uses .get() to avoid polluting the defaultdict with phantom keys\",\n    \"Flat control flow with no deep nesting\",\n    \"Clear, minimal data structure choice (deque per key)\",\n    \"Explicit ValueError with descriptive messages\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are excessively long and re-explain what the code already says clearly\",\n    \"isinstance checks go beyond the spec's 'positive' requirement, adding noise\",\n    \"Uses deprecated typing.Deque/Dict/List instead of built-in generics (dict, deque, list)\",\n    \"No helper extracted for the eviction step, though the method is still short enough to be readable\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct half-open window semantics with a clean while-loop eviction",
+      "snapshot uses .get() to avoid polluting the defaultdict with phantom keys",
+      "Flat control flow with no deep nesting",
+      "Clear, minimal data structure choice (deque per key)",
+      "Explicit ValueError with descriptive messages"
+    ],
+    "weaknesses": [
+      "Docstrings are excessively long and re-explain what the code already says clearly",
+      "isinstance checks go beyond the spec's 'positive' requirement, adding noise",
+      "Uses deprecated typing.Deque/Dict/List instead of built-in generics (dict, deque, list)",
+      "No helper extracted for the eviction step, though the method is still short enough to be readable"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.202,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 3,
+    "loc": 74,
+    "maintainability_index": 60.5,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

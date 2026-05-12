@@ -1,0 +1,56 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed into small pure helpers with explicit data movement. The control flow in `aggregate_sales` is straightforward with guard clauses that keep nesting shallow. Helper names are self-explanatory and each does one thing. The use of standard-library constructs (csv.DictReader, StringIO, sorted) is appropriate. Minor weaknesses include the module-level `_REQUIRED_FIELDS` tuple being a mild speculative abstraction (it's only used in two places and could be inlined or passed as a parameter), the `_has_required_headers` check returning `[]` on missing headers rather than raising (silently swallowing a likely caller error), the mixed use of `typing` imports alongside native PEP 604 union syntax (`int | None`) which is inconsistent, and the `None in row` check in `_row_has_required_values` being a subtle DictReader-specific detail that deserves a comment. Overall the code is auditable, sparse, and well-structured with no framework-shaped bloat or hidden mutation.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed into small pure helpers with explicit data movement. The control flow in `aggregate_sales` is straightforward with guard clauses that keep nesting shallow. Helper names are self-explanatory and each does one thing. The use of standard-library constructs (csv.DictReader, StringIO, sorted) is appropriate. Minor weaknesses include the module-level `_REQUIRED_FIELDS` tuple being a mild speculative abstraction (it's only used in two places and could be inlined or passed as a parameter), the `_has_required_headers` check returning `[]` on missing headers rather than raising (silently swallowing a likely caller error), the mixed use of `typing` imports alongside native PEP 604 union syntax (`int | None`) which is inconsistent, and the `None in row` check in `_row_has_required_values` being a subtle DictReader-specific detail that deserves a comment. Overall the code is auditable, sparse, and well-structured with no framework-shaped bloat or hidden mutation.\",\n  \"strengths\": [\n    \"Small, single-purpose helpers with descriptive names\",\n    \"Flat control flow with guard clauses instead of deep nesting\",\n    \"Explicit data movement: totals dict updated immutably per key\",\n    \"Clear TypeError raised for non-string input\",\n    \"Standard-library only, no clever metaprogramming\",\n    \"Final sort and list comprehension are readable and correct\"\n  ],\n  \"weaknesses\": [\n    \"Missing headers silently returns [] instead of raising, hiding likely caller errors\",\n    \"Mixed typing styles: `List[Dict]` from `typing` alongside native `int | None` union syntax\",\n    \"`_REQUIRED_FIELDS` module-level constant is a mild speculative abstraction used in only two helpers\",\n    \"`None in row` check lacks a comment explaining it guards against DictReader extra-field behavior\",\n    \"Type annotation `List[Dict[str, object]]` is imprecise; could use a TypedDict or at least `Dict[str, int | str]`\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Small, single-purpose helpers with descriptive names",
+      "Flat control flow with guard clauses instead of deep nesting",
+      "Explicit data movement: totals dict updated immutably per key",
+      "Clear TypeError raised for non-string input",
+      "Standard-library only, no clever metaprogramming",
+      "Final sort and list comprehension are readable and correct"
+    ],
+    "weaknesses": [
+      "Missing headers silently returns [] instead of raising, hiding likely caller errors",
+      "Mixed typing styles: `List[Dict]` from `typing` alongside native `int | None` union syntax",
+      "`_REQUIRED_FIELDS` module-level constant is a mild speculative abstraction used in only two helpers",
+      "`None in row` check lacks a comment explaining it guards against DictReader extra-field behavior",
+      "Type annotation `List[Dict[str, object]]` is imprecise; could use a TypedDict or at least `Dict[str, int | str]`"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.226,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 4,
+    "loc": 43,
+    "maintainability_index": 48.82,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "oracle_generation"
+}

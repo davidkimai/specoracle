@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean: it handles missing fields, falls back to default rules, adjusts priority by severity, and preserves order. However, it diverges from several explicit Zen/spec directives. The spec calls for a local lookup table (named with _table suffix) for the severity-to-adjustment mapping instead of an if/elif chain, which would be more explicit and extensible. The spec also asks for branch reasons as short explicit strings, which is not present. The code does avoid classes and preserves order correctly, and status_code is a stable string. The extra isinstance(ticket, dict) guard is defensive but not specified. Overall it's solid procedural code but misses the structural idioms the spec explicitly requests.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean: it handles missing fields, falls back to default rules, adjusts priority by severity, and preserves order. However, it diverges from several explicit Zen/spec directives. The spec calls for a local lookup table (named with _table suffix) for the severity-to-adjustment mapping instead of an if/elif chain, which would be more explicit and extensible. The spec also asks for branch reasons as short explicit strings, which is not present. The code does avoid classes and preserves order correctly, and status_code is a stable string. The extra isinstance(ticket, dict) guard is defensive but not specified. Overall it's solid procedural code but misses the structural idioms the spec explicitly requests.\",\n  \"strengths\": [\n    \"Preserves ticket input order correctly\",\n    \"Uses stable string 'routed' for status_code, never booleans\",\n    \"No classes introduced for single-pass routing\",\n    \"Graceful fallback to 'default' rule when service is absent\",\n    \"Safe int() conversion with try/except for priority\"\n  ],\n  \"weaknesses\": [\n    \"Severity-to-priority adjustment uses if/elif instead of a named _table lookup as the spec requires\",\n    \"No short explicit branch reason strings as the spec mandates\",\n    \"Extra isinstance(ticket, dict) guard adds implicit logic not in the spec\",\n    \"Missing queue/priority None-check before int() conversion could silently coerce None to string 'None' for queue\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Preserves ticket input order correctly",
+      "Uses stable string 'routed' for status_code, never booleans",
+      "No classes introduced for single-pass routing",
+      "Graceful fallback to 'default' rule when service is absent",
+      "Safe int() conversion with try/except for priority"
+    ],
+    "weaknesses": [
+      "Severity-to-priority adjustment uses if/elif instead of a named _table lookup as the spec requires",
+      "No short explicit branch reason strings as the spec mandates",
+      "Extra isinstance(ticket, dict) guard adds implicit logic not in the spec",
+      "Missing queue/priority None-check before int() conversion could silently coerce None to string 'None' for queue"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.987,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 52.793,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,75 @@
+"""
+dedupe_event_stream: deduplicate a stream of events within a rolling time window.
+"""
+
+from typing import Any
+
+
+def _extract_key(event: dict, key_fields: list[str]) -> tuple[Any, ...] | None:
+    """Return the composite key tuple, or None if any field is missing."""
+    try:
+        return tuple(event[field] for field in key_fields)
+    except KeyError:
+        return None
+
+
+def _is_valid_event(event: dict, key_fields: list[str]) -> bool:
+    """Return True when the event has an integer timestamp and all key fields."""
+    if not isinstance(event.get("timestamp"), int):
+        return False
+    if _extract_key(event, key_fields) is None:
+        return False
+    return True
+
+
+def dedupe_events(
+    events: list[dict], key_fields: list[str], window_seconds: int
+) -> list[dict]:
+    """
+    Deduplicate events by composite key within a rolling timestamp window.
+
+    Keep the first occurrence of each (composite key, window) combination.
+    A later event is a duplicate when it shares the same composite key and
+    its timestamp is less than window_seconds after the timestamp of the
+    already-kept event for that key.
+
+    Malformed events (missing timestamp, non-integer timestamp, or missing
+    key fields) are silently skipped.
+
+    Parameters
+    ----------
+    events:
+        Ordered sequence of event dictionaries.
+    key_fields:
+        Field names that together form the deduplication key.
+    window_seconds:
+        Duration in seconds for which a kept event suppresses duplicates.
+
+    Returns
+    -------
+    list[dict]
+        Retained events in their original relative order.
+    """
+    if not isinstance(window_seconds, int) or window_seconds < 0:
+        raise ValueError("window_seconds must be a non-negative integer")
+    if not isinstance(key_fields, list) or not key_fields:
+        raise ValueError("key_fields must be a non-empty list")
+
+    # Maps composite key -> timestamp of the most recently kept event.
+    kept_timestamps: dict[tuple[Any, ...], int] = {}
+    retained: list[dict] = []
+
+    for event in events:
+        if not _is_valid_event(event, key_fields):
+            continue
+
+        composite_key = _extract_key(event, key_fields)
+        ts: int = event["timestamp"]
+
+        last_kept = kept_timestamps.get(composite_key)
+
+        if last_kept is None or ts - last_kept >= window_seconds:
+            kept_timestamps[composite_key] = ts
+            retained.append(event)
+
+    return retained

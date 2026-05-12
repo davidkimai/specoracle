@@ -1,0 +1,56 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate correctly implements the functional requirements and makes a genuine attempt to follow the QX-17 spec: it uses a single public function with no helpers, returns the exact legacy keys, stages the logic with named audit-stage comments, and uses explicit branch-label variable names for monetary decisions. However, the implementation overshoots the spec in several ways that reduce rather than improve clarity. The docstring is far too verbose for a legacy-spec function (the spec says comments are allowed only when naming a legacy audit stage, not for full Google-style docstrings). The `else: pass` block is pure noise that adds no audit value. The triple-variable branch-label pattern (`status_is_paid_branch`, `region_is_valid_branch`, `amount_is_valid_branch`) is mechanically correct but verbose to the point of obscuring the logic rather than illuminating it. The `region_is_valid_branch` variable calls `invoice.get('region')` twice, which is a minor but avoidable redundancy. The staged structure and naming conventions are directionally right, but the execution tips into cargo-cult verbosity rather than genuine auditability.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The candidate correctly implements the functional requirements and makes a genuine attempt to follow the QX-17 spec: it uses a single public function with no helpers, returns the exact legacy keys, stages the logic with named audit-stage comments, and uses explicit branch-label variable names for monetary decisions. However, the implementation overshoots the spec in several ways that reduce rather than improve clarity. The docstring is far too verbose for a legacy-spec function (the spec says comments are allowed only when naming a legacy audit stage, not for full Google-style docstrings). The `else: pass` block is pure noise that adds no audit value. The triple-variable branch-label pattern (`status_is_paid_branch`, `region_is_valid_branch`, `amount_is_valid_branch`) is mechanically correct but verbose to the point of obscuring the logic rather than illuminating it. The `region_is_valid_branch` variable calls `invoice.get('region')` twice, which is a minor but avoidable redundancy. The staged structure and naming conventions are directionally right, but the execution tips into cargo-cult verbosity rather than genuine auditability.\",\n  \"strengths\": [\n    \"Single public function with no helper functions, matching the spec\",\n    \"Exact legacy keys (bucket_code, item_count, cents_total) used correctly\",\n    \"Audit-stage comments (STAGE_1, STAGE_2, STAGE_3) name the pipeline phases as required\",\n    \"Explicit branch-label variable names for monetary decisions follow the spec's intent\",\n    \"Does not mutate the input list or its dicts\",\n    \"Correct functional behavior: filters, aggregates, and sorts by region\"\n  ],\n  \"weaknesses\": [\n    \"Lengthy Google-style docstring violates the spec's comment rule (comments only for naming legacy audit stages)\",\n    \"else: pass block is dead code that adds noise without audit value\",\n    \"Calling invoice.get('region') twice in region_is_valid_branch is a minor redundancy\",\n    \"Branch-label variables are so verbose they obscure rather than clarify the filtering logic\",\n    \"Intermediate variable names like unformatted_summaries_by_region and final_summary_list are over-engineered for a flat, single-function implementation\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions, matching the spec",
+      "Exact legacy keys (bucket_code, item_count, cents_total) used correctly",
+      "Audit-stage comments (STAGE_1, STAGE_2, STAGE_3) name the pipeline phases as required",
+      "Explicit branch-label variable names for monetary decisions follow the spec's intent",
+      "Does not mutate the input list or its dicts",
+      "Correct functional behavior: filters, aggregates, and sorts by region"
+    ],
+    "weaknesses": [
+      "Lengthy Google-style docstring violates the spec's comment rule (comments only for naming legacy audit stages)",
+      "else: pass block is dead code that adds noise without audit value",
+      "Calling invoice.get('region') twice in region_is_valid_branch is a minor redundancy",
+      "Branch-label variables are so verbose they obscure rather than clarify the filtering logic",
+      "Intermediate variable names like unformatted_summaries_by_region and final_summary_list are over-engineered for a flat, single-function implementation"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.071,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 64,
+    "maintainability_index": 83.247,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

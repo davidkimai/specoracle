@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean. It uses guard clauses to keep the loop body flat, makes data movement explicit, and avoids clever metaprogramming. The main structural weaknesses are the verbose docstring that restates the code rather than adding insight, the unnecessary `typing` import when built-in generics suffice in modern Python, the two-step result construction (list comprehension then sort) that could be a single `sorted()` call, and the manual dict-of-dicts accumulation pattern that could be replaced with `collections.defaultdict` or `collections.Counter`-style idioms for clarity. The `isinstance(window_size, int)` check correctly rejects booleans only if one notes that `bool` is a subclass of `int`, but booleans would pass this check\u2014a minor correctness edge case. Overall the code is readable and locally auditable, but carries some unnecessary verbosity and missed opportunities for simpler standard-library constructs.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean. It uses guard clauses to keep the loop body flat, makes data movement explicit, and avoids clever metaprogramming. The main structural weaknesses are the verbose docstring that restates the code rather than adding insight, the unnecessary `typing` import when built-in generics suffice in modern Python, the two-step result construction (list comprehension then sort) that could be a single `sorted()` call, and the manual dict-of-dicts accumulation pattern that could be replaced with `collections.defaultdict` or `collections.Counter`-style idioms for clarity. The `isinstance(window_size, int)` check correctly rejects booleans only if one notes that `bool` is a subclass of `int`, but booleans would pass this check\u2014a minor correctness edge case. Overall the code is readable and locally auditable, but carries some unnecessary verbosity and missed opportunities for simpler standard-library constructs.\",\n  \"strengths\": [\n    \"Guard clauses keep the event-validation logic flat and easy to follow\",\n    \"Explicit data movement: no hidden mutation or global state\",\n    \"Clear ValueError with descriptive message for invalid window_size\",\n    \"Comprehension + sort pattern is straightforward and readable\",\n    \"Variable names (window_start, window_aggregates) are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Imports `typing` for annotations when built-in `dict[int, dict[str, int]]` works in Python 3.9+\",\n    \"Docstring is overly long and largely restates the code rather than adding value\",\n    \"Two-step result build (comprehension then in-place sort) could be a single `sorted()` call\",\n    \"Manual dict-of-dicts accumulation is more verbose than `collections.defaultdict`\",\n    \"Boolean values (True/False) pass the `isinstance(..., int)` check, a subtle edge case not addressed\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses keep the event-validation logic flat and easy to follow",
+      "Explicit data movement: no hidden mutation or global state",
+      "Clear ValueError with descriptive message for invalid window_size",
+      "Comprehension + sort pattern is straightforward and readable",
+      "Variable names (window_start, window_aggregates) are self-explanatory"
+    ],
+    "weaknesses": [
+      "Imports `typing` for annotations when built-in `dict[int, dict[str, int]]` works in Python 3.9+",
+      "Docstring is overly long and largely restates the code rather than adding value",
+      "Two-step result build (comprehension then in-place sort) could be a single `sorted()` call",
+      "Manual dict-of-dicts accumulation is more verbose than `collections.defaultdict`",
+      "Boolean values (True/False) pass the `isinstance(..., int)` check, a subtle edge case not addressed"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.199,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 48,
+    "maintainability_index": 77.019,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "baseline_generation"
+}

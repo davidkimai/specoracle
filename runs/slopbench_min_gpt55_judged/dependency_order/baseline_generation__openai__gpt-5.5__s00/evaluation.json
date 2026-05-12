@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and follows a standard Kahn's algorithm approach with explicit data movement and no hidden mutation. Variable names are descriptive and make the algorithm easy to audit locally. The code is flat with minimal nesting, uses ordinary standard-library constructs, and raises a clear ValueError for cycles. The main structural weakness is that the function is monolithic\u2014the graph-building phase and the BFS phase could be separated into small pure helpers as the spec suggests, which would improve local auditability. The docstring is slightly verbose for what is essentially a well-known algorithm. The `remaining_prerequisite_count` initialization loop could be folded into the earlier loop over `all_tasks`, but this is a minor redundancy. Overall, the implementation is solid, correct, and readable with only modest opportunities for improvement.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and follows a standard Kahn's algorithm approach with explicit data movement and no hidden mutation. Variable names are descriptive and make the algorithm easy to audit locally. The code is flat with minimal nesting, uses ordinary standard-library constructs, and raises a clear ValueError for cycles. The main structural weakness is that the function is monolithic\u2014the graph-building phase and the BFS phase could be separated into small pure helpers as the spec suggests, which would improve local auditability. The docstring is slightly verbose for what is essentially a well-known algorithm. The `remaining_prerequisite_count` initialization loop could be folded into the earlier loop over `all_tasks`, but this is a minor redundancy. Overall, the implementation is solid, correct, and readable with only modest opportunities for improvement.\",\n  \"strengths\": [\n    \"Explicit data movement: all intermediate structures are named and visible\",\n    \"Flat control flow with no deep nesting\",\n    \"Clear, descriptive variable names (e.g., remaining_prerequisite_count, dependents_by_task)\",\n    \"Correct cycle detection via completed_count comparison\",\n    \"Does not mutate the input\",\n    \"Includes tasks that only appear as dependencies\"\n  ],\n  \"weaknesses\": [\n    \"Monolithic function; graph construction and BFS scheduling could be extracted into small pure helpers\",\n    \"Two separate loops over all_tasks where one would suffice (remaining_prerequisite_count initialization)\",\n    \"Docstring restates the task spec rather than adding implementation insight\",\n    \"Minor: `from __future__ import annotations` is unnecessary overhead for this codebase\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Explicit data movement: all intermediate structures are named and visible",
+      "Flat control flow with no deep nesting",
+      "Clear, descriptive variable names (e.g., remaining_prerequisite_count, dependents_by_task)",
+      "Correct cycle detection via completed_count comparison",
+      "Does not mutate the input",
+      "Includes tasks that only appear as dependencies"
+    ],
+    "weaknesses": [
+      "Monolithic function; graph construction and BFS scheduling could be extracted into small pure helpers",
+      "Two separate loops over all_tasks where one would suffice (remaining_prerequisite_count initialization)",
+      "Docstring restates the task spec rather than adding implementation insight",
+      "Minor: `from __future__ import annotations` is unnecessary overhead for this codebase"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.91,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 40,
+    "maintainability_index": 73.784,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "baseline_generation"
+}

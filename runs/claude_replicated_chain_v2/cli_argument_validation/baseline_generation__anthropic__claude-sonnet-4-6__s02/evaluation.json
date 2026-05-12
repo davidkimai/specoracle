@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses a straightforward while-loop with explicit index management, clear guard clauses, and named sets for flag categorization. Control flow is flat enough to audit locally, errors are explicit and descriptive, and there is no hidden mutation or global state. The main weakness is that the single monolithic function could be marginally improved by extracting small pure helpers (e.g., parse_limit, parse_format) as the operational constraints suggest, which would make each validation concern independently auditable. The docstring is thorough but slightly verbose for a function of this size. The use of `known_flags` and `value_flags` sets is a clean, ordinary construct. Overall, this is a well-structured, maintainable implementation that closely follows the Zen-of-Python spirit with only minor room for improvement in decomposition.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses a straightforward while-loop with explicit index management, clear guard clauses, and named sets for flag categorization. Control flow is flat enough to audit locally, errors are explicit and descriptive, and there is no hidden mutation or global state. The main weakness is that the single monolithic function could be marginally improved by extracting small pure helpers (e.g., parse_limit, parse_format) as the operational constraints suggest, which would make each validation concern independently auditable. The docstring is thorough but slightly verbose for a function of this size. The use of `known_flags` and `value_flags` sets is a clean, ordinary construct. Overall, this is a well-structured, maintainable implementation that closely follows the Zen-of-Python spirit with only minor room for improvement in decomposition.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses and early raises keeps nesting shallow\",\n    \"Explicit sets for known_flags and value_flags make the flag taxonomy immediately clear\",\n    \"Error messages are precise and include the offending value\",\n    \"No hidden mutation, no global state, data movement is explicit\",\n    \"Ordinary standard-library constructs only; no metaprogramming or framework-shaped code\",\n    \"Required-flag validation is deferred cleanly to the end\"\n  ],\n  \"weaknesses\": [\n    \"Operational constraints suggest small pure helpers (e.g., parse_limit, parse_format) but everything is inlined into one function\",\n    \"The check `next_token.startswith('--')` to detect missing values is a heuristic that would misclassify a legitimate path like '--my-file.txt'\",\n    \"Docstring is slightly over-documented relative to the function's size, adding noise without proportional benefit\",\n    \"The else branch for --dry-run is implicit rather than being handled symmetrically with the value flags\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses and early raises keeps nesting shallow",
+      "Explicit sets for known_flags and value_flags make the flag taxonomy immediately clear",
+      "Error messages are precise and include the offending value",
+      "No hidden mutation, no global state, data movement is explicit",
+      "Ordinary standard-library constructs only; no metaprogramming or framework-shaped code",
+      "Required-flag validation is deferred cleanly to the end"
+    ],
+    "weaknesses": [
+      "Operational constraints suggest small pure helpers (e.g., parse_limit, parse_format) but everything is inlined into one function",
+      "The check `next_token.startswith('--')` to detect missing values is a heuristic that would misclassify a legitimate path like '--my-file.txt'",
+      "Docstring is slightly over-documented relative to the function's size, adding noise without proportional benefit",
+      "The else branch for --dry-run is implicit rather than being handled symmetrically with the value flags"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.881,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 15.0,
+    "cyclomatic_complexity_max": 15,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 1,
+    "loc": 76,
+    "maintainability_index": 74.603,
+    "max_nesting_depth": 5,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "baseline_generation"
+}

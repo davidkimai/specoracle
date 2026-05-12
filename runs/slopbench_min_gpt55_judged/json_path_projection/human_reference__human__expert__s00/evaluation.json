@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and well-structured. It separates concerns correctly with a small pure helper `_resolve_path`, uses a sentinel `_MISSING` to distinguish missing values from `None`, keeps control flow flat with guard clauses, avoids mutation, and uses clear names throughout. The logic is locally auditable in a single pass. Minor weaknesses include not handling negative list indexes (which could be argued either way for this use case) and the `isdigit()` check silently treating non-integer numeric strings as missing rather than raising, but these are defensible design choices rather than architectural flaws.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and well-structured. It separates concerns correctly with a small pure helper `_resolve_path`, uses a sentinel `_MISSING` to distinguish missing values from `None`, keeps control flow flat with guard clauses, avoids mutation, and uses clear names throughout. The logic is locally auditable in a single pass. Minor weaknesses include not handling negative list indexes (which could be argued either way for this use case) and the `isdigit()` check silently treating non-integer numeric strings as missing rather than raising, but these are defensible design choices rather than architectural flaws.\",\n  \"strengths\": [\n    \"Clean separation between public API and private path resolver\",\n    \"Sentinel pattern correctly distinguishes missing values from None default\",\n    \"Flat control flow with guard clauses in _resolve_path\",\n    \"No mutation of input, explicit data movement\",\n    \"Readable names that make behavior self-documenting\",\n    \"Uses only standard library constructs\"\n  ],\n  \"weaknesses\": [\n    \"Does not handle negative list indexes, which may be a valid use case\",\n    \"isdigit() silently treats non-integer segments as missing rather than raising a clear error for malformed paths\",\n    \"No input validation (e.g., checking that record is actually a dict or paths is a dict)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation between public API and private path resolver",
+      "Sentinel pattern correctly distinguishes missing values from None default",
+      "Flat control flow with guard clauses in _resolve_path",
+      "No mutation of input, explicit data movement",
+      "Readable names that make behavior self-documenting",
+      "Uses only standard library constructs"
+    ],
+    "weaknesses": [
+      "Does not handle negative list indexes, which may be a valid use case",
+      "isdigit() silently treats non-integer segments as missing rather than raising a clear error for malformed paths",
+      "No input validation (e.g., checking that record is actually a dict or paths is a dict)"
+    ]
+  },
+  "model": "expert",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "human",
+  "pytest": {
+    "duration_seconds": 1.002,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": null,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 2,
+    "loc": 22,
+    "maintainability_index": 58.067,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "human_reference"
+}

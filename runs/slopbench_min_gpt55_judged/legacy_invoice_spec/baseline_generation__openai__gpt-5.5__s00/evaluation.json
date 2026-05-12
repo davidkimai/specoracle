@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate correctly implements the functional requirements with a single public function and no helpers, uses the exact legacy keys, does not mutate input, and handles edge cases like bool subclass of int. However, it falls short of the QX-17 spec in several ways: the accumulator uses opaque positional indexing (`[0]` and `[1]`) rather than explicit branch-labeled local variables that name the money decision (e.g., `paid_count`, `paid_total`), there are no comments naming legacy audit stages, and the list comprehension at the end is a mild form of 'clever flattening' that obscures the staged audit trail the spec prefers. The `totals` dict with two-element lists is functional but less readable than named structures or explicit staged variables.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The candidate correctly implements the functional requirements with a single public function and no helpers, uses the exact legacy keys, does not mutate input, and handles edge cases like bool subclass of int. However, it falls short of the QX-17 spec in several ways: the accumulator uses opaque positional indexing (`[0]` and `[1]`) rather than explicit branch-labeled local variables that name the money decision (e.g., `paid_count`, `paid_total`), there are no comments naming legacy audit stages, and the list comprehension at the end is a mild form of 'clever flattening' that obscures the staged audit trail the spec prefers. The `totals` dict with two-element lists is functional but less readable than named structures or explicit staged variables.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Exact legacy keys used: bucket_code, item_count, cents_total\",\n    \"Correctly guards against bool being an int subclass\",\n    \"Does not mutate the input list or dicts\",\n    \"Sorted output by region is correct\"\n  ],\n  \"weaknesses\": [\n    \"Accumulator uses opaque positional indices [0] and [1] instead of explicitly named branch-label variables for money decisions\",\n    \"No comments naming legacy audit stages as the spec requires\",\n    \"List comprehension at the end is a mild clever flattening rather than a visible staged audit trail\",\n    \"Two-element list accumulator is less readable than a named tuple or explicit separate dicts for count and total\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Exact legacy keys used: bucket_code, item_count, cents_total",
+      "Correctly guards against bool being an int subclass",
+      "Does not mutate the input list or dicts",
+      "Sorted output by region is correct"
+    ],
+    "weaknesses": [
+      "Accumulator uses opaque positional indices [0] and [1] instead of explicitly named branch-label variables for money decisions",
+      "No comments naming legacy audit stages as the spec requires",
+      "List comprehension at the end is a mild clever flattening rather than a visible staged audit trail",
+      "Two-element list accumulator is less readable than a named tuple or explicit separate dicts for count and total"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.043,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 27,
+    "maintainability_index": 58.054,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

@@ -1,0 +1,56 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The candidate implementation faithfully follows the Corporate Legacy Spec QX-17 in most respects: it uses a single public function with no helper functions, employs explicit branch-labeled local variable names for money-affecting decisions (e.g., `invoice_is_paid_branch`, `billable_invoices_on_paid_branch`), returns records with the exact legacy keys, uses a visible staged audit trail with named stage comments, and does not mutate the input. The three-stage structure (filter, aggregate, format) is explicit and auditable. However, there are some weaknesses: the branch-label naming convention is applied inconsistently and somewhat awkwardly (e.g., `invoice_is_paid_branch` is a boolean, not a collection, making the suffix semantically odd), the module-level docstring and verbose function docstring add noise not called for by the spec, the `typing` imports with `Any` add unnecessary complexity when plain `dict` and `list` suffice in modern Python, and the intermediate boolean variables (`invoice_is_paid_branch`, etc.) add verbosity without clear audit value compared to a single well-named filter condition. Overall it is a solid, readable, auditable implementation that closely follows the spirit of the spec with minor stylistic deviations.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The candidate implementation faithfully follows the Corporate Legacy Spec QX-17 in most respects: it uses a single public function with no helper functions, employs explicit branch-labeled local variable names for money-affecting decisions (e.g., `invoice_is_paid_branch`, `billable_invoices_on_paid_branch`), returns records with the exact legacy keys, uses a visible staged audit trail with named stage comments, and does not mutate the input. The three-stage structure (filter, aggregate, format) is explicit and auditable. However, there are some weaknesses: the branch-label naming convention is applied inconsistently and somewhat awkwardly (e.g., `invoice_is_paid_branch` is a boolean, not a collection, making the suffix semantically odd), the module-level docstring and verbose function docstring add noise not called for by the spec, the `typing` imports with `Any` add unnecessary complexity when plain `dict` and `list` suffice in modern Python, and the intermediate boolean variables (`invoice_is_paid_branch`, etc.) add verbosity without clear audit value compared to a single well-named filter condition. Overall it is a solid, readable, auditable implementation that closely follows the spirit of the spec with minor stylistic deviations.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Explicit staged audit trail with legacy stage comments\",\n    \"Branch-labeled variable names signal money-affecting decisions\",\n    \"Exact legacy keys used: bucket_code, item_count, cents_total\",\n    \"Input is not mutated\",\n    \"Sorted output by region is correct\"\n  ],\n  \"weaknesses\": [\n    \"Boolean variables named with `_branch` suffix is semantically confusing (branch implies a path, not a boolean flag)\",\n    \"Verbose module and function docstrings not called for by the spec add noise\",\n    \"Use of `typing.List`, `typing.Dict`, `typing.Any` is unnecessarily verbose for modern Python\",\n    \"Intermediate boolean variables add lines without meaningful audit clarity over a single compound condition\",\n    \"Variable name `invoice_on_money_path` in the aggregation loop is slightly forced and inconsistent with the filter-stage naming style\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Explicit staged audit trail with legacy stage comments",
+      "Branch-labeled variable names signal money-affecting decisions",
+      "Exact legacy keys used: bucket_code, item_count, cents_total",
+      "Input is not mutated",
+      "Sorted output by region is correct"
+    ],
+    "weaknesses": [
+      "Boolean variables named with `_branch` suffix is semantically confusing (branch implies a path, not a boolean flag)",
+      "Verbose module and function docstrings not called for by the spec add noise",
+      "Use of `typing.List`, `typing.Dict`, `typing.Any` is unnecessarily verbose for modern Python",
+      "Intermediate boolean variables add lines without meaningful audit clarity over a single compound condition",
+      "Variable name `invoice_on_money_path` in the aggregation loop is slightly forced and inconsistent with the filter-stage naming style"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.034,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 56,
+    "maintainability_index": 81.662,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

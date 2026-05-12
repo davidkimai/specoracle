@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and well-structured. It uses a guard clause to raise early on invalid input, avoids mutation, uses standard-library `cycle` appropriately, and keeps control flow flat. The list comprehension for filtering enabled workers and the final assignment comprehension are both readable and locally auditable. The main weaknesses are minor: the docstring is verbose to the point of padding (the Zen favors sparse documentation), the type annotations use the older `List`/`Dict` from `typing` instead of the built-in `list`/`dict` generics available since Python 3.9, and the module-level docstring adds little value. The logic itself is essentially optimal for the task\u2014no speculative abstractions, no hidden state, no deep nesting\u2014making this a strong realization of the informal oracle with only cosmetic issues holding it back from a perfect score.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and well-structured. It uses a guard clause to raise early on invalid input, avoids mutation, uses standard-library `cycle` appropriately, and keeps control flow flat. The list comprehension for filtering enabled workers and the final assignment comprehension are both readable and locally auditable. The main weaknesses are minor: the docstring is verbose to the point of padding (the Zen favors sparse documentation), the type annotations use the older `List`/`Dict` from `typing` instead of the built-in `list`/`dict` generics available since Python 3.9, and the module-level docstring adds little value. The logic itself is essentially optimal for the task\u2014no speculative abstractions, no hidden state, no deep nesting\u2014making this a strong realization of the informal oracle with only cosmetic issues holding it back from a perfect score.\",\n  \"strengths\": [\n    \"Guard clause raises ValueError early and clearly before any work is done\",\n    \"No mutation of inputs; filtered names are extracted into a new list\",\n    \"`itertools.cycle` is the idiomatic standard-library choice for round-robin\",\n    \"Control flow is completely flat with no nested conditionals\",\n    \"Names (`enabled_worker_names`, `worker_cycle`, `assignments`) are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"Docstring is excessively verbose; the Zen favors sparse, necessary documentation\",\n    \"Uses deprecated `typing.List`/`typing.Dict` instead of built-in `list`/`dict` generics\",\n    \"Module-level docstring adds no information beyond the function itself\",\n    \"`Any` in the type signature is slightly imprecise and imports an unnecessary symbol\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Guard clause raises ValueError early and clearly before any work is done",
+      "No mutation of inputs; filtered names are extracted into a new list",
+      "`itertools.cycle` is the idiomatic standard-library choice for round-robin",
+      "Control flow is completely flat with no nested conditionals",
+      "Names (`enabled_worker_names`, `worker_cycle`, `assignments`) are self-explanatory"
+    ],
+    "weaknesses": [
+      "Docstring is excessively verbose; the Zen favors sparse, necessary documentation",
+      "Uses deprecated `typing.List`/`typing.Dict` instead of built-in `list`/`dict` generics",
+      "Module-level docstring adds no information beyond the function itself",
+      "`Any` in the type signature is slightly imprecise and imports an unnecessary symbol"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.183,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 46,
+    "maintainability_index": 89.142,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "baseline_generation"
+}

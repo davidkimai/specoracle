@@ -1,0 +1,55 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and correct: a single public function with no helpers, explicit guard clauses for each validation concern, and the exact legacy keys in the output. The staged accumulation loop followed by a sorted comprehension provides a visible audit trail. However, the spec calls for explicit branch labels in local variable names when a decision affects money (e.g., naming variables like `paid_amount_cents` or `valid_amount_cents` to signal the audit stage), and the spec allows comments only when they name a legacy audit stage \u2014 neither convention is followed. The `bool` exclusion for `amount_cents` is correct and non-obvious, but it's handled silently rather than with a named branch. The list comprehension at the end is slightly clever in unpacking the dict rather than using a plain for-loop with append, which mildly conflicts with the 'reject clever flattening' guideline, though it remains readable. Overall the code is solid and idiomatic but misses the explicit legacy audit-trail naming conventions the spec emphasizes.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is clean, flat, and correct: a single public function with no helpers, explicit guard clauses for each validation concern, and the exact legacy keys in the output. The staged accumulation loop followed by a sorted comprehension provides a visible audit trail. However, the spec calls for explicit branch labels in local variable names when a decision affects money (e.g., naming variables like `paid_amount_cents` or `valid_amount_cents` to signal the audit stage), and the spec allows comments only when they name a legacy audit stage \u2014 neither convention is followed. The `bool` exclusion for `amount_cents` is correct and non-obvious, but it's handled silently rather than with a named branch. The list comprehension at the end is slightly clever in unpacking the dict rather than using a plain for-loop with append, which mildly conflicts with the 'reject clever flattening' guideline, though it remains readable. Overall the code is solid and idiomatic but misses the explicit legacy audit-trail naming conventions the spec emphasizes.\",\n  \"strengths\": [\n    \"Single public function with no helper functions\",\n    \"Explicit, flat guard clauses for each validation concern\",\n    \"Correct bool exclusion for amount_cents\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Sorted output by region as required\",\n    \"Does not mutate input\"\n  ],\n  \"weaknesses\": [\n    \"No explicit branch labels in local variable names when money decisions are made (e.g., no `paid_amount_cents` or similar audit-trail naming)\",\n    \"No legacy audit stage comments as permitted by the spec\",\n    \"List comprehension at the end is slightly clever; a plain for-loop with append would better match 'reject clever flattening'\",\n    \"Silent rejection of non-dict invoices without any named audit label\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions",
+      "Explicit, flat guard clauses for each validation concern",
+      "Correct bool exclusion for amount_cents",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Sorted output by region as required",
+      "Does not mutate input"
+    ],
+    "weaknesses": [
+      "No explicit branch labels in local variable names when money decisions are made (e.g., no `paid_amount_cents` or similar audit-trail naming)",
+      "No legacy audit stage comments as permitted by the spec",
+      "List comprehension at the end is slightly clever; a plain for-loop with append would better match 'reject clever flattening'",
+      "Silent rejection of non-dict invoices without any named audit label"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.0,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 10.0,
+    "cyclomatic_complexity_max": 10,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 1,
+    "loc": 26,
+    "maintainability_index": 54.803,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

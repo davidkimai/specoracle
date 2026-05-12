@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and locally auditable. It uses a single lock protecting all shared state, keeps control flow straightforward with guard clauses, and exposes no mutable internals. The helpers `_require_positive_int` and `_require_str` are small and purposeful, though they go slightly beyond what the spec requires (the spec only mandates ValueError for non-positive max_total, not TypeError for wrong types, and name validation isn't specified at all). The `__slots__` usage is a nice touch for a class meant to be instantiated many times. The snapshot comprehension filtering `count != 0` is technically correct but slightly speculative since counts can never be zero given the increment-only design \u2014 a simple `dict(self._counts)` would suffice and be more honest about the invariant. Overall the code is well-structured, readable, and avoids speculative abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and locally auditable. It uses a single lock protecting all shared state, keeps control flow straightforward with guard clauses, and exposes no mutable internals. The helpers `_require_positive_int` and `_require_str` are small and purposeful, though they go slightly beyond what the spec requires (the spec only mandates ValueError for non-positive max_total, not TypeError for wrong types, and name validation isn't specified at all). The `__slots__` usage is a nice touch for a class meant to be instantiated many times. The snapshot comprehension filtering `count != 0` is technically correct but slightly speculative since counts can never be zero given the increment-only design \u2014 a simple `dict(self._counts)` would suffice and be more honest about the invariant. Overall the code is well-structured, readable, and avoids speculative abstractions.\",\n  \"strengths\": [\n    \"Single lock protecting all shared state \u2014 simple and correct\",\n    \"Flat control flow with an early guard clause in increment\",\n    \"No mutable internal state exposed via snapshot (returns a copy)\",\n    \"__slots__ prevents accidental attribute addition\",\n    \"Clear, self-explanatory names throughout\"\n  ],\n  \"weaknesses\": [\n    \"Input validation helpers add type-checking not required by the spec, introducing speculative defensive code\",\n    \"snapshot filters for count != 0 which is a dead condition given the increment-only design \u2014 misleads readers about possible state\",\n    \"Separate _total field is redundant with sum(_counts.values()), adding a consistency invariant to maintain\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Single lock protecting all shared state \u2014 simple and correct",
+      "Flat control flow with an early guard clause in increment",
+      "No mutable internal state exposed via snapshot (returns a copy)",
+      "__slots__ prevents accidental attribute addition",
+      "Clear, self-explanatory names throughout"
+    ],
+    "weaknesses": [
+      "Input validation helpers add type-checking not required by the spec, introducing speculative defensive code",
+      "snapshot filters for count != 0 which is a dead condition given the increment-only design \u2014 misleads readers about possible state",
+      "Separate _total field is redundant with sum(_counts.values()), adding a consistency invariant to maintain"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.957,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 2.286,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 6,
+    "loc": 35,
+    "maintainability_index": 50.435,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "thread_safe_counter",
+  "variant": "oracle_generation"
+}

@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable, but it diverges from the Corporate Legacy Spec QX-17 in several notable ways. The spec calls for explicit branch labels in local variable names when a decision affects money (e.g., something like `paid_amount_cents` or `eligible_region`), but the code uses generic names. The spec discourages clever flattening in favor of a visible staged audit trail, yet the code uses a `defaultdict` with a lambda initializer\u2014a moderately clever construct\u2014and collapses the aggregation into a single loop without named audit stages. Comments are allowed only when they name a legacy audit stage, but the code has numerous inline comments that describe implementation mechanics rather than audit stages. The docstring is verbose and Google-style, which is not called for. The use of `collections.defaultdict` with a lambda is slightly clever rather than explicit. On the positive side, there are no helper functions, the output keys are exactly correct, the input is not mutated, and the logic is straightforward and auditable at a glance.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable, but it diverges from the Corporate Legacy Spec QX-17 in several notable ways. The spec calls for explicit branch labels in local variable names when a decision affects money (e.g., something like `paid_amount_cents` or `eligible_region`), but the code uses generic names. The spec discourages clever flattening in favor of a visible staged audit trail, yet the code uses a `defaultdict` with a lambda initializer\u2014a moderately clever construct\u2014and collapses the aggregation into a single loop without named audit stages. Comments are allowed only when they name a legacy audit stage, but the code has numerous inline comments that describe implementation mechanics rather than audit stages. The docstring is verbose and Google-style, which is not called for. The use of `collections.defaultdict` with a lambda is slightly clever rather than explicit. On the positive side, there are no helper functions, the output keys are exactly correct, the input is not mutated, and the logic is straightforward and auditable at a glance.\",\n  \"strengths\": [\n    \"Single public function with no helper functions, matching the spec\",\n    \"Exact legacy output keys: bucket_code, item_count, cents_total\",\n    \"Input is not mutated\",\n    \"Validation logic is explicit and readable in the if-condition\",\n    \"Sorted output is correct\"\n  ],\n  \"weaknesses\": [\n    \"No explicit branch labels in local variable names for money-affecting decisions (spec requires e.g. paid_amount_cents)\",\n    \"Uses defaultdict with lambda\u2014a clever construct the spec discourages in favor of visible staged audit trail\",\n    \"Comments describe mechanics, not legacy audit stage names as the spec requires\",\n    \"Overly verbose Google-style docstring not aligned with the terse legacy spec aesthetic\",\n    \"Aggregation and filtering collapsed into one loop without named audit stages, reducing auditability\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helper functions, matching the spec",
+      "Exact legacy output keys: bucket_code, item_count, cents_total",
+      "Input is not mutated",
+      "Validation logic is explicit and readable in the if-condition",
+      "Sorted output is correct"
+    ],
+    "weaknesses": [
+      "No explicit branch labels in local variable names for money-affecting decisions (spec requires e.g. paid_amount_cents)",
+      "Uses defaultdict with lambda\u2014a clever construct the spec discourages in favor of visible staged audit trail",
+      "Comments describe mechanics, not legacy audit stage names as the spec requires",
+      "Overly verbose Google-style docstring not aligned with the terse legacy spec aesthetic",
+      "Aggregation and filtering collapsed into one loop without named audit stages, reducing auditability"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.374,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 59,
+    "maintainability_index": 82.316,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

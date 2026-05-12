@@ -1,0 +1,56 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally sound and reasonably well-structured with small pure helpers, explicit data movement, and no hidden mutation of inputs. However, several Zen violations reduce the score: the `_deep_merge` helper mutates its destination argument (hidden mutation, non-obvious call site semantics), the `for/else` construct in `_parse_env` is a clever Python idiom that hurts local auditability, the `break`-on-conflict path in `_parse_env` silently skips values instead of raising a clear error, the `Union` type annotation imports add noise without aiding clarity, and the docstrings are verbose relative to the code's simplicity. The `_parse_env_value` function correctly returns the original `value` (not `cleaned_value`) for the string fallback, which is a subtle inconsistency. The overall architecture is reasonable but the mutation-based merge pattern forces a deep-copy workaround at the top level rather than returning a new dict naturally, which is less explicit than a functional approach would be.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally sound and reasonably well-structured with small pure helpers, explicit data movement, and no hidden mutation of inputs. However, several Zen violations reduce the score: the `_deep_merge` helper mutates its destination argument (hidden mutation, non-obvious call site semantics), the `for/else` construct in `_parse_env` is a clever Python idiom that hurts local auditability, the `break`-on-conflict path in `_parse_env` silently skips values instead of raising a clear error, the `Union` type annotation imports add noise without aiding clarity, and the docstrings are verbose relative to the code's simplicity. The `_parse_env_value` function correctly returns the original `value` (not `cleaned_value`) for the string fallback, which is a subtle inconsistency. The overall architecture is reasonable but the mutation-based merge pattern forces a deep-copy workaround at the top level rather than returning a new dict naturally, which is less explicit than a functional approach would be.\",\n  \"strengths\": [\n    \"Decomposed into small, single-purpose helpers (_parse_env_value, _parse_env, _deep_merge)\",\n    \"Input dictionaries are never mutated (deep copy of defaults before merging)\",\n    \"Precedence order is clearly expressed in merge_settings as three sequential steps\",\n    \"Boolean, integer, list, and string parsing cases are handled explicitly and in a readable order\",\n    \"Empty path segment after prefix is guarded against\"\n  ],\n  \"weaknesses\": [\n    \"_deep_merge mutates its destination in place, making call sites harder to reason about locally\",\n    \"for/else construct in _parse_env is a clever idiom that reduces auditability\",\n    \"Conflict between a scalar and a nested path silently skips the value instead of raising a clear error\",\n    \"String fallback in _parse_env_value returns original `value` instead of `cleaned_value`, subtle inconsistency\",\n    \"Verbose docstrings and Union/typing imports add noise disproportionate to the code's complexity\",\n    \"Negative integer values (e.g., '-5') are not parsed as ints due to isdecimal() check, a silent functional gap\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Decomposed into small, single-purpose helpers (_parse_env_value, _parse_env, _deep_merge)",
+      "Input dictionaries are never mutated (deep copy of defaults before merging)",
+      "Precedence order is clearly expressed in merge_settings as three sequential steps",
+      "Boolean, integer, list, and string parsing cases are handled explicitly and in a readable order",
+      "Empty path segment after prefix is guarded against"
+    ],
+    "weaknesses": [
+      "_deep_merge mutates its destination in place, making call sites harder to reason about locally",
+      "for/else construct in _parse_env is a clever idiom that reduces auditability",
+      "Conflict between a scalar and a nested path silently skips the value instead of raising a clear error",
+      "String fallback in _parse_env_value returns original `value` instead of `cleaned_value`, subtle inconsistency",
+      "Verbose docstrings and Union/typing imports add noise disproportionate to the code's complexity",
+      "Negative integer values (e.g., '-5') are not parsed as ints due to isdecimal() check, a silent functional gap"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.242,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 22,
+    "function_count": 4,
+    "loc": 90,
+    "maintainability_index": 71.805,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "baseline_generation"
+}

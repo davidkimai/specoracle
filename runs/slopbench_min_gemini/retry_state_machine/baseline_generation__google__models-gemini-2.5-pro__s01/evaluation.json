@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and correct. State is explicit and local, names are self-explanatory, control flow is trivially auditable, and there are no speculative abstractions or unused extension points. The one mild concern is the `isinstance(max_attempts, int)` guard, which silently rejects valid numeric types like `bool` subclass edge cases but also rejects floats that happen to be whole numbers \u2014 this is a reasonable design choice but slightly over-constrains the interface beyond what the spec requires (which only says 'positive'). The docstrings are verbose relative to the simplicity of the code, adding bulk without proportional clarity gain, which nudges against 'sparse enough to audit locally'. The `remaining()` helper correctly clamps to zero. Overall this is a solid, idiomatic implementation with minor documentation over-engineering.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and correct. State is explicit and local, names are self-explanatory, control flow is trivially auditable, and there are no speculative abstractions or unused extension points. The one mild concern is the `isinstance(max_attempts, int)` guard, which silently rejects valid numeric types like `bool` subclass edge cases but also rejects floats that happen to be whole numbers \u2014 this is a reasonable design choice but slightly over-constrains the interface beyond what the spec requires (which only says 'positive'). The docstrings are verbose relative to the simplicity of the code, adding bulk without proportional clarity gain, which nudges against 'sparse enough to audit locally'. The `remaining()` helper correctly clamps to zero. Overall this is a solid, idiomatic implementation with minor documentation over-engineering.\",\n  \"strengths\": [\n    \"All state is explicit and instance-local with no global or hidden mutation\",\n    \"Method bodies are one-liners; behavior is immediately auditable\",\n    \"Guard clause in __init__ raises a clear, descriptive ValueError\",\n    \"No speculative abstractions, inheritance, or unused extension points\",\n    \"remaining() correctly clamps negative values to zero\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are disproportionately verbose for such simple methods, adding noise over signal\",\n    \"isinstance check rejects bool subclass True/False as max_attempts, which may be surprising\",\n    \"Module-level docstring adds little value for a single-class file\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "All state is explicit and instance-local with no global or hidden mutation",
+      "Method bodies are one-liners; behavior is immediately auditable",
+      "Guard clause in __init__ raises a clear, descriptive ValueError",
+      "No speculative abstractions, inheritance, or unused extension points",
+      "remaining() correctly clamps negative values to zero"
+    ],
+    "weaknesses": [
+      "Docstrings are disproportionately verbose for such simple methods, adding noise over signal",
+      "isinstance check rejects bool subclass True/False as max_attempts, which may be surprising",
+      "Module-level docstring adds little value for a single-class file"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.05,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 53,
+    "maintainability_index": 52.188,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "baseline_generation"
+}

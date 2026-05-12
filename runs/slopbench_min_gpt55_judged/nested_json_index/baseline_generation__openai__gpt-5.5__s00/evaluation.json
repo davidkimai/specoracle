@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with guard clauses that keep nesting shallow. Each validation step is explicit and locally auditable. The boolean exclusion (`isinstance(amount, bool)`) is a correct and well-documented edge case. The use of `Any` type annotations for intermediate variables is slightly noisy but harmless. The main weakness is the manual dict initialization pattern (`if user_id not in index: index[user_id] = ...`) which could be replaced with `collections.defaultdict` or `setdefault` for slightly cleaner data movement, but the current approach is perfectly readable. No speculative abstractions, no hidden mutation, no framework-shaped code. The docstring is helpful without being excessive. Overall a solid, maintainable implementation that closely follows the spirit of the Zen of Python.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with guard clauses that keep nesting shallow. Each validation step is explicit and locally auditable. The boolean exclusion (`isinstance(amount, bool)`) is a correct and well-documented edge case. The use of `Any` type annotations for intermediate variables is slightly noisy but harmless. The main weakness is the manual dict initialization pattern (`if user_id not in index: index[user_id] = ...`) which could be replaced with `collections.defaultdict` or `setdefault` for slightly cleaner data movement, but the current approach is perfectly readable. No speculative abstractions, no hidden mutation, no framework-shaped code. The docstring is helpful without being excessive. Overall a solid, maintainable implementation that closely follows the spirit of the Zen of Python.\",\n  \"strengths\": [\n    \"Flat control flow using guard clauses avoids deep nesting\",\n    \"Explicit validation for each field with clear rejection conditions\",\n    \"Correct boolean exclusion from integer check\",\n    \"No mutation of input events or the input list\",\n    \"Names are self-explanatory and locally auditable\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"Using `Any` type annotations for local variables adds noise without benefit\",\n    \"Manual `if user_id not in index` initialization is slightly verbose compared to `setdefault` or `defaultdict`\",\n    \"Silently skips non-dict events rather than raising; acceptable but worth noting given the 'raise clear errors' guideline\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow using guard clauses avoids deep nesting",
+      "Explicit validation for each field with clear rejection conditions",
+      "Correct boolean exclusion from integer check",
+      "No mutation of input events or the input list",
+      "Names are self-explanatory and locally auditable",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "Using `Any` type annotations for local variables adds noise without benefit",
+      "Manual `if user_id not in index` initialization is slightly verbose compared to `setdefault` or `defaultdict`",
+      "Silently skips non-dict events rather than raising; acceptable but worth noting given the 'raise clear errors' guideline"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.892,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 27,
+    "maintainability_index": 82.607,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "nested_json_index",
+  "variant": "baseline_generation"
+}

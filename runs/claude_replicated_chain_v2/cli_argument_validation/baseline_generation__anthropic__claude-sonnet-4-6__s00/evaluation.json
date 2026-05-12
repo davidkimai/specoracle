@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, readable, and structurally sound. It uses a straightforward while-loop with guard clauses, explicit data movement into a result dict, and clear error messages. The control flow is flat enough to audit locally, and there is no speculative abstraction or framework-shaped code. Minor weaknesses include the monolithic function (the spec suggests small pure helpers), the mutable result dict initialized with None sentinel rather than tracking seen flags separately, and the docstring/module comment adding bulk without aiding auditability. Overall it closely follows the Zen oracle: explicit over implicit, flat over nested, simple over clever.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, readable, and structurally sound. It uses a straightforward while-loop with guard clauses, explicit data movement into a result dict, and clear error messages. The control flow is flat enough to audit locally, and there is no speculative abstraction or framework-shaped code. Minor weaknesses include the monolithic function (the spec suggests small pure helpers), the mutable result dict initialized with None sentinel rather than tracking seen flags separately, and the docstring/module comment adding bulk without aiding auditability. Overall it closely follows the Zen oracle: explicit over implicit, flat over nested, simple over clever.\",\n  \"strengths\": [\n    \"Flat control flow with guard clauses; no deep nesting\",\n    \"Explicit data movement into a single result dict with no hidden mutation\",\n    \"Clear, specific ValueError messages for every failure mode\",\n    \"Ordinary standard-library constructs only; no metaprogramming\",\n    \"Known/value flag sets make the parsing logic easy to extend or audit\"\n  ],\n  \"weaknesses\": [\n    \"Single monolithic function rather than small pure helpers (e.g., a value-consumer helper, a validator per flag)\",\n    \"Using None as a sentinel for 'input not yet seen' is implicit; a separate 'seen' set would be more explicit\",\n    \"Verbose docstring and module-level comment add noise without improving local auditability\",\n    \"The elif chain for token dispatch could be a small dispatch table or extracted validators, reducing repetition\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with guard clauses; no deep nesting",
+      "Explicit data movement into a single result dict with no hidden mutation",
+      "Clear, specific ValueError messages for every failure mode",
+      "Ordinary standard-library constructs only; no metaprogramming",
+      "Known/value flag sets make the parsing logic easy to extend or audit"
+    ],
+    "weaknesses": [
+      "Single monolithic function rather than small pure helpers (e.g., a value-consumer helper, a validator per flag)",
+      "Using None as a sentinel for 'input not yet seen' is implicit; a separate 'seen' set would be more explicit",
+      "Verbose docstring and module-level comment add noise without improving local auditability",
+      "The elif chain for token dispatch could be a small dispatch table or extracted validators, reducing repetition"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.691,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 14.0,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 1,
+    "loc": 69,
+    "maintainability_index": 74.255,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "cli_argument_validation",
+  "variant": "baseline_generation"
+}

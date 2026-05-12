@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, correct, and readable with explicit control flow and no hidden mutation. The guard clauses for type checking are clear, the loop logic is flat with a well-placed `continue` for the None case, and the recursive call reuses the validated entry point naturally. The two boolean variables `is_dict_in_merged` and `is_dict_in_override` add slight verbosity that could be collapsed into a single inline condition without harming readability, and the docstring is longer than necessary for a function this small. The use of `collections.abc` is imported but unused, which is a minor slop artifact. Overall the architecture is straightforward, auditable, and avoids speculative abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, correct, and readable with explicit control flow and no hidden mutation. The guard clauses for type checking are clear, the loop logic is flat with a well-placed `continue` for the None case, and the recursive call reuses the validated entry point naturally. The two boolean variables `is_dict_in_merged` and `is_dict_in_override` add slight verbosity that could be collapsed into a single inline condition without harming readability, and the docstring is longer than necessary for a function this small. The use of `collections.abc` is imported but unused, which is a minor slop artifact. Overall the architecture is straightforward, auditable, and avoids speculative abstractions.\",\n  \"strengths\": [\n    \"No mutation of inputs; uses `.copy()` and builds result cleanly\",\n    \"Explicit TypeError with informative messages for invalid inputs\",\n    \"Flat control flow with guard clause (`continue`) for the None removal case\",\n    \"Recursive call reuses the validated public entry point correctly\",\n    \"Names are self-explanatory and match the task domain\"\n  ],\n  \"weaknesses\": [\n    \"`collections.abc` is imported but never used\",\n    \"Two intermediate boolean variables add verbosity; a single compound condition would be more concise\",\n    \"Docstring is disproportionately long relative to the function's simplicity\",\n    \"Minor: no handling distinction between `dict` subclasses and plain dicts, though `isinstance` covers subclasses fine\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "No mutation of inputs; uses `.copy()` and builds result cleanly",
+      "Explicit TypeError with informative messages for invalid inputs",
+      "Flat control flow with guard clause (`continue`) for the None removal case",
+      "Recursive call reuses the validated public entry point correctly",
+      "Names are self-explanatory and match the task domain"
+    ],
+    "weaknesses": [
+      "`collections.abc` is imported but never used",
+      "Two intermediate boolean variables add verbosity; a single compound condition would be more concise",
+      "Docstring is disproportionately long relative to the function's simplicity",
+      "Minor: no handling distinction between `dict` subclasses and plain dicts, though `isinstance` covers subclasses fine"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.19,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 8.0,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 1,
+    "loc": 44,
+    "maintainability_index": 86.281,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "policy_merge",
+  "variant": "oracle_generation"
+}

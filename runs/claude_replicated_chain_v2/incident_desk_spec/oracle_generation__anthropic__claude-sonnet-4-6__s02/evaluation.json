@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows Spec N-9: it uses a named lookup table (`severity_boost_table`) with the required `_table` suffix, avoids classes entirely, preserves ticket order via sequential list append, uses an explicit string constant `ROUTED_STATUS = 'routed'` rather than a boolean or magic string, and keeps the skip logic flat and readable with a single `any()` guard. The `required_fields_table` naming is slightly unconventional (tuples don't typically get the `_table` suffix, which is more natural for dicts), and the missing-field check uses `.get() is None` which would incorrectly pass tickets where a field is explicitly set to `None` rather than absent \u2014 though this is a minor semantic edge case. Overall the code is clean, flat, locally auditable, and well-aligned with the structural oracle.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows Spec N-9: it uses a named lookup table (`severity_boost_table`) with the required `_table` suffix, avoids classes entirely, preserves ticket order via sequential list append, uses an explicit string constant `ROUTED_STATUS = 'routed'` rather than a boolean or magic string, and keeps the skip logic flat and readable with a single `any()` guard. The `required_fields_table` naming is slightly unconventional (tuples don't typically get the `_table` suffix, which is more natural for dicts), and the missing-field check uses `.get() is None` which would incorrectly pass tickets where a field is explicitly set to `None` rather than absent \u2014 though this is a minor semantic edge case. Overall the code is clean, flat, locally auditable, and well-aligned with the structural oracle.\",\n  \"strengths\": [\n    \"severity_boost_table uses the mandated _table suffix and is a clean dict lookup\",\n    \"ROUTED_STATUS constant makes status_code explicit and never a boolean\",\n    \"No classes introduced; single-pass flat loop preserves ticket order\",\n    \"default_rule fallback is explicit and handled at the top of the function\",\n    \"Code is locally auditable with no hidden logic in comments\"\n  ],\n  \"weaknesses\": [\n    \"required_fields_table is a tuple, not a dict; _table suffix is slightly misleading for a tuple\",\n    \"ticket.get(field) is None misses fields explicitly set to None vs. absent keys \u2014 should use `field not in ticket` or check for falsy values per spec intent\",\n    \"No guard if 'default' key is also missing from rules entirely beyond the fallback default\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "severity_boost_table uses the mandated _table suffix and is a clean dict lookup",
+      "ROUTED_STATUS constant makes status_code explicit and never a boolean",
+      "No classes introduced; single-pass flat loop preserves ticket order",
+      "default_rule fallback is explicit and handled at the top of the function",
+      "Code is locally auditable with no hidden logic in comments"
+    ],
+    "weaknesses": [
+      "required_fields_table is a tuple, not a dict; _table suffix is slightly misleading for a tuple",
+      "ticket.get(field) is None misses fields explicitly set to None vs. absent keys \u2014 should use `field not in ticket` or check for falsy values per spec intent",
+      "No guard if 'default' key is also missing from rules entirely beyond the fallback default"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.743,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 4,
+    "function_count": 1,
+    "loc": 32,
+    "maintainability_index": 78.977,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

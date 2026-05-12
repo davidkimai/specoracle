@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, minimal, and structurally sound. It uses a deque per key for O(1) amortized eviction, raises a clear ValueError with a descriptive message, keeps control flow flat with a guard-clause style while loop before the decision branch, and exposes data movement explicitly through setdefault and list() copy in snapshot. Names are self-explanatory and there are no speculative abstractions or unused extension points. The only minor quibble is that `setdefault` in `allow` silently creates an empty deque for every key that is ever queried via `allow`, even on a rejected request, which is a small hidden side-effect; and `snapshot` does not evict stale entries, so it may return timestamps that would be pruned on the next `allow` call \u2014 a subtle semantic inconsistency a maintainer might not immediately notice. These are small issues that don't significantly detract from an otherwise exemplary implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, minimal, and structurally sound. It uses a deque per key for O(1) amortized eviction, raises a clear ValueError with a descriptive message, keeps control flow flat with a guard-clause style while loop before the decision branch, and exposes data movement explicitly through setdefault and list() copy in snapshot. Names are self-explanatory and there are no speculative abstractions or unused extension points. The only minor quibble is that `setdefault` in `allow` silently creates an empty deque for every key that is ever queried via `allow`, even on a rejected request, which is a small hidden side-effect; and `snapshot` does not evict stale entries, so it may return timestamps that would be pruned on the next `allow` call \u2014 a subtle semantic inconsistency a maintainer might not immediately notice. These are small issues that don't significantly detract from an otherwise exemplary implementation.\",\n  \"strengths\": [\n    \"Minimal, purpose-fit data structure (deque) with no over-engineering\",\n    \"Clear, single-message ValueError with both offending parameters named\",\n    \"Flat control flow: eviction loop then single conditional, no deep nesting\",\n    \"snapshot returns a plain list copy, making data movement explicit and safe\",\n    \"No speculative abstractions, framework scaffolding, or unused hooks\"\n  ],\n  \"weaknesses\": [\n    \"allow creates a deque entry even for rejected requests, a subtle hidden mutation\",\n    \"snapshot does not evict stale timestamps, so it may return entries outside the current window, creating a semantic gap with allow\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Minimal, purpose-fit data structure (deque) with no over-engineering",
+      "Clear, single-message ValueError with both offending parameters named",
+      "Flat control flow: eviction loop then single conditional, no deep nesting",
+      "snapshot returns a plain list copy, making data movement explicit and safe",
+      "No speculative abstractions, framework scaffolding, or unused hooks"
+    ],
+    "weaknesses": [
+      "allow creates a deque entry even for rejected requests, a subtle hidden mutation",
+      "snapshot does not evict stale timestamps, so it may return entries outside the current window, creating a semantic gap with allow"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.135,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 12,
+    "function_count": 3,
+    "loc": 20,
+    "maintainability_index": 56.346,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

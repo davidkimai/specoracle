@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-label variable names for money-affecting decisions (e.g., `status_is_paid`, `region_is_nonempty`, `amount_is_integer`, `stage2_bucket_totals`), returns records with the exact legacy keys, uses a visible three-stage audit trail with named stage variables rather than clever one-liners, and restricts comments to naming legacy audit stages. The boolean exclusion guard (`not isinstance(amount_cents_value, bool)`) is a correct and explicit defensive check. Minor verbosity in Stage 3 (assigning `record_bucket_code` etc. before immediately using them) is slightly over-engineered but aligns with the spec's preference for explicit audit trails over conciseness. The use of `defaultdict` is idiomatic and does not obscure the logic. Overall this is a strong, auditable, spec-compliant implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Corporate Legacy Spec QX-17: it uses a single public function with no helper functions, employs explicit branch-label variable names for money-affecting decisions (e.g., `status_is_paid`, `region_is_nonempty`, `amount_is_integer`, `stage2_bucket_totals`), returns records with the exact legacy keys, uses a visible three-stage audit trail with named stage variables rather than clever one-liners, and restricts comments to naming legacy audit stages. The boolean exclusion guard (`not isinstance(amount_cents_value, bool)`) is a correct and explicit defensive check. Minor verbosity in Stage 3 (assigning `record_bucket_code` etc. before immediately using them) is slightly over-engineered but aligns with the spec's preference for explicit audit trails over conciseness. The use of `defaultdict` is idiomatic and does not obscure the logic. Overall this is a strong, auditable, spec-compliant implementation.\",\n  \"strengths\": [\n    \"Single public function with no helpers, exactly as specified\",\n    \"Stage variables named with explicit audit-trail labels (stage1_, stage2_, stage3_)\",\n    \"Branch-label variable names for money-affecting boolean decisions\",\n    \"Comments restricted to naming legacy audit stages\",\n    \"Correct boolean exclusion guard for amount_cents\",\n    \"Exact legacy output keys used\",\n    \"Does not mutate input\"\n  ],\n  \"weaknesses\": [\n    \"Intermediate variables like `record_bucket_code`, `record_item_count`, `record_cents_total` in Stage 3 add verbosity without meaningful audit value\",\n    \"Two separate defaultdicts for counts and totals could be a single dict-of-dicts for tighter grouping, though the current approach is still readable\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Single public function with no helpers, exactly as specified",
+      "Stage variables named with explicit audit-trail labels (stage1_, stage2_, stage3_)",
+      "Branch-label variable names for money-affecting boolean decisions",
+      "Comments restricted to naming legacy audit stages",
+      "Correct boolean exclusion guard for amount_cents",
+      "Exact legacy output keys used",
+      "Does not mutate input"
+    ],
+    "weaknesses": [
+      "Intermediate variables like `record_bucket_code`, `record_item_count`, `record_cents_total` in Stage 3 add verbosity without meaningful audit value",
+      "Two separate defaultdicts for counts and totals could be a single dict-of-dicts for tighter grouping, though the current approach is still readable"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.154,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 33,
+    "maintainability_index": 71.219,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "oracle_generation"
+}

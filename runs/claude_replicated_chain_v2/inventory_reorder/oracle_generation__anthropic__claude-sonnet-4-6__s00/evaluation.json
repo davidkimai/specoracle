@@ -1,0 +1,52 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed. Guard clauses keep the main loop readable, helpers are small and pure, data movement is explicit with no hidden mutation, and names clearly communicate intent. The validation helper `_is_valid_item` is a reasonable extraction that keeps the main function uncluttered. The only minor quibble is that `_is_valid_item` does type-coercion probing (calling `int()` and `str()`) while the main loop repeats those same coercions, creating a slight redundancy; a tighter design might validate-and-extract in one pass or accept the duplication as an explicit trade-off for clarity. The `REQUIRED_FIELDS` module-level constant is a mild speculative abstraction for a fixed four-field schema, but it's harmless. Overall the code is sparse, auditable, and idiomatic.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed. Guard clauses keep the main loop readable, helpers are small and pure, data movement is explicit with no hidden mutation, and names clearly communicate intent. The validation helper `_is_valid_item` is a reasonable extraction that keeps the main function uncluttered. The only minor quibble is that `_is_valid_item` does type-coercion probing (calling `int()` and `str()`) while the main loop repeats those same coercions, creating a slight redundancy; a tighter design might validate-and-extract in one pass or accept the duplication as an explicit trade-off for clarity. The `REQUIRED_FIELDS` module-level constant is a mild speculative abstraction for a fixed four-field schema, but it's harmless. Overall the code is sparse, auditable, and idiomatic.\",\n  \"strengths\": [\n    \"Flat control flow with early-continue guard clauses avoids nesting\",\n    \"Small, single-purpose helpers (_is_valid_item, _round_up_to_multiple) are easy to test in isolation\",\n    \"Explicit data extraction (sku, on_hand, target, case_pack) makes transformations locally auditable\",\n    \"No hidden mutation or global state; results list is built and returned cleanly\",\n    \"Ordinary standard-library constructs (math.ceil, dict.get, list.sort) with no clever metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"Validation in _is_valid_item and coercion in reorder_plan duplicate the int()/str() calls on the same fields\",\n    \"REQUIRED_FIELDS as a module-level set is a minor speculative abstraction for a fixed schema\",\n    \"No docstrings on helpers, though the names are self-explanatory\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with early-continue guard clauses avoids nesting",
+      "Small, single-purpose helpers (_is_valid_item, _round_up_to_multiple) are easy to test in isolation",
+      "Explicit data extraction (sku, on_hand, target, case_pack) makes transformations locally auditable",
+      "No hidden mutation or global state; results list is built and returned cleanly",
+      "Ordinary standard-library constructs (math.ceil, dict.get, list.sort) with no clever metaprogramming"
+    ],
+    "weaknesses": [
+      "Validation in _is_valid_item and coercion in reorder_plan duplicate the int()/str() calls on the same fields",
+      "REQUIRED_FIELDS as a module-level set is a minor speculative abstraction for a fixed schema",
+      "No docstrings on helpers, though the names are self-explanatory"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.795,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.333,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 3,
+    "loc": 39,
+    "maintainability_index": 67.067,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "oracle_generation"
+}

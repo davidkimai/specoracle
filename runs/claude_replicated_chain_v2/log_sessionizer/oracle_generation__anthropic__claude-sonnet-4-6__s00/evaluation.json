@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a clean, well-decomposed solution that closely follows the Zen of Python. It separates concerns into small, pure helpers (_is_valid, _sessions_for_user, build_sessions), keeps control flow flat with guard clauses in _is_valid, makes data movement explicit with no hidden mutation, uses ordinary standard-library constructs (itertools.groupby, list comprehensions, sort), and has names that make behavior immediately auditable. The session-building loop in _sessions_for_user is straightforward and easy to reason about locally. The one minor weakness is that gap_seconds validation only checks for int but not for bool (since bool is a subclass of int in Python), and the docstring uses NumPy-style formatting which is slightly heavier than needed for this size of function, but neither is a meaningful architectural flaw.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a clean, well-decomposed solution that closely follows the Zen of Python. It separates concerns into small, pure helpers (_is_valid, _sessions_for_user, build_sessions), keeps control flow flat with guard clauses in _is_valid, makes data movement explicit with no hidden mutation, uses ordinary standard-library constructs (itertools.groupby, list comprehensions, sort), and has names that make behavior immediately auditable. The session-building loop in _sessions_for_user is straightforward and easy to reason about locally. The one minor weakness is that gap_seconds validation only checks for int but not for bool (since bool is a subclass of int in Python), and the docstring uses NumPy-style formatting which is slightly heavier than needed for this size of function, but neither is a meaningful architectural flaw.\",\n  \"strengths\": [\n    \"Clean separation into small, single-purpose helpers with no speculative abstractions\",\n    \"Flat control flow with guard clauses in _is_valid instead of nested conditionals\",\n    \"Explicit data movement: valid events collected, sorted, grouped, then sessions built and assembled\",\n    \"Raises TypeError for invalid gap_seconds rather than silently proceeding\",\n    \"Uses standard-library groupby naturally without over-engineering\",\n    \"Names (_is_valid, _sessions_for_user, timestamps, gap_seconds) are self-explanatory\"\n  ],\n  \"weaknesses\": [\n    \"bool is a subclass of int, so gap_seconds=True passes validation silently\",\n    \"Docstring style (NumPy Parameters/Returns sections) is heavier than needed for small helpers\",\n    \"Minor: str(user_id) conversion happens at result-assembly time rather than being documented as an intentional normalization step\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation into small, single-purpose helpers with no speculative abstractions",
+      "Flat control flow with guard clauses in _is_valid instead of nested conditionals",
+      "Explicit data movement: valid events collected, sorted, grouped, then sessions built and assembled",
+      "Raises TypeError for invalid gap_seconds rather than silently proceeding",
+      "Uses standard-library groupby naturally without over-engineering",
+      "Names (_is_valid, _sessions_for_user, timestamps, gap_seconds) are self-explanatory"
+    ],
+    "weaknesses": [
+      "bool is a subclass of int, so gap_seconds=True passes validation silently",
+      "Docstring style (NumPy Parameters/Returns sections) is heavier than needed for small helpers",
+      "Minor: str(user_id) conversion happens at result-assembly time rather than being documented as an intentional normalization step"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.669,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.333,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 3,
+    "loc": 52,
+    "maintainability_index": 75.187,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "log_sessionizer",
+  "variant": "oracle_generation"
+}

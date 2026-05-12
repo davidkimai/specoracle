@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is well-structured with small, pure helpers that each do one thing clearly. The decomposition into `_normalize_dependencies`, `_collect_tasks`, `_build_graph`, and `_make_batches` maps cleanly onto the problem's logical phases, making each piece locally auditable. Data movement is explicit, there's no hidden mutation of the input, and the cycle detection via count comparison is idiomatic Kahn's algorithm. The type validation in `_normalize_dependencies` is thorough and raises clear errors. Minor weaknesses include the validation layer being somewhat verbose for a task that didn't explicitly require runtime type-checking (speculative defensiveness), and `_build_graph` pre-sorting dependents lists which is a minor hidden optimization that slightly obscures intent. The `prerequisite_counts` dict is mutated inside `_make_batches`, which is acceptable since it's a local copy, but could be noted. Overall the code is clean, flat, readable, and avoids clever metaprogramming or framework-shaped abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is well-structured with small, pure helpers that each do one thing clearly. The decomposition into `_normalize_dependencies`, `_collect_tasks`, `_build_graph`, and `_make_batches` maps cleanly onto the problem's logical phases, making each piece locally auditable. Data movement is explicit, there's no hidden mutation of the input, and the cycle detection via count comparison is idiomatic Kahn's algorithm. The type validation in `_normalize_dependencies` is thorough and raises clear errors. Minor weaknesses include the validation layer being somewhat verbose for a task that didn't explicitly require runtime type-checking (speculative defensiveness), and `_build_graph` pre-sorting dependents lists which is a minor hidden optimization that slightly obscures intent. The `prerequisite_counts` dict is mutated inside `_make_batches`, which is acceptable since it's a local copy, but could be noted. Overall the code is clean, flat, readable, and avoids clever metaprogramming or framework-shaped abstractions.\",\n  \"strengths\": [\n    \"Clean decomposition into small, single-purpose helpers\",\n    \"Explicit data flow with no hidden global state or input mutation\",\n    \"Idiomatic Kahn's algorithm with clear cycle detection\",\n    \"Alphabetical sorting is handled consistently and correctly\",\n    \"Clear, descriptive variable and function names\"\n  ],\n  \"weaknesses\": [\n    \"Runtime type validation adds verbosity not required by the spec, bordering on speculative defensiveness\",\n    \"Pre-sorting dependents in `_build_graph` is a minor hidden optimization that slightly obscures the separation of concerns\",\n    \"The `_build_graph` function takes both `dependencies` and `tasks` as arguments but `tasks` is derivable from `dependencies`, creating mild redundancy\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Clean decomposition into small, single-purpose helpers",
+      "Explicit data flow with no hidden global state or input mutation",
+      "Idiomatic Kahn's algorithm with clear cycle detection",
+      "Alphabetical sorting is handled consistently and correctly",
+      "Clear, descriptive variable and function names"
+    ],
+    "weaknesses": [
+      "Runtime type validation adds verbosity not required by the spec, bordering on speculative defensiveness",
+      "Pre-sorting dependents in `_build_graph` is a minor hidden optimization that slightly obscures the separation of concerns",
+      "The `_build_graph` function takes both `dependencies` and `tasks` as arguments but `tasks` is derivable from `dependencies`, creating mild redundancy"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.919,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.8,
+    "cyclomatic_complexity_max": 8,
+    "cyclomatic_complexity_total": 24,
+    "function_count": 5,
+    "loc": 64,
+    "maintainability_index": 44.395,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "dependency_order",
+  "variant": "oracle_generation"
+}

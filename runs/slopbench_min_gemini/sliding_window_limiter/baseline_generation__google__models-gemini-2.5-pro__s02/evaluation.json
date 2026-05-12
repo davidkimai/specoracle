@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and structurally sound. It uses a straightforward deque-per-key approach with explicit pruning, clear naming, and no hidden mutation. The control flow is flat and locally auditable. The main weaknesses are over-documentation (docstrings are verbose and restate the obvious, violating the Zen's 'sparse is better than dense' spirit), the isinstance checks on constructor args go slightly beyond the spec (which says 'positive' not 'must be int'), and the snapshot method has a subtle bug where an empty deque (falsy) returns [] correctly but a non-empty deque check via truthiness is fine\u2014however the real issue is that accessing self._data[key] in allow() creates a defaultdict entry even for snapshot's .get() workaround, which is a minor inconsistency. The class-level docstring and method docstrings are speculative over-documentation that adds noise without aiding local auditability. Overall the architecture is clean and idiomatic but the verbosity and minor inconsistencies prevent a top score.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and structurally sound. It uses a straightforward deque-per-key approach with explicit pruning, clear naming, and no hidden mutation. The control flow is flat and locally auditable. The main weaknesses are over-documentation (docstrings are verbose and restate the obvious, violating the Zen's 'sparse is better than dense' spirit), the isinstance checks on constructor args go slightly beyond the spec (which says 'positive' not 'must be int'), and the snapshot method has a subtle bug where an empty deque (falsy) returns [] correctly but a non-empty deque check via truthiness is fine\u2014however the real issue is that accessing self._data[key] in allow() creates a defaultdict entry even for snapshot's .get() workaround, which is a minor inconsistency. The class-level docstring and method docstrings are speculative over-documentation that adds noise without aiding local auditability. Overall the architecture is clean and idiomatic but the verbosity and minor inconsistencies prevent a top score.\",\n  \"strengths\": [\n    \"Correct sliding window semantics with efficient deque pruning from the left\",\n    \"Flat control flow with guard-clause style in allow()\",\n    \"Explicit data movement; no hidden global state\",\n    \"snapshot() avoids polluting defaultdict with .get()\",\n    \"Clear, descriptive variable names (window_start, timestamps)\"\n  ],\n  \"weaknesses\": [\n    \"Docstrings are excessively verbose, restating what the code already makes obvious\",\n    \"isinstance checks add speculative strictness not required by the spec\",\n    \"Inline comments over-explain trivial operations, adding noise rather than clarity\",\n    \"No small pure helper extracted for pruning, though the method is short enough it barely matters\",\n    \"Class-level docstring is framework-shaped boilerplate rather than useful signal\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Correct sliding window semantics with efficient deque pruning from the left",
+      "Flat control flow with guard-clause style in allow()",
+      "Explicit data movement; no hidden global state",
+      "snapshot() avoids polluting defaultdict with .get()",
+      "Clear, descriptive variable names (window_start, timestamps)"
+    ],
+    "weaknesses": [
+      "Docstrings are excessively verbose, restating what the code already makes obvious",
+      "isinstance checks add speculative strictness not required by the spec",
+      "Inline comments over-explain trivial operations, adding noise rather than clarity",
+      "No small pure helper extracted for pruning, though the method is short enough it barely matters",
+      "Class-level docstring is framework-shaped boilerplate rather than useful signal"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.085,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 4.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 16,
+    "function_count": 3,
+    "loc": 72,
+    "maintainability_index": 60.096,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "sliding_window_limiter",
+  "variant": "baseline_generation"
+}

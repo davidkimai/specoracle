@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and well-decomposed into small pure helpers that each do one thing. Control flow is explicit with guard clauses rather than deep nesting, data movement is transparent (no hidden mutation), errors are raised clearly, and all names are self-explanatory. The only minor quibbles are that `_validate_window_size` checks `_is_integer` on `window_size` which adds a slight type-check overhead beyond what the signature implies (the task says window_size is an int, so a simple `<= 0` guard would suffice), and `_window_start` is a trivially thin wrapper that could reasonably be inlined without harming readability\u2014but neither of these rises to a real flaw. Overall the code is sparse, auditable, and architecturally honest.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and well-decomposed into small pure helpers that each do one thing. Control flow is explicit with guard clauses rather than deep nesting, data movement is transparent (no hidden mutation), errors are raised clearly, and all names are self-explanatory. The only minor quibbles are that `_validate_window_size` checks `_is_integer` on `window_size` which adds a slight type-check overhead beyond what the signature implies (the task says window_size is an int, so a simple `<= 0` guard would suffice), and `_window_start` is a trivially thin wrapper that could reasonably be inlined without harming readability\u2014but neither of these rises to a real flaw. Overall the code is sparse, auditable, and architecturally honest.\",\n  \"strengths\": [\n    \"Small, pure helpers with clear single responsibilities\",\n    \"Flat control flow using early returns and guard clauses\",\n    \"Explicit data movement through the accumulation dict with no hidden state\",\n    \"Clear ValueError with a descriptive message for invalid window_size\",\n    \"Readable final list comprehension over sorted items\",\n    \"Bool-exclusion in _is_integer is a correct and explicit edge-case guard\"\n  ],\n  \"weaknesses\": [\n    \"_validate_window_size redundantly type-checks window_size when the signature already declares it int, adding noise\",\n    \"_window_start is a one-liner wrapper thin enough that inlining it would reduce indirection without hurting clarity\",\n    \"The `Any` import and type annotation on _event_numbers slightly over-engineers what is essentially a simple filter\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Small, pure helpers with clear single responsibilities",
+      "Flat control flow using early returns and guard clauses",
+      "Explicit data movement through the accumulation dict with no hidden state",
+      "Clear ValueError with a descriptive message for invalid window_size",
+      "Readable final list comprehension over sorted items",
+      "Bool-exclusion in _is_integer is a correct and explicit edge-case guard"
+    ],
+    "weaknesses": [
+      "_validate_window_size redundantly type-checks window_size when the signature already declares it int, adding noise",
+      "_window_start is a one-liner wrapper thin enough that inlining it would reduce indirection without hurting clarity",
+      "The `Any` import and type annotation on _event_numbers slightly over-engineers what is essentially a simple filter"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.085,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 2.8,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 14,
+    "function_count": 5,
+    "loc": 32,
+    "maintainability_index": 50.305,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "event_windows",
+  "variant": "oracle_generation"
+}

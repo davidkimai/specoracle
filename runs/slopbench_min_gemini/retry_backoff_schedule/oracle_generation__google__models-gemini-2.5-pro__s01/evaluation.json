@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and correct. Validation is extracted into a small pure helper, the core logic is a single readable list comprehension, and data flow is explicit with no hidden state. The main deduction is that the isinstance checks add noise beyond what the functional spec requires (the spec says 'non-negative' and 'positive', not 'must be int'), and the docstrings are verbose to the point of padding\u2014the Zen favors sparse, auditable code over exhaustive prose. The `List[int]` import from typing is mildly dated (Python 3.9+ supports `list[int]` natively), but that's minor. Overall the architecture is sound and a maintainer can audit behavior locally in seconds.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and correct. Validation is extracted into a small pure helper, the core logic is a single readable list comprehension, and data flow is explicit with no hidden state. The main deduction is that the isinstance checks add noise beyond what the functional spec requires (the spec says 'non-negative' and 'positive', not 'must be int'), and the docstrings are verbose to the point of padding\u2014the Zen favors sparse, auditable code over exhaustive prose. The `List[int]` import from typing is mildly dated (Python 3.9+ supports `list[int]` natively), but that's minor. Overall the architecture is sound and a maintainer can audit behavior locally in seconds.\",\n  \"strengths\": [\n    \"Validation extracted into a focused helper, keeping the public function uncluttered\",\n    \"Core logic is a single, readable list comprehension with no deep nesting\",\n    \"Explicit data flow: no mutation, no global state\",\n    \"Clear ValueError messages that name the offending parameter\",\n    \"Correct exponential backoff formula with cap applied via min()\"\n  ],\n  \"weaknesses\": [\n    \"isinstance checks go beyond the spec's requirements and add brittleness (e.g., rejects bool subclass values or numpy ints without justification)\",\n    \"Docstrings are disproportionately long relative to the simplicity of the code, violating sparseness\",\n    \"Using `from typing import List` instead of the built-in `list` type hint is mildly dated\",\n    \"Module-level docstring and __all__ are speculative abstractions for a single-function module\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Validation extracted into a focused helper, keeping the public function uncluttered",
+      "Core logic is a single, readable list comprehension with no deep nesting",
+      "Explicit data flow: no mutation, no global state",
+      "Clear ValueError messages that name the offending parameter",
+      "Correct exponential backoff formula with cap applied via min()"
+    ],
+    "weaknesses": [
+      "isinstance checks go beyond the spec's requirements and add brittleness (e.g., rejects bool subclass values or numpy ints without justification)",
+      "Docstrings are disproportionately long relative to the simplicity of the code, violating sparseness",
+      "Using `from typing import List` instead of the built-in `list` type hint is mildly dated",
+      "Module-level docstring and __all__ are speculative abstractions for a single-function module"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 0.956,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.5,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 2,
+    "loc": 43,
+    "maintainability_index": 80.53,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "oracle_generation"
+}

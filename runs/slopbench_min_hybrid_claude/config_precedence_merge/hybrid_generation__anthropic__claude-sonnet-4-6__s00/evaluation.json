@@ -1,0 +1,89 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": {
+    "attempts": [
+      {
+        "attempt_index": 0,
+        "code": "\"\"\"\nconfig_precedence_merge \u2013 merge settings from defaults, file config, and\nenvironment variables with explicit precedence: defaults < file_config < env.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport copy\nfrom typing import Any\n\n\n# ---------------------------------------------------------------------------\n# Value parsing\n# ---------------------------------------------------------------------------\n\ndef _parse_value(raw: str) -> Any:\n    \"\"\"Parse a raw environment-variable string into a typed Python value.\"\"\"\n    if raw.lower() == \"true\":\n        return True\n    if raw.lower() == \"false\":\n        return False\n    try:\n        return int(raw, 10)\n    except ValueError:\n        pass\n    if \",\" in raw:\n        return [item.strip() for item in raw.split(\",\") if item.strip()]\n    return raw\n\n\n# ---------------------------------------------------------------------------\n# Deep merge\n# ---------------------------------------------------------------------------\n\ndef _deep_merge(base: dict, override: dict) -> dict:\n    \"\"\"\n    Return a new dict that is *base* deep-merged with *override*.\n    Where both values are dicts, recurse.  Otherwise *override* wins.\n    Neither input is mutated.\n    \"\"\"\n    result = copy.deepcopy(base)\n    for key, override_value in override.items():\n        base_value = result.get(key)\n        if isinstance(base_value, dict) and isinstance(override_value, dict):\n            result[key] = _deep_merge(base_value, override_value)\n        else:\n            result[key] = copy.deepcopy(override_value)\n    return result\n\n\n# ---------------------------------------------------------------------------\n# Environment variable extraction\n# ---------------------------------------------------------------------------\n\n_ENV_PREFIX = \"APP__\"\n\n\ndef _env_key_to_path(env_key: str) -> list[str]:\n    \"\"\"\n    Strip the APP__ prefix, split on __, and lowercase each segment.\n\n    >>> _env_key_to_path(\"APP__DATABASE__HOST\")\n    ['database', 'host']\n    \"\"\"\n    without_prefix = env_key[len(_ENV_PREFIX):]\n    if not without_prefix:\n        raise ValueError(f\"Environment key {env_key!r} has no content after prefix.\")\n    segments = without_prefix.split(\"__\")\n    return [segment.lower() for segment in segments]\n\n\ndef _set_nested(target: dict, path: list[str], value: Any) -> None:\n    \"\"\"\n    Write *value* into *target* at the nested location described by *path*.\n    Creates intermediate dicts as needed.  Raises ValueError if an\n    intermediate node exists but is not a dict.\n    \"\"\"\n    if not path:\n        raise ValueError(\"Path must have at least one segment.\")\n    node = target\n    for segment in path[:-1]:\n        existing = node.get(segment)\n        if existing is None:\n            node[segment] = {}\n            node = node[segment]\n        elif isinstance(existing, dict):\n            node = existing\n        else:\n            raise ValueError(\n                f\"Cannot set nested key: segment {segment!r} already holds a \"\n                f\"non-dict value ({existing!r}).\"\n            )\n    node[path[-1]] = value\n\n\ndef _build_env_overrides(env: dict[str, str]) -> dict:\n    \"\"\"\n    Extract all APP__* variables from *env*, parse their values, and return\n    a single nested dict representing those overrides.\n    \"\"\"\n    overrides: dict = {}\n    for key, raw_value in env.items():\n        if not key.startswith(_ENV_PREFIX):\n            continue\n        path = _env_key_to_path(key)\n        value = _parse_value(raw_value)\n        _set_nested(overrides, path, value)\n    return overrides\n\n\n# ---------------------------------------------------------------------------\n# Public entry point\n# ---------------------------------------------------------------------------\n\ndef merge_settings(\n    defaults: dict,\n    file_config: dict,\n    env: dict[str, str],\n) -> dict:\n    \"\"\"\n    Return a new nested settings dict merged with precedence:\n        defaults < file_config < environment variables.\n\n    Parameters\n    ----------\n    defaults:    Base settings dictionary.\n    file_config: Settings loaded from a configuration file.\n    env:         Mapping of environment variable names to their raw string\n                 values (typically os.environ or a subset thereof).\n\n    Returns\n    -------\n    A new dictionary; the inputs are never mutated.\n    \"\"\"\n    if not isinstance(defaults, dict):\n        raise TypeError(f\"defaults must be a dict, got {type(defaults).__name__!r}.\")\n    if not isinstance(file_config, dict):\n        raise TypeError(f\"file_config must be a dict, got {type(file_config).__name__!r}.\")\n    if not isinstance(env, dict):\n        raise TypeError(f\"env must be a dict, got {type(env).__name__!r}.\")\n\n    after_file = _deep_merge(defaults, file_config)\n    env_overrides = _build_env_overrides(env)\n    return _deep_merge(after_file, env_overrides)",
+        "feedback_prompt": null,
+        "gate_failures": {},
+        "pytest": {
+          "duration_seconds": 0.895,
+          "exit_code": 0,
+          "passed": true,
+          "sandbox": "docker:specoracle-pytest:py311-alpine",
+          "sandbox_error": null,
+          "stderr": "",
+          "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+          "timed_out": false
+        },
+        "raw_response": "```python\n\"\"\"\nconfig_precedence_merge \u2013 merge settings from defaults, file config, and\nenvironment variables with explicit precedence: defaults < file_config < env.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport copy\nfrom typing import Any\n\n\n# ---------------------------------------------------------------------------\n# Value parsing\n# ---------------------------------------------------------------------------\n\ndef _parse_value(raw: str) -> Any:\n    \"\"\"Parse a raw environment-variable string into a typed Python value.\"\"\"\n    if raw.lower() == \"true\":\n        return True\n    if raw.lower() == \"false\":\n        return False\n    try:\n        return int(raw, 10)\n    except ValueError:\n        pass\n    if \",\" in raw:\n        return [item.strip() for item in raw.split(\",\") if item.strip()]\n    return raw\n\n\n# ---------------------------------------------------------------------------\n# Deep merge\n# ---------------------------------------------------------------------------\n\ndef _deep_merge(base: dict, override: dict) -> dict:\n    \"\"\"\n    Return a new dict that is *base* deep-merged with *override*.\n    Where both values are dicts, recurse.  Otherwise *override* wins.\n    Neither input is mutated.\n    \"\"\"\n    result = copy.deepcopy(base)\n    for key, override_value in override.items():\n        base_value = result.get(key)\n        if isinstance(base_value, dict) and isinstance(override_value, dict):\n            result[key] = _deep_merge(base_value, override_value)\n        else:\n            result[key] = copy.deepcopy(override_value)\n    return result\n\n\n# ---------------------------------------------------------------------------\n# Environment variable extraction\n# ---------------------------------------------------------------------------\n\n_ENV_PREFIX = \"APP__\"\n\n\ndef _env_key_to_path(env_key: str) -> list[str]:\n    \"\"\"\n    Strip the APP__ prefix, split on __, and lowercase each segment.\n\n    >>> _env_key_to_path(\"APP__DATABASE__HOST\")\n    ['database', 'host']\n    \"\"\"\n    without_prefix = env_key[len(_ENV_PREFIX):]\n    if not without_prefix:\n        raise ValueError(f\"Environment key {env_key!r} has no content after prefix.\")\n    segments = without_prefix.split(\"__\")\n    return [segment.lower() for segment in segments]\n\n\ndef _set_nested(target: dict, path: list[str], value: Any) -> None:\n    \"\"\"\n    Write *value* into *target* at the nested location described by *path*.\n    Creates intermediate dicts as needed.  Raises ValueError if an\n    intermediate node exists but is not a dict.\n    \"\"\"\n    if not path:\n        raise ValueError(\"Path must have at least one segment.\")\n    node = target\n    for segment in path[:-1]:\n        existing = node.get(segment)\n        if existing is None:\n            node[segment] = {}\n            node = node[segment]\n        elif isinstance(existing, dict):\n            node = existing\n        else:\n            raise ValueError(\n                f\"Cannot set nested key: segment {segment!r} already holds a \"\n                f\"non-dict value ({existing!r}).\"\n            )\n    node[path[-1]] = value\n\n\ndef _build_env_overrides(env: dict[str, str]) -> dict:\n    \"\"\"\n    Extract all APP__* variables from *env*, parse their values, and return\n    a single nested dict representing those overrides.\n    \"\"\"\n    overrides: dict = {}\n    for key, raw_value in env.items():\n        if not key.startswith(_ENV_PREFIX):\n            continue\n        path = _env_key_to_path(key)\n        value = _parse_value(raw_value)\n        _set_nested(overrides, path, value)\n    return overrides\n\n\n# ---------------------------------------------------------------------------\n# Public entry point\n# ---------------------------------------------------------------------------\n\ndef merge_settings(\n    defaults: dict,\n    file_config: dict,\n    env: dict[str, str],\n) -> dict:\n    \"\"\"\n    Return a new nested settings dict merged with precedence:\n        defaults < file_config < environment variables.\n\n    Parameters\n    ----------\n    defaults:    Base settings dictionary.\n    file_config: Settings loaded from a configuration file.\n    env:         Mapping of environment variable names to their raw string\n                 values (typically os.environ or a subset thereof).\n\n    Returns\n    -------\n    A new dictionary; the inputs are never mutated.\n    \"\"\"\n    if not isinstance(defaults, dict):\n        raise TypeError(f\"defaults must be a dict, got {type(defaults).__name__!r}.\")\n    if not isinstance(file_config, dict):\n        raise TypeError(f\"file_config must be a dict, got {type(file_config).__name__!r}.\")\n    if not isinstance(env, dict):\n        raise TypeError(f\"env must be a dict, got {type(env).__name__!r}.\")\n\n    after_file = _deep_merge(defaults, file_config)\n    env_overrides = _build_env_overrides(env)\n    return _deep_merge(after_file, env_overrides)\n```",
+        "static_metrics": {
+          "class_count": 0,
+          "cyclomatic_complexity_average": 4.333,
+          "cyclomatic_complexity_max": 7,
+          "cyclomatic_complexity_total": 26,
+          "function_count": 6,
+          "loc": 120,
+          "maintainability_index": 70.479,
+          "max_nesting_depth": 2,
+          "syntax_error": null,
+          "syntax_ok": true
+        }
+      }
+    ],
+    "constraints": {
+      "max_cc": 8,
+      "max_nesting": 3,
+      "max_retries": 3,
+      "require_pytest": true
+    },
+    "feedback_prompts": [],
+    "hard_cc_pass": true,
+    "hard_nesting_pass": true,
+    "hard_pytest_pass": true,
+    "hybrid_feedback_cc_delta": null,
+    "hybrid_gate_pass": true,
+    "hybrid_retries": 0,
+    "max_retries_exceeded": false
+  },
+  "judge": {
+    "error": null,
+    "rationale": "not requested",
+    "raw_response": "",
+    "score": null,
+    "skipped": true,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n\n\nZen of Python primitives:\n- Beautiful is better than ugly.\n- Explicit is better than implicit.\n- Simple is better than complex.\n- Complex is better than complicated.\n- Flat is better than nested.\n- Sparse is better than dense.\n- Readability counts.\n- Special cases are not special enough to break the rules.\n- Although practicality beats purity.\n- Errors should never pass silently.\n- Unless explicitly silenced.\n- In the face of ambiguity, refuse the temptation to guess.\n- There should be one obvious way to do it.\n- Although that way may not be obvious at first unless you are Dutch.\n- Now is better than never.\n- Although never is often better than right now.\n- If the implementation is hard to explain, it is a bad idea.\n- If the implementation is easy to explain, it may be a good idea.\n- Namespaces are one honking great idea -- let's do more of those!",
+  "oracle_spec_label": "hybrid_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.175,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 4.333,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 26,
+    "function_count": 6,
+    "loc": 120,
+    "maintainability_index": 70.479,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "config_precedence_merge",
+  "variant": "hybrid_generation"
+}

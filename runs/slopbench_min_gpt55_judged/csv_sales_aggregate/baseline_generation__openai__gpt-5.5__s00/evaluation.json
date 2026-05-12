@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally solid and mostly follows the Zen principles: it uses standard-library constructs, has a clear entry point, and avoids metaprogramming. However, several structural issues reduce the score. The `_parse_decimal_integer` helper is over-engineered for the task \u2014 the spec says 'non-integer quantity or cents', which a simple `int()` call with a try/except would handle cleanly; the manual sign/digit parsing adds complexity without benefit and actually diverges from `int()` semantics in subtle ways (e.g., it rejects leading/trailing whitespace after a sign). The `None in row` check for extra fields is clever but opaque. The `try/except` around the entire reader loop to catch `csv.Error` is a broad catch that swallows errors silently, which conflicts with 'raise clear errors for invalid inputs'. The `restkey=None, restval=None, strict=True` arguments on `DictReader` are non-obvious and `strict=True` is not a valid `DictReader` parameter (it's for `reader`), suggesting speculative configuration. The `List[int]` accumulator could be a simple tuple or named pair for clarity. The lambda sort key is redundant since the key is already the tuple being sorted. Overall the code is readable and auditable but carries unnecessary complexity in the integer parser and some opaque guard logic.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally solid and mostly follows the Zen principles: it uses standard-library constructs, has a clear entry point, and avoids metaprogramming. However, several structural issues reduce the score. The `_parse_decimal_integer` helper is over-engineered for the task \u2014 the spec says 'non-integer quantity or cents', which a simple `int()` call with a try/except would handle cleanly; the manual sign/digit parsing adds complexity without benefit and actually diverges from `int()` semantics in subtle ways (e.g., it rejects leading/trailing whitespace after a sign). The `None in row` check for extra fields is clever but opaque. The `try/except` around the entire reader loop to catch `csv.Error` is a broad catch that swallows errors silently, which conflicts with 'raise clear errors for invalid inputs'. The `restkey=None, restval=None, strict=True` arguments on `DictReader` are non-obvious and `strict=True` is not a valid `DictReader` parameter (it's for `reader`), suggesting speculative configuration. The `List[int]` accumulator could be a simple tuple or named pair for clarity. The lambda sort key is redundant since the key is already the tuple being sorted. Overall the code is readable and auditable but carries unnecessary complexity in the integer parser and some opaque guard logic.\",\n  \"strengths\": [\n    \"Uses standard-library csv, io, collections \u2014 no exotic dependencies\",\n    \"Guard clauses keep the row-processing loop relatively flat\",\n    \"Sorting and output construction are clean and explicit\",\n    \"Separation of parsing helper from aggregation logic is appropriate\"\n  ],\n  \"weaknesses\": [\n    \"_parse_decimal_integer is over-engineered; plain int() with try/except is simpler and more correct\",\n    \"strict=True is not a valid DictReader kwarg, indicating speculative/untested configuration\",\n    \"Silent pass on csv.Error in the loop body hides errors rather than surfacing them\",\n    \"None in row check is opaque; a comment or clearer guard would improve auditability\",\n    \"lambda item: item[0] sort key is redundant when the dict key is already the sort key\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Uses standard-library csv, io, collections \u2014 no exotic dependencies",
+      "Guard clauses keep the row-processing loop relatively flat",
+      "Sorting and output construction are clean and explicit",
+      "Separation of parsing helper from aggregation logic is appropriate"
+    ],
+    "weaknesses": [
+      "_parse_decimal_integer is over-engineered; plain int() with try/except is simpler and more correct",
+      "strict=True is not a valid DictReader kwarg, indicating speculative/untested configuration",
+      "Silent pass on csv.Error in the loop body hides errors rather than surfacing them",
+      "None in row check is opaque; a comment or clearer guard would improve auditability",
+      "lambda item: item[0] sort key is redundant when the dict key is already the sort key"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.922,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.5,
+    "cyclomatic_complexity_max": 14,
+    "cyclomatic_complexity_total": 19,
+    "function_count": 2,
+    "loc": 56,
+    "maintainability_index": 44.823,
+    "max_nesting_depth": 4,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "csv_sales_aggregate",
+  "variant": "baseline_generation"
+}

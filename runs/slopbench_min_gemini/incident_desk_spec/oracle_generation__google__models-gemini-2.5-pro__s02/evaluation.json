@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and follows most of the Incident Desk Spec N-9 directives: it uses a `_table`-suffixed lookup for severity adjustments, avoids classes, preserves ticket order, and uses a stable string `status_code`. The core logic is clean and flat with no unnecessary abstraction. However, the spec says to keep branch reasons as short explicit strings, yet the skip branch has no explicit reason string at all \u2014 the comment even acknowledges this gap ('the reason is implicit'). The docstring and inline comments are verbose and partially redundant, cluttering auditability rather than aiding it. The `required_keys` set is a minor indirection that slightly obscures the three-field check. The module-level `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` is placed outside the function, which is reasonable for reuse but slightly reduces locality for a single-pass routing function. Overall it is a solid, readable implementation with minor structural deviations from the oracle.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and follows most of the Incident Desk Spec N-9 directives: it uses a `_table`-suffixed lookup for severity adjustments, avoids classes, preserves ticket order, and uses a stable string `status_code`. The core logic is clean and flat with no unnecessary abstraction. However, the spec says to keep branch reasons as short explicit strings, yet the skip branch has no explicit reason string at all \u2014 the comment even acknowledges this gap ('the reason is implicit'). The docstring and inline comments are verbose and partially redundant, cluttering auditability rather than aiding it. The `required_keys` set is a minor indirection that slightly obscures the three-field check. The module-level `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` is placed outside the function, which is reasonable for reuse but slightly reduces locality for a single-pass routing function. Overall it is a solid, readable implementation with minor structural deviations from the oracle.\",\n  \"strengths\": [\n    \"Uses `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` naming convention as specified\",\n    \"No classes introduced; purely functional single-pass approach\",\n    \"Ticket order preserved correctly\",\n    \"status_code is a stable string, never a boolean\",\n    \"Fallback to rules['default'] is clean and explicit\"\n  ],\n  \"weaknesses\": [\n    \"Skip branch has no explicit reason string; spec requires short explicit branch reasons\",\n    \"Inline comments repeatedly cite the spec verbatim, adding noise rather than clarity\",\n    \"Docstring is overly verbose for a simple routing function, hurting local auditability\",\n    \"required_keys set adds a layer of indirection over a straightforward three-key check\",\n    \"Module-level table reduces locality for what is effectively a single-use lookup\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Uses `_SEVERITY_PRIORITY_ADJUSTMENT_TABLE` naming convention as specified",
+      "No classes introduced; purely functional single-pass approach",
+      "Ticket order preserved correctly",
+      "status_code is a stable string, never a boolean",
+      "Fallback to rules['default'] is clean and explicit"
+    ],
+    "weaknesses": [
+      "Skip branch has no explicit reason string; spec requires short explicit branch reasons",
+      "Inline comments repeatedly cite the spec verbatim, adding noise rather than clarity",
+      "Docstring is overly verbose for a simple routing function, hurting local auditability",
+      "required_keys set adds a layer of indirection over a straightforward three-key check",
+      "Module-level table reduces locality for what is effectively a single-use lookup"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Incident Desk Spec N-9:\n- Return review-facing rows with stable status_code values, never booleans.\n- Prefer local lookup tables with names ending in _table.\n- Keep branch reasons as short explicit strings, not hidden in comments.\n- Do not introduce classes for single-pass ticket routing.\n- Preserve ticket order because shift leads compare rows against the intake log.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.384,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.0,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 3,
+    "function_count": 1,
+    "loc": 63,
+    "maintainability_index": 85.404,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "incident_desk_spec",
+  "variant": "oracle_generation"
+}

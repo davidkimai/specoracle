@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and readable with well-named guard clauses that make the control flow easy to audit locally. The `_is_int` helper is a small, pure, appropriately extracted utility. Data movement is explicit, there's no hidden mutation, and the ceiling-division idiom is standard. Minor weaknesses include the silent swallowing of an invalid `sales_velocity` argument (returning an empty dict instead of raising) which violates the 'raise clear errors for invalid inputs' constraint, and the `_is_int` bool-exclusion check, while defensively correct, adds a subtle complexity that may surprise maintainers without a comment explaining why booleans are excluded. The docstring is helpful but slightly verbose for a function this small. Overall the architecture is appropriately simple with no speculative abstractions.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and readable with well-named guard clauses that make the control flow easy to audit locally. The `_is_int` helper is a small, pure, appropriately extracted utility. Data movement is explicit, there's no hidden mutation, and the ceiling-division idiom is standard. Minor weaknesses include the silent swallowing of an invalid `sales_velocity` argument (returning an empty dict instead of raising) which violates the 'raise clear errors for invalid inputs' constraint, and the `_is_int` bool-exclusion check, while defensively correct, adds a subtle complexity that may surprise maintainers without a comment explaining why booleans are excluded. The docstring is helpful but slightly verbose for a function this small. Overall the architecture is appropriately simple with no speculative abstractions.\",\n  \"strengths\": [\n    \"Flat control flow using guard clauses keeps nesting minimal and logic easy to follow\",\n    \"Small pure `_is_int` helper cleanly separates a reusable validation concern\",\n    \"Explicit variable extraction from each item dict makes data movement transparent\",\n    \"Standard ceiling-division arithmetic is idiomatic and auditable\",\n    \"Sort at the end is clean and avoids premature ordering concerns\"\n  ],\n  \"weaknesses\": [\n    \"Silently substitutes an empty dict for an invalid `sales_velocity` instead of raising a clear error, violating the 'raise clear errors for invalid inputs' constraint\",\n    \"Boolean exclusion in `_is_int` is correct but unexplained; a brief comment would aid local auditability\",\n    \"The `from __future__ import annotations` import is unnecessary for Python 3.10+ and adds minor noise\",\n    \"Docstring is slightly over-explained for a function whose guard clauses already self-document the validation logic\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow using guard clauses keeps nesting minimal and logic easy to follow",
+      "Small pure `_is_int` helper cleanly separates a reusable validation concern",
+      "Explicit variable extraction from each item dict makes data movement transparent",
+      "Standard ceiling-division arithmetic is idiomatic and auditable",
+      "Sort at the end is clean and avoids premature ordering concerns"
+    ],
+    "weaknesses": [
+      "Silently substitutes an empty dict for an invalid `sales_velocity` instead of raising a clear error, violating the 'raise clear errors for invalid inputs' constraint",
+      "Boolean exclusion in `_is_int` is correct but unexplained; a brief comment would aid local auditability",
+      "The `from __future__ import annotations` import is unnecessary for Python 3.10+ and adds minor noise",
+      "Docstring is slightly over-explained for a function whose guard clauses already self-document the validation logic"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 0.982,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.5,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 15,
+    "function_count": 2,
+    "loc": 43,
+    "maintainability_index": 74.732,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "inventory_reorder",
+  "variant": "baseline_generation"
+}

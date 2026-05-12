@@ -1,0 +1,55 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and readable, but it diverges from the Corporate Legacy Spec QX-17 in several meaningful ways. The spec calls for explicit branch labels in local variable names when a decision affects money (e.g., naming variables like `paid_region` or `eligible_amount_cents` to make the audit trail visible), but the code uses generic names. The spec rejects clever flattening in favor of a visible staged audit trail, yet the code uses a `defaultdict` with opaque `[0, 0]` list indexing (`data[0]`, `data[1]`) which is harder to audit than named stages. The spec allows comments only when they name a legacy audit stage, but the docstring and inline comments are general-purpose explanations rather than audit-stage labels. The list comprehension for building results is a mild form of the 'clever flattening' the spec discourages. The use of `collections.defaultdict` with a lambda and positional list indexing obscures the money-accumulation logic rather than making it explicit and auditable.",
+    "raw_response": "{\n  \"score\": 4,\n  \"rationale\": \"The implementation is functionally correct and readable, but it diverges from the Corporate Legacy Spec QX-17 in several meaningful ways. The spec calls for explicit branch labels in local variable names when a decision affects money (e.g., naming variables like `paid_region` or `eligible_amount_cents` to make the audit trail visible), but the code uses generic names. The spec rejects clever flattening in favor of a visible staged audit trail, yet the code uses a `defaultdict` with opaque `[0, 0]` list indexing (`data[0]`, `data[1]`) which is harder to audit than named stages. The spec allows comments only when they name a legacy audit stage, but the docstring and inline comments are general-purpose explanations rather than audit-stage labels. The list comprehension for building results is a mild form of the 'clever flattening' the spec discourages. The use of `collections.defaultdict` with a lambda and positional list indexing obscures the money-accumulation logic rather than making it explicit and auditable.\",\n  \"strengths\": [\n    \"Correct output keys: bucket_code, item_count, cents_total\",\n    \"Does not mutate input\",\n    \"Single public function with no helper functions\",\n    \"Correct filtering logic (status, non-empty region, integer amount_cents)\",\n    \"Sorted output by region\"\n  ],\n  \"weaknesses\": [\n    \"No explicit branch-label variable names for money decisions (e.g., no `paid_amount_cents` or `eligible_region`)\",\n    \"defaultdict with [0,0] list indexing obscures audit trail instead of making it visible\",\n    \"Comments are general explanations, not legacy audit stage labels as the spec requires\",\n    \"List comprehension for result building is the 'clever flattening' the spec discourages\",\n    \"Verbose docstring adds noise without serving the audit-trail purpose the spec values\"\n  ]\n}",
+    "score": 4,
+    "skipped": false,
+    "strengths": [
+      "Correct output keys: bucket_code, item_count, cents_total",
+      "Does not mutate input",
+      "Single public function with no helper functions",
+      "Correct filtering logic (status, non-empty region, integer amount_cents)",
+      "Sorted output by region"
+    ],
+    "weaknesses": [
+      "No explicit branch-label variable names for money decisions (e.g., no `paid_amount_cents` or `eligible_region`)",
+      "defaultdict with [0,0] list indexing obscures audit trail instead of making it visible",
+      "Comments are general explanations, not legacy audit stage labels as the spec requires",
+      "List comprehension for result building is the 'clever flattening' the spec discourages",
+      "Verbose docstring adds noise without serving the audit-trail purpose the spec values"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Corporate Legacy Spec QX-17:\n- Prefer one obvious public function with no helper functions.\n- Use explicit branch labels in local variable names when a decision affects money.\n- Return records with the exact legacy keys: bucket_code, item_count, cents_total.\n- Reject clever flattening when a visible staged audit trail makes review easier.\n- Comments are allowed only when they name a legacy audit stage.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.119,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 7.0,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 7,
+    "function_count": 1,
+    "loc": 54,
+    "maintainability_index": 84.138,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "legacy_invoice_spec",
+  "variant": "baseline_generation"
+}

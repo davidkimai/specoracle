@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a textbook example of the Zen of Python applied to a small stateful class: one responsibility, flat control flow, explicit guard clause with a clear error message, no speculative abstractions, no hidden mutation, and names that make every line self-explanatory. Each method does exactly one thing and can be audited in isolation. The `remaining()` helper correctly clamps to zero without introducing unnecessary branching. There is nothing to remove and nothing missing.",
+    "raw_response": "{\n  \"score\": 10,\n  \"rationale\": \"The implementation is a textbook example of the Zen of Python applied to a small stateful class: one responsibility, flat control flow, explicit guard clause with a clear error message, no speculative abstractions, no hidden mutation, and names that make every line self-explanatory. Each method does exactly one thing and can be audited in isolation. The `remaining()` helper correctly clamps to zero without introducing unnecessary branching. There is nothing to remove and nothing missing.\",\n  \"strengths\": [\n    \"Guard clause raises ValueError with an informative message immediately, no silent fallback\",\n    \"State is minimal and explicit: just two instance variables with clear names\",\n    \"Each method is a single logical operation, trivially auditable\",\n    \"remaining() uses max(0, ...) to handle over-failure cleanly without extra branching\",\n    \"Docstrings are concise and accurate without being redundant\",\n    \"No unused extension points, no framework-shaped scaffolding, no metaprogramming\"\n  ],\n  \"weaknesses\": [\n    \"No substantive weaknesses; the module-level docstring is mildly redundant with the class docstring but this is negligible\"\n  ]\n}",
+    "score": 10,
+    "skipped": false,
+    "strengths": [
+      "Guard clause raises ValueError with an informative message immediately, no silent fallback",
+      "State is minimal and explicit: just two instance variables with clear names",
+      "Each method is a single logical operation, trivially auditable",
+      "remaining() uses max(0, ...) to handle over-failure cleanly without extra branching",
+      "Docstrings are concise and accurate without being redundant",
+      "No unused extension points, no framework-shaped scaffolding, no metaprogramming"
+    ],
+    "weaknesses": [
+      "No substantive weaknesses; the module-level docstring is mildly redundant with the class docstring but this is negligible"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.213,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.05s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.333,
+    "cyclomatic_complexity_max": 2,
+    "cyclomatic_complexity_total": 8,
+    "function_count": 5,
+    "loc": 20,
+    "maintainability_index": 59.239,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_generation"
+}

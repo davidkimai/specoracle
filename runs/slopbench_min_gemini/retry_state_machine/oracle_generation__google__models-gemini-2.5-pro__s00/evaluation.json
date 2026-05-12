@@ -1,0 +1,53 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and direct. Each method does exactly one thing, state is explicit and local, names are self-explanatory, and the guard clause in `__init__` raises a clear error. The `remaining()` helper correctly clamps to zero. The only minor issues are the `isinstance` check (the spec says positive int, but booleans are ints in Python \u2014 `isinstance(True, int)` is True \u2014 so `True` would pass, though this is a minor edge case), and the docstrings are slightly over-verbose for such simple methods, adding noise without proportional clarity gain. The intermediate variable `remaining_count` in `remaining()` is marginally speculative but not harmful. Overall this is a well-structured, auditable, minimal implementation that closely follows the Zen principles.",
+    "raw_response": "{\n  \"score\": 8,\n  \"rationale\": \"The implementation is clean, flat, and direct. Each method does exactly one thing, state is explicit and local, names are self-explanatory, and the guard clause in `__init__` raises a clear error. The `remaining()` helper correctly clamps to zero. The only minor issues are the `isinstance` check (the spec says positive int, but booleans are ints in Python \u2014 `isinstance(True, int)` is True \u2014 so `True` would pass, though this is a minor edge case), and the docstrings are slightly over-verbose for such simple methods, adding noise without proportional clarity gain. The intermediate variable `remaining_count` in `remaining()` is marginally speculative but not harmful. Overall this is a well-structured, auditable, minimal implementation that closely follows the Zen principles.\",\n  \"strengths\": [\n    \"Flat control flow with a single guard clause in __init__\",\n    \"All state is explicit and instance-local \u2014 no hidden mutation\",\n    \"Method names map directly to their behavior\",\n    \"remaining() correctly clamps to zero without branching\",\n    \"No speculative abstractions or unused extension points\"\n  ],\n  \"weaknesses\": [\n    \"isinstance check allows bool values (True/False) since bool is a subclass of int\",\n    \"Docstrings are over-detailed for trivially readable one-liners, adding noise\",\n    \"Intermediate variable `remaining_count` in remaining() is unnecessary\"\n  ]\n}",
+    "score": 8,
+    "skipped": false,
+    "strengths": [
+      "Flat control flow with a single guard clause in __init__",
+      "All state is explicit and instance-local \u2014 no hidden mutation",
+      "Method names map directly to their behavior",
+      "remaining() correctly clamps to zero without branching",
+      "No speculative abstractions or unused extension points"
+    ],
+    "weaknesses": [
+      "isinstance check allows bool values (True/False) since bool is a subclass of int",
+      "Docstrings are over-detailed for trivially readable one-liners, adding noise",
+      "Intermediate variable `remaining_count` in remaining() is unnecessary"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.055,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.5,
+    "cyclomatic_complexity_max": 3,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 5,
+    "loc": 45,
+    "maintainability_index": 65.68,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_generation"
+}

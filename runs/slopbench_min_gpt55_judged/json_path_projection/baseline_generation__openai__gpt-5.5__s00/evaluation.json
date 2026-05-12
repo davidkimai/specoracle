@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, well-decomposed, and closely follows the Zen of Python. The sentinel `_MISSING` pattern is idiomatic and avoids conflating `None` with 'not found'. The helper `_resolve_path` is small, pure, and handles the traversal logic with flat control flow using guard clauses that return early on failure. Data movement is explicit, there is no mutation of the input, and no speculative abstractions or framework-shaped code. The main function `extract_fields` is straightforward and easy to audit locally. Minor weaknesses include the lack of an explicit type/validity check on `record` (the spec says raise clear errors for invalid inputs), and the `not isinstance(path, str)` guard silently falls back to default rather than raising \u2014 though this is a minor judgment call. The use of `collections.abc.Mapping` is a thoughtful generalization that doesn't add complexity. Overall this is a high-quality, maintainable implementation.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, well-decomposed, and closely follows the Zen of Python. The sentinel `_MISSING` pattern is idiomatic and avoids conflating `None` with 'not found'. The helper `_resolve_path` is small, pure, and handles the traversal logic with flat control flow using guard clauses that return early on failure. Data movement is explicit, there is no mutation of the input, and no speculative abstractions or framework-shaped code. The main function `extract_fields` is straightforward and easy to audit locally. Minor weaknesses include the lack of an explicit type/validity check on `record` (the spec says raise clear errors for invalid inputs), and the `not isinstance(path, str)` guard silently falls back to default rather than raising \u2014 though this is a minor judgment call. The use of `collections.abc.Mapping` is a thoughtful generalization that doesn't add complexity. Overall this is a high-quality, maintainable implementation.\",\n  \"strengths\": [\n    \"Clean separation between path resolution helper and the main mapping function\",\n    \"Sentinel `_MISSING` correctly distinguishes between a stored `None` value and a missing path\",\n    \"Flat control flow with early returns in `_resolve_path` avoids deep nesting\",\n    \"No mutation of input; explicit data movement throughout\",\n    \"Ordinary standard-library constructs only; no metaprogramming or clever tricks\",\n    \"Names are self-explanatory and locally auditable\"\n  ],\n  \"weaknesses\": [\n    \"No explicit validation that `record` is a dict/Mapping; invalid input silently degrades rather than raising a clear error\",\n    \"Non-string path values silently fall back to default instead of raising, which may hide caller bugs\",\n    \"Negative list indexes are not handled (e.g., `-1` fails `isdigit()` and returns MISSING silently)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Clean separation between path resolution helper and the main mapping function",
+      "Sentinel `_MISSING` correctly distinguishes between a stored `None` value and a missing path",
+      "Flat control flow with early returns in `_resolve_path` avoids deep nesting",
+      "No mutation of input; explicit data movement throughout",
+      "Ordinary standard-library constructs only; no metaprogramming or clever tricks",
+      "Names are self-explanatory and locally auditable"
+    ],
+    "weaknesses": [
+      "No explicit validation that `record` is a dict/Mapping; invalid input silently degrades rather than raising a clear error",
+      "Non-string path values silently fall back to default instead of raising, which may hide caller bugs",
+      "Negative list indexes are not handled (e.g., `-1` fails `isdigit()` and returns MISSING silently)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.001,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 7,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 2,
+    "loc": 30,
+    "maintainability_index": 54.751,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "baseline_generation"
+}

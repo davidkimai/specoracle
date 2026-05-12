@@ -1,0 +1,52 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is clean, flat, and explicit with no speculative abstractions or hidden state. Each method does exactly one thing, names are self-explanatory, and control flow is trivially auditable. The type guard on max_attempts is slightly over-engineered for a duck-typed language (rejecting floats like 3.0 that would otherwise be semantically valid integers), but it does satisfy the 'raise clear errors for invalid inputs' constraint and is a defensible choice. The `max(\u2026, 0)` clamp in `remaining()` is a small but sensible guard against over-counting failures beyond max_attempts. Overall this is a near-ideal realization of the Zen oracle for this task.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is clean, flat, and explicit with no speculative abstractions or hidden state. Each method does exactly one thing, names are self-explanatory, and control flow is trivially auditable. The type guard on max_attempts is slightly over-engineered for a duck-typed language (rejecting floats like 3.0 that would otherwise be semantically valid integers), but it does satisfy the 'raise clear errors for invalid inputs' constraint and is a defensible choice. The `max(\u2026, 0)` clamp in `remaining()` is a small but sensible guard against over-counting failures beyond max_attempts. Overall this is a near-ideal realization of the Zen oracle for this task.\",\n  \"strengths\": [\n    \"Flat, single-responsibility methods with no nesting\",\n    \"Explicit state stored in clearly named instance variables\",\n    \"Clear ValueError messages for invalid construction arguments\",\n    \"No speculative abstractions, inheritance, or unused extension points\",\n    \"remaining() defensively clamps to zero, preventing negative results\"\n  ],\n  \"weaknesses\": [\n    \"isinstance/bool type guard is stricter than necessary for a duck-typed context and adds a small layer of non-obvious logic\",\n    \"Docstring on the class is minimal; method docstrings are absent (minor readability gap)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Flat, single-responsibility methods with no nesting",
+      "Explicit state stored in clearly named instance variables",
+      "Clear ValueError messages for invalid construction arguments",
+      "No speculative abstractions, inheritance, or unused extension points",
+      "remaining() defensively clamps to zero, preventing negative results"
+    ],
+    "weaknesses": [
+      "isinstance/bool type guard is stricter than necessary for a duck-typed context and adds a small layer of non-obvious logic",
+      "Docstring on the class is minimal; method docstrings are absent (minor readability gap)"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.262,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 1,
+    "cyclomatic_complexity_average": 1.667,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 10,
+    "function_count": 5,
+    "loc": 17,
+    "maintainability_index": 59.051,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_state_machine",
+  "variant": "oracle_generation"
+}

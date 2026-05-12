@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably clean, with a good separation of concerns via the `_get_enabled_worker_names` helper and explicit use of `itertools.cycle`. The control flow is flat and data movement is explicit with no mutation. However, the code is over-documented with verbose docstrings that dwarf the actual logic, adding noise rather than clarity \u2014 a violation of the Zen principle that sparse code aids local auditability. The `typing` imports use the older `List`/`Dict` style instead of the built-in generics available since Python 3.9, which is minor but slightly dated. The `TypeError` checks for input types are speculative defensive programming not required by the spec, adding untested extension points. The edge case where `not enabled_worker_names` returns `[]` when `jobs` is empty is correct but slightly obscures the simpler invariant that `ValueError` should always be raised when there are no enabled workers (the spec says 'Raise ValueError if there are no enabled workers', unconditionally). Overall the architecture is sound but bloated relative to the task's simplicity.",
+    "raw_response": "{\n  \"score\": 7,\n  \"rationale\": \"The implementation is functionally correct and reasonably clean, with a good separation of concerns via the `_get_enabled_worker_names` helper and explicit use of `itertools.cycle`. The control flow is flat and data movement is explicit with no mutation. However, the code is over-documented with verbose docstrings that dwarf the actual logic, adding noise rather than clarity \u2014 a violation of the Zen principle that sparse code aids local auditability. The `typing` imports use the older `List`/`Dict` style instead of the built-in generics available since Python 3.9, which is minor but slightly dated. The `TypeError` checks for input types are speculative defensive programming not required by the spec, adding untested extension points. The edge case where `not enabled_worker_names` returns `[]` when `jobs` is empty is correct but slightly obscures the simpler invariant that `ValueError` should always be raised when there are no enabled workers (the spec says 'Raise ValueError if there are no enabled workers', unconditionally). Overall the architecture is sound but bloated relative to the task's simplicity.\",\n  \"strengths\": [\n    \"Clean helper function extraction for filtering enabled workers\",\n    \"Correct use of itertools.cycle for round-robin logic\",\n    \"No input mutation; data movement is explicit\",\n    \"Flat control flow with guard clauses\"\n  ],\n  \"weaknesses\": [\n    \"Verbose docstrings overwhelm the actual logic, hurting local auditability\",\n    \"Speculative TypeError checks not required by the spec\",\n    \"Uses legacy typing.List/Dict instead of built-in list/dict generics\",\n    \"Conditional ValueError only when jobs is non-empty contradicts the spec's unconditional raise requirement\",\n    \"Module-level __all__ and docstring are unnecessary overhead for a simple utility\"\n  ]\n}",
+    "score": 7,
+    "skipped": false,
+    "strengths": [
+      "Clean helper function extraction for filtering enabled workers",
+      "Correct use of itertools.cycle for round-robin logic",
+      "No input mutation; data movement is explicit",
+      "Flat control flow with guard clauses"
+    ],
+    "weaknesses": [
+      "Verbose docstrings overwhelm the actual logic, hurting local auditability",
+      "Speculative TypeError checks not required by the spec",
+      "Uses legacy typing.List/Dict instead of built-in list/dict generics",
+      "Conditional ValueError only when jobs is non-empty contradicts the spec's unconditional raise requirement",
+      "Module-level __all__ and docstring are unnecessary overhead for a simple utility"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.044,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 1,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.5,
+    "cyclomatic_complexity_max": 6,
+    "cyclomatic_complexity_total": 11,
+    "function_count": 2,
+    "loc": 63,
+    "maintainability_index": 81.577,
+    "max_nesting_depth": 3,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "round_robin_scheduler",
+  "variant": "oracle_generation"
+}

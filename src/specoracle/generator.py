@@ -291,7 +291,14 @@ def extract_python_code(text: str) -> str:
     matches = _PYTHON_FENCE.findall(text)
     if matches:
         return max((match.strip() for match in matches), key=len)
-    return text.strip()
+    stripped = text.strip()
+    if stripped.startswith("```"):
+        lines = stripped.splitlines()
+        first = lines[0].strip().lower()
+        if first in {"```", "```python", "```py"}:
+            body = "\n".join(lines[1:]).strip()
+            return body.removesuffix("```").strip()
+    return stripped
 
 
 def generation_result_from_mapping(

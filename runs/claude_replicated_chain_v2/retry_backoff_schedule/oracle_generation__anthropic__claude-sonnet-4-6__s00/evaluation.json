@@ -1,0 +1,51 @@
+{
+  "effective_temperature": 0.8,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is a near-ideal realization of the Zen of Python oracle for this task. Validation is explicit and flat with clear guard clauses and informative error messages. The core logic is a single, readable list comprehension that makes the data transformation fully explicit \u2014 base, exponent, and cap are all visible at a glance. There is no hidden state, no speculative abstraction, no unnecessary helpers, and no framework-shaped scaffolding. The only minor quibble is that `2 ** i` starting at `i=0` produces `base_seconds * 1` for the first attempt, which is correct per spec, but a maintainer might briefly pause to verify the indexing; a named helper like `_delay(i, base, cap)` could make that one line even more locally auditable, though it would also add indirection that isn't strictly needed for something this small.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation is a near-ideal realization of the Zen of Python oracle for this task. Validation is explicit and flat with clear guard clauses and informative error messages. The core logic is a single, readable list comprehension that makes the data transformation fully explicit \u2014 base, exponent, and cap are all visible at a glance. There is no hidden state, no speculative abstraction, no unnecessary helpers, and no framework-shaped scaffolding. The only minor quibble is that `2 ** i` starting at `i=0` produces `base_seconds * 1` for the first attempt, which is correct per spec, but a maintainer might briefly pause to verify the indexing; a named helper like `_delay(i, base, cap)` could make that one line even more locally auditable, though it would also add indirection that isn't strictly needed for something this small.\",\n  \"strengths\": [\n    \"Guard clauses are flat, explicit, and ordered logically with clear error messages\",\n    \"Single list comprehension makes the entire algorithm auditable in one line\",\n    \"No hidden mutation, no global state, no speculative abstractions\",\n    \"Correct use of min() to enforce the cap cleanly\",\n    \"Function signature and body are self-documenting without extra comments\"\n  ],\n  \"weaknesses\": [\n    \"The `2 ** i` indexing starting at 0 requires a brief mental check to confirm the first delay equals base_seconds exactly \u2014 a named variable or comment could eliminate that pause\",\n    \"No validation that base_seconds <= cap_seconds, which could produce a schedule where every delay is immediately capped (not wrong per spec, but potentially surprising)\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Guard clauses are flat, explicit, and ordered logically with clear error messages",
+      "Single list comprehension makes the entire algorithm auditable in one line",
+      "No hidden mutation, no global state, no speculative abstractions",
+      "Correct use of min() to enforce the cap cleanly",
+      "Function signature and body are self-documenting without extra comments"
+    ],
+    "weaknesses": [
+      "The `2 ** i` indexing starting at 0 requires a brief mental check to confirm the first delay equals base_seconds exactly \u2014 a named variable or comment could eliminate that pause",
+      "No validation that base_seconds <= cap_seconds, which could produce a schedule where every delay is immediately capped (not wrong per spec, but potentially surprising)"
+    ]
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 2.015,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 5.0,
+    "cyclomatic_complexity_max": 5,
+    "cyclomatic_complexity_total": 5,
+    "function_count": 1,
+    "loc": 8,
+    "maintainability_index": 67.618,
+    "max_nesting_depth": 1,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "oracle_generation"
+}

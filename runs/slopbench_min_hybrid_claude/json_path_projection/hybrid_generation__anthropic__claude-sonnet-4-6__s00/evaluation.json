@@ -1,0 +1,131 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": {
+    "attempts": [
+      {
+        "attempt_index": 0,
+        "code": "\"\"\"\njson_path_projection.py\n\nProvides extract_fields: project named dot-separated paths out of a nested\nrecord into a flat output dictionary.\n\"\"\"\n\n\ndef _resolve_path(record, path, default):\n    \"\"\"Walk *path* (dot-separated) through *record*, return value or default.\"\"\"\n    parts = path.split(\".\")\n    current = record\n    for part in parts:\n        if isinstance(current, list):\n            try:\n                index = int(part)\n            except ValueError:\n                return default\n            if index < 0 or index >= len(current):\n                return default\n            current = current[index]\n        elif isinstance(current, dict):\n            if part not in current:\n                # Try integer key as a fallback for dict-keyed integers.\n                try:\n                    int_part = int(part)\n                except ValueError:\n                    return default\n                if int_part not in current:\n                    return default\n                current = current[int_part]\n            else:\n                current = current[part]\n        else:\n            return default\n    return current\n\n\ndef extract_fields(record: dict, paths: dict, default=None) -> dict:\n    \"\"\"\n    Extract values from *record* using dot-separated *paths*.\n\n    Parameters\n    ----------\n    record  : The source nested structure (dict at the top level).\n    paths   : Mapping of output_key -> dot-separated path string.\n    default : Value to use when a path cannot be resolved.\n\n    Returns\n    -------\n    A new dict mapping each output key to its resolved (or default) value.\n    \"\"\"\n    if not isinstance(record, dict):\n        raise TypeError(f\"record must be a dict, got {type(record).__name__!r}\")\n    if not isinstance(paths, dict):\n        raise TypeError(f\"paths must be a dict, got {type(paths).__name__!r}\")\n\n    return {\n        output_key: _resolve_path(record, path, default)\n        for output_key, path in paths.items()\n    }",
+        "feedback_prompt": null,
+        "gate_failures": {
+          "cc": {
+            "branches": 9,
+            "threshold": 8,
+            "value": 10,
+            "violating_function": "_resolve_path"
+          },
+          "nesting": {
+            "threshold": 3,
+            "value": 5
+          }
+        },
+        "pytest": {
+          "duration_seconds": 1.738,
+          "exit_code": 0,
+          "passed": true,
+          "sandbox": "docker:specoracle-pytest:py311-alpine",
+          "sandbox_error": null,
+          "stderr": "",
+          "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "timed_out": false
+        },
+        "raw_response": "```python\n\"\"\"\njson_path_projection.py\n\nProvides extract_fields: project named dot-separated paths out of a nested\nrecord into a flat output dictionary.\n\"\"\"\n\n\ndef _resolve_path(record, path, default):\n    \"\"\"Walk *path* (dot-separated) through *record*, return value or default.\"\"\"\n    parts = path.split(\".\")\n    current = record\n    for part in parts:\n        if isinstance(current, list):\n            try:\n                index = int(part)\n            except ValueError:\n                return default\n            if index < 0 or index >= len(current):\n                return default\n            current = current[index]\n        elif isinstance(current, dict):\n            if part not in current:\n                # Try integer key as a fallback for dict-keyed integers.\n                try:\n                    int_part = int(part)\n                except ValueError:\n                    return default\n                if int_part not in current:\n                    return default\n                current = current[int_part]\n            else:\n                current = current[part]\n        else:\n            return default\n    return current\n\n\ndef extract_fields(record: dict, paths: dict, default=None) -> dict:\n    \"\"\"\n    Extract values from *record* using dot-separated *paths*.\n\n    Parameters\n    ----------\n    record  : The source nested structure (dict at the top level).\n    paths   : Mapping of output_key -> dot-separated path string.\n    default : Value to use when a path cannot be resolved.\n\n    Returns\n    -------\n    A new dict mapping each output key to its resolved (or default) value.\n    \"\"\"\n    if not isinstance(record, dict):\n        raise TypeError(f\"record must be a dict, got {type(record).__name__!r}\")\n    if not isinstance(paths, dict):\n        raise TypeError(f\"paths must be a dict, got {type(paths).__name__!r}\")\n\n    return {\n        output_key: _resolve_path(record, path, default)\n        for output_key, path in paths.items()\n    }\n```",
+        "static_metrics": {
+          "class_count": 0,
+          "cyclomatic_complexity_average": 7.0,
+          "cyclomatic_complexity_max": 10,
+          "cyclomatic_complexity_total": 14,
+          "function_count": 2,
+          "loc": 53,
+          "maintainability_index": 80.21,
+          "max_nesting_depth": 5,
+          "syntax_error": null,
+          "syntax_ok": true
+        }
+      },
+      {
+        "attempt_index": 1,
+        "code": "\"\"\"\njson_path_projection.py\n\nProvides extract_fields: project named dot-separated paths out of a nested\nrecord into a flat output dictionary.\n\"\"\"\n\n\ndef _step_into_list(current, part, default):\n    \"\"\"Advance into a list using *part* as an integer index.\"\"\"\n    try:\n        index = int(part)\n    except ValueError:\n        return default, False\n    if index < 0 or index >= len(current):\n        return default, False\n    return current[index], True\n\n\ndef _step_into_dict(current, part, default):\n    \"\"\"Advance into a dict using *part* as a string key, then integer key.\"\"\"\n    if part in current:\n        return current[part], True\n    try:\n        int_part = int(part)\n    except ValueError:\n        return default, False\n    if int_part in current:\n        return current[int_part], True\n    return default, False\n\n\ndef _step(current, part, default):\n    \"\"\"Advance one path segment into *current*.\"\"\"\n    if isinstance(current, list):\n        return _step_into_list(current, part, default)\n    if isinstance(current, dict):\n        return _step_into_dict(current, part, default)\n    return default, False\n\n\ndef _resolve_path(record, path, default):\n    \"\"\"Walk *path* (dot-separated) through *record*, return value or default.\"\"\"\n    current = record\n    for part in path.split(\".\"):\n        current, ok = _step(current, part, default)\n        if not ok:\n            return default\n    return current\n\n\ndef extract_fields(record: dict, paths: dict, default=None) -> dict:\n    \"\"\"\n    Extract values from *record* using dot-separated *paths*.\n\n    Parameters\n    ----------\n    record  : The source nested structure (dict at the top level).\n    paths   : Mapping of output_key -> dot-separated path string.\n    default : Value to use when a path cannot be resolved.\n\n    Returns\n    -------\n    A new dict mapping each output key to its resolved (or default) value.\n    \"\"\"\n    if not isinstance(record, dict):\n        raise TypeError(f\"record must be a dict, got {type(record).__name__!r}\")\n    if not isinstance(paths, dict):\n        raise TypeError(f\"paths must be a dict, got {type(paths).__name__!r}\")\n\n    return {\n        output_key: _resolve_path(record, path, default)\n        for output_key, path in paths.items()\n    }",
+        "feedback_prompt": "The previous implementation was rejected by the hard oracle gates.\nRejected attempt: 1\n\nOriginal task and soft oracle, unchanged:\nTask id: json_path_projection\nEntry point: extract_fields\n\nFunctional requirements:\nImplement extract_fields(record: dict, paths: dict[str, str], default=None) -> dict.\n\nEach path is dot-separated and may include integer list indexes, such as\n\"orders.0.total\". Return a dictionary mapping each output key to the extracted\nvalue. If a path cannot be resolved, use default. Do not mutate the input.\n\nSynthesis instructions:\n- Return a complete Python module.\n- Keep imports standard-library only unless the task explicitly permits otherwise.\n- Do not include tests in the generated module.\n- Do not perform network, filesystem, or subprocess operations unless required.\n\nSoft oracle system specification:\nYou are a secure program synthesis engineer. Generate a correct, reviewable Python\nmodule for the task. Return only Python code. Do not include markdown prose.\n\nTreat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n\n\nZen of Python primitives:\n- Beautiful is better than ugly.\n- Explicit is better than implicit.\n- Simple is better than complex.\n- Complex is better than complicated.\n- Flat is better than nested.\n- Sparse is better than dense.\n- Readability counts.\n- Special cases are not special enough to break the rules.\n- Although practicality beats purity.\n- Errors should never pass silently.\n- Unless explicitly silenced.\n- In the face of ambiguity, refuse the temptation to guess.\n- There should be one obvious way to do it.\n- Although that way may not be obvious at first unless you are Dutch.\n- Now is better than never.\n- Although never is often better than right now.\n- If the implementation is hard to explain, it is a bad idea.\n- If the implementation is easy to explain, it may be a good idea.\n- Namespaces are one honking great idea -- let's do more of those!\n\nRejected code:\n```python\n\"\"\"\njson_path_projection.py\n\nProvides extract_fields: project named dot-separated paths out of a nested\nrecord into a flat output dictionary.\n\"\"\"\n\n\ndef _resolve_path(record, path, default):\n    \"\"\"Walk *path* (dot-separated) through *record*, return value or default.\"\"\"\n    parts = path.split(\".\")\n    current = record\n    for part in parts:\n        if isinstance(current, list):\n            try:\n                index = int(part)\n            except ValueError:\n                return default\n            if index < 0 or index >= len(current):\n                return default\n            current = current[index]\n        elif isinstance(current, dict):\n            if part not in current:\n                # Try integer key as a fallback for dict-keyed integers.\n                try:\n                    int_part = int(part)\n                except ValueError:\n                    return default\n                if int_part not in current:\n                    return default\n                current = current[int_part]\n            else:\n                current = current[part]\n        else:\n            return default\n    return current\n\n\ndef extract_fields(record: dict, paths: dict, default=None) -> dict:\n    \"\"\"\n    Extract values from *record* using dot-separated *paths*.\n\n    Parameters\n    ----------\n    record  : The source nested structure (dict at the top level).\n    paths   : Mapping of output_key -> dot-separated path string.\n    default : Value to use when a path cannot be resolved.\n\n    Returns\n    -------\n    A new dict mapping each output key to its resolved (or default) value.\n    \"\"\"\n    if not isinstance(record, dict):\n        raise TypeError(f\"record must be a dict, got {type(record).__name__!r}\")\n    if not isinstance(paths, dict):\n        raise TypeError(f\"paths must be a dict, got {type(paths).__name__!r}\")\n\n    return {\n        output_key: _resolve_path(record, path, default)\n        for output_key, path in paths.items()\n    }\n```\n\nStructured hard-gate failure report:\n- Cyclomatic complexity was 10. Target: <= 8.\n  Decompose _resolve_path; it has approximately 9 decision branches. Extract each logical path into a named helper.\n- Max nesting depth was 5. Target: <= 3.\n  Replace nested conditionals with early returns or guard clauses.\n\nRewrite the implementation addressing ONLY the specific failures above.\nDo not change function signatures or the overall algorithm.\nReturn only Python code. Do not include markdown prose.",
+        "gate_failures": {},
+        "pytest": {
+          "duration_seconds": 1.117,
+          "exit_code": 0,
+          "passed": true,
+          "sandbox": "docker:specoracle-pytest:py311-alpine",
+          "sandbox_error": null,
+          "stderr": "",
+          "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "timed_out": false
+        },
+        "raw_response": "\"\"\"\njson_path_projection.py\n\nProvides extract_fields: project named dot-separated paths out of a nested\nrecord into a flat output dictionary.\n\"\"\"\n\n\ndef _step_into_list(current, part, default):\n    \"\"\"Advance into a list using *part* as an integer index.\"\"\"\n    try:\n        index = int(part)\n    except ValueError:\n        return default, False\n    if index < 0 or index >= len(current):\n        return default, False\n    return current[index], True\n\n\ndef _step_into_dict(current, part, default):\n    \"\"\"Advance into a dict using *part* as a string key, then integer key.\"\"\"\n    if part in current:\n        return current[part], True\n    try:\n        int_part = int(part)\n    except ValueError:\n        return default, False\n    if int_part in current:\n        return current[int_part], True\n    return default, False\n\n\ndef _step(current, part, default):\n    \"\"\"Advance one path segment into *current*.\"\"\"\n    if isinstance(current, list):\n        return _step_into_list(current, part, default)\n    if isinstance(current, dict):\n        return _step_into_dict(current, part, default)\n    return default, False\n\n\ndef _resolve_path(record, path, default):\n    \"\"\"Walk *path* (dot-separated) through *record*, return value or default.\"\"\"\n    current = record\n    for part in path.split(\".\"):\n        current, ok = _step(current, part, default)\n        if not ok:\n            return default\n    return current\n\n\ndef extract_fields(record: dict, paths: dict, default=None) -> dict:\n    \"\"\"\n    Extract values from *record* using dot-separated *paths*.\n\n    Parameters\n    ----------\n    record  : The source nested structure (dict at the top level).\n    paths   : Mapping of output_key -> dot-separated path string.\n    default : Value to use when a path cannot be resolved.\n\n    Returns\n    -------\n    A new dict mapping each output key to its resolved (or default) value.\n    \"\"\"\n    if not isinstance(record, dict):\n        raise TypeError(f\"record must be a dict, got {type(record).__name__!r}\")\n    if not isinstance(paths, dict):\n        raise TypeError(f\"paths must be a dict, got {type(paths).__name__!r}\")\n\n    return {\n        output_key: _resolve_path(record, path, default)\n        for output_key, path in paths.items()\n    }",
+        "static_metrics": {
+          "class_count": 0,
+          "cyclomatic_complexity_average": 3.6,
+          "cyclomatic_complexity_max": 4,
+          "cyclomatic_complexity_total": 18,
+          "function_count": 5,
+          "loc": 60,
+          "maintainability_index": 77.048,
+          "max_nesting_depth": 2,
+          "syntax_error": null,
+          "syntax_ok": true
+        }
+      }
+    ],
+    "constraints": {
+      "max_cc": 8,
+      "max_nesting": 3,
+      "max_retries": 3,
+      "require_pytest": true
+    },
+    "feedback_prompts": [
+      "The previous implementation was rejected by the hard oracle gates.\nRejected attempt: 1\n\nOriginal task and soft oracle, unchanged:\nTask id: json_path_projection\nEntry point: extract_fields\n\nFunctional requirements:\nImplement extract_fields(record: dict, paths: dict[str, str], default=None) -> dict.\n\nEach path is dot-separated and may include integer list indexes, such as\n\"orders.0.total\". Return a dictionary mapping each output key to the extracted\nvalue. If a path cannot be resolved, use default. Do not mutate the input.\n\nSynthesis instructions:\n- Return a complete Python module.\n- Keep imports standard-library only unless the task explicitly permits otherwise.\n- Do not include tests in the generated module.\n- Do not perform network, filesystem, or subprocess operations unless required.\n\nSoft oracle system specification:\nYou are a secure program synthesis engineer. Generate a correct, reviewable Python\nmodule for the task. Return only Python code. Do not include markdown prose.\n\nTreat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n\n\nZen of Python primitives:\n- Beautiful is better than ugly.\n- Explicit is better than implicit.\n- Simple is better than complex.\n- Complex is better than complicated.\n- Flat is better than nested.\n- Sparse is better than dense.\n- Readability counts.\n- Special cases are not special enough to break the rules.\n- Although practicality beats purity.\n- Errors should never pass silently.\n- Unless explicitly silenced.\n- In the face of ambiguity, refuse the temptation to guess.\n- There should be one obvious way to do it.\n- Although that way may not be obvious at first unless you are Dutch.\n- Now is better than never.\n- Although never is often better than right now.\n- If the implementation is hard to explain, it is a bad idea.\n- If the implementation is easy to explain, it may be a good idea.\n- Namespaces are one honking great idea -- let's do more of those!\n\nRejected code:\n```python\n\"\"\"\njson_path_projection.py\n\nProvides extract_fields: project named dot-separated paths out of a nested\nrecord into a flat output dictionary.\n\"\"\"\n\n\ndef _resolve_path(record, path, default):\n    \"\"\"Walk *path* (dot-separated) through *record*, return value or default.\"\"\"\n    parts = path.split(\".\")\n    current = record\n    for part in parts:\n        if isinstance(current, list):\n            try:\n                index = int(part)\n            except ValueError:\n                return default\n            if index < 0 or index >= len(current):\n                return default\n            current = current[index]\n        elif isinstance(current, dict):\n            if part not in current:\n                # Try integer key as a fallback for dict-keyed integers.\n                try:\n                    int_part = int(part)\n                except ValueError:\n                    return default\n                if int_part not in current:\n                    return default\n                current = current[int_part]\n            else:\n                current = current[part]\n        else:\n            return default\n    return current\n\n\ndef extract_fields(record: dict, paths: dict, default=None) -> dict:\n    \"\"\"\n    Extract values from *record* using dot-separated *paths*.\n\n    Parameters\n    ----------\n    record  : The source nested structure (dict at the top level).\n    paths   : Mapping of output_key -> dot-separated path string.\n    default : Value to use when a path cannot be resolved.\n\n    Returns\n    -------\n    A new dict mapping each output key to its resolved (or default) value.\n    \"\"\"\n    if not isinstance(record, dict):\n        raise TypeError(f\"record must be a dict, got {type(record).__name__!r}\")\n    if not isinstance(paths, dict):\n        raise TypeError(f\"paths must be a dict, got {type(paths).__name__!r}\")\n\n    return {\n        output_key: _resolve_path(record, path, default)\n        for output_key, path in paths.items()\n    }\n```\n\nStructured hard-gate failure report:\n- Cyclomatic complexity was 10. Target: <= 8.\n  Decompose _resolve_path; it has approximately 9 decision branches. Extract each logical path into a named helper.\n- Max nesting depth was 5. Target: <= 3.\n  Replace nested conditionals with early returns or guard clauses.\n\nRewrite the implementation addressing ONLY the specific failures above.\nDo not change function signatures or the overall algorithm.\nReturn only Python code. Do not include markdown prose."
+    ],
+    "hard_cc_pass": true,
+    "hard_nesting_pass": true,
+    "hard_pytest_pass": true,
+    "hybrid_feedback_cc_delta": -6,
+    "hybrid_gate_pass": true,
+    "hybrid_retries": 1,
+    "max_retries_exceeded": false
+  },
+  "judge": {
+    "error": null,
+    "rationale": "not requested",
+    "raw_response": "",
+    "score": null,
+    "skipped": true,
+    "strengths": [],
+    "weaknesses": []
+  },
+  "model": "claude-sonnet-4-6",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n\n\nZen of Python primitives:\n- Beautiful is better than ugly.\n- Explicit is better than implicit.\n- Simple is better than complex.\n- Complex is better than complicated.\n- Flat is better than nested.\n- Sparse is better than dense.\n- Readability counts.\n- Special cases are not special enough to break the rules.\n- Although practicality beats purity.\n- Errors should never pass silently.\n- Unless explicitly silenced.\n- In the face of ambiguity, refuse the temptation to guess.\n- There should be one obvious way to do it.\n- Although that way may not be obvious at first unless you are Dutch.\n- Now is better than never.\n- Although never is often better than right now.\n- If the implementation is hard to explain, it is a bad idea.\n- If the implementation is easy to explain, it may be a good idea.\n- Namespaces are one honking great idea -- let's do more of those!",
+  "oracle_spec_label": "hybrid_oracle",
+  "provider": "anthropic",
+  "pytest": {
+    "duration_seconds": 1.116,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": ".                                                                        [100%]\n1 passed in 0.04s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 3.6,
+    "cyclomatic_complexity_max": 4,
+    "cyclomatic_complexity_total": 18,
+    "function_count": 5,
+    "loc": 60,
+    "maintainability_index": 77.048,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "json_path_projection",
+  "variant": "hybrid_generation"
+}

@@ -1,0 +1,54 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and reasonably readable with visibly staged parsing, but it fails several explicit structural requirements from the Archival Binder Spec R-04. Most notably, the spec mandates that dictionaries surviving across loop iterations use local names ending in '_ledger', yet the candidate uses 'result' throughout. The error messages include line numbers but do not 'name the archival field being rejected' in a meaningful archival sense \u2014 they describe structural issues rather than identifying the field by its section.key path. The code is otherwise clean, flat, and explicit with no compressed one-liners, preserves insertion order via dict, and keeps exactly one public function. The staged parsing (strip, check comment, check '=', split, check '.', split, validate) is clear and auditable. The main deductions come from ignoring the '_ledger' naming convention and the error message quality requirement, both of which are explicit spec rules.",
+    "raw_response": "{\n  \"score\": 5,\n  \"rationale\": \"The implementation is functionally correct and reasonably readable with visibly staged parsing, but it fails several explicit structural requirements from the Archival Binder Spec R-04. Most notably, the spec mandates that dictionaries surviving across loop iterations use local names ending in '_ledger', yet the candidate uses 'result' throughout. The error messages include line numbers but do not 'name the archival field being rejected' in a meaningful archival sense \u2014 they describe structural issues rather than identifying the field by its section.key path. The code is otherwise clean, flat, and explicit with no compressed one-liners, preserves insertion order via dict, and keeps exactly one public function. The staged parsing (strip, check comment, check '=', split, check '.', split, validate) is clear and auditable. The main deductions come from ignoring the '_ledger' naming convention and the error message quality requirement, both of which are explicit spec rules.\",\n  \"strengths\": [\n    \"Visibly staged parsing with clear sequential steps\",\n    \"Exactly one public function\",\n    \"Insertion order preserved via standard dict\",\n    \"No compressed one-liners or clever abstractions\",\n    \"Correct handling of all edge cases (empty section, empty key, missing '=', missing '.')\"\n  ],\n  \"weaknesses\": [\n    \"Uses 'result' instead of a name ending in '_ledger' as explicitly required by the spec\",\n    \"Error messages include line numbers but don't name the archival field (section.key) being rejected\",\n    \"Inner dicts also lack '_ledger' suffix per the spec's dictionary naming convention\",\n    \"No helper to construct the field identifier for error messages, making error context less archival-friendly\"\n  ]\n}",
+    "score": 5,
+    "skipped": false,
+    "strengths": [
+      "Visibly staged parsing with clear sequential steps",
+      "Exactly one public function",
+      "Insertion order preserved via standard dict",
+      "No compressed one-liners or clever abstractions",
+      "Correct handling of all edge cases (empty section, empty key, missing '=', missing '.')"
+    ],
+    "weaknesses": [
+      "Uses 'result' instead of a name ending in '_ledger' as explicitly required by the spec",
+      "Error messages include line numbers but don't name the archival field (section.key) being rejected",
+      "Inner dicts also lack '_ledger' suffix per the spec's dictionary naming convention",
+      "No helper to construct the field identifier for error messages, making error context less archival-friendly"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.09,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 2,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 24,
+    "maintainability_index": 55.623,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "baseline_generation"
+}

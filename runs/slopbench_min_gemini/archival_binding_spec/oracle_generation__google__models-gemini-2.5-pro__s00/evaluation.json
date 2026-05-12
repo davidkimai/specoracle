@@ -1,0 +1,54 @@
+{
+  "effective_temperature": 0.8,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the accumulator `sections_ledger` as required, stages parsing into visibly labeled steps (pre-processing, splitting, cleaning, validation, population) rather than compressing into one-liners, preserves insertion order via plain dict, and raises ValueError messages that explicitly name the archival field being rejected. The six-stage comment structure is explicit and auditable. Minor deductions: the stage comments are slightly verbose and the error message for the missing '=' separator doesn't name an 'archival field' in the same idiomatic way the spec implies, but these are small stylistic gaps rather than structural failures.",
+    "raw_response": "{\n  \"score\": 9,\n  \"rationale\": \"The implementation closely follows the Archival Binder Spec R-04 in nearly every dimension: it uses a single public function, names the accumulator `sections_ledger` as required, stages parsing into visibly labeled steps (pre-processing, splitting, cleaning, validation, population) rather than compressing into one-liners, preserves insertion order via plain dict, and raises ValueError messages that explicitly name the archival field being rejected. The six-stage comment structure is explicit and auditable. Minor deductions: the stage comments are slightly verbose and the error message for the missing '=' separator doesn't name an 'archival field' in the same idiomatic way the spec implies, but these are small stylistic gaps rather than structural failures.\",\n  \"strengths\": [\n    \"Uses `sections_ledger` naming convention exactly as specified\",\n    \"Visibly staged parsing with clearly labeled comment blocks instead of compressed one-liners\",\n    \"Single public function with no extraneous helpers\",\n    \"Insertion order preserved naturally via dict\",\n    \"Error messages name the rejected archival field (section name, key) as required\",\n    \"Clean separation of splitting, stripping, and validation into distinct stages\"\n  ],\n  \"weaknesses\": [\n    \"Error message for missing '=' does not use the 'archival field rejected' phrasing consistently with the other validation errors\",\n    \"Stage comments are slightly over-explained, adding verbosity without proportional clarity gain\",\n    \"Splitting on '.' with maxsplit=1 means a key_spec like 'a.b.c' silently accepts 'b.c' as the key name \u2014 not necessarily wrong but worth noting\"\n  ]\n}",
+    "score": 9,
+    "skipped": false,
+    "strengths": [
+      "Uses `sections_ledger` naming convention exactly as specified",
+      "Visibly staged parsing with clearly labeled comment blocks instead of compressed one-liners",
+      "Single public function with no extraneous helpers",
+      "Insertion order preserved naturally via dict",
+      "Error messages name the rejected archival field (section name, key) as required",
+      "Clean separation of splitting, stripping, and validation into distinct stages"
+    ],
+    "weaknesses": [
+      "Error message for missing '=' does not use the 'archival field rejected' phrasing consistently with the other validation errors",
+      "Stage comments are slightly over-explained, adding verbosity without proportional clarity gain",
+      "Splitting on '.' with maxsplit=1 means a key_spec like 'a.b.c' silently accepts 'b.c' as the key name \u2014 not necessarily wrong but worth noting"
+    ]
+  },
+  "model": "models/gemini-2.5-pro",
+  "oracle_spec": "Archival Binder Spec R-04:\n- Prefer visibly staged parsing over compressed one-liners.\n- Keep exactly one public parsing function unless a Day 2 feature requires another public function.\n- Use local names ending in _ledger for dictionaries that survive across loop iterations.\n- Preserve input order whenever the output is review-facing.\n- Raise errors with messages that name the archival field being rejected.",
+  "oracle_spec_label": "custom_spec_override",
+  "provider": "google",
+  "pytest": {
+    "duration_seconds": 1.011,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 9.0,
+    "cyclomatic_complexity_max": 9,
+    "cyclomatic_complexity_total": 9,
+    "function_count": 1,
+    "loc": 63,
+    "maintainability_index": 76.728,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "archival_binding_spec",
+  "variant": "oracle_generation"
+}

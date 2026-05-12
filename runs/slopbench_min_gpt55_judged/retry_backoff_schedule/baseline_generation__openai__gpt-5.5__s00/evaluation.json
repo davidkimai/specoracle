@@ -1,0 +1,53 @@
+{
+  "effective_temperature": null,
+  "hybrid": null,
+  "judge": {
+    "error": null,
+    "rationale": "The implementation is functionally correct and mostly readable, with flat control flow and explicit error messages. However, it adds type-checking guards (isinstance + bool exclusion) that go beyond the stated requirements, which is speculative defensive programming not asked for. The loop body uses a conditional expression and a separate mutation guard that could be simplified to `min(delay, cap_seconds)` with `delay = min(delay * 2, cap_seconds)` or a simple list comprehension using `min(base_seconds * (2**i), cap_seconds)`, making data movement more explicit and eliminating the mutable `delay` variable. The docstring is thorough but the overall function is slightly heavier than necessary for the task.",
+    "raw_response": "{\n  \"score\": 6,\n  \"rationale\": \"The implementation is functionally correct and mostly readable, with flat control flow and explicit error messages. However, it adds type-checking guards (isinstance + bool exclusion) that go beyond the stated requirements, which is speculative defensive programming not asked for. The loop body uses a conditional expression and a separate mutation guard that could be simplified to `min(delay, cap_seconds)` with `delay = min(delay * 2, cap_seconds)` or a simple list comprehension using `min(base_seconds * (2**i), cap_seconds)`, making data movement more explicit and eliminating the mutable `delay` variable. The docstring is thorough but the overall function is slightly heavier than necessary for the task.\",\n  \"strengths\": [\n    \"Clear, explicit ValueError messages for each invalid input\",\n    \"Flat control flow with guard clauses at the top\",\n    \"No hidden mutation or global state\",\n    \"Correct capping behavior with the delay update guard preventing overflow\"\n  ],\n  \"weaknesses\": [\n    \"Adds isinstance/bool type checks not required by the spec, introducing speculative validation\",\n    \"Mutable `delay` variable and conditional update logic is harder to audit than a pure index-based formula like `min(base_seconds * 2**i, cap_seconds)`\",\n    \"The `delay if delay <= cap_seconds else cap_seconds` pattern is less idiomatic than `min(delay, cap_seconds)`\",\n    \"Splitting validation into two passes (type check then value check) adds unnecessary verbosity\"\n  ]\n}",
+    "score": 6,
+    "skipped": false,
+    "strengths": [
+      "Clear, explicit ValueError messages for each invalid input",
+      "Flat control flow with guard clauses at the top",
+      "No hidden mutation or global state",
+      "Correct capping behavior with the delay update guard preventing overflow"
+    ],
+    "weaknesses": [
+      "Adds isinstance/bool type checks not required by the spec, introducing speculative validation",
+      "Mutable `delay` variable and conditional update logic is harder to audit than a pure index-based formula like `min(base_seconds * 2**i, cap_seconds)`",
+      "The `delay if delay <= cap_seconds else cap_seconds` pattern is less idiomatic than `min(delay, cap_seconds)`",
+      "Splitting validation into two passes (type check then value check) adds unnecessary verbosity"
+    ]
+  },
+  "model": "gpt-5.5",
+  "oracle_spec": "Treat the Zen of Python as an informal in-context oracle for structural quality.\nThe oracle is not a style preference layer; it is a degree-of-freedom collapse\nover the implementation space. Preserve functional correctness while choosing\nthe simplest architecture that satisfies the task.\n\nOperational constraints:\n- Prefer small pure helpers over monolithic functions.\n- Keep control flow flat; avoid deep nesting when guard clauses or extraction work.\n- Make data movement explicit; avoid hidden mutation and implicit global state.\n- Raise clear errors for invalid inputs instead of silently guessing.\n- Choose ordinary standard-library constructs over clever metaprogramming.\n- Use names that make the implementation easy to explain.\n- Avoid speculative abstractions, framework-shaped code, and unused extension points.\n- Keep code sparse enough that a maintainer can audit behavior locally.\n",
+  "oracle_spec_label": "zen_of_python",
+  "provider": "openai",
+  "pytest": {
+    "duration_seconds": 1.268,
+    "exit_code": 0,
+    "passed": true,
+    "sandbox": "docker:specoracle-pytest:py311-alpine",
+    "sandbox_error": null,
+    "stderr": "",
+    "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "timed_out": false
+  },
+  "requested_temperature": 0.8,
+  "sample_index": 0,
+  "static_metrics": {
+    "class_count": 0,
+    "cyclomatic_complexity_average": 13.0,
+    "cyclomatic_complexity_max": 13,
+    "cyclomatic_complexity_total": 13,
+    "function_count": 1,
+    "loc": 35,
+    "maintainability_index": 81.889,
+    "max_nesting_depth": 2,
+    "syntax_error": null,
+    "syntax_ok": true
+  },
+  "task_id": "retry_backoff_schedule",
+  "variant": "baseline_generation"
+}
